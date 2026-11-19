@@ -41,9 +41,9 @@ test('labels: full words, short forms for a phone ("US", the metro\'s first city
 
 test('search: five digits open a ZIP, a word lists a city\'s ZIPs, anything else is not a search yet',()=>{
  const S=load();
- assert.deepEqual(S.parseSearch('92629'),{zip:'92629'});
- assert.deepEqual(S.parseSearch(' 92629 '),{zip:'92629'});
- assert.deepEqual(S.parseSearch('  Dana   Point '),{city:'Dana Point'});
+ assert.deepEqual(S.parseSearch('92647'),{zip:'92647'});
+ assert.deepEqual(S.parseSearch(' 92647 '),{zip:'92647'});
+ assert.deepEqual(S.parseSearch('  Huntington   Beach '),{city:'Huntington Beach'});
  assert.equal(S.parseSearch('9262'),null);
  assert.equal(S.parseSearch('926290'),null);
  assert.equal(S.parseSearch(''),null);

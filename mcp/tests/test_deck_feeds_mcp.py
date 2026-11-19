@@ -95,7 +95,7 @@ JOBS: dict[str, Any] = {
         {
             "title": "Line Cook",
             "company": "Diner",
-            "location": "Dana Point, CA",
+            "location": "Huntington Beach, CA",
             "remote": None,
             "salary": None,
             "site": "dice",
@@ -132,12 +132,12 @@ REALESTATE = {
     "t": NOW - 400,
     "refresh": 3600,
     "homes": [
-        {"addr": "1 A St, Dana Point, CA 92629", "city": "Dana Point", "price": 900000, "beds": 2, "baths": 2},
+        {"addr": "1 A St, Huntington Beach, CA 92647", "city": "Huntington Beach", "price": 900000, "beds": 2, "baths": 2},
         {"addr": "2 B St, San Clemente, CA 92672", "city": "San Clemente", "price": 1500000, "beds": 3, "baths": 2},
-        {"addr": "3 C St, Dana Point, CA 92629", "city": "Dana Point", "price": 2500000, "beds": 4, "baths": 3},
+        {"addr": "3 C St, Huntington Beach, CA 92647", "city": "Huntington Beach", "price": 2500000, "beds": 4, "baths": 3},
     ],
     "commercial": [{"addr": "4 D St", "price": 3200000, "sqft": 4000}],
-    "market": {"area": "Dana Point", "median_list_price": 1899000},
+    "market": {"area": "Huntington Beach", "median_list_price": 1899000},
     "disabled": [{"source": "loopnet", "reason": "Access Denied"}],
 }
 
@@ -184,7 +184,7 @@ CASEY_JOBS = {
     "errors": [],
     "taxonomy": [{"slug": "sdr_bdr", "name": "SDR and BDR", "definition": "Entry sales",
                   "subs": [{"slug": "sdr", "name": "SDR"}]}],
-    "rules": {"home": "Dana Point, CA", "in_person_metros": ["south_oc", "oc", "sd", "la"],
+    "rules": {"home": "Huntington Beach, CA", "in_person_metros": ["south_oc", "oc", "sd", "la"],
               "remote_min_pay": 60000},
     "listings": [
         {"title": "Business Development Representative", "company": "Irvine Catering",
@@ -259,7 +259,7 @@ class JobsTests(unittest.TestCase):
 
     def test_metro_classification(self):
         self.assertEqual(jobs.metro_of({"location": "Costa Mesa, California"}), "oc")
-        self.assertEqual(jobs.metro_of({"location": "Dana Point, CA"}), "south_oc")
+        self.assertEqual(jobs.metro_of({"location": "Huntington Beach, CA"}), "south_oc")
         self.assertEqual(jobs.metro_of({"location": "San Diego, CA"}), "sd")
         self.assertEqual(jobs.metro_of({"location": "Remote"}), "remote")
         self.assertEqual(jobs.metro_of({"location": "Denver, CO"}), "unknown")
@@ -303,7 +303,7 @@ class JobsTests(unittest.TestCase):
         listings = [
             {"title": "Lower score", "company": "B", "location": "Costa Mesa, CA", "score": 10},
             {"title": "Higher score", "company": "A", "location": "Costa Mesa, CA", "score": 90},
-            {"title": "Closer metro", "company": "C", "location": "Dana Point, CA", "score": 1},
+            {"title": "Closer metro", "company": "C", "location": "Huntington Beach, CA", "score": 1},
         ]
 
         out = jobs.search(listings, apply_rules=False, limit=2)
@@ -381,7 +381,7 @@ class ToolTests(unittest.TestCase):
         self.assertEqual(out["teams"][0]["name"], "Anaheim Ducks")
 
     def test_housing_scope_and_filters(self):
-        out = server.housing_market("homes", city="dana point", max_price=1000000)
+        out = server.housing_market("homes", city="huntington beach", max_price=1000000)
         self.assertEqual(out["homes"]["matched"], 1)
         self.assertEqual(out["homes"]["median_price"], 900000)
         self.assertEqual(server.housing_market("bogus")["ok"], False)
@@ -545,7 +545,7 @@ def published_jobs() -> dict:
     payload = dict(JOBS)
     payload["listings"] = rows
     payload["taxonomy"] = taxonomy.taxonomy()
-    payload["rules"] = {"home": "Dana Point, CA", "in_person_metros": ["south_oc", "oc", "sd", "la"],
+    payload["rules"] = {"home": "Huntington Beach, CA", "in_person_metros": ["south_oc", "oc", "sd", "la"],
                         "remote_min_pay": 100000}
     payload["market"] = {"by_category": jobs.market(rows), "listings_total": len(rows)}
     return payload
@@ -1042,7 +1042,7 @@ class DeckSectionToolsTests(unittest.TestCase):
             {"id": "h-1", "rank": 2, "kind": "hotel", "title": "Lisbon 4-star", "price": None, "currency": "USD",
              "source_url": "https://example.test/h-1", "as_of": self.GEN}], summary={"LAX-ATH": {"best": 627}}))
         write("outdoors.json", self.contract("outdoors", [
-            {"kind": "surf", "title": "Doheny 2.5 ft", "summary": "FAIR", "location": "Dana Point, CA", "price": None,
+            {"kind": "surf", "title": "Doheny 2.5 ft", "summary": "FAIR", "location": "Huntington Beach, CA", "price": None,
              "currency": None, "source_url": "https://example.test/s", "as_of": self.GEN}], sections={"surf": {}}))
         write("life.json", self.contract("life", [
             {"kind": "gas", "title": "California regular", "price": 4.91, "currency": "USD", "place": "California",
@@ -1083,7 +1083,7 @@ class DeckSectionToolsTests(unittest.TestCase):
         self.assertEqual([i["id"] for i in hotels["items"]], ["h-1"])
 
     def test_outdoors_life_history_and_deals(self):
-        self.assertEqual(server.outdoors(kind="surf")["items"][0]["location"], "Dana Point, CA")
+        self.assertEqual(server.outdoors(kind="surf")["items"][0]["location"], "Huntington Beach, CA")
         self.assertNotIn("sections", server.outdoors())
         self.assertEqual(server.life()["items"][0]["price"], 4.91)
         news = server.history_goodnews(section="good_news")

@@ -1,5 +1,5 @@
 // Real estate > Residential and its ZIP sheet (deck v3): models and render on route-shaped fixtures trimmed from the staged
-// national v2 build (tests/fixtures/realestate-page: 92629, a thin rural ZIP, states, summary, rank and sources answers).
+// national v2 build (tests/fixtures/realestate-page: 92647, a thin rural ZIP, states, summary, rank and sources answers).
 // Pins consumer-visible behaviour: rank queries from filters, strips per scope, ZIP sheet sections, confidence dots, masked money,
 // empty and stale states, and no source text on the page.
 require('./setup-core.js'); // DeckCore on every global, as the page loads static/ui-core.js first
@@ -16,7 +16,7 @@ const store=init=>{const m=new Map(Object.entries(init||{}));return {getItem:k=>
 const load=ls=>new Function('localStorage','DeckUI',src+'\nreturn {DeckScope,DeckRE};')(ls||store(),D);
 const fx=p=>JSON.parse(fs.readFileSync(path.join(__dirname,'fixtures/realestate-page',p),'utf8'));
 const sum=fx('summary.json'),states=fx('states.json').states,metros=fx('metros.json').metros,fields=fx('fields.json'),rank=fx('rank.json'),
- z92629=fx('zip-92629.json'),rural=fx('zip-rural.json'),sources=fx('sources.json').sources,re=fx('realestate.json'),mine=fx('rank-mine.json');
+ z92647=fx('zip-92647.json'),rural=fx('zip-rural.json'),sources=fx('sources.json').sources,re=fx('realestate.json'),mine=fx('rank-mine.json');
 const qs=s=>Object.fromEntries(s.split('&').map(p=>p.split('=').map(decodeURIComponent)));
 const NOW=(sum.generated_at+3600)*1000;
 const textOf=h=>h.replace(/<[^>]+>/g,' ').replace(/&[a-z#0-9]+;/g,' ');
@@ -44,7 +44,7 @@ test('rank query: scope, grade, population, sort and the columns the table shows
  const mineQ=qs(R.rankQuery({kind:'mine'},{sort:'score'},{fields}));assert.equal(mineQ.state,'CA');assert.equal(mineQ.county,'Orange,Los Angeles,San Diego');
  const v1=qs(R.rankQuery({kind:'us'},{sort:'yield'},{fields:{dataset:'v1',fields:[]}}));
  assert.equal(v1.sort,'yield');assert.equal(v1.cols,undefined,'v1 data: old aliases, no cols');
- assert.equal(qs(R.rankQuery({kind:'us'},{sort:'score'},{fields,zips:['92629','92624']})).zip,'92629,92624');
+ assert.equal(qs(R.rankQuery({kind:'us'},{sort:'score'},{fields,zips:['92647','92624']})).zip,'92647,92624');
 });
 
 test('min population: 5,000 by default on State, Metro and US (the national top was bases and tiny towns), none on Your markets; clearable',()=>{
@@ -122,18 +122,18 @@ test('strip per scope: rollups give values, the ZIP gives dots; missing values g
  assert.ok(us.filter(t=>t.dx).length>=1,'D-only tiles are marked');
  const ca=R.stripModel(states.find(s=>s.state==='CA'),sum);
  assert.equal(ca.find(t=>t.key==='home_value').value,D.fmt.money(states.find(s=>s.state==='CA').home_value));
- const home=R.stripModel(z92629,sum),hv=home.find(t=>t.key==='home_value');
- assert.equal(hv.conf.c,z92629.m.home_value.c);assert.ok(hv.spark&&hv.spark.length>1,'ZIP history draws a sparkline');
+ const home=R.stripModel(z92647,sum),hv=home.find(t=>t.key==='home_value');
+ assert.equal(hv.conf.c,z92647.m.home_value.c);assert.ok(hv.spark&&hv.spark.length>1,'ZIP history draws a sparkline');
  assert.equal(home.find(t=>t.key==='typical_rent').unit,'/mo');
  assert.deepEqual(R.stripModel({home_value:null,gross_yield:5.1},{mortgage:null}).map(t=>t.key),['gross_yield']);
- const html=R.stripHtml(home,'Your markets \u00b7 Dana Point',false);
- assert.match(html,/class="strip"/);assert.match(html,/Your markets \u00b7 Dana Point/,'the strip caption names the scope');
+ const html=R.stripHtml(home,'Your markets \u00b7 Huntington Beach',false);
+ assert.match(html,/class="strip"/);assert.match(html,/Your markets \u00b7 Huntington Beach/,'the strip caption names the scope');
  assert.equal((R.stripHtml(home,'x',true).match(/class="tile[\s"]/g)||[]).length,Math.min(6,home.filter(t=>!t.dx).length),'TV keeps the first six');
 });
 
 test('confidence: blended ZIP values, rank rows and scope rollups carry the meter; no key, no meter',()=>{
  const {DeckRE:R}=load();
- assert.deepEqual(R.confOf(z92629,'home_value'),{c:z92629.m.home_value.c,n:z92629.m.home_value.n});
+ assert.deepEqual(R.confOf(z92647,'home_value'),{c:z92647.m.home_value.c,n:z92647.m.home_value.n});
  assert.deepEqual(R.confOf({h_score:50,h_conf:.8},'h_score'),{c:.8,zips:null});
  assert.equal(R.confOf({home_value:1},'home_value'),null);
  // rollups carry <metric>_conf and <metric>_n (ZIPs): the strip shows the meter for state, metro and US values
@@ -197,16 +197,16 @@ test('Your markets: the owner\'s ZIPs in order with national values, then the co
  const {DeckRE:R}=load(),rows=R.mineModel(re,mine.rows,sum);
  const zips=re.market.residential.areas.filter(x=>x.level==='zip').map(x=>x.zip);
  assert.deepEqual(rows.filter(r=>r.zip).map(r=>r.zip),zips);
- assert.equal(rows[0].value,mine.rows.find(r=>r.zip==='92629').home_value,'92629 reads the blended national value');
+ assert.equal(rows[0].value,mine.rows.find(r=>r.zip==='92647').home_value,'92647 reads the blended national value');
  assert.equal(rows[rows.length-1].name,'United States');
  assert.ok(rows.some(r=>/County/.test(r.name)));
  const fb=R.mineModel(re,null,sum);assert.equal(fb[0].value,re.market.residential.areas[0].zhvi.value,'without national rows the feed value stands');
- const h=R.mineHtml(rows);assert.match(h,/data-open="zip" data-key="92629"/);assert.doesNotMatch(h,/ZHVI|as of/);
+ const h=R.mineHtml(rows);assert.match(h,/data-open="zip" data-key="92647"/);assert.doesNotMatch(h,/ZHVI|as of/);
 });
 
-test('ZIP sheet 92629: headline, eleven sections in order, blended items with dots, missing names said once',()=>{
- const {DeckRE:R}=load(),z=R.zipModel(z92629,{summary:sum,prof:null,cat:new Map(fields.fields.map(f=>[f.name,f]))});
- assert.equal(z.state,'ok');assert.equal(z.title,'92629 Dana Point, CA');
+test('ZIP sheet 92647: headline, eleven sections in order, blended items with dots, missing names said once',()=>{
+ const {DeckRE:R}=load(),z=R.zipModel(z92647,{summary:sum,prof:null,cat:new Map(fields.fields.map(f=>[f.name,f]))});
+ assert.equal(z.state,'ok');assert.equal(z.title,'92647 Huntington Beach, CA');
  assert.equal(z.tiles.map(t=>t.label).join(),'Home value,1-yr change,Rent,Gross yield,Days to sell,30-yr rate,Price cuts,Inventory,Payment to income','the nine data points, in the owner\'s order');
  assert.equal(z.tiles.find(t=>t.key==='mortgage_rate').value,'7.11%','the national rate from the summary');
  const ids=z.sections.map(s=>s.id),order=['value','market','mf','people','jobs','schools','risk','costs','lending','grade','proforma','homes'];
@@ -236,8 +236,8 @@ test('ZIP sheet, thin rural ZIP: sections without data are absent, never drawn a
 
 test('pro forma: budget-driven amounts stay masked until Show amounts; the profile form saves fractions',()=>{
  const {DeckRE:R}=load(),prof={profile:{down_pct:0.2,closing_pct:0.03},budget:{rate:{rate_used:7}}};
- const pf=R.proForma(z92629,prof,sum);assert.ok(pf.noi>0&&pf.ads>0);
- const z=R.zipModel(z92629,{summary:sum,prof,cat:new Map()}),body=R.zipBody(z,{},NOW);
+ const pf=R.proForma(z92647,prof,sum);assert.ok(pf.noi>0&&pf.ads>0);
+ const z=R.zipModel(z92647,{summary:sum,prof,cat:new Map()}),body=R.zipBody(z,{},NOW);
  const sec=body.slice(body.indexOf('data-sec="proforma"'));
  const ads=String(Math.round(pf.ads)),cash=D.fmt.money(Math.round(pf.cash_in));
  assert.ok(!sec.includes(cash),'cash in hidden');assert.match(sec,/data-money="show">Show amounts/);
@@ -249,9 +249,9 @@ test('pro forma: budget-driven amounts stay masked until Show amounts; the profi
 
 test('homes for sale: scope query, 12 a page, honest prices and dates, outside links only over https',()=>{
  const {DeckRE:R}=load();
- const q=qs(R.homesQuery({kind:'mine'},{type:'Condo',beds:2,q:' Dana Point '},12));
- assert.deepEqual([q.state,q.type,q.beds,q.q,q.limit,q.offset,q.sort],['CA','Condo','2','Dana Point','12','12','feed']);
- const r=R.homeRow({price:435000,currency:'USD',beds:1,baths:1,sqft:490,city:'Dana Point',type:'Condo',url:'https://example.test/x',listed_at:NOW/1000-3*86400},NOW);
+ const q=qs(R.homesQuery({kind:'mine'},{type:'Condo',beds:2,q:' Huntington Beach '},12));
+ assert.deepEqual([q.state,q.type,q.beds,q.q,q.limit,q.offset,q.sort],['CA','Condo','2','Huntington Beach','12','12','feed']);
+ const r=R.homeRow({price:435000,currency:'USD',beds:1,baths:1,sqft:490,city:'Huntington Beach',type:'Condo',url:'https://example.test/x',listed_at:NOW/1000-3*86400},NOW);
  assert.equal(r.title,'$435K \u00b7 1 BR 1 BA');assert.match(r.sub,/490 SF \u00b7 \$888\/SF \u00b7 3 days listed/);
  assert.equal(R.homeRow({price:162,url:'http://x'},NOW).title,'Price not listed');
  assert.equal(R.homeRow({price:500000,url:'http://x'},NOW).url,'');
@@ -266,15 +266,15 @@ test('homes for sale: the feed writes price_cut as the dollar amount cut, and an
  assert.equal(R.homeRow({price:900000,source:'redfin',price_cut:50000},NOW).cut,true);
  assert.equal(R.homeRow({price:900000,price_cut:true},NOW).cut,true);
  for(const none of [null,0,undefined,false,'']){assert.equal(R.homeRow({price:900000,price_cut:none},NOW).cut,false,String(none))}
- const html=R.homesHtml({hf:{type:'',beds:0,q:''},homes:{ok:true,data:{total:1,rows:[]}},homeRows:[{price:900000,city:'Dana Point',source:'redfin',price_cut:50000,url:'https://example.test/c'}]},NOW);
+ const html=R.homesHtml({hf:{type:'',beds:0,q:''},homes:{ok:true,data:{total:1,rows:[]}},homeRows:[{price:900000,city:'Huntington Beach',source:'redfin',price_cut:50000,url:'https://example.test/c'}]},NOW);
  assert.match(html,/aria-label="Price cut"/);
 });
 
 test('homes for sale: a stale row says stale, a repeat counts once, and a partial list says how many of how many',()=>{
  const {DeckRE:R}=load();
- assert.match(R.homeRow({price:500000,city:'Dana Point',stale:true,url:'https://example.test/s'},NOW).sub,/stale/,'a row the collector could not refresh says stale');
- assert.doesNotMatch(R.homeRow({price:500000,city:'Dana Point',stale:false,url:'https://example.test/f'},NOW).sub,/stale/,'only stale === true counts');
- const h=(o)=>Object.assign({addr:'100 Fixture Dr',city:'Dana Point',price:1850000,beds:4,baths:2.5,sqft:2359,source:'redfin',url:'https://www.redfin.com/h/1'},o);
+ assert.match(R.homeRow({price:500000,city:'Huntington Beach',stale:true,url:'https://example.test/s'},NOW).sub,/stale/,'a row the collector could not refresh says stale');
+ assert.doesNotMatch(R.homeRow({price:500000,city:'Huntington Beach',stale:false,url:'https://example.test/f'},NOW).sub,/stale/,'only stale === true counts');
+ const h=(o)=>Object.assign({addr:'100 Fixture Dr',city:'Huntington Beach',price:1850000,beds:4,baths:2.5,sqft:2359,source:'redfin',url:'https://www.redfin.com/h/1'},o);
  const rows=[h(),h({source:'zillow',url:'https://www.zillow.com/h/1',price:1849000}),h({addr:'1 A St',url:'https://www.redfin.com/h/2'})];
  const html=R.homesHtml({hf:{type:'',beds:0,q:''},homes:{ok:true,data:{total:30,rows}},homeRows:rows},NOW);
  assert.equal((html.match(/class="frow"/g)||[]).length,2,'the same address from two sources is one row');
@@ -292,7 +292,7 @@ test('homes for sale: a stale row says stale, a repeat counts once, and a partia
 
 test('homes for sale: the feed behind the list says out of date when it is stale, and says nothing when fresh',()=>{
  const {DeckRE:R}=load();
- const row={price:900000,city:'Dana Point',source:'redfin',listed_at:NOW/1000-7200,url:'https://example.test/o'};
+ const row={price:900000,city:'Huntington Beach',source:'redfin',listed_at:NOW/1000-7200,url:'https://example.test/o'};
  const page=(re)=>R.homesHtml({hf:{type:'',beds:0,q:''},homes:{ok:true,data:{total:1,rows:[row]}},homeRows:[row],re},NOW);
  assert.match(page({stale:true,age:3*86400,refresh:3600}),/re-stale[^>]*>Out of date · 3 days</,'a feed two refreshes old is out of date');
  assert.match(page({stale:true}),/Out of date</,'stale with no age still says so');
@@ -303,15 +303,15 @@ test('homes for sale: the feed behind the list says out of date when it is stale
 test('Data sheet: sources with coverage and plain dates, ZIP blends with parts and weights, method, setup',()=>{
  const {DeckRE:R}=load(),cat=new Map(fields.fields.map(f=>[f.name,f]));
  const keyed=sources.concat([{id:'x',name:'Key source',side:'residential',status:'needs_key',key_env:'X_KEY'}]);
- const d=R.dataModel({sources:keyed,summary:sum,cat,zip:z92629});
+ const d=R.dataModel({sources:keyed,summary:sum,cat,zip:z92647});
  assert.ok(d.sources.length>0&&d.sources.every(s=>s.name));
  assert.ok(!d.sources.some(s=>/commercial/i.test(s.side||'')),'commercial-only sources stay on Commercial');
  assert.ok(d.sources.every(s=>!/^\d{4}-\d{2}(-\d{2})?$/.test(s.asOf)),'dates read as Sep 2026, not ISO');
  const hv=d.blends.find(x=>x.label.startsWith((cat.get('home_value')||{}).label||'home value'));
- assert.ok(hv&&hv.parts.length===z92629.m.home_value.p.length&&hv.parts.every(p=>/%$/.test(p.weight)));
+ assert.ok(hv&&hv.parts.length===z92647.m.home_value.p.length&&hv.parts.every(p=>/%$/.test(p.weight)));
  assert.ok(d.method.some(m=>/higher is better|lower is better/.test(m[1])));
  assert.deepEqual(d.setup.map(s=>s.state),keyed.filter(s=>s.status==='needs_key').map(()=>'needs_key'));assert.ok(d.setup.length>=1);
- const page=R.dataModel({sources,summary:sum,cat,strip:R.stripModel(z92629,sum),where:'Dana Point'});
+ const page=R.dataModel({sources,summary:sum,cat,strip:R.stripModel(z92647,sum),where:'Huntington Beach'});
  assert.ok(page.blends.every(x=>x.parts.length===0),'page scope lists the strip\'s blended values');
 });
 
@@ -327,13 +327,13 @@ test('the page: no source text anywhere, the scope as the strip caption, TV boar
  assert.doesNotMatch(h,/re-mine/,'Your markets shows in its own scope only');
  const tv=R.pageHtml(Object.assign({},st,{tv:true}),NOW);
  assert.match(tv,/class="board re-board re-tv"/);assert.doesNotMatch(tv,/re-fbar|re-areas/,'no filters on TV');
- S.set({kind:'mine'});const mh=R.pageHtml(Object.assign({},st,{home:z92629}),NOW);
- assert.match(mh,/Your markets \u00b7 Dana Point/);assert.match(mh,/class="sect re-mine"/);
+ S.set({kind:'mine'});const mh=R.pageHtml(Object.assign({},st,{home:z92647}),NOW);
+ assert.match(mh,/Your markets \u00b7 Huntington Beach/);assert.match(mh,/class="sect re-mine"/);
 });
 
 test('homes for sale: a tax-sale minimum bid is labelled a bid with no price per square foot, and a held sale says so',()=>{
  const {DeckRE:R}=load();
  const r=R.homeRow({price:43000,currency:'USD',sqft:900,city:'Santa Monica',type:'Condo',source:'la_ttc',kind:'Tax sale',sale_status:'held',url:'https://ttc.lacounty.gov/x'},NOW);
  assert.equal(r.title,'Minimum bid $43K');assert.doesNotMatch(r.sub,/\/SF/);assert.match(r.sub,/Tax sale/);assert.match(r.sub,/sale held/);
- assert.doesNotMatch(R.homeRow({price:500000,currency:'USD',city:'Dana Point',url:'https://example.test/n'},NOW).sub,/sale held/);
+ assert.doesNotMatch(R.homeRow({price:500000,currency:'USD',city:'Huntington Beach',url:'https://example.test/n'},NOW).sub,/sale held/);
 });

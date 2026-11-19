@@ -1654,7 +1654,7 @@ mod tests {
         let Some((base, _)) = spawn_app_home(home.clone()).await else { panic!("no listener") };
         let c = reqwest::Client::new();
         let mut paths: Vec<String> = [
-            "whoami", "fleet-widgets", "crons", "amazon", "client-error", "housing/national", "housing/rank", "housing/zip/92629",
+            "whoami", "fleet-widgets", "crons", "amazon", "client-error", "housing/national", "housing/rank", "housing/zip/92647",
             "surf-coast", "ecom-market", "realestate/homes", "realestate/commercial", "saved-jobs?person=casey", "crons/abcdef01",
             "unit?name=x", "nope",
         ]
@@ -1806,7 +1806,7 @@ mod tests {
             ("zips.json", include_str!("../../tests/fixtures/housing-national/zips.json")),
             ("zip/926.json", include_str!("../../tests/fixtures/housing-national/zip/926.json")),
             ("zip/100.json", include_str!("../../tests/fixtures/housing-national/zip/100.json")),
-            ("listings/92629.json", include_str!("../../tests/fixtures/housing-national/listings/92629.json")),
+            ("listings/92647.json", include_str!("../../tests/fixtures/housing-national/listings/92647.json")),
         ] {
             let p = d.join(rel);
             if let Some(parent) = p.parent() {
@@ -1842,7 +1842,7 @@ mod tests {
         let u = |p: &str| format!("{base}/api/housing/{p}");
         let own = Some("tok_test-1");
         // no data directory: a clear not-reporting state on every read, never a 5xx
-        for p in ["national", "rank?kind=housing&limit=5", "zip/92629"] {
+        for p in ["national", "rank?kind=housing&limit=5", "zip/92647"] {
             let (code, v) = get_json(&c, &u(p), own, &[]).await;
             assert_eq!((code, v["status"].as_str()), (200, Some("not_reporting")), "{p} {v}");
         }
@@ -1860,8 +1860,8 @@ mod tests {
         assert_eq!((code, r["total"].as_u64()), (200, Some(4)));
         assert_eq!(get_json(&c, &u("rank?kind=land"), own, &[]).await.0, 400);
         // one ZIP: the shard record plus its listings file
-        let (code, z) = get_json(&c, &u("zip/92629"), own, &[]).await;
-        assert_eq!((code, z["city"].as_str()), (200, Some("Dana Point")));
+        let (code, z) = get_json(&c, &u("zip/92647"), own, &[]).await;
+        assert_eq!((code, z["city"].as_str()), (200, Some("Huntington Beach")));
         assert_eq!(z["fmr"]["br2"], 2600);
         assert_eq!(z["listings"]["listings"][0]["price"], 1650000);
         assert_eq!(z["hist"]["zhvi"].as_array().map(Vec::len), Some(60));
@@ -2040,7 +2040,7 @@ mod tests {
         let (_, r) = get_json(&c, &u("rank?limit=2"), own, &[]).await;
         assert!(r.get("dataset").is_none() && r["total"] == 8);
         assert_eq!(get_json(&c, &u("rank?area=rural"), own, &[]).await, (400, json!({"error": "area needs national v2"})));
-        let (_, h) = get_json(&c, &u("zip/92629/hist?fields=zhvi"), own, &[]).await;
+        let (_, h) = get_json(&c, &u("zip/92647/hist?fields=zhvi"), own, &[]).await;
         assert_eq!((h["dataset"].as_str(), h["hist"]["zhvi"].as_array().map(Vec::len)), (Some("v1"), Some(60)));
         housing_v2_fixture(&home);
         // rank: aliases, catalog sorts, repeated f, cols
@@ -2095,8 +2095,8 @@ mod tests {
         let zh = f["fields"].as_array().and_then(|a| a.iter().find(|e| e["name"] == "zhvi").cloned()).unwrap_or(Value::Null);
         assert_eq!((zh["sources"][0]["id"].as_str(), zh["sources"][0]["as_of"].as_str()), (Some("zillow_zhvi"), Some("2026-09")));
         // one ZIP: v1 keys, v2 keys, hist merged, field_sources rebuilt, the on-demand listings file from national/
-        let (code, z) = get_json(&c, &u("zip/92629"), own, &[]).await;
-        assert_eq!((code, z["dataset"].as_str(), z["city"].as_str()), (200, Some("v2"), Some("Dana Point")));
+        let (code, z) = get_json(&c, &u("zip/92647"), own, &[]).await;
+        assert_eq!((code, z["dataset"].as_str(), z["city"].as_str()), (200, Some("v2"), Some("Huntington Beach")));
         assert_eq!(z["fmr"]["br2"], 2600);
         assert_eq!(z["hist"]["zhvi"].as_array().map(Vec::len), Some(60));
         assert_eq!(z["hist"]["home_value"].as_array().map(Vec::len), Some(9));
@@ -2115,27 +2115,27 @@ mod tests {
             assert_eq!(get_json(&c, &u(p), own, &[]).await, (404, json!({"error": "unknown zip"})), "{p}");
         }
         // hist route: declared series only
-        let (_, h) = get_json(&c, &u("zip/92629/hist?fields=zhvi,home_value"), own, &[]).await;
+        let (_, h) = get_json(&c, &u("zip/92647/hist?fields=zhvi,home_value"), own, &[]).await;
         assert_eq!(h["hist"].as_object().map(|o| o.len()), Some(2));
         assert_eq!(h["fields"].as_array().map(Vec::len), Some(6));
-        let (_, h) = get_json(&c, &u("zip/92629/hist?fields=laus_unemployment"), own, &[]).await;
+        let (_, h) = get_json(&c, &u("zip/92647/hist?fields=laus_unemployment"), own, &[]).await;
         assert_eq!(h["hist"]["laus_unemployment"][0], json!(["2026-01", 3.1]));
-        assert_eq!(get_json(&c, &u("zip/92629/hist?fields=nope"), own, &[]).await.0, 400);
+        assert_eq!(get_json(&c, &u("zip/92647/hist?fields=nope"), own, &[]).await.0, 400);
         let (code, h) = get_json(&c, &u("zip/10001/hist"), own, &[]).await;
         assert_eq!((code, h["hist"].clone()), (200, json!({})), "no history shard: an empty set, not an error");
         assert_eq!(get_json(&c, &u("zip/10009/hist"), own, &[]).await.0, 404);
         // the shard LRU parses a shard again when it changes on disk
         let shard = home.join(housing::DIR_V2).join("zip/926.json");
-        let text = std::fs::read_to_string(&shard).unwrap_or_default().replace("\"Dana Point\"", "\"Dana Point Harbor\"");
+        let text = std::fs::read_to_string(&shard).unwrap_or_default().replace("\"Huntington Beach\"", "\"Huntington Beach Harbor\"");
         let _ = std::fs::write(&shard, text);
-        let (_, z) = get_json(&c, &u("zip/92629"), own, &[]).await;
-        assert_eq!(z["city"], "Dana Point Harbor");
+        let (_, z) = get_json(&c, &u("zip/92647"), own, &[]).await;
+        assert_eq!(z["city"], "Huntington Beach Harbor");
         // a v2 manifest that is not schema 2 sends every reader back to v1
         let _ = std::fs::write(home.join(housing::DIR_V2).join("manifest.json"), r#"{"schema":1}"#);
         let (_, r) = get_json(&c, &u("rank?limit=2"), own, &[]).await;
         assert!(r.get("dataset").is_none() && r["total"] == 8, "{r}");
-        let (_, z) = get_json(&c, &u("zip/92629"), own, &[]).await;
-        assert!(z.get("dataset").is_none() && z["city"] == "Dana Point");
+        let (_, z) = get_json(&c, &u("zip/92647"), own, &[]).await;
+        assert!(z.get("dataset").is_none() && z["city"] == "Huntington Beach");
         let _ = std::fs::remove_dir_all(&home);
     }
 
@@ -2227,10 +2227,10 @@ mod tests {
         assert_eq!((code, v["person"].as_str(), v["box"].as_str()), (200, Some("jordan"), Some("mf-core")), "a viewer reads only the own desk");
         let (code, _, _) = call(&c, M::GET, &u(&format!("/api/cre/deals?t={vt}")), None).await;
         assert_eq!(code, 200, "the viewer's ?t= bootstrap may read the desk");
-        for p in ["/api/realestate/homes", "/api/realestate/commercial", "/api/housing/fields", "/api/housing/zip/92629/hist"] {
+        for p in ["/api/realestate/homes", "/api/realestate/commercial", "/api/housing/fields", "/api/housing/zip/92647/hist"] {
             assert_eq!(call(&c, M::GET, &u(p), Some(&vt)).await.0, 403, "viewer {p}");
         }
-        for p in ["/api/realestate/homes", "/api/realestate/commercial", "/api/cre/deals", "/api/housing/fields", "/api/housing/national?part=summary", "/api/housing/zip/92629/hist"] {
+        for p in ["/api/realestate/homes", "/api/realestate/commercial", "/api/cre/deals", "/api/housing/fields", "/api/housing/national?part=summary", "/api/housing/zip/92647/hist"] {
             assert_eq!(call(&c, M::GET, &u(p), Some(GTOK)).await.0, 403, "guest {p}");
             assert_eq!(call(&c, M::GET, &u(p), None).await.0, 401, "nobody {p}");
         }

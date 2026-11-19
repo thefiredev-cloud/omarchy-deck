@@ -17,7 +17,7 @@ from typing import Any
 
 from . import taxonomy as contract
 
-# Metro tiers ordered by distance from Dana Point. ``unknown`` means outside the four metros.
+# Metro tiers ordered by distance from Huntington Beach. ``unknown`` means outside the four metros.
 METRO_RANK = {"south_oc": 0, "oc": 1, "la": 2, "sd": 3, "remote": 4}
 
 SOUTH_OC = contract.metros()["south_oc"]

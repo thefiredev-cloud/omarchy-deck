@@ -15,14 +15,14 @@ const src=fs.readFileSync(path.join(root,'static/pages/realestate.js'),'utf8');
 const store=()=>{const m=new Map();return {getItem:k=>m.has(k)?m.get(k):null,setItem:(k,v)=>m.set(k,String(v)),removeItem:k=>m.delete(k)}};
 const load=()=>new Function('localStorage','DeckUI',src+'\nreturn {DeckScope,DeckRE};')(store(),D);
 const fx=p=>JSON.parse(fs.readFileSync(path.join(__dirname,'fixtures/realestate-page',p),'utf8'));
-const sum=fx('summary.json'),states=fx('states.json').states,metros=fx('metros.json').metros,z92629=fx('zip-92629.json'),rank=fx('rank.json');
+const sum=fx('summary.json'),states=fx('states.json').states,metros=fx('metros.json').metros,z92647=fx('zip-92647.json'),rank=fx('rank.json');
 const text=h=>h.replace(/<[^>]*>/g,' ').replace(/&#39;/g,"'").replace(/&amp;/g,'&').replace(/\s+/g,' ');
 const series=n=>Array.from({length:n},(_,i)=>['2025-'+String(i+1).padStart(2,'0'),40+i]);
 const tick=ms=>new Promise(r=>setTimeout(r,ms||0));
 // a ZIP whose days to sell the build rejected for too few listings (3 homes for sale), with the raw Realtor column still in the record
-const rejected=()=>Object.assign({},z92629,{days_on_market:null,dom:9581,home_value:null,inventory:3,
- m:Object.assign({},z92629.m,{days_on_market:{v:null,reason:'too few listings'},home_value:{v:null,reason:'placeholder value'}}),
- hist:Object.assign({},z92629.hist,{redfin_dom:series(12),zhvi:series(12)})});
+const rejected=()=>Object.assign({},z92647,{days_on_market:null,dom:9581,home_value:null,inventory:3,
+ m:Object.assign({},z92647.m,{days_on_market:{v:null,reason:'too few listings'},home_value:{v:null,reason:'placeholder value'}}),
+ hist:Object.assign({},z92647.hist,{redfin_dom:series(12),zhvi:series(12)})});
 const MEMBERS=new Map([['redfin_dom','days_on_market'],['zillow_days_to_pending','days_on_market'],['dom','days_on_market'],['zhvi','home_value'],
  ['rent_zori','typical_rent'],['safmr_2br','typical_rent']]);
 // the manifest's metrics[id].limits, as the live build wrote them (2026-11-15 17:30)
@@ -50,8 +50,8 @@ test('a raw member row of a rejected metric shows the missing form with the metr
 });
 
 test('Your market\'s feed numbers that feed a rejected metric go to the line with its reason',()=>{
- const {DeckRE:R}=load(),re=fx('realestate.json'),area=R.areaByZip(re,'92629');assert.ok(area,'fixture has 92629 in Your markets');
- const plain=R.zipModel(z92629,{summary:sum,area}).sections.find(s=>s.id==='mine');
+ const {DeckRE:R}=load(),re=fx('realestate.json'),area=R.areaByZip(re,'92647');assert.ok(area,'fixture has 92647 in Your markets');
+ const plain=R.zipModel(z92647,{summary:sum,area}).sections.find(s=>s.id==='mine');
  const days=plain.area.items.find(x=>x.key==='days_to_pending');assert.ok(days,'the fixture shows a days item when nothing is rejected');
  const z=R.zipModel(rejected(),{summary:sum,area,members:MEMBERS,limits:LIMITS}),mine=z.sections.find(s=>s.id==='mine');
  assert.ok(!mine.area.items.some(x=>x.key==='days_to_pending'));assert.ok(mine.missing.includes(days.label+' (too few listings)'),mine.missing.join('|'));
@@ -60,8 +60,8 @@ test('Your market\'s feed numbers that feed a rejected metric go to the line wit
 
 test('a member whose own value is sane keeps its number: 11930 hides the Zillow rent with its reason and shows HUD\'s',()=>{
  const {DeckRE:R}=load();
- const rec=Object.assign({},z92629,{zip:'11930',city:'Amagansett',state:'NY',typical_rent:null,gross_yield:null,rent_zori:103750,safmr_2br:3270,
-  m:Object.assign({},z92629.m,{typical_rent:{v:null,reason:'seasonal rentals'},gross_yield:{v:null,reason:'seasonal rentals',from:'typical_rent'}})});
+ const rec=Object.assign({},z92647,{zip:'11930',city:'Amagansett',state:'NY',typical_rent:null,gross_yield:null,rent_zori:103750,safmr_2br:3270,
+  m:Object.assign({},z92647.m,{typical_rent:{v:null,reason:'seasonal rentals'},gross_yield:{v:null,reason:'seasonal rentals',from:'typical_rent'}})});
  const z=R.zipModel(rec,{summary:sum,cat:new Map(),members:MEMBERS,limits:LIMITS}),val=z.sections.find(s=>s.id==='value');
  assert.deepEqual(z.headWhy,['Rent (seasonal rentals)','Gross yield (seasonal rentals)'],'the Zillow rent is hidden with its reason');
  assert.deepEqual(val.items.find(x=>x.key==='safmr_2br'),{key:'safmr_2br',label:'Fair market rent, 2 BR',value:'$3,270/mo',conf:null},'HUD keeps its number');
@@ -75,7 +75,7 @@ test('a member whose own value is sane keeps its number: 11930 hides the Zillow 
 
 test('a rental grade factor that arrives null with a reason prints the missing form with it, never the raw column',()=>{
  const {DeckRE:R}=load(),summary=Object.assign({},sum,{grade_method:{factors:[{key:'rent_to_income',weight:.1},{key:'renter_share',weight:.15}]}});
- const rec=Object.assign({},z92629,{area_grade:'D',rent_to_income:1010.1,grade_parts:{rent_to_income:{value:null,points:null,weight:.1,reason:'seasonal rentals'},renter_share:{value:17.43,points:0,weight:.15}}});
+ const rec=Object.assign({},z92647,{area_grade:'D',rent_to_income:1010.1,grade_parts:{rent_to_income:{value:null,points:null,weight:.1,reason:'seasonal rentals'},renter_share:{value:17.43,points:0,weight:.15}}});
  const z=R.zipModel(rec,{summary,cat:new Map()}),g=z.sections.find(s=>s.id==='grade');
  assert.equal(g.factors[0].value,null);assert.equal(g.factors[0].why,'seasonal rentals');
  const body=text(R.zipBody(z,{find:''},Date.now()));assert.match(body,/No data \(seasonal rentals\)/);assert.doesNotMatch(body,/1,010|1010/);
@@ -85,23 +85,23 @@ test('a rental grade factor that arrives null with a reason prints the missing f
 test('only the build\'s five reasons print; anything else is a plain missing and never reaches the page',()=>{
  const {DeckRE:R}=load();
  for(const why of ['too few listings','no listing count','placeholder value','seasonal rentals','out of range']){
-  const rec=Object.assign({},z92629,{days_on_market:null,m:{days_on_market:{v:null,reason:why}}});
+  const rec=Object.assign({},z92647,{days_on_market:null,m:{days_on_market:{v:null,reason:why}}});
   assert.ok(R.zipModel(rec,{}).sections.find(s=>s.id==='market').missing.includes('Days to sell ('+why+')'),why)}
- const odd=Object.assign({},z92629,{days_on_market:null,m:{days_on_market:{v:null,reason:'<img src=x onerror=__X>'}}});
+ const odd=Object.assign({},z92647,{days_on_market:null,m:{days_on_market:{v:null,reason:'<img src=x onerror=__X>'}}});
  const mk=R.zipModel(odd,{}).sections.find(s=>s.id==='market');assert.ok(mk.missing.includes('Days to sell'));assert.doesNotMatch(mk.missing.join(),/img/);
  // a record without m (older data) keeps its history lines
- const old=Object.assign({},z92629,{m:undefined,days_on_market:null,hist:{redfin_dom:series(6)}});
+ const old=Object.assign({},z92647,{m:undefined,days_on_market:null,hist:{redfin_dom:series(6)}});
  assert.ok(R.zipModel(old,{}).sections.find(s=>s.id==='market').line2,'no m, no rule');
 });
 
 test('a list row shows the missing-value form for a rejected metric, never the raw column',()=>{
  const {DeckRE:R}=load(),row=Object.assign({},rank.rows[0],{days_on_market:null,dom:9581,home_value:null,price:1});
  for(const k of ['days','value']){const h=R.cellHtml(row,{key:k},true,1);assert.match(h,/^<span class="na re-na" title="[^"]+: not reported for this ZIP\. Open the ZIP to see why\." aria-label="[^"]+">-<\/span>$/,k);assert.doesNotMatch(h,/9581|9,581|\$1\b/)}
- const mine=R.mineModel({market:{residential:{areas:[{level:'zip',zip:'92629',name:'Dana Point',days_on_market:9581}]}}},[Object.assign({},row,{zip:'92629'})],null);
+ const mine=R.mineModel({market:{residential:{areas:[{level:'zip',zip:'92647',name:'Huntington Beach',days_on_market:9581}]}}},[Object.assign({},row,{zip:'92647'})],null);
  assert.equal(mine[0].days,null,'Your markets reads the national row, not the feed column, when the row exists');
  assert.doesNotMatch(R.mineHtml(mine),/9581|9,581/);
  // without its national row the feed's own Realtor number reads as what it is: days listed, never days to sell
- const fb=R.mineModel({market:{residential:{areas:[{level:'zip',zip:'92629',name:'Dana Point',days_on_market:68}]}}},null,null);
+ const fb=R.mineModel({market:{residential:{areas:[{level:'zip',zip:'92647',name:'Huntington Beach',days_on_market:68}]}}},null,null);
  assert.equal(fb[0].daysWord,'days listed');assert.match(R.mineHtml(fb),/68\u00a0days\u00a0listed/);assert.doesNotMatch(R.mineHtml(fb),/days to sell|days\u00a0to\u00a0sell/);
 });
 
@@ -136,7 +136,7 @@ test('part=metrics is read when a ZIP sheet opens, never when the page opens',as
  const mod=new Function('localStorage','DeckUI','DeckPages','document','fetch',src+'\nreturn {DeckRE};')(store(),D,P,doc,fetch);
  mod.DeckRE.page.show({el,head:null,tv:false,cls:'D'});for(let i=0;i<30;i++)await new Promise(r=>setTimeout(r,5));
  assert.ok(!seen.some(u=>u.includes('part=metrics')),'not on open');
- (L.click||[]).forEach(f=>f({target:{closest:s=>s==='[data-open="zip"]'?{dataset:{key:'92629'}}:null}}));
+ (L.click||[]).forEach(f=>f({target:{closest:s=>s==='[data-open="zip"]'?{dataset:{key:'92647'}}:null}}));
  for(let i=0;i<10;i++)await new Promise(r=>setTimeout(r,5));
  assert.equal(seen.filter(u=>u.includes('part=metrics')).length,1,'once, when the sheet opens');
  mod.DeckRE.page.hide();
@@ -153,7 +153,7 @@ test('part=metrics failing: no raw member figure beside the rejection, one plain
  const dlg={isConnected:true,open:true,querySelector:s=>s==='.sheet-b'?sheetBody:null,contains:()=>false};
  const DeckShell={sheet:{open:o=>{sheetBody.innerHTML=o.body||'';return dlg},close(){}}};
  const mod=new Function('localStorage','DeckUI','DeckPages','document','fetch','DeckShell',src+'\nreturn {DeckRE};')(store(),D,P,doc,fetch,DeckShell);
- const tap=sel=>(L.click||[]).forEach(f=>f({target:{closest:s=>s===sel?{dataset:{key:'92629'}}:null}}));
+ const tap=sel=>(L.click||[]).forEach(f=>f({target:{closest:s=>s===sel?{dataset:{key:'92647'}}:null}}));
  mod.DeckRE.page.show({el,head:null,tv:false,cls:'D'});for(let i=0;i<20;i++)await tick(5);
  tap('[data-open="zip"]');for(let i=0;i<40&&!/Not reported/.test(sheetBody.innerHTML);i++)await tick(10);
  const failed=text(sheetBody.innerHTML);

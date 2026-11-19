@@ -124,7 +124,7 @@ def served_national(path, query, missing):
     rank rows were captured from the live deck API on 2026-11-17, values unchanged). Rank filters by state and q and
     sorts the fixture rows; with `cols=` it answers like housing.rs v2 (only columns the catalog says the ZIP table has,
     else 400 bad cols; each row cut to those columns plus the sort column, `from` cut to them). Lists take `fields=`
-    (at most 100) and `state=`. A ZIP with a cut body (housing-zip-<zip>.json: 92629, 79607, the top-ranked card, and
+    (at most 100) and `state=`. A ZIP with a cut body (housing-zip-<zip>.json: 92647, 79607, the top-ranked card, and
     62927, a synthetic row whose home value the build rejected) answers it; other ZIPs answer 404 unknown zip."""
     if missing:
         return 200, {"status": "not_reporting", "reason": "the national build has not run yet"}

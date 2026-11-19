@@ -317,18 +317,18 @@ mod tests {
         // Markets > Housing and Commercial (2026-11-11): the household budget and the national data are owner-only
         ("GET", "/api/housing/national", "", "", false),
         ("GET", "/api/housing/rank", "", "", false),
-        ("GET", "/api/housing/zip/92629", "", "", false),
+        ("GET", "/api/housing/zip/92647", "", "", false),
         ("GET", "/api/housing/profile", "", "", false),
         ("POST", "/api/housing/profile", "", "", false),
         // national dataset v2 and paged listings (2026-11-14): owner-only like the rest of housing; deals reach the
         // desk viewers through `viewer_allowed`, never the household guest
         ("GET", "/api/housing/fields", "", "", false),
-        ("GET", "/api/housing/zip/92629/hist", "", "", false),
+        ("GET", "/api/housing/zip/92647/hist", "", "", false),
         ("GET", "/api/realestate/homes", "", "", false),
         ("GET", "/api/realestate/commercial", "", "", false),
         ("GET", "/api/cre/deals", "", "", false),
         ("POST", "/api/cre/deals", "", "", false),
-        ("POST", "/api/housing/zip/92629/listings", "", "", false),
+        ("POST", "/api/housing/zip/92647/listings", "", "", false),
         // Shop > market feed (2026-11-14): owner only, like every feed
         ("GET", "/api/ecom-market", "", "", false),
         // Surf, Cabo to the Columbia River (2026-11-14): owner-only like every feed
@@ -565,7 +565,7 @@ mod tests {
         assert!(viewer_allowed(&Method::GET, "/") && viewer_allowed(&Method::GET, "/api/whoami"));
         for p in [
             "/api/realestate", "/api/realestate/homes", "/api/realestate/commercial", "/api/housing/profile", "/api/housing/rank",
-            "/api/housing/fields", "/api/housing/zip/92629/hist", "/api/saved-jobs", "/api/today", "/pad", "/cam/x/index.m3u8",
+            "/api/housing/fields", "/api/housing/zip/92647/hist", "/api/saved-jobs", "/api/today", "/pad", "/cam/x/index.m3u8",
             "/api/keys", "/almanac/",
         ] {
             assert!(!viewer_allowed(&Method::GET, p), "{p}");

@@ -1,4 +1,4 @@
-// Surf page (lane PgSurf, 2026-11-14): Cabo San Lucas to the Columbia River, the owner's Dana Point spots first.
+// Surf page (lane PgSurf, 2026-11-14): Cabo San Lucas to the Columbia River, the owner's Huntington Beach spots first.
 // Data: GET /api/surf-coast (overview) and GET /api/surf-coast/region/<id> (spot sheet detail); contract docs/surf-coast.md.
 // What the page shows: PageBlueprints section 6. Nothing about sources on the page: station ids, blend weights, the
 // model correction and coverage counts open in the Data sheet. The model functions below are pure (node tests call them

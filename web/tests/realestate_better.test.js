@@ -16,7 +16,7 @@ const store=init=>{const m=new Map(Object.entries(init||{}));return {getItem:k=>
 const load=ls=>new Function('localStorage','DeckUI',src+'\nreturn {DeckScope,DeckRE};')(ls||store(),D);
 const fx=p=>JSON.parse(fs.readFileSync(path.join(__dirname,'fixtures/realestate-page',p),'utf8'));
 const sum=fx('summary.json'),states=fx('states.json').states,metros=fx('metros.json').metros,fields=fx('fields.json'),rank=fx('rank.json'),
- z92629=fx('zip-92629.json'),re=fx('realestate.json'),mine=fx('rank-mine.json'),sources=fx('sources.json').sources;
+ z92647=fx('zip-92647.json'),re=fx('realestate.json'),mine=fx('rank-mine.json'),sources=fx('sources.json').sources;
 const qs=s=>Object.fromEntries(s.split('&').map(p=>p.split('=').map(decodeURIComponent)));
 const tick=ms=>new Promise(r=>setTimeout(r,ms||0));
 
@@ -51,7 +51,7 @@ test('P1 page side: the Metros list holds its place while the metros are unread,
 
 test('V16: each hazard is a plain 0 to 100 meter with its value named; no invented band or median tick',()=>{
  const {DeckRE:R}=load();
- const z=R.zipModel(Object.assign({},z92629,{nri_flood_score:96.4,nri_heat_score:12}),{summary:sum,cat:new Map()});
+ const z=R.zipModel(Object.assign({},z92647,{nri_flood_score:96.4,nri_heat_score:12}),{summary:sum,cat:new Map()});
  const body=R.zipBody(z,{find:''},Date.now()),risk=body.slice(body.indexOf('data-sec="risk"'));
  assert.match(risk,/<span>Flood <b>96<\/b><\/span><span class="bar" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="96" aria-label="Flood risk 96 of 100"><i style="--v:96%">/);
  assert.match(risk,/Heat <b>12<\/b>/);
@@ -100,10 +100,10 @@ test('F4: typing in "ZIP or city" lists up to five ZIPs under the field; Enter o
  const doc=fakeDoc();
  const S=new Function('localStorage','DeckUI','document','innerWidth','scrollX','scrollY',src+'\nreturn DeckScope;')(store(),D,doc,430,0,0);
  assert.match(S.searchBox(),/role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="re-sugg"/);
- assert.equal(S.suggestQuery('926'),'926');assert.equal(S.suggestQuery(' dana  point '),'dana point');assert.equal(S.suggestQuery('92'),null);assert.equal(S.suggestQuery('9a'),null);
+ assert.equal(S.suggestQuery('926'),'926');assert.equal(S.suggestQuery(' huntington  beach '),'huntington beach');assert.equal(S.suggestQuery('92'),null);assert.equal(S.suggestQuery('9a'),null);
  const bad='<img src=x onerror=__X>',h=S.suggestHtml([{zip:bad,place:bad,score:bad}],0);
  assert.doesNotMatch(h,/<img|onerror=__X>/);assert.match(h,/data-sugg-zip="&lt;img src=x onerror=__X&gt;"/,'attributes go through esc too');
- assert.equal(S.suggestRows([{zip:bad,city:'X'},{zip:'92629',city:bad,state:'CA',h_score:57.4}]).length,1,'a row whose ZIP is not five digits is dropped');
+ assert.equal(S.suggestRows([{zip:bad,city:'X'},{zip:'92647',city:bad,state:'CA',h_score:57.4}]).length,1,'a row whose ZIP is not five digits is dropped');
  const asked=[],opened=[],many=Array.from({length:8},(_,i)=>Object.assign({},rank.rows[0],{zip:String(92620+i),city:'Town '+i,state:'CA',h_score:60-i}));
  S.mount({},{onZip:(z,o)=>opened.push(z),onCity:()=>{},suggest:q=>{asked.push(q);return Promise.resolve(many)}});
  const t=field(doc,'926');doc.fire('input',{target:t});await tick(220);
@@ -137,7 +137,7 @@ test('F13: a repaint while a field in the filter row has focus replaces only the
 
 test('P1: the default scope reads states for the map but never the metros until the list nears the screen; a state scope reads them at once',async()=>{
  const answer=u=>u.includes('part=metros')?{metros}:u.includes('part=states')?{states}:u.includes('part=summary')?sum:u.includes('part=sources')?{sources}:
-  u.includes('/fields')?fields:u.includes('/rank')?(u.includes('zip=')?mine:rank):u.includes('/zip/')?z92629:u.includes('/homes')?{total:0,rows:[]}:u.endsWith('/realestate')?re:{};
+  u.includes('/fields')?fields:u.includes('/rank')?(u.includes('zip=')?mine:rank):u.includes('/zip/')?z92647:u.includes('/homes')?{total:0,rows:[]}:u.endsWith('/realestate')?re:{};
  async function run(ls,failMetros){const seen=[];let io=null;
   const fetch=u=>{seen.push(u);const bad=failMetros&&u.includes('part=metros');return Promise.resolve({ok:!bad,status:bad?500:200,json:async()=>bad?{error:'boom'}:answer(u)})};
   const P=new Function('fetch','AbortController','setTimeout','clearTimeout','DeckUI',REG+'\nreturn DeckPages;')(fetch,AbortController,setTimeout,clearTimeout,D);

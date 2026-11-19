@@ -119,7 +119,7 @@ export const surfFeed = () => feed({ spots: [
 export const realestateFeed = () => feed({ market: { area: 'Fixture Point', median_list_price: 2000000, source: 'fixture', at: now() - 3600 },
   homes: [
     { price: 175000, addr: '1 Fixture Way', city: 'Capistrano Beach', beds: 2, baths: 2, sqft: 1100, source: 'redfin', listed_at: now() - 7200, url: 'https://www.redfin.com/CA/fixture/1' },
-    { price: 285000, addr: '2 Sample Ct', city: 'Dana Point', beds: 1, baths: 1, sqft: 858, source: 'redfin', listed_at: now() - 9000, url: 'https://www.redfin.com/CA/fixture/2' } ],
+    { price: 285000, addr: '2 Sample Ct', city: 'Huntington Beach', beds: 1, baths: 1, sqft: 858, source: 'redfin', listed_at: now() - 9000, url: 'https://www.redfin.com/CA/fixture/2' } ],
   commercial: [] });
 
 export const marketsToday = () => ({ items: [

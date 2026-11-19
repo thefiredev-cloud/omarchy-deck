@@ -145,7 +145,7 @@ const surf = { t: T - 900, refresh: 1800, spots: [
   { id: 'rincon', name: 'Rincon', pinned: null, now: { wave_ft: [8, 10], rating: 9, word: 'Great', height_basis: 'spot' } },
 ] };
 const summary = { mortgage: { rate_30y: 7.11 } };
-const zip = { zip: '92629', city: 'Dana Point', value_trend_1y: 7.06, x: { m: { value_trend_1y: { v: 7.06, c: 0.62 } } } };
+const zip = { zip: '92647', city: 'Huntington Beach', value_trend_1y: 7.06, x: { m: { value_trend_1y: { v: 7.06, c: 0.62 } } } };
 const ecom = { watches: { items: [
   { label: 'rtx 4080', median: 900, change_7d: -14.29 },
   { label: 'steam deck oled', median: 549, change_7d: 2.1 },
@@ -154,7 +154,7 @@ const hockey = { teams: [{ abbr: 'ANA', name: 'Anaheim Ducks', record: '10-8-1',
 const onthisday = { total: 34, years: [{ year: 2024, count: 14 }, { year: 2019, count: 9 }] };
 const traffic = { t: T - 600, daily: { date: '2026-11-12', goal: 2000, aggregate: { clicks: 24, measured: 2, tracked: 3, complete: false, pct: 1.2 },
   sites: [{ domain: 'meshvault.ai', value: 0 }, { domain: 'protocol-guide.com', value: 24 }, { domain: 'pepgo.org', value: null, reason: 'no_access' }] } };
-const glanceAll = { surf, summary, zip, place: 'Dana Point', ecom, hockey, onthisday, traffic, now: NOW };
+const glanceAll = { surf, summary, zip, place: 'Huntington Beach', ecom, hockey, onthisday, traffic, now: NOW };
 
 test('glance row: six tiles in order, the best home spot, the owner market, the biggest watch drop', () => {
   const g = DeckUI.tdGlance(glanceAll);
@@ -163,7 +163,7 @@ test('glance row: six tiles in order, the best home spot, the owner market, the 
   const words = visible(g.html);
   assert.match(words, /Surf · San Clemente Pier 5-6 ft/, 'the best pinned spot, never an out-of-area spot');
   assert.doesNotMatch(words, /Rincon/);
-  assert.match(words, /Real estate · Dana Point \+7\.1% /);
+  assert.match(words, /Real estate · Huntington Beach \+7\.1% /);
   assert.match(words, /30-yr rate 7\.11%/);
   assert.match(words, /Shop · RTX 4080 \$900 median \u221214\.3% 7 days/);
   assert.match(words, /Hockey · Anaheim Ducks 10-8-1 Next NYI/);

@@ -56,7 +56,7 @@ LEGACY_LEVEL = {"homicide_rate": "county", "colleges_5mi": "point", "colleges_10
                 "college_enroll_5mi": "point", "college_enroll_10mi": "point", "schools_5mi": "point"}
 LEGACY_HIST = ("zhvi", "rent", "list_price", "active")
 # Both manifests' score_method describes the scores the ZIPs carry (SeeData D9, 2026-11-15): h is the v2 housing score.
-# Compat used to keep the v1 formula, so one ZIP read two scores (92629: 49 on v2, 42.7 in compat). c stays v1.
+# Compat used to keep the v1 formula, so one ZIP read two scores (92647: 49 on v2, 42.7 in compat). c stays v1.
 SCORE_NOTE = ("Percentile rank 0 to 100 among ZIPs with population of at least %d (ACS 5-year). Lower-is-better "
               "components are inverted. Composite is the weighted mean of the available components, re-weighted over "
               "those present. The housing score (h) needs %s; the business score (c) needs at least 3 components. "

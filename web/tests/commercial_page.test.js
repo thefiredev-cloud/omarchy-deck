@@ -14,7 +14,7 @@ const C=new Function('DeckUI','DeckCRE',block('static/pages/commercial.js','// =
 const qs=q=>{const u=new URLSearchParams(q.split('?')[1]);return {get:k=>u.get(k),all:k=>u.getAll(k)}};
 const text=h=>h.replace(/<[^>]*>/g,'').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&amp;/g,'&');
 const SOURCE_WORDS=/Zillow|Census|FRED|CoStar|LODES|QCEW|FDIC|SBA |HMDA|Realtor|ACS\b|ZORI|ZHVI|\bas of\b|Sources?:/;
-// one ZIP record as the route serves it: the shard row as an object plus its x block (staged fixture, 92629)
+// one ZIP record as the route serves it: the shard row as an object plus its x block (staged fixture, 92647)
 const shard=JSON.parse(fs.readFileSync(path.join(root,'tests/fixtures/housing-national-v2/zip/926.json'),'utf8'));
 const rec=zip=>Object.assign(Object.fromEntries(shard.cols.map((c,i)=>[c,shard.rows[zip][i]])),shard.x[zip],{zip,dataset:'v2'});
 
@@ -145,7 +145,7 @@ test('Best ZIPs states: thin types say they cannot be scored yet; filters that m
 });
 
 test('commercial ZIP sheet: only sections with data, missing values named once each, the unscored line, listings only inside coverage',()=>{
- const r=rec('92629');
+ const r=rec('92647');
  const m=C.zipModel(r,{type:'retail',dataset:'ca'});
  assert.equal(m.score,97);assert.equal(m.unscored,'');
  for(const s of m.sections){assert.ok(s.kv.length||s.bars.length||s.line,'no empty section: '+s.id)}
@@ -304,7 +304,7 @@ test('no listings of a type in the scope: the page says so with the type and pla
 test('ZIP sheet: the type\'s own section first, score parts as plain reasons with band, figure, why and weight',()=>{
  const parts={retail:{income:94.8,daytime_pop:77.6,traffic:98.9,retail_sqft_per_cap:12,commercial_risk:71.9},office:{jobs_office:76.8,cmbs_office_occ:30,gsa_expiring_24m_share:5},
   industrial:{power_cost:0.4,hpms_truck_aadt_max:99.3},multifamily:{rent_trend_1y:81.5,vacancy_rate:20,mystery_part:60}};
- const z=caRec('92629',{hh_income:142807,daytime_pop:45287,hpms_aadt_max:386600,retail_sqft_per_cap:54.5,score_parts:parts,power_cost:39.7,hpms_truck_aadt_max:12000,rent_trend_1y:5.51,vacancy_rate:4.5});
+ const z=caRec('92647',{hh_income:142807,daytime_pop:45287,hpms_aadt_max:386600,retail_sqft_per_cap:54.5,score_parts:parts,power_cost:39.7,hpms_truck_aadt_max:12000,rent_trend_1y:5.51,vacancy_rate:4.5});
  const scores={retail_score:{inputs:[{key:'daytime_pop',weight:0.15,direction:'higher'},{key:'income',weight:0.1,direction:'higher'},{key:'traffic',weight:0.1,direction:'higher'},{key:'retail_sqft_per_cap',weight:0.1,direction:'lower'}]}};
  const m=C.zipModel(z,{type:'retail',dataset:'ca',scores});
  assert.equal(m.sections[0].id,'type');assert.equal(m.sections[0].title,'Retail in this ZIP');

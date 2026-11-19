@@ -638,7 +638,7 @@ impl Ha {
     }
 
     /// The top bar weather line from `weather.forecast_home` (allowlisted above), worded like the Omarchy weather
-    /// script: "Dana Point  ·  Temp 68°F  ·  Wind 5 mph". The deck uses it when wttr.in, the script's source, does
+    /// script: "Huntington Beach  ·  Temp 68°F  ·  Wind 5 mph". The deck uses it when wttr.in, the script's source, does
     /// not answer. None when Home Assistant is not configured, does not answer, or reports no temperature.
     pub async fn weather_line(&self, place: &str) -> Option<String> {
         let r = self.req(reqwest::Method::GET, "/api/states/weather.forecast_home", 6).ok()?.send().await.ok()?;
@@ -1310,7 +1310,7 @@ mod tests {
     fn weather_text_reads_only_temperature_and_wind_and_rounds_them() {
         let v = json!({"state": "sunny", "attributes": {"temperature": 67.6, "temperature_unit": "\u{b0}F", "wind_speed": 4.7,
             "wind_speed_unit": "mph", "humidity": 52, "friendly_name": "Forecast 1 Example Street"}});
-        assert_eq!(weather_text(&v, "Dana Point").as_deref(), Some("Dana Point  \u{b7}  Temp 68\u{b0}F  \u{b7}  Wind 5 mph"));
+        assert_eq!(weather_text(&v, "Huntington Beach").as_deref(), Some("Huntington Beach  \u{b7}  Temp 68\u{b0}F  \u{b7}  Wind 5 mph"));
         assert_eq!(weather_text(&v, "").as_deref(), Some("Temp 68\u{b0}F  \u{b7}  Wind 5 mph"));
         assert!(!weather_text(&v, "").unwrap_or_default().contains("Example"), "the entity name never leaves");
         let calm = json!({"state": "clear-night", "attributes": {"temperature": -0.4, "temperature_unit": "\u{b0}C"}});
@@ -1333,14 +1333,14 @@ mod tests {
             "temperature_unit": "\u{b0}F", "wind_speed": 4.7, "wind_speed_unit": "mph"}})
         .to_string();
         let (url, seen) = recording_ha(200, "application/json", &body).await;
-        let line = test_ha(url).weather_line("Dana Point").await;
-        assert_eq!(line.as_deref(), Some("Dana Point  \u{b7}  Temp 68\u{b0}F  \u{b7}  Wind 5 mph"));
+        let line = test_ha(url).weather_line("Huntington Beach").await;
+        assert_eq!(line.as_deref(), Some("Huntington Beach  \u{b7}  Temp 68\u{b0}F  \u{b7}  Wind 5 mph"));
         let reqs = requests(&seen);
         assert_eq!(reqs.len(), 1);
         assert!(reqs[0].starts_with("GET /api/states/weather.forecast_home HTTP/1.1"), "{}", reqs[0]);
         assert!(reqs[0].to_lowercase().contains("authorization: bearer t\r\n"), "{}", reqs[0]);
         let (url, _) = recording_ha(500, "application/json", "{}").await;
-        assert_eq!(test_ha(url).weather_line("Dana Point").await, None);
+        assert_eq!(test_ha(url).weather_line("Huntington Beach").await, None);
     }
 
     #[tokio::test]

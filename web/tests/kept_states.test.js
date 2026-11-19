@@ -103,7 +103,7 @@ test('Today read shapes accept empty valid feeds but reject missing and mistyped
     'ecom-market': { watches: { items: [] } }, hockey: { teams: [] }, onthisday: { years: [], total: 0 },
     accounts: { apple: { events_today: [], bills_due: [] } },
     traffic: { status: 'ok', daily: {} }, health: { count: 0, names: [] }, weather: { text: 'Weather unavailable' },
-    realestate: { market: { residential: { areas: [] } } }, 'housing/zip/92629': { zip: '92629' }, photoyears: { years: [] }
+    realestate: { market: { residential: { areas: [] } } }, 'housing/zip/92647': { zip: '92647' }, photoyears: { years: [] }
   };
   const b = boot(answers);
   vm.runInContext(cut(deck, 'const TDS=', '// the Almanac\'s day sits') + '\nthis.tdGet=tdGet;', b.ctx);

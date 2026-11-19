@@ -25,7 +25,7 @@ SPEC.loader.exec_module(gen)
 COLLECTOR_TAXONOMY = '''
 import re
 
-SOUTH_OC = ["Dana Point"]
+SOUTH_OC = ["Huntington Beach"]
 OC = ["Irvine"]
 LA = ["Long Beach"]
 SD = ["San Diego"]

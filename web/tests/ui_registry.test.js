@@ -27,8 +27,8 @@ function rec(log, name, extra) {
 
 test('parse splits tab, sub and query params', () => {
   const P = fresh();
-  const r = P.parse('realestate/residential?zip=92629&q=san+clemente');
-  assert.deepStrictEqual(JSON.parse(JSON.stringify(r)), { route: 'realestate/residential', tab: 'realestate', sub: 'residential', params: { zip: '92629', q: 'san clemente' } });
+  const r = P.parse('realestate/residential?zip=92647&q=san+clemente');
+  assert.deepStrictEqual(JSON.parse(JSON.stringify(r)), { route: 'realestate/residential', tab: 'realestate', sub: 'residential', params: { zip: '92647', q: 'san clemente' } });
   assert.strictEqual(P.parse('surf').sub, '');
   assert.strictEqual(P.parse('/today/').route, 'today');
 });
@@ -37,7 +37,7 @@ test('dispatch: show on first paint, refresh(ctx,true) on ticks, hide when the r
   const P = fresh(), log = [];
   P.register('realestate/residential', rec(log, 'res'));
   P.register('surf', rec(log, 'surf'));
-  P.dispatch('realestate/residential?zip=92629', false);
+  P.dispatch('realestate/residential?zip=92647', false);
   P.dispatch('realestate/residential', true);
   P.dispatch('surf', false);
   P.dispatch('surf', true);
@@ -136,10 +136,10 @@ test('ctx carries route, sub, params, containers, class, tv and guest', () => {
   const els = { 'pg-realestate': { querySelector: (s) => (s === '.phead' ? 'HEAD' : null) }, 'pg-realestate-residential': 'EL', 'pg-surf-main': 'SURF' };
   const document = { getElementById: (id) => els[id] || null, documentElement: { dataset: { dc: 'T' }, classList: { contains: (c) => c === 'tv' } }, hidden: false };
   const P = fresh({ document });
-  const c = P.ctx(P.parse('realestate/residential?zip=92629'));
+  const c = P.ctx(P.parse('realestate/residential?zip=92647'));
   assert.strictEqual(c.el, 'EL');
   assert.strictEqual(c.head, 'HEAD');
-  assert.strictEqual(c.params.zip, '92629');
+  assert.strictEqual(c.params.zip, '92647');
   assert.strictEqual(c.cls, 'T');
   assert.strictEqual(c.tv, true);
   assert.strictEqual(c.guest, false);

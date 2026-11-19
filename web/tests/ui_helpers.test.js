@@ -152,7 +152,7 @@ test('tile: escaped text, confidence meter after the value and unit inside .v, n
   assert.equal(D.tile({ label: 'Vacancy', value: null }), '');
   assert.equal(D.tile({ label: 'Vacancy', value: '' }), '');
   assert.match(D.tile({ label: 'x', value: '1', cls: 'dx evil' }), /class="tile dx"/);
-  assert.match(D.tile({ label: 'x', value: '1', open: 'zip', key: '92629' }), /^<button type="button" class="tile" data-open="zip" data-key="92629">/);
+  assert.match(D.tile({ label: 'x', value: '1', open: 'zip', key: '92647' }), /^<button type="button" class="tile" data-open="zip" data-key="92647">/);
 });
 
 test('tile model:true marks a model-only value, keeps the value readable and escaped', () => {
@@ -174,7 +174,7 @@ test('strip: counts tiles (n) and non-D tiles (nb), drops missing tiles, labels 
 // ---------------- table with phone cards (blueprint 2.5) ----------------
 const COLS = [{ key: 'zip', label: 'ZIP', place: true, sub: (r) => r.city }, { key: 'score', label: 'Score', num: true, sort: true },
   { key: 'rent', label: 'Rent', num: true, pri: 2, fmt: (v) => F.rent(v) }, { key: 'grade', label: 'Grade', pri: 3 }, { key: 'pop', label: 'Population', num: true, pri: 4, fmt: (v) => F.count(v) }];
-const ROWS = [{ zip: '92629', city: 'Dana <Point>', score: 80, rent: 2450, grade: 'A', pop: 33000 }, { zip: '92624', city: 'Capo', score: null, rent: null, grade: null, pop: null },
+const ROWS = [{ zip: '92647', city: 'Huntington <Beach>', score: 80, rent: 2450, grade: 'A', pop: 33000 }, { zip: '92624', city: 'Capo', score: null, rent: null, grade: null, pop: null },
   { zip: '92672', city: 'San Clemente', score: 91, rent: 3100, grade: 'B', pop: 64000 }];
 
 test('table: frozen place column, data-l on every cell, data-pri on P2-P4 cells only, open rows focusable', () => {
@@ -196,7 +196,7 @@ test('table: frozen place column, data-l on every cell, data-pri on P2-P4 cells 
 
 test('table: sorts high to low with missing last; missing cells get the dot; no raw < or > in cell text', () => {
   const h = D.table({ cols: COLS, rows: ROWS, key: (r) => r.zip, sorted: { key: 'score', dir: 'descending' } });
-  assert.deepEqual(h.match(/data-key="(\d+)"/g), ['data-key="92672"', 'data-key="92629"', 'data-key="92624"']);
+  assert.deepEqual(h.match(/data-key="(\d+)"/g), ['data-key="92672"', 'data-key="92647"', 'data-key="92624"']);
   const capo = h.match(/<tr[^>]*data-key="92624">[^]*?<\/tr>/)[0];
   assert.equal(count(capo, /class="na" aria-label="No data"/g), 4);
   assert.doesNotMatch(capo, />0</, 'a missing value is never 0');
@@ -204,9 +204,9 @@ test('table: sorts high to low with missing last; missing cells get the dot; no 
     const inner = cell.replace(/^<t[dh][^>]*>|<\/t[dh]>$/g, '').replace(/<\/?(span|b|small)[^>]*>/g, '');
     assert.doesNotMatch(inner, /[<>]/, 'escaped cell text ' + cell);
   }
-  assert.match(h, /Dana &lt;Point&gt;/);
+  assert.match(h, /Huntington &lt;Beach&gt;/);
   const asc = D.table({ cols: COLS, rows: ROWS, key: (r) => r.zip, sorted: { key: 'score', dir: 'ascending' } });
-  assert.deepEqual(asc.match(/data-key="(\d+)"/g), ['data-key="92629"', 'data-key="92672"', 'data-key="92624"'], 'missing stays last both ways');
+  assert.deepEqual(asc.match(/data-key="(\d+)"/g), ['data-key="92647"', 'data-key="92672"', 'data-key="92624"'], 'missing stays last both ways');
   assert.doesNotMatch(asc.match(/<tr[^>]*>/)[0], /tabindex/, 'rows without open are plain text rows');
 });
 
@@ -443,9 +443,9 @@ test('card taps open sheets on the Work tab (the shell renames Life to work) as 
 });
 
 test('detail sheet options end with a Data button scoped to the item', () => {
-  const o = D.detail({ title: '92629 Dana Point, CA', sub: 'Residential', body: '<p>x</p>', actions: '<button class="btn btn-primary">Find homes for sale</button>', wide: true, scope: 'zip:92629' });
+  const o = D.detail({ title: '92647 Huntington Beach, CA', sub: 'Residential', body: '<p>x</p>', actions: '<button class="btn btn-primary">Find homes for sale</button>', wide: true, scope: 'zip:92647' });
   assert.equal(o.wide, true);
-  assert.match(o.actions, /Find homes for sale<\/button><button type="button" class="btn" data-sheet="data" data-scope="zip:92629">Data<\/button>$/);
+  assert.match(o.actions, /Find homes for sale<\/button><button type="button" class="btn" data-sheet="data" data-scope="zip:92647">Data<\/button>$/);
 });
 
 test('no helper emits data: or blob: URLs or inline style beyond custom properties', () => {

@@ -164,10 +164,10 @@ const OC = () => ({
       cam: { id: 'monarch-bay-beach-club', name: 'Monarch Bay Beach Club', operator: 'HDOnTap', kind: 'link', distance_km: 0.7,
         view_url: 'https://hdontap.com/stream/621213/monarch-bay-beach-club-live-webcam/', player_url: null,
         snapshot_thumbnail_url: 'https://storage.hdontap.com/wowza_stream_thumbnails/snapshot_x.jpg' } },
-    { spot: 'Strands', cam: { id: 'dana-point-harbor', name: 'Dana Point Harbor, Laguna Cliffs Resort', operator: 'HDOnTap', kind: 'link',
-      view_url: 'https://hdontap.com/stream/994481/dana-point-harbor-laguna-cliffs-resort-live-webcam/', player_url: null }, surfline_url: SL('strands', '5842041f4e65fad6a77088d5') },
-    { spot: 'Doheny', cam: { id: 'dana-point-harbor', name: 'Dana Point Harbor, Laguna Cliffs Resort', operator: 'HDOnTap', kind: 'link',
-      view_url: 'https://hdontap.com/stream/994481/dana-point-harbor-laguna-cliffs-resort-live-webcam/', player_url: null }, surfline_url: SL('doheny-state-beach', '5842041f4e65fad6a77088d7') },
+    { spot: 'Strands', cam: { id: 'huntington-beach-harbor', name: 'Huntington Beach Harbor, Laguna Cliffs Resort', operator: 'HDOnTap', kind: 'link',
+      view_url: 'https://hdontap.com/stream/994481/huntington-beach-harbor-laguna-cliffs-resort-live-webcam/', player_url: null }, surfline_url: SL('strands', '5842041f4e65fad6a77088d5') },
+    { spot: 'Doheny', cam: { id: 'huntington-beach-harbor', name: 'Huntington Beach Harbor, Laguna Cliffs Resort', operator: 'HDOnTap', kind: 'link',
+      view_url: 'https://hdontap.com/stream/994481/huntington-beach-harbor-laguna-cliffs-resort-live-webcam/', player_url: null }, surfline_url: SL('doheny-state-beach', '5842041f4e65fad6a77088d7') },
     { spot: 'San Clemente Pier', aka: 'T-Street', surfline_url: SL('t-street', '5842041f4e65fad6a7708830'),
       cam: { id: 'san-clemente-beach', name: 'San Clemente Beach Camera', operator: 'City of San Clemente', kind: 'embed', distance_km: 0,
         view_url: 'https://www.youtube.com/watch?v=2c7NV66YzKA', player_url: YT('2c7NV66YzKA'), snapshot_thumbnail_url: 'https://i.ytimg.com/vi/2c7NV66YzKA/hqdefault.jpg' } },
@@ -188,7 +188,7 @@ test('L11, L12: the two city piers play here as tiles, every other cam is a link
   assert.match(cams, /aria-label="Play live cam: Huntington Pier"/);
   assert.equal(count(cams, /data-surf="camstop">Stop<\/button>/g), 2, 'each tile has its Stop');
   assert.match(cams, /<div class="sf-snap" data-cam="monarch-bay-beach-club"><div class="frow sf-snr"><button class="sf-snb" data-surf="snap" aria-expanded="false"><span class="fl"><b>Salt Creek<\/b><small>Monarch Bay Beach Club · tap for a picture<\/small><\/span><\/button><a class="ext sf-live" href="https:\/\/hdontap\.com\/stream\/621213\/monarch-bay-beach-club-live-webcam\/" target="_blank" rel="noopener noreferrer">Live view<\/a><\/div><\/div>/, 'a snapshot row, the live view beside it');
-  assert.match(cams, /<b>Strands and Doheny<\/b><small>Dana Point Harbor, Laguna Cliffs Resort · opens at HDOnTap/, 'one row per cam, its breaks named');
+  assert.match(cams, /<b>Strands and Doheny<\/b><small>Huntington Beach Harbor, Laguna Cliffs Resort · opens at HDOnTap/, 'one row per cam, its breaks named');
   assert.match(text(cams), /No free cam at Trestles and San Onofre\. Trestles on Surfline San Onofre on Surfline/);
   assert.match(cams, /href="https:\/\/www\.surfline\.com\/surf-report\/lower-trestles\/5842041f4e65fad6a770888a"/);
   assert.doesNotMatch(cams, /<img|<iframe|ytimg|storage\.hdontap|thumbnail/, 'no picture from another host, no frame before a tap');

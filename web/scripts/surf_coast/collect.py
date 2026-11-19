@@ -36,8 +36,9 @@ MUR_TIMEOUT_S = 180  # the satellite server answered a single point in 120 s on 
 OM_BATCH = 50
 WIND_GRID = 0.1
 
-PINNED = ["salt-creek", "strands", "doheny-state-beach", "san-clemente-pier", "trestles-lowers",
-          "san-onofre-old-mans", "huntington-beach-pier"]
+# Sample pins: edit for the breaks you surf.
+PINNED = ["huntington-beach-pier", "huntington-state-beach", "bolsa-chica", "salt-creek", "trestles-lowers",
+          "san-onofre-old-mans"]
 SRF_OFFICES = ["SGX", "LOX", "MTR", "EKA", "MFR", "PQR"]
 # A cached Surf Zone Forecast past its own expiry is asked for again after an hour, not after the usual 3 h.
 SRF_EXPIRED_TTL = HOUR

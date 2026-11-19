@@ -63,9 +63,9 @@ test('E13: a read started before a role change cannot repopulate the masked copy
 function shellCapture(s){const bodies=[];const dlg={open:true,isConnected:true,querySelector:sel=>sel==='.sheet-b'?{set innerHTML(h){bodies.push(h)}}:{},contains:()=>true};
  s.ctx.DeckShell={sheet:{open:sp=>{bodies.push(sp.body);return dlg},close(){}},money:{revealed:()=>false}};return bodies;}
 test('ZIP pro forma says default terms when the budget read failed',async()=>{
- const s=sandbox(p=>p==='housing/profile'?{http:500}:p==='housing/zip/92629'?{zip:'92629',zhvi:600000,rent:3000,hist:{}}:residential(p)),bodies=shellCapture(s);
+ const s=sandbox(p=>p==='housing/profile'?{http:500}:p==='housing/zip/92647'?{zip:'92647',zhvi:600000,rent:3000,hist:{}}:residential(p)),bodies=shellCapture(s);
  vm.runInContext(re+';this.RE=DeckRE;this.Scope=DeckScope;',s.ctx);s.ctx.Scope.set({kind:'us'});s.ctx.RE.page.show({el:s.el,cls:'P'});await settle();
- const t={dataset:{key:'92629'},closest:sel=>sel==='[data-open="zip"]'?t:null};s.listeners.click.forEach(f=>f({target:t}));await settle();
+ const t={dataset:{key:'92647'},closest:sel=>sel==='[data-open="zip"]'?t:null};s.listeners.click.forEach(f=>f({target:t}));await settle();
  assert.match(bodies.join(' '),/Default terms[^]*your budget did not load/);
 });
 test('/cre deal sheet keeps Your stake with a budget-not-loaded line',async()=>{

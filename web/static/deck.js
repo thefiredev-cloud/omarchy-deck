@@ -884,7 +884,7 @@ const gmailUrl=u=>/^https:\/\/mail\.google\.com\/mail\/u\/\d\/#[a-z]+(\/[\w-]+)?
   return '<div class="hm-area frow"><span class="fl"><b>'+esc(area||'Median price')+'</b><small>'+parts+'</small>'+
    '<small class="hm-asof">'+(at!=null?'as of '+esc(ago(at,now)):'as of unavailable')+'</small></span>'+
    '<span class="fr"><b>'+esc(mileage(lp))+'</b><small>median list</small></span></div>'};
- // the owner's areas (Dana Point, South OC, then OC, LA, SD); the United States scope shows the national row only
+ // the owner's areas (Huntington Beach, South OC, then OC, LA, SD); the United States scope shows the national row only
  function marketAreas(m,filter,now){
   const res=isObj(m&&m.residential)?m.residential:null;
   if(!res||!arr(res.areas).length){const leg=legacyMarkets(m,now==null?Date.now()/1000:now);
@@ -931,14 +931,14 @@ const addrNorm=s=>str(s,200).toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
 // the same street address spelled two ways ("Drive" and "Dr", "Unit 4" and "#4", "North" and "N") is one address
 const ADDR_WORD={street:'st',drive:'dr',avenue:'ave',boulevard:'blvd',road:'rd',lane:'ln',court:'ct',place:'pl',circle:'cir',terrace:'ter',highway:'hwy',parkway:'pkwy',
  north:'n',south:'s',east:'e',west:'w',northeast:'ne',northwest:'nw',southeast:'se',southwest:'sw',apartment:'unit',apt:'unit',suite:'unit',ste:'unit',space:'unit',spc:'unit'};
-// a source may print the unit in front of the street ("E110-24901 Dana Point Harbor Dr", "915-#C Buena Vis"): the unit moves behind the street, where the other sources print it. A plain number range ("1701-1721 N Main St") has no letters in front of its dash and no #, so it stays whole.
+// a source may print the unit in front of the street ("E110-24901 Huntington Beach Harbor Dr", "915-#C Buena Vis"): the unit moves behind the street, where the other sources print it. A plain number range ("1701-1721 N Main St") has no letters in front of its dash and no #, so it stays whole.
 const addrUnitFirst=s=>{let m=/^([a-z]{1,2}-?\d{1,4}[a-z]?)\s*-\s*(\d+\s+\S.*)$/i.exec(s)||/^(\d+)\s*-\s*(#\s*[a-z0-9]{1,4})\s+(\S.*)$/i.exec(s);
  return !m?s:m.length===4?m[1]+' '+m[3]+' '+m[2]:m[2]+' '+m[1]};
 const addrKey=s=>addrNorm(addrUnitFirst(str(s,200)).replace(/#/g,' unit ')).split(' ').map(w=>ADDR_WORD[w]||w).join(' ');
-// a unit the address prints after its street, as a second comma part: "Unit 4", "#5", "Suite 200", "Bldg A", "Space 2", "E110", "A-202". Two units at one street stay two listings; a zip (CA92629) is no unit.
+// a unit the address prints after its street, as a second comma part: "Unit 4", "#5", "Suite 200", "Bldg A", "Space 2", "E110", "A-202". Two units at one street stay two listings; a zip (CA92647) is no unit.
 const ADDR_UNIT_RE=/^(#|unit\b|apt\b|apartment\b|suite\b|ste\b|bldg\b|building\b|space\b|spc\b|lot\b|pad\b|bay\b|fl\b|floor\b|rm\b|room\b|[a-z]{1,2}-?\d{1,4}[a-z]?$)/i;
-// one feed row's address as {street, city}. A source may print "1 A St, Dana Point, CA 92629" in the address and leave the city field empty (or the reverse): the street part keys the row, the city comes from the city field, else from the address tail. State and ZIP parts are not a city.
-// A city field may carry its state ("San Clemente, CA"): only the part before the first comma names the city. An address printed with no commas ("1 A St Dana Point CA 92629") loses its trailing ZIP, state and the row's own city, as long as a street of two words or more is left.
+// one feed row's address as {street, city}. A source may print "1 A St, Huntington Beach, CA 92647" in the address and leave the city field empty (or the reverse): the street part keys the row, the city comes from the city field, else from the address tail. State and ZIP parts are not a city.
+// A city field may carry its state ("San Clemente, CA"): only the part before the first comma names the city. An address printed with no commas ("1 A St Huntington Beach CA 92647") loses its trailing ZIP, state and the row's own city, as long as a street of two words or more is left.
 const addrSplit=x=>{const p=str(x&&x.addr,200).split(',').map(t=>t.trim()).filter(Boolean);let street=p.shift()||'';
  if(p.length&&ADDR_UNIT_RE.test(p[0]))street+=' '+p.shift();
  const tail=p.length&&!/^([a-z]{2}(\s+\d{5}(-\d{4})?)?|\d{5}(-\d{4})?)$/i.test(p[0])?p[0]:'',cityRaw=str(x&&x.city,80).split(',',1)[0];
@@ -2929,7 +2929,7 @@ function finSheet(f,id,now,rev){
     // a hardware keyboard class (the shell sets display.keys on D and XL): the shortcuts, also on ?
     (d.keys?'<div class="toggle-row"><span>Keyboard shortcuts</span><button type="button" class="btn btn-sm" data-keys>Show</button></div>':'');
    return sec('Sources',srcRows,'ds-src')+sec('Blends',blRows)+sec('Method',meRows)+sec('Setup',suRows)+sec('Display',disp)}
-  // options for DeckShell.sheet.open: every detail sheet ends with a Data button scoped to its item ('zip:92629')
+  // options for DeckShell.sheet.open: every detail sheet ends with a Data button scoped to its item ('zip:92647')
   function detail(o){o=isObj(o)?o:{};const sc=txt(o.scope);
    return {title:txt(o.title),sub:txt(o.sub),body:txt(o.body),wide:!!o.wide,actions:txt(o.actions)+'<button type="button" class="btn" data-sheet="data"'+(sc?' data-scope="'+esc(sc)+'"':'')+'>Data</button>'}}
   return {FMT,conf,fresh,freshState,staleBar,mark,pill,pips,capMark,tile,strip,skeleton,missing,sortRows,table,spark,line,axis,bars,range,bullet,group,groupRow,scatter,obars,USPOS,USNAME,usmap,quintiles,COAST,coast,filters,amount,amountsBtn,dataSheet,detail,NA}
@@ -3254,7 +3254,7 @@ function finSheet(f,id,now,rev){
 })();
 // ==== DECK V6 UI HELPERS END ====
 // ==== DECK PAGES REGISTRY BEGIN (pages register {show, refresh, hide} by route; tests/ui_registry.test.js runs this block in a sandbox) ====
-// A route is 'tab' or 'tab/sub', optional query ('realestate/residential?zip=92629'). Lookup: the exact route, then the sub alone
+// A route is 'tab' or 'tab/sub', optional query ('realestate/residential?zip=92647'). Lookup: the exact route, then the sub alone
 // (old leaf names such as 'commercial' or 'markets'), or the tab when there is no sub or the sub is 'main'.
 // A page with neither show nor refresh (a stub) never claims a route, so it cannot hide an old page that still lives there.
 // hook(route, page) adds behaviour after a route's own page (invest.js, ops.js); hooks never get a late show.

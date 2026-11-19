@@ -32,9 +32,9 @@ test('listing detail line: type, BR, BA, SF, $/SF and cap rate, each left out wh
 
 test('listing rows use the broker wording in the for sale and commercial lists',()=>{
  const re={t:1794000000,refresh:3600,src:['fixture'],errors:[],market:{},
-  homes:[{addr:'1 Main St',city:'Dana Point',price:1250000,currency:'USD',beds:3,baths:2,sqft:1440,source:'redfin'}],commercial:[{addr:'2 Row',city:'Irvine',type:'Office',price:2500000,currency:'USD',sqft:5000,cap_rate:5.2,source:'crexi'}]};
+  homes:[{addr:'1 Main St',city:'Huntington Beach',price:1250000,currency:'USD',beds:3,baths:2,sqft:1440,source:'redfin'}],commercial:[{addr:'2 Row',city:'Irvine',type:'Office',price:2500000,currency:'USD',sqft:5000,cap_rate:5.2,source:'crexi'}]};
  const p=D.homes(re,1794000000*1000);
- assert.match(p,/Dana Point \u00B7 3 BR \u00B7 2 BA \u00B7 1,440 SF \u00B7 \$868\/SF/);
+ assert.match(p,/Huntington Beach \u00B7 3 BR \u00B7 2 BA \u00B7 1,440 SF \u00B7 \$868\/SF/);
  assert.match(p,/2 Row \u00B7 5,000 SF \u00B7 \$500\/SF \u00B7 cap rate 5\.2%/);
  assert.doesNotMatch(p,/ bd<| ba<| sqft</);
 });

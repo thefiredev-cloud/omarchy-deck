@@ -206,8 +206,8 @@ test('viewer: only their own boxes, no other desks, no co-invest views',()=>{
 
 test('buy box save: the same POST body as before; unknown keys never sent; carried keys kept; ids never collide',()=>{
  const boxes=[{id:'retail',name:'Retail',f:{types:['Retail'],units_min:5,sort:'cap'}}];
- const edit=C.boxPayload('tanner',{name:'Retail',types:['Retail','Office'],price_max:'$3,000,000',cap_min:'6.5',dom_max:'',counties:[],places:'92629, 926, Dana Point'},boxes[0],boxes);
- assert.deepEqual(edit,{person:'tanner',op:'box',box:{id:'retail',name:'Retail',f:{units_min:5,sort:'cap',types:['Retail','Office'],price_max:3000000,cap_min:6.5,zips:['92629','926'],q:'Dana Point'}}});
+ const edit=C.boxPayload('tanner',{name:'Retail',types:['Retail','Office'],price_max:'$3,000,000',cap_min:'6.5',dom_max:'',counties:[],places:'92647, 926, Huntington Beach'},boxes[0],boxes);
+ assert.deepEqual(edit,{person:'tanner',op:'box',box:{id:'retail',name:'Retail',f:{units_min:5,sort:'cap',types:['Retail','Office'],price_max:3000000,cap_min:6.5,zips:['92647','926'],q:'Huntington Beach'}}});
  const allowed=['types','counties','zips','price_min','price_max','cap_min','units_min','sf_min','dom_max','score_min','dscr_min','q','sort'];
  for(const k of Object.keys(edit.box.f))assert.ok(allowed.includes(k),'the server refuses unknown filter keys: '+k);
  const fresh=C.boxPayload('tanner',{name:'Retail',types:[],places:''},null,boxes);

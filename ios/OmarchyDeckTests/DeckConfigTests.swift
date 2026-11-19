@@ -39,7 +39,7 @@ final class DeckConfigTests: XCTestCase {
         func inPlace(_ text: String) -> Bool { DeckConfig.reloadsInPlace(URL(string: text), origin: origin) }
         XCTAssertTrue(inPlace("https://deck.example.com:10443/"))
         XCTAssertTrue(inPlace("https://deck.example.com:10443/?p=surf"), "the page he is on stays")
-        XCTAssertTrue(inPlace("https://deck.example.com:10443/?p=realestate/residential&zip=92629"), "a sheet's key stays too")
+        XCTAssertTrue(inPlace("https://deck.example.com:10443/?p=realestate/residential&zip=92647"), "a sheet's key stays too")
         XCTAssertTrue(inPlace("https://deck.example.com:10443/?view=tv&p=today"))
         XCTAssertFalse(inPlace("https://deck.example.com:10443/?t=abcdef12"), "a bootstrap token is never replayed")
         XCTAssertFalse(inPlace("https://deck.example.com:10443/?p=surf&t=abcdef12"))

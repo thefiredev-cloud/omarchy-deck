@@ -25,7 +25,7 @@ const plain = (x) => JSON.parse(JSON.stringify(x));
 // ---------------- the address (F3, F9) ----------------
 test('a pasted link or a reload names its route and its sheet; the token, the TV switch and junk are never parameters', () => {
   assert.deepEqual(plain(R.boot('?p=surf&spot=salt-creek', '')), { route: 'surf', params: { spot: 'salt-creek' }, from: 'link' });
-  assert.deepEqual(plain(R.boot('?p=realestate/residential&zip=92629', '')), { route: 'realestate/residential', params: { zip: '92629' }, from: 'link' });
+  assert.deepEqual(plain(R.boot('?p=realestate/residential&zip=92647', '')), { route: 'realestate/residential', params: { zip: '92647' }, from: 'link' });
   assert.deepEqual(plain(R.boot('?t=tok_secret&view=tv&p=surf', '')).params, {}, 'the token and the TV switch stay out');
   assert.deepEqual(plain(R.boot('?p=surf&q=%3Cscript%3E&X=1', '')).params, {}, 'an odd key or value is dropped, never kept');
   assert.equal(R.boot('?p=../etc', '').route, '', 'a route that is not a route keeps the stored page');
@@ -51,7 +51,7 @@ test('an installed app launch reopens on the page used last, never on the ?p= it
 });
 
 test('the address round trip: what query() writes, boot() reads back, always on "/" (the iOS shell shows Back to deck off it)', () => {
-  for (const [route, params, key] of [['surf', {}, ['spot', 'salt-creek']], ['realestate/residential', {}, ['zip', '92629']], ['home/crons', { f: 'all' }, null],
+  for (const [route, params, key] of [['surf', {}, ['spot', 'salt-creek']], ['realestate/residential', {}, ['zip', '92647']], ['home/crons', { f: 'all' }, null],
     ['surf', { region: 'oc' }, ['spot', 'trestles']], ['today', {}, null], ['shop/market', {}, ['watch', 'rtx-4080']]]) {
     const u = R.query(route, params, key);
     assert.match(u, /^\/\?p=/, u);
@@ -61,7 +61,7 @@ test('the address round trip: what query() writes, boot() reads back, always on 
   }
   assert.equal(R.query('surf', { spot: 'old' }, ['spot', 'new']), '/?p=surf&spot=new', 'the open sheet wins over a stale parameter of the same name');
   assert.equal(R.query('surf', { view: 'tv', t: 'x' }, null), '/?p=surf');
-  assert.deepEqual(plain(R.sheetKey('zip', '92629')), ['zip', '92629']);
+  assert.deepEqual(plain(R.sheetKey('zip', '92647')), ['zip', '92647']);
   assert.equal(R.sheetKey('zip', ''), null);
   assert.equal(R.sheetKey('Zip Code', '1'), null);
   assert.equal(R.sheetKey('spot', 'a b'), null);
@@ -155,9 +155,9 @@ test('Back closes the sheet first, then returns to the page before; the address 
   assert.equal(t.hist.url, '/?p=surf', 'boot writes the route on screen');
   t.go('realestate/residential', true); t.settle();
   assert.equal(t.hist.url, '/?p=realestate/residential');
-  const row = t.row('zip', '92629');
-  t.S.sheet.open({ title: '92629', opener: row }); t.settle();
-  assert.equal(t.hist.url, '/?p=realestate/residential&zip=92629', 'the open sheet is in the address, so a reload or a copy keeps it');
+  const row = t.row('zip', '92647');
+  t.S.sheet.open({ title: '92647', opener: row }); t.settle();
+  assert.equal(t.hist.url, '/?p=realestate/residential&zip=92647', 'the open sheet is in the address, so a reload or a copy keeps it');
   assert.equal(t.hist.list.length, 3);
   t.hist.back(); t.settle();
   assert.equal(t.S.sheet.current(), null, 'first Back: the sheet closes');
@@ -189,7 +189,7 @@ test('inside the iPhone app and on the TV routes only replace; a sheet still own
   t.go('realestate/residential', true); t.settle();
   assert.equal(t.hist.list.length, 1, 'no entry per page');
   assert.equal(t.hist.url, '/?p=realestate/residential');
-  t.S.sheet.open({ title: '92629', opener: t.row('zip', '92629') }); t.settle();
+  t.S.sheet.open({ title: '92647', opener: t.row('zip', '92647') }); t.settle();
   assert.equal(t.hist.list.length, 2);
   t.go('surf', true); t.settle();
   assert.equal(t.hist.i, 0, 'the sheet entry is given back');
@@ -199,21 +199,21 @@ test('inside the iPhone app and on the TV routes only replace; a sheet still own
 
 test('a sheet a page opens from its link without a row takes the link key; a row inside another sheet gives none', () => {
   const t = shell();
-  t.S.hint(['zip', '92629']);
-  t.S.sheet.open({ title: '92629' }); t.settle();
-  assert.equal(t.hist.url, '/?p=surf&zip=92629');
-  assert.deepEqual(plain(t.S.sheet.key()), ['zip', '92629']);
+  t.S.hint(['zip', '92647']);
+  t.S.sheet.open({ title: '92647' }); t.settle();
+  assert.equal(t.hist.url, '/?p=surf&zip=92647');
+  assert.deepEqual(plain(t.S.sheet.key()), ['zip', '92647']);
   const inner = el(t.doc, 'button', { 'data-open': 'zip', 'data-key': '92648' }, t.S.sheet.current());
   t.S.sheet.open({ title: '92648', opener: inner }); t.settle();
-  assert.equal(t.hist.url, '/?p=surf&zip=92629', 'a link to the inner sheet could not reopen it, so the address keeps the outer one');
+  assert.equal(t.hist.url, '/?p=surf&zip=92647', 'a link to the inner sheet could not reopen it, so the address keeps the outer one');
 });
 
 // ---------------- focus and keys in a sheet (A2, A11, A12) ----------------
 test('closing a sheet gives focus to its row, found again by its key when the page repainted it (A2)', () => {
-  const t = shell(), row = t.row('zip', '92629');
-  t.S.sheet.open({ title: '92629', opener: row }); t.settle();
+  const t = shell(), row = t.row('zip', '92647');
+  t.S.sheet.open({ title: '92647', opener: row }); t.settle();
   t.doc.body.removeChild(row); // the page repainted its list while the sheet was open
-  const again = t.row('zip', '92629');
+  const again = t.row('zip', '92647');
   t.S.sheet.close(); t.settle();
   assert.equal(t.doc.activeElement, again, 'the same row, painted again');
   // no row with that key on the page: the tab, as before

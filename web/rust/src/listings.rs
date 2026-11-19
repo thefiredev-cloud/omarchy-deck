@@ -595,7 +595,7 @@ mod tests {
         ] {
             assert!(parse(&qs(&[bad]), kind).is_err(), "{kind:?} {bad:?}");
         }
-        assert!(parse(&qs(&[("zip", "926,92629"), ("sort", "ppsf")]), Kind::Homes).is_ok());
+        assert!(parse(&qs(&[("zip", "926,92647"), ("sort", "ppsf")]), Kind::Homes).is_ok());
     }
 
     #[test]
@@ -617,9 +617,9 @@ mod tests {
         // The second row repeats the first (same url, same street); the third shares its url but names another street, so it stays.
         let cols: Vec<String> = ["id", "addr", "city", "type", "price", "currency", "source", "url"].iter().map(|s| s.to_string()).collect();
         let row = |id: &str, addr: &str| {
-            vec![json!(id), json!(addr), json!("Dana Point"), json!("Office"), json!(2_000_000), json!("USD"), json!("ccafe"), json!("https://broker.example/index")]
+            vec![json!(id), json!(addr), json!("Huntington Beach"), json!("Office"), json!(2_000_000), json!("USD"), json!("ccafe"), json!("https://broker.example/index")]
         };
-        let rows = vec![row("a1", "100 Harbor Blvd, Dana Point, CA 92629"), row("a1", "100 Harbor Blvd, Dana Point, CA 92629"), row("a2", "200 Fixture Cove Dr, Dana Point, CA 92629")];
+        let rows = vec![row("a1", "100 Harbor Blvd, Huntington Beach, CA 92647"), row("a1", "100 Harbor Blvd, Huntington Beach, CA 92647"), row("a2", "200 Fixture Cove Dr, Huntington Beach, CA 92647")];
         let ids: Vec<String> = commercial_v2_rows(&cols, &rows).iter().map(|r| r["id"].as_str().unwrap_or("").to_string()).collect();
         assert_eq!(ids, ["a1", "a2"]);
     }

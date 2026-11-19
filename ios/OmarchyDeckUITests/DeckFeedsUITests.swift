@@ -406,9 +406,9 @@ final class DeckFeedsUITests: XCTestCase {
         XCTAssertFalse(status.label.contains("Out of date"), "the server says fresh: \(status.label)")
         let search = app.textFields["national.search"].firstMatch
         search.tap()
-        search.typeText("92629\n")
+        search.typeText("92647\n")
         XCTAssertTrue(any["national.sheet"].firstMatch.waitForExistence(timeout: 10), "five digits open the ZIP")
-        XCTAssertTrue(app.staticTexts["Dana Point, CA"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Huntington Beach, CA"].waitForExistence(timeout: 10))
         shoot("realestate-zip")
         app.buttons["national.sheet.done"].firstMatch.tap()
         XCTAssertTrue(any["national.sheet"].firstMatch.waitForNonExistence(timeout: 5))

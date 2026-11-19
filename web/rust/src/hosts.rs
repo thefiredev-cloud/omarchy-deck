@@ -233,7 +233,7 @@ pub async fn weather_place(home: &Path) -> WeatherPlace {
 }
 
 /// The weather line from Open-Meteo's current conditions at the place's coordinates, worded like the Omarchy
-/// script's: "Dana Point  ·  Temp 70°F  ·  Wind 5 mph". `api` is `OPEN_METEO` outside tests. None when the place
+/// script's: "Huntington Beach  ·  Temp 70°F  ·  Wind 5 mph". `api` is `OPEN_METEO` outside tests. None when the place
 /// has no coordinates, Open-Meteo does not answer in 6 s, or it reports no temperature.
 pub async fn open_meteo_line(http: &reqwest::Client, api: &str, place: &WeatherPlace) -> Option<String> {
     let (lat, lon) = place.coords?;
@@ -648,8 +648,8 @@ mod tests {
             asked.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
             Some("house".to_string())
         };
-        let v = h.weather_from(&["/bin/sh", "-c", "echo 'Dana point  \u{b7}  Temp 68\u{b0}F  \u{b7}  Wind 5mph'"], house).await;
-        assert_eq!(v["text"], "Dana point  \u{b7}  Temp 68\u{b0}F  \u{b7}  Wind 5mph");
+        let v = h.weather_from(&["/bin/sh", "-c", "echo 'Huntington beach  \u{b7}  Temp 68\u{b0}F  \u{b7}  Wind 5mph'"], house).await;
+        assert_eq!(v["text"], "Huntington beach  \u{b7}  Temp 68\u{b0}F  \u{b7}  Wind 5mph");
         assert_eq!(asked.load(std::sync::atomic::Ordering::SeqCst), 0, "the house forecast is not asked when the script answers");
     }
 
@@ -659,10 +659,10 @@ mod tests {
         let asked = std::sync::atomic::AtomicUsize::new(0);
         let house = || async {
             asked.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
-            Some("Dana Point  \u{b7}  Temp 68\u{b0}F  \u{b7}  Wind 5 mph".to_string())
+            Some("Huntington Beach  \u{b7}  Temp 68\u{b0}F  \u{b7}  Wind 5 mph".to_string())
         };
         let v = h.weather_from(&["/bin/false"], house).await;
-        assert_eq!(v["text"], "Dana Point  \u{b7}  Temp 68\u{b0}F  \u{b7}  Wind 5 mph");
+        assert_eq!(v["text"], "Huntington Beach  \u{b7}  Temp 68\u{b0}F  \u{b7}  Wind 5 mph");
         // a second read inside the ten minutes is the kept line: neither the script nor the house is asked again
         let again = h.weather_from(&["/bin/false"], house).await;
         assert_eq!(again, v);
@@ -686,10 +686,10 @@ mod tests {
         let dir = home.join(".local/state/omarchy/settings");
         assert!(std::fs::create_dir_all(&dir).is_ok());
         assert_eq!(weather_place(&home).await, WeatherPlace::default(), "no file: no place");
-        assert!(std::fs::write(dir.join("weather.json"), r#"{"name": " Dana Point ", "latitude": 33.4, "longitude": -117.7}"#).is_ok());
+        assert!(std::fs::write(dir.join("weather.json"), r#"{"name": " Huntington Beach ", "latitude": 33.4, "longitude": -117.7}"#).is_ok());
         assert_eq!(
             weather_place(&home).await,
-            WeatherPlace { name: "Dana Point".into(), coords: Some((33.4, -117.7)) }
+            WeatherPlace { name: "Huntington Beach".into(), coords: Some((33.4, -117.7)) }
         );
         assert!(std::fs::write(dir.join("weather.json"), r#"{"name": "X", "latitude": 95, "longitude": -117.7}"#).is_ok());
         assert_eq!(weather_place(&home).await.coords, None, "out of range: no coordinates");
@@ -702,7 +702,7 @@ mod tests {
     fn open_meteo_text_reads_current_temperature_and_wind_and_rounds_them() {
         let v = json!({"current_units": {"temperature_2m": "\u{b0}F", "wind_speed_10m": "mp/h"},
             "current": {"time": "2026-11-02T19:00", "temperature_2m": 70.4, "wind_speed_10m": 4.8}});
-        assert_eq!(open_meteo_text(&v, "Dana Point").as_deref(), Some("Dana Point  \u{b7}  Temp 70\u{b0}F  \u{b7}  Wind 5 mph"));
+        assert_eq!(open_meteo_text(&v, "Huntington Beach").as_deref(), Some("Huntington Beach  \u{b7}  Temp 70\u{b0}F  \u{b7}  Wind 5 mph"));
         assert_eq!(open_meteo_text(&json!({"current": {"temperature_2m": -0.4}}), "").as_deref(), Some("Temp 0\u{b0}F"));
         for bad in [json!({}), json!({"current": {}}), json!({"current": {"temperature_2m": "hot"}}), json!({"error": true})] {
             assert_eq!(open_meteo_text(&bad, "X"), None, "{bad}");
@@ -739,10 +739,10 @@ mod tests {
     #[tokio::test]
     async fn open_meteo_line_is_one_get_at_the_place_coordinates() {
         let http = reqwest::Client::new();
-        let place = WeatherPlace { name: "Dana Point".into(), coords: Some((33.46697, -117.69811)) };
+        let place = WeatherPlace { name: "Huntington Beach".into(), coords: Some((33.46697, -117.69811)) };
         let (url, seen) = mock_once(200, r#"{"current": {"temperature_2m": 70.4, "wind_speed_10m": 4.8}}"#).await;
         let line = open_meteo_line(&http, &url, &place).await;
-        assert_eq!(line.as_deref(), Some("Dana Point  \u{b7}  Temp 70\u{b0}F  \u{b7}  Wind 5 mph"));
+        assert_eq!(line.as_deref(), Some("Huntington Beach  \u{b7}  Temp 70\u{b0}F  \u{b7}  Wind 5 mph"));
         let head = seen.await.unwrap_or_default();
         assert!(
             head.starts_with("GET /v1/forecast?latitude=33.467&longitude=-117.698&current=temperature_2m,wind_speed_10m&temperature_unit=fahrenheit&wind_speed_unit=mph HTTP/1.1"),

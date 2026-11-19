@@ -140,7 +140,7 @@ fn hash_unit_before_street(s: &str) -> Option<(String, String, String)> {
     Some((c[..num_end].iter().collect(), c[hash..code_end].iter().collect(), c[rest..].iter().collect()))
 }
 
-/// deck.js `addrUnitFirst`: "E110-24901 Dana Point Harbor Dr" reads as "24901 Dana Point Harbor Dr E110".
+/// deck.js `addrUnitFirst`: "E110-24901 Huntington Beach Harbor Dr" reads as "24901 Huntington Beach Harbor Dr E110".
 fn addr_unit_first(s: &str) -> String {
     if let Some((unit, rest)) = unit_before_street(s) {
         return format!("{rest} {unit}");
@@ -177,7 +177,7 @@ fn is_unit_code(s: &str) -> bool {
     (1..=4).contains(&(digits_end - digits_at)) && end == c.len()
 }
 
-/// deck.js: a state and ZIP part ("CA", "92629", "CA 92629-1234") is not a city.
+/// deck.js: a state and ZIP part ("CA", "92647", "CA 92647-1234") is not a city.
 fn is_state_zip(s: &str) -> bool {
     fn zip(t: &str) -> bool {
         let (main, ext) = t.split_once('-').map_or((t, None), |(m, e)| (m, Some(e)));
@@ -195,7 +195,7 @@ fn is_state_zip(s: &str) -> bool {
     }
 }
 
-/// Drops a trailing " 92629" or " 92629 1234" from a key (deck.js `zip` regex).
+/// Drops a trailing " 92647" or " 92647 1234" from a key (deck.js `zip` regex).
 fn strip_zip(key: &str) -> Option<String> {
     let t: Vec<&str> = key.split(' ').collect();
     let is_n = |w: &str, n: usize| w.len() == n && w.bytes().all(|b| b.is_ascii_digit());
@@ -414,9 +414,9 @@ mod tests {
     #[test]
     fn two_sources_at_one_address_spelled_ave_and_avenue_show_once() {
         let rows = vec![
-            json!({"id": "a", "addr": "9 Ocean Ave", "city": "Dana Point", "price": 900000, "currency": "USD", "beds": 3, "source": "redfin", "url": "https://www.redfin.com/a"}),
-            json!({"id": "b", "addr": "9 Ocean Avenue", "city": "Dana Point", "price": 900000, "currency": "USD", "beds": 3, "source": "zillow", "url": "https://www.zillow.com/b"}),
-            json!({"id": "c", "addr": "4 Harbor Way", "city": "Dana Point", "price": 1200000, "currency": "USD", "beds": 4, "source": "redfin", "url": "https://www.redfin.com/c"}),
+            json!({"id": "a", "addr": "9 Ocean Ave", "city": "Huntington Beach", "price": 900000, "currency": "USD", "beds": 3, "source": "redfin", "url": "https://www.redfin.com/a"}),
+            json!({"id": "b", "addr": "9 Ocean Avenue", "city": "Huntington Beach", "price": 900000, "currency": "USD", "beds": 3, "source": "zillow", "url": "https://www.zillow.com/b"}),
+            json!({"id": "c", "addr": "4 Harbor Way", "city": "Huntington Beach", "price": 1200000, "currency": "USD", "beds": 4, "source": "redfin", "url": "https://www.redfin.com/c"}),
         ];
         assert_eq!(kept_ids(&rows), vec!["a", "c"]);
     }
@@ -424,8 +424,8 @@ mod tests {
     #[test]
     fn a_unit_printed_before_the_street_is_the_same_unit_printed_after_it() {
         let rows = vec![
-            json!({"id": "a", "addr": "E110-24901 Dana Point Harbor Dr", "city": "Dana Point", "price": 650000, "currency": "USD", "source": "redfin"}),
-            json!({"id": "b", "addr": "24901 Dana Point Harbor Dr E110", "city": "Dana Point", "price": 650000, "currency": "USD", "source": "zillow"}),
+            json!({"id": "a", "addr": "E110-24901 Huntington Beach Harbor Dr", "city": "Huntington Beach", "price": 650000, "currency": "USD", "source": "redfin"}),
+            json!({"id": "b", "addr": "24901 Huntington Beach Harbor Dr E110", "city": "Huntington Beach", "price": 650000, "currency": "USD", "source": "zillow"}),
         ];
         assert_eq!(kept_ids(&rows), vec!["a"]);
     }
@@ -433,8 +433,8 @@ mod tests {
     #[test]
     fn two_sizes_at_one_street_are_two_homes() {
         let rows = vec![
-            json!({"id": "a", "addr": "100 Ocean Ave", "city": "Dana Point", "price": 800000, "currency": "USD", "beds": 2, "source": "redfin"}),
-            json!({"id": "b", "addr": "100 Ocean Ave", "city": "Dana Point", "price": 950000, "currency": "USD", "beds": 3, "source": "zillow"}),
+            json!({"id": "a", "addr": "100 Ocean Ave", "city": "Huntington Beach", "price": 800000, "currency": "USD", "beds": 2, "source": "redfin"}),
+            json!({"id": "b", "addr": "100 Ocean Ave", "city": "Huntington Beach", "price": 950000, "currency": "USD", "beds": 3, "source": "zillow"}),
         ];
         assert_eq!(kept_ids(&rows), vec!["a", "b"]);
     }
@@ -442,13 +442,13 @@ mod tests {
     #[test]
     fn a_priced_copy_takes_the_place_of_an_unpriced_first_copy_and_a_fresh_one_of_a_stale_one() {
         let unpriced_first = vec![
-            json!({"id": "a", "addr": "9 Ocean Ave", "city": "Dana Point", "source": "redfin"}),
-            json!({"id": "b", "addr": "9 Ocean Avenue", "city": "Dana Point", "price": 900000, "currency": "USD", "source": "zillow"}),
+            json!({"id": "a", "addr": "9 Ocean Ave", "city": "Huntington Beach", "source": "redfin"}),
+            json!({"id": "b", "addr": "9 Ocean Avenue", "city": "Huntington Beach", "price": 900000, "currency": "USD", "source": "zillow"}),
         ];
         assert_eq!(kept_ids(&unpriced_first), vec!["b"]);
         let stale_first = vec![
-            json!({"id": "a", "addr": "9 Ocean Ave", "city": "Dana Point", "price": 900000, "currency": "USD", "stale": true, "source": "redfin"}),
-            json!({"id": "b", "addr": "9 Ocean Avenue", "city": "Dana Point", "price": 900000, "currency": "USD", "source": "zillow"}),
+            json!({"id": "a", "addr": "9 Ocean Ave", "city": "Huntington Beach", "price": 900000, "currency": "USD", "stale": true, "source": "redfin"}),
+            json!({"id": "b", "addr": "9 Ocean Avenue", "city": "Huntington Beach", "price": 900000, "currency": "USD", "source": "zillow"}),
         ];
         assert_eq!(kept_ids(&stale_first), vec!["b"]);
     }
@@ -462,12 +462,12 @@ mod tests {
 
     #[test]
     fn a_building_on_both_lists_counts_once_and_a_home_wins_a_tie() {
-        let home = vec![json!({"id": "h", "addr": "5 Harbor Way", "city": "Dana Point", "source": "redfin"})];
-        let commercial = vec![json!({"id": "c", "addr": "5 Harbor Way", "city": "Dana Point", "price": 2500000, "currency": "USD", "type": "Multifamily", "source": "century21"})];
+        let home = vec![json!({"id": "h", "addr": "5 Harbor Way", "city": "Huntington Beach", "source": "redfin"})];
+        let commercial = vec![json!({"id": "c", "addr": "5 Harbor Way", "city": "Huntington Beach", "price": 2500000, "currency": "USD", "type": "Multifamily", "source": "century21"})];
         let (h, c) = feed_rows(&home, &commercial);
         assert!(h.is_empty() && c.len() == 1, "the unpriced home copy is the repeat");
-        let priced_home = vec![json!({"id": "h", "addr": "5 Harbor Way", "city": "Dana Point", "price": 2500000, "currency": "USD", "source": "redfin"})];
-        let priced_com = vec![json!({"id": "c", "addr": "5 Harbor Way", "city": "Dana Point", "price": 2500000, "currency": "USD", "source": "century21"})];
+        let priced_home = vec![json!({"id": "h", "addr": "5 Harbor Way", "city": "Huntington Beach", "price": 2500000, "currency": "USD", "source": "redfin"})];
+        let priced_com = vec![json!({"id": "c", "addr": "5 Harbor Way", "city": "Huntington Beach", "price": 2500000, "currency": "USD", "source": "century21"})];
         let (h, c) = feed_rows(&priced_home, &priced_com);
         assert!(h.len() == 1 && c.is_empty(), "a tie keeps the home");
     }

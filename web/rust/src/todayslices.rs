@@ -317,7 +317,7 @@ mod tests {
     #[test]
     fn home_area_is_the_home_tier_or_the_first_area() {
         let re = |areas: Value| json!({"market": {"residential": {"areas": areas}}, "homes": [1, 2]});
-        assert_eq!(home_area(&re(json!([{"zip": "92672", "name": "San Clemente"}, {"zip": "92629", "name": "Dana Point", "tier": "home"}]))), json!({"zip": "92629", "name": "Dana Point"}));
+        assert_eq!(home_area(&re(json!([{"zip": "92672", "name": "San Clemente"}, {"zip": "92647", "name": "Huntington Beach", "tier": "home"}]))), json!({"zip": "92647", "name": "Huntington Beach"}));
         assert_eq!(home_area(&re(json!([{"zip": "92672", "name": "San Clemente"}]))), json!({"zip": "92672", "name": "San Clemente"}));
         let why = |v: Value| home_area(&v)["reason"].as_str().map(str::to_string);
         assert_eq!(why(re(json!([{"zip": "9262", "tier": "home"}]))).as_deref(), Some("the home market has no five-digit ZIP"));
@@ -325,8 +325,8 @@ mod tests {
         assert_eq!(home_area(&json!({"error": "file missing"})), json!({"zip": null, "reason": "the Real estate feed is not reporting: file missing"}));
         assert_eq!(why(json!({"status": "not_reporting"})).as_deref(), Some("the Real estate feed is not reporting"));
         let mut t = json!({"cron": {}});
-        attach(&mut t, &json!({"spots": []}), &json!({"watches": {"items": []}}), &re(json!([{"zip": 92629, "tier": "home"}])));
-        assert_eq!((t["surf_best"]["spots"].clone(), t["home_area"]["zip"].clone()), (json!([]), json!("92629")));
+        attach(&mut t, &json!({"spots": []}), &json!({"watches": {"items": []}}), &re(json!([{"zip": 92647, "tier": "home"}])));
+        assert_eq!((t["surf_best"]["spots"].clone(), t["home_area"]["zip"].clone()), (json!([]), json!("92647")));
         assert!(t["cron"].is_object(), "the rest of the answer is untouched");
     }
 }

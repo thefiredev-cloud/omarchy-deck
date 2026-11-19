@@ -22,7 +22,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 CONTRACT = ROOT / "deck_feeds_mcp" / "taxonomy_contract.json"
-HOME = "Dana Point, CA"
+HOME = "Huntington Beach, CA"
 IN_PERSON = ["south_oc", "oc", "sd", "la"]
 
 

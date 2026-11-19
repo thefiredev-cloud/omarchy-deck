@@ -16,7 +16,7 @@ const css=fs.readFileSync(path.join(root,'static/css/realestate.css'),'utf8');
 const store=init=>{const m=new Map(Object.entries(init||{}));return {getItem:k=>m.has(k)?m.get(k):null,setItem:(k,v)=>m.set(k,String(v)),removeItem:k=>m.delete(k)}};
 const load=ls=>new Function('localStorage','DeckUI',src+'\nreturn {DeckScope,DeckRE};')(ls||store(),D).DeckRE;
 const fx=p=>JSON.parse(fs.readFileSync(path.join(__dirname,'fixtures/realestate-page',p),'utf8'));
-const sum=fx('summary.json'),fields=fx('fields.json'),rank=fx('rank.json'),z92629=fx('zip-92629.json');
+const sum=fx('summary.json'),fields=fx('fields.json'),rank=fx('rank.json'),z92647=fx('zip-92647.json');
 const qs=s=>Object.fromEntries(s.split('&').map(p=>p.split('=').map(decodeURIComponent)));
 // keeps the no-break space that joins a figure to its unit (\s would fold it)
 const text=h=>h.replace(/<[^>]*>/g,' ').replace(/&#39;/g,"'").replace(/&amp;/g,'&').replace(/[ \t\n]+/g,' ');
@@ -121,7 +121,7 @@ test('the lens and the help line: one plain line per shown column, units on ever
 
 test('ZIP sheet: the nine lead in a strip; a Multifamily section with unit mix, renters, rent by bedrooms and maturity',()=>{
  const R=load(),cat=new Map(fields.fields.map(f=>[f.name,f]));
- const rec=Object.assign({},z92629,{cbsa:'31080',acs_units_2_4_share:18.31,acs_units_5plus_share:19.56,acs_vacant_for_rent_share:1.69,bps_units_5plus_12m:24,
+ const rec=Object.assign({},z92647,{cbsa:'31080',acs_units_2_4_share:18.31,acs_units_5plus_share:19.56,acs_vacant_for_rent_share:1.69,bps_units_5plus_12m:24,
   acsmf_renter_5plus_share:41.2,acsmf_rent_0br:1890,acsmf_rent_1br:2210,acsmf_rent_2br:2875,acsmf_rent_3br:null,hud_assisted_units:120,fham_loans_maturing_5y:3,fham_upb_maturing_5y:41000000});
  const z=R.zipModel(rec,{summary:sum,cat,mfCtx:new Map([['31080',2.9]])}),mf=z.sections.find(s=>s.id==='mf');
  assert.equal(z.tiles.length,9);assert.equal(z.tiles.find(t=>t.key==='inventory').unit,'\u00a0homes');
@@ -135,7 +135,7 @@ test('ZIP sheet: the nine lead in a strip; a Multifamily section with unit mix, 
  const body=text(R.zipBody(z,{find:''},Date.now()));
  assert.match(body,/Multifamily/);assert.doesNotMatch(body,/HUD|Census|ACS/,'no source names in the sheet');
  // a record without any multifamily field draws no section
- const bare=Object.fromEntries(Object.entries(z92629).filter(([k])=>!/^(acs|bps|hud|fha|lihtc|lihx|crel|cap_spread|multifamily|renter_share)/.test(k)));
+ const bare=Object.fromEntries(Object.entries(z92647).filter(([k])=>!/^(acs|bps|hud|fha|lihtc|lihx|crel|cap_spread|multifamily|renter_share)/.test(k)));
  assert.ok(!R.zipModel(bare,{summary:sum,cat:new Map()}).sections.some(s=>s.id==='mf'));
 });
 
@@ -160,7 +160,7 @@ test('area values: a rank row\'s from and a ZIP record\'s m[k].from tag the cell
  const r1=h.slice(h.indexOf('data-key="92801"'),h.indexOf('data-key="92802"')),r2=h.slice(h.indexOf('data-key="92802"'));
  assert.match(r1,/41\u00a0days(<[^>]+>)*<small class="re-from" title="Not this ZIP\u2019s own figure\. The ZIP has none, so this is the value for its county\.">county value<\/small>/);
  assert.doesNotMatch(r2,/re-from/,'a ZIP\'s own figure carries no tag');
- const rec=Object.assign({},z92629,{m:Object.assign({},z92629.m,{days_on_market:{v:39,c:.29,n:101,p:[['days_on_market',.6,2]],from:'county',area:'06059'}}),days_on_market:39});
+ const rec=Object.assign({},z92647,{m:Object.assign({},z92647.m,{days_on_market:{v:39,c:.29,n:101,p:[['days_on_market',.6,2]],from:'county',area:'06059'}}),days_on_market:39});
  const z=R.zipModel(rec,{summary:sum,cat:new Map()});
  assert.equal(z.tiles.find(t=>t.key==='days_on_market').from,'county');
  assert.ok(!('from' in z.tiles.find(t=>t.key==='home_value')),'own figures keep their shape');
@@ -168,7 +168,7 @@ test('area values: a rank row\'s from and a ZIP record\'s m[k].from tag the cell
  const body=R.zipBody(z,{},Date.now());
  assert.ok((body.match(/>county value<\/small>/g)||[]).length>=2,'head strip and Market section both say so');
  assert.match(css,/\.re-from\{[^}]*border:1px solid var\(--c-line\)/);
- const mine=R.mineModel({market:{residential:{areas:[{level:'zip',zip:'92629',name:'Dana Point'}]}}},[row('92629',{from:{days_on_market:'county'}})],sum);
+ const mine=R.mineModel({market:{residential:{areas:[{level:'zip',zip:'92647',name:'Huntington Beach'}]}}},[row('92647',{from:{days_on_market:'county'}})],sum);
  assert.equal(mine[0].daysWord,'days to sell, county value');
 });
 

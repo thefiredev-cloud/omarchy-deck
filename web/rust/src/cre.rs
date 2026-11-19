@@ -62,7 +62,7 @@ pub fn defaults(person: &str) -> Value {
             "label": "Tanner",
             "about": "A smaller investor in the same deals: each listing shows the stake your Housing budget can take (LP or co-invest), your share of the cash flow, and the small deals you could buy whole.",
             "boxes": [
-                {"id": "south-oc", "name": "South OC, any type", "f": {"zips": ["92629", "92624", "92672", "92673", "92677", "92675", "92651", "92656", "92691", "92692", "92694", "92688", "92653", "92630"], "sort": "score"}},
+                {"id": "south-oc", "name": "South OC, any type", "f": {"zips": ["92647", "92624", "92672", "92673", "92677", "92675", "92651", "92656", "92691", "92692", "92694", "92688", "92653", "92630"], "sort": "score"}},
                 {"id": "small-mf", "name": "Small multifamily to buy (2-4 units)", "f": {"types": ["Multifamily"], "counties": ["Orange County", "Riverside County", "San Bernardino County"], "units_min": 2, "units_max": 4, "sort": "score"}}
             ]
         }),

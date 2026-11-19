@@ -12,7 +12,7 @@ const D=new Function(deck.slice(a,b)+'\nreturn DeckUI;')();
 const src=fs.readFileSync(path.join(root,'static/pages/realestate.js'),'utf8');
 const store=()=>{const m=new Map();return {getItem:k=>m.has(k)?m.get(k):null,setItem:(k,v)=>m.set(k,String(v)),removeItem:k=>m.delete(k),m}};
 const fx=p=>JSON.parse(fs.readFileSync(path.join(__dirname,'fixtures/realestate-page',p),'utf8'));
-const sum=fx('summary.json'),fields=fx('fields.json'),sources=fx('sources.json').sources,z=fx('zip-92629.json');
+const sum=fx('summary.json'),fields=fx('fields.json'),sources=fx('sources.json').sources,z=fx('zip-92647.json');
 
 test('Data sheet: sources with what they give and their date, the score weights, the ZIP\'s blend parts',()=>{
  const R=new Function('localStorage','DeckUI',src+'\nreturn DeckRE;')(store(),D),cat=new Map(fields.fields.map(f=>[f.name,f]));

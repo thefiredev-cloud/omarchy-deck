@@ -16,16 +16,16 @@ final class DeckNationalTests: XCTestCase {
         XCTAssertEqual(DeckFeedSection.realestate.feeds, ["housing/national?part=summary", "housing/national?part=sources"])
         XCTAssertEqual(DeckFeedNames.path(NationalRoutes.summary), "/api/housing/national")
         XCTAssertEqual(DeckFeedNames.query(NationalRoutes.summary), [URLQueryItem(name: "part", value: "summary")])
-        let rank = NationalRoutes.rank(NationalRoutes.Scope(state: "CA", query: "Dana Point", sort: "gross_yield"))
+        let rank = NationalRoutes.rank(NationalRoutes.Scope(state: "CA", query: "Huntington Beach", sort: "gross_yield"))
         XCTAssertTrue(DeckFeedNames.isAllowed(rank))
         XCTAssertEqual(DeckFeedNames.path(rank), "/api/housing/rank")
         XCTAssertEqual(Set(DeckFeedNames.query(rank).map { "\($0.name)=\($0.value ?? "")" }),
-                       ["kind=housing", "sort=gross_yield", "limit=50", "state=CA", "q=Dana Point"])
+                       ["kind=housing", "sort=gross_yield", "limit=50", "state=CA", "q=Huntington Beach"])
         XCTAssertFalse(DeckFeedNames.isAllowed("housing/rank?kind=housing&sort=yield&limit=50"),
                        "the v1 alias reads the raw yield column: the app never sends it")
-        XCTAssertTrue(DeckFeedNames.isAllowed(NationalRoutes.zip("92629")))
-        XCTAssertEqual(DeckFeedNames.path(NationalRoutes.zip("92629")), "/api/housing/zip/92629")
-        for bad in ["housing/zip/9262", "housing/zip/92629/hist", "housing/zip/../../lock", "housing/national?part=fields",
+        XCTAssertTrue(DeckFeedNames.isAllowed(NationalRoutes.zip("92647")))
+        XCTAssertEqual(DeckFeedNames.path(NationalRoutes.zip("92647")), "/api/housing/zip/92647")
+        for bad in ["housing/zip/9262", "housing/zip/92647/hist", "housing/zip/../../lock", "housing/national?part=fields",
                     "housing/rank?kind=commercial&sort=score&limit=50", "housing/rank?kind=housing&sort=bogus&limit=50",
                     "housing/rank?kind=housing&sort=score&limit=500", "housing/rank?kind=housing&sort=score&limit=50&state=ZZ",
                     "housing/rank?kind=housing&sort=score&limit=50&q=%3Cscript%3E", "housing/profile"] {
@@ -33,7 +33,7 @@ final class DeckNationalTests: XCTestCase {
         }
         XCTAssertNil(NationalRoutes.cleanQuery(String(repeating: "a", count: 41)))
         XCTAssertEqual(NationalRoutes.cleanQuery("  San Clemente "), "San Clemente")
-        XCTAssertTrue(NationalRoutes.isZip("92629"))
+        XCTAssertTrue(NationalRoutes.isZip("92647"))
         XCTAssertFalse(NationalRoutes.isZip("9262a"))
     }
 
@@ -128,13 +128,13 @@ final class DeckNationalTests: XCTestCase {
         let json = try fixture("housing-rank-rows")
         let rank = DeckNationalParser.rank(json)
         XCTAssertEqual(rank.zipsTotal, 39_228)
-        let dana = try XCTUnwrap(rank.rows.first { $0.zip == "92629" })
-        XCTAssertEqual(dana.place, "Dana Point, CA")
-        XCTAssertEqual(dana.value, 1_790_155)
-        XCTAssertEqual(dana.value.map { DeckMoney.short($0) }, "$1.79M")
-        XCTAssertNotNil(dana.valueConfidence, "a blended value carries its mark")
-        XCTAssertEqual(dana.grossYield, 2.84)
-        XCTAssertEqual(dana.grade, "D")
+        let hb = try XCTUnwrap(rank.rows.first { $0.zip == "92647" })
+        XCTAssertEqual(hb.place, "Huntington Beach, CA")
+        XCTAssertEqual(hb.value, 1_790_155)
+        XCTAssertEqual(hb.value.map { DeckMoney.short($0) }, "$1.79M")
+        XCTAssertNotNil(hb.valueConfidence, "a blended value carries its mark")
+        XCTAssertEqual(hb.grossYield, 2.84)
+        XCTAssertEqual(hb.grade, "D")
         let first = try XCTUnwrap(rank.rows.first)
         XCTAssertEqual(first.zip, "79607")
         XCTAssertEqual(first.value, 255_859, "the blended home value stands in where the value index has none")
@@ -145,12 +145,12 @@ final class DeckNationalTests: XCTestCase {
     }
 
     func testZipSheetBlendsCarryConfidenceAndParts() throws {
-        let json = try fixture("housing-zip-92629")
-        guard case .loaded(let page) = DeckFeedParser.state(feed: NationalRoutes.zip("92629"), json: json),
+        let json = try fixture("housing-zip-92647")
+        guard case .loaded(let page) = DeckFeedParser.state(feed: NationalRoutes.zip("92647"), json: json),
               let zip = page.nationalZip else {
             return XCTFail("the ZIP body must load")
         }
-        XCTAssertEqual(zip.place, "Dana Point, CA")
+        XCTAssertEqual(zip.place, "Huntington Beach, CA")
         XCTAssertEqual(zip.metro, "Los Angeles-Long Beach-Anaheim, CA")
         XCTAssertEqual(zip.tiles.map(\.label), ["Home value", "Rent", "Gross yield", "1-yr change"])
         XCTAssertEqual(zip.tiles[0].value, "$1.79M")

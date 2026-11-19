@@ -827,7 +827,7 @@ const kvHtml=items=>items.length?'<dl class="kv">'+items.map(x=>'<div><dt>'+esc(
     return Promise.all([get('housing/zip/'+home).then(z=>{S.home=z&&z.ok&&isObj(z.data)&&!z.data.error?z.data:null}),
      zips.length?get('housing/rank?'+rankQuery({kind:'us'},{sort:'score'},{fields:S.fields,zips,limit:40})).then(x=>{S.mine=x&&x.ok&&x.data?arr(x.data.rows):null}):null])}))}
   await Promise.all(jobs);paint()}
- const homeZip=re=>{const a=arr(re&&re.market&&re.market.residential&&re.market.residential.areas).find(x=>isObj(x)&&x.tier==='home'&&/^\d{5}$/.test(String(x.zip)));return a?String(a.zip):'92629'};
+ const homeZip=re=>{const a=arr(re&&re.market&&re.market.residential&&re.market.residential.areas).find(x=>isObj(x)&&x.tier==='home'&&/^\d{5}$/.test(String(x.zip)));return a?String(a.zip):'92647'};
  // /api/realestate: Your markets, the area sheets and the 15-yr rate. Read once per page load (every scope needs the rate) and shared
  // by the scope parts; a failure is no feed, so the strip says the 15-yr rate has no data and no area row opens a sheet
  function reLoad(force){if(force||!S.reP)S.reP=get('realestate').then(r=>{S.re=r&&r.ok&&isObj(r.data)?r.data:null;S.reDone=true;return S.re});return S.reP}

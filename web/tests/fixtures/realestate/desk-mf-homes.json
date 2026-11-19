@@ -211,10 +211,10 @@
   },
   {
    "id": "fixture-13",
-   "addr": "113 Fixture Ave, Dana Point, CA 92629",
-   "city": "Dana Point",
+   "addr": "113 Fixture Ave, Huntington Beach, CA 92647",
+   "city": "Huntington Beach",
    "state": "CA",
-   "zip": "92629",
+   "zip": "92647",
    "type": "Multifamily",
    "price": 2475000,
    "beds": 5,

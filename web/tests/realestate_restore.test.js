@@ -19,7 +19,7 @@ const text=h=>h.replace(/<[^>]*>/g,' ').replace(/&lt;/g,'<').replace(/&gt;/g,'>'
 const SOURCE_WORDS=/Zillow|Realtor|Redfin|FRED|Census|CoStar|Freddie|Realmo|ZHVI|\bas of\b|Sources?:|\.csv|\.json/;
 
 const areas=[
- {slug:'zip-92629',name:'Dana Point',tier:'home',level:'zip',zip:'92629',zhvi:{value:1790154.98,as_of:'2026-09-30',yoy_pct:7.06},list_price:{value:2230833,as_of:'2026-09-30',yoy_pct:26.99},
+ {slug:'zip-92647',name:'Huntington Beach',tier:'home',level:'zip',zip:'92647',zhvi:{value:1790154.98,as_of:'2026-09-30',yoy_pct:7.06},list_price:{value:2230833,as_of:'2026-09-30',yoy_pct:26.99},
   sale_price:{value:1856500,as_of:'2026-08-31'},days_to_pending:null,active_listings:77,days_on_market:68,realtor_list_price:2489000,realtor_as_of:'2026-10-01'},
  {slug:'zip-92624',name:'Capistrano Beach',tier:'south_oc',level:'zip',zip:'92624',zhvi:{value:1704699.15,as_of:'2026-09-30',yoy_pct:5.67},list_price:null,sale_price:null,days_to_pending:null,
   active_listings:22,days_on_market:95,realtor_list_price:2772500,realtor_as_of:'2026-10-01'},
@@ -57,7 +57,7 @@ test('15-yr rate: rides under the 30-yr on the strip, never as an extra tile; TV
 
 test('Your markets: county and US rows open their area sheet; ZIP rows keep the ZIP sheet; a bad slug opens nothing',()=>{
  const rows=R.mineModel(re,null,sum),h=R.mineHtml(rows);
- assert.match(h,/data-open="zip" data-key="92629"/);
+ assert.match(h,/data-open="zip" data-key="92647"/);
  assert.match(h,/data-open="area" data-key="orange-county-ca"/);assert.match(h,/data-open="area" data-key="united-states"/);
  const bad=R.mineModel({market:{residential:{areas:[{slug:'"><b>x',name:'Bad <b>County</b>',level:'county',zhvi:{value:1}}]}}},null,null);
  assert.equal(bad[0].slug,'');const bh=R.mineHtml(bad);assert.doesNotMatch(bh,/data-open="area"/);assert.doesNotMatch(bh,/<b>County/);
@@ -83,8 +83,8 @@ test('area sheet: homes for sale, list and sale price, days to pending, each wit
 });
 
 test('ZIP sheet: one of the owner\'s ZIPs leads with its own market numbers; any other ZIP has no such section',()=>{
- const rec={zip:'92629',city:'Dana Point',state:'CA',home_value:1790155,typical_rent:5200,gross_yield:2.8,value_trend_1y:7};
- const z=R.zipModel(rec,{summary:sum,area:R.areaByZip(re,'92629')});
+ const rec={zip:'92647',city:'Huntington Beach',state:'CA',home_value:1790155,typical_rent:5200,gross_yield:2.8,value_trend_1y:7};
+ const z=R.zipModel(rec,{summary:sum,area:R.areaByZip(re,'92647')});
  assert.equal(z.sections[0].id,'mine');assert.equal(z.sections[0].title,'Your market');
  assert.deepEqual(z.sections[0].area.items.map(x=>x.label),['Homes for sale','List price','Sale price','Days on market'],'the value is the headline\'s, not repeated');
  const body=R.zipBody(z,{find:''},Date.now());assert.match(body,/data-sec="mine"/);assert.match(body,/Homes for sale/);assert.doesNotMatch(text(body),SOURCE_WORDS);

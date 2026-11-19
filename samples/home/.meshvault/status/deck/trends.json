@@ -26,7 +26,7 @@
   ],
   "searches": [
     {"term": "home battery backup", "region": "US-CA", "growth_pct": 180, "source": "google-trends"},
-    {"term": "surf lessons dana point", "region": "US-CA", "growth_pct": 65, "source": "google-trends"},
+    {"term": "surf lessons huntington beach", "region": "US-CA", "growth_pct": 65, "source": "google-trends"},
     {"term": "local ai assistant for small business", "region": "US", "growth_pct": 240, "source": "google-trends"},
     {"term": "duplex for sale orange county", "region": "US-CA", "growth_pct": null, "source": "google-trends"}
   ]

@@ -219,7 +219,7 @@ test('Fleet urgency: one element is filled, a machine in the third column before
 
 // ---------------- Markets homes paging and the jobs glue (jobs paging lives in tests/work_jobs_ui.test.js since 2026-11-14) ----------------
 test('Life: the homes list opens short with a Show more button, expands to everything, and keeps the plain list by default', () => {
-  const homes = Array.from({ length: 30 }, (_, i) => ({ addr: i + ' Fixture Way', price: 500000 + i, city: 'Dana Point', beds: 3, baths: 2, sqft: 1500 + i, source: 'redfin', listed_at: T(3600), url: 'https://example.com/h' + i }));
+  const homes = Array.from({ length: 30 }, (_, i) => ({ addr: i + ' Fixture Way', price: 500000 + i, city: 'Huntington Beach', beds: 3, baths: 2, sqft: 1500 + i, source: 'redfin', listed_at: T(3600), url: 'https://example.com/h' + i }));
   const r = { t: T(30), src: 'x', stale: false, errors: [], market: { area: 'Fixture', median_list_price: 900000, at: T(60) }, homes, commercial: [] };
   const hs = D.homes(r, NOW, 'short');
   assert.equal((hs.match(/ class="frow"/g) || []).length, 8);
@@ -239,7 +239,7 @@ test('Life: the homes list opens short with a Show more button, expands to every
 const rowsOf = (h) => (h.match(/ class="frow"/g) || []).length;
 const labelN = (h, k) => { const m = new RegExp('data-more="' + k + '">Show (\\d+) more').exec(h); return m ? +m[1] : null; };
 test('Homes: every Show more count is exactly what the click delivers, and a capped list says "Showing N of M"', () => {
-  const home = (i) => ({ addr: i + ' Fixture Way', price: 500000 + i, city: 'Dana Point', beds: 3, baths: 2, sqft: 1500 + i, source: 'redfin', listed_at: T(3600), url: 'https://example.com/h' + i });
+  const home = (i) => ({ addr: i + ' Fixture Way', price: 500000 + i, city: 'Huntington Beach', beds: 3, baths: 2, sqft: 1500 + i, source: 'redfin', listed_at: T(3600), url: 'https://example.com/h' + i });
   const com = (i) => ({ addr: i + ' Office Row', price: 2000000 + i, city: 'Irvine', type: 'Office', sqft: 4000 + i, source: 'loopnet', url: 'https://example.com/c' + i });
   for (const [nh, nc] of [[333, 46], [200, 0], [21, 21], [20, 20], [13, 6], [5, 3]]) {
     const mk = (h, c) => ({ t: T(30), src: 'x', stale: false, errors: [], market: {}, homes: Array.from({ length: h }, (_, i) => home(i)), commercial: Array.from({ length: c }, (_, i) => com(i)) });

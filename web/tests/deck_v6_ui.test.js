@@ -330,8 +330,8 @@ test('jobs: rows carry no site, a fit of 0 shows as 0, only safe links open, and
 });
 
 test('homes and markets render truthfully', () => {
-  const r = feed({ market: { area: 'Dana Point', median_list_price: 1850000, source: 'redfin', at: T(86400) },
-    homes: [{ addr: '1 Main St', city: 'Dana Point', price: 1250000, currency: 'USD', beds: 3, baths: 2.5, sqft: 1800, source: 'redfin' }],
+  const r = feed({ market: { area: 'Huntington Beach', median_list_price: 1850000, source: 'redfin', at: T(86400) },
+    homes: [{ addr: '1 Main St', city: 'Huntington Beach', price: 1250000, currency: 'USD', beds: 3, baths: 2.5, sqft: 1800, source: 'redfin' }],
     commercial: [{ city: 'Irvine', type: 'Office', price: null, sqft: 5000, cap_rate: 6.25 }] });
   const rh = D.homes(r, NOW);
   assert.match(rh, /\$1\.85M/);

@@ -55,7 +55,7 @@ class MetroAndModeTests(unittest.TestCase):
         self.assertEqual(jobs.metro_of({"location": "Denver, CO", "summary": "fully remote team"}), "remote")
 
     def test_south_oc_city_wins_over_oc_city_in_the_same_location(self):
-        self.assertEqual(jobs.metro_of({"location": "Costa Mesa or Dana Point, CA"}), "south_oc")
+        self.assertEqual(jobs.metro_of({"location": "Costa Mesa or Huntington Beach, CA"}), "south_oc")
 
     def test_valid_feed_mode_wins_case_insensitively(self):
         self.assertEqual(jobs.mode_of({"mode": " Hybrid ", "remote": True}), "hybrid")

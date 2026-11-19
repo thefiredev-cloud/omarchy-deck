@@ -211,11 +211,11 @@ test('Housing: the national price records block, its controls and its records to
 });
 
 test('W10: market area rows are .frow so the name sits left and the numbers right', () => {
-  const area = { slug: 'zip-92629', name: 'Dana Point', tier: 'home', level: 'zip', zip: '92629', zhvi: { value: 1780453.5, as_of: '2026-09-30', yoy_pct: 4.12 }, active_listings: 61 };
-  const h = D.homes({ t: T(30), src: 'x', stale: false, errors: [], homes: [], commercial: [], market: { residential: { areas_with_zhvi: 1, scope: { home: 'Dana Point, CA' }, areas: [area] } } }, NOW);
-  assert.match(h, /<div class="hm-area frow"><span class="fl"><b>Dana Point/);
+  const area = { slug: 'zip-92647', name: 'Huntington Beach', tier: 'home', level: 'zip', zip: '92647', zhvi: { value: 1780453.5, as_of: '2026-09-30', yoy_pct: 4.12 }, active_listings: 61 };
+  const h = D.homes({ t: T(30), src: 'x', stale: false, errors: [], homes: [], commercial: [], market: { residential: { areas_with_zhvi: 1, scope: { home: 'Huntington Beach, CA' }, areas: [area] } } }, NOW);
+  assert.match(h, /<div class="hm-area frow"><span class="fl"><b>Huntington Beach/);
   assert.match(h, /<span class="fr"><b>\$1\.78M<\/b>/);
-  const legacy = D.homes({ t: T(30), src: 'x', stale: false, errors: [], homes: [], commercial: [], market: { area: 'Dana Point', median_list_price: 1900000, at: T(100) } }, NOW);
+  const legacy = D.homes({ t: T(30), src: 'x', stale: false, errors: [], homes: [], commercial: [], market: { area: 'Huntington Beach', median_list_price: 1900000, at: T(100) } }, NOW);
   assert.match(legacy, /<div class="hm-area frow">/);
 });
 

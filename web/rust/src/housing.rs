@@ -1751,14 +1751,14 @@ mod tests {
         assert_eq!(p["filters"]["max_price"], 700000);
         let q = rank_of(&[("q", "926")]);
         assert_eq!(q["total"], 2);
-        assert_eq!(rank_of(&[("q", "dana")])["total"], 1);
+        assert_eq!(rank_of(&[("q", "huntington")])["total"], 1);
     }
 
     #[test]
     fn commercial_rank_keeps_unpriced_rows_under_a_budget() {
         let v = rank_of(&[("kind", "commercial"), ("state", "CA"), ("max_price", "1000000")]);
         let z = zips(&v);
-        assert!(!z.contains(&"92629".to_string()), "priced above the budget");
+        assert!(!z.contains(&"92647".to_string()), "priced above the budget");
         assert!(z.contains(&"92624".to_string()), "no commercial price: the budget does not apply");
         assert_eq!(z.first().map(String::as_str), Some("92101"), "highest c_score first");
         let e = rank_of(&[("kind", "commercial"), ("sort", "estabs"), ("limit", "2")]);
@@ -1794,7 +1794,7 @@ mod tests {
     #[test]
     fn housing_sorts_by_renters_income_and_colleges() {
         assert_eq!(zips(&rank_of(&[("sort", "renters"), ("limit", "2")])), vec!["10001", "90011"]);
-        assert_eq!(zips(&rank_of(&[("sort", "income"), ("limit", "1")])), vec!["92629"]);
+        assert_eq!(zips(&rank_of(&[("sort", "income"), ("limit", "1")])), vec!["92647"]);
         assert_eq!(zips(&rank_of(&[("sort", "colleges"), ("limit", "2")])), vec!["10001", "92101"]);
     }
 
@@ -1959,13 +1959,13 @@ mod tests {
         assert_eq!(keys.len(), 7, "{keys:?}");
         assert_eq!(rank_v2(&[("cols", "zip,nope")], &[]).err().as_deref(), Some("bad cols"));
         // a page's own markets in one call, any dataset
-        let mine = ok_v2(&[("zip", "92629, 10001,99999"), ("cols", "zip,home_value")], &[]);
+        let mine = ok_v2(&[("zip", "92647, 10001,99999"), ("cols", "zip,home_value")], &[]);
         let mut z = zips(&mine);
         z.sort();
-        assert_eq!((z, mine["filters"]["zip"].clone()), (vec!["10001".to_string(), "92629".into(), "99999".into()], json!(["92629", "10001", "99999"])));
-        assert_eq!(zips(&rank_of(&[("zip", "92629")])), vec!["92629"]);
+        assert_eq!((z, mine["filters"]["zip"].clone()), (vec!["10001".to_string(), "92647".into(), "99999".into()], json!(["92647", "10001", "99999"])));
+        assert_eq!(zips(&rank_of(&[("zip", "92647")])), vec!["92647"]);
         assert!(rank_of(&[])["filters"].get("zip").is_none(), "no zip= keeps today's filters");
-        for bad in ["9262", "92629,abcde", &vec!["92629"; 41].join(",")] {
+        for bad in ["9262", "92647,abcde", &vec!["92647"; 41].join(",")] {
             assert_eq!(rank_v2(&[("zip", bad)], &[]).err().as_deref(), Some("bad zip"), "{bad}");
         }
     }
@@ -2219,19 +2219,19 @@ mod tests {
             .map(|r| {
                 let mut r = r.clone();
                 r.push(match Table::zip(&r, cz).as_str() {
-                    "92629" => Cell::Str("days_on_market:county, price_cuts:metro,bogus,gross_yield:city".into()),
+                    "92647" => Cell::Str("days_on_market:county, price_cuts:metro,bogus,gross_yield:city".into()),
                     _ => Cell::Null,
                 });
                 r
             })
             .collect();
         let t = Table::from_file(ZipsFile { generated_at: Value::Null, cols, rows });
-        let q = rank_query(&qs(&[("cols", "days_on_market,gross_yield"), ("zip", "92629,77494")]), &[], Ctx { table: Some(&t), man: Some(&m) });
+        let q = rank_query(&qs(&[("cols", "days_on_market,gross_yield"), ("zip", "92647,77494")]), &[], Ctx { table: Some(&t), man: Some(&m) });
         let v = rank_rows(&t, &q.unwrap_or_else(|e| panic!("{e}")));
         let row = |z: &str| v["rows"].as_array().and_then(|a| a.iter().find(|r| r["zip"] == z).cloned()).unwrap_or(Value::Null);
-        assert_eq!(row("92629")["from"], json!({"days_on_market": "county"}), "price_cuts was not asked; a city or bare entry is no mark");
+        assert_eq!(row("92647")["from"], json!({"days_on_market": "county"}), "price_cuts was not asked; a city or bare entry is no mark");
         assert!(row("77494").get("from").is_none(), "a ZIP's own figures carry no mark");
-        assert!(row("92629").get(AREA_FROM).is_none(), "the raw column stays out unless asked");
+        assert!(row("92647").get(AREA_FROM).is_none(), "the raw column stays out unless asked");
         assert_eq!(area_from(Some("price_cuts:metro")), Some(vec![("price_cuts", "metro")]));
         assert_eq!(area_from(Some(":county,x")), None);
         assert_eq!(area_from(None), None);

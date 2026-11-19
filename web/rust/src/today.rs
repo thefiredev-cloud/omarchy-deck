@@ -242,7 +242,7 @@ const AI_NAMED: &[&str] = &[
 
 /// Places that anchor a headline to his home beats: OC, LA, SD and the cities he tracks.
 const HOME_PLACES: &[&str] = &[
-    "orange county", "los angeles", "san diego", "southern california", "socal", "dana point",
+    "orange county", "los angeles", "san diego", "southern california", "socal", "huntington beach",
     "newport beach", "huntington beach", "costa mesa", "santa ana", "anaheim", "irvine",
     "laguna beach", "laguna niguel", "lake forest", "mission viejo", "san clemente",
     "san juan capistrano", "aliso viejo", "tustin", "fullerton", "yorba linda", "garden grove",
@@ -476,7 +476,7 @@ mod tests {
         assert_eq!(beat("real-estate", "HousingWire", "OC home prices fall"), "housing");
         assert_eq!(beat("finance", "MarketWatch Top Stories", "Mortgage rates hit 7.3 percent"), "rates");
         assert_eq!(beat("finance", "CNBC Top News", "Treasury yields climb"), "rates");
-        assert_eq!(beat("local", "Google News: OC Register", "Dana Point harbor plan advances"), "local");
+        assert_eq!(beat("local", "Google News: OC Register", "Huntington Beach harbor plan advances"), "local");
         assert_eq!(beat("fire", "LA County Fire", "LA County Fire adds crews"), "fire");
         assert_eq!(beat("sports", "ESPN NHL", "NHL jersey sponsor deal"), "sports");
         assert_eq!(beat("ai", "OpenAI News", "Anthropic ships a new agent tool"), "ai");
@@ -519,7 +519,7 @@ mod tests {
 
     #[test]
     fn local_beat_keeps_home_region_news_and_local_outlets() {
-        assert_eq!(beat("local", "Google News: OC Register", "OC Register: Dana Point harbor plan advances"), "local");
+        assert_eq!(beat("local", "Google News: OC Register", "OC Register: Huntington Beach harbor plan advances"), "local");
         assert_eq!(beat("local", "Times of San Diego", "San Diego port approves budget"), "local");
         assert_eq!(beat("local", "Some Wire", "Huntington Beach approves new housing plan"), "local");
         assert_eq!(beat("local", "MyNewsLA California", "LA Council Approves First $5M to Aid Boyle Heights Residents"), "local");

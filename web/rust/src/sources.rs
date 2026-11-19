@@ -2166,7 +2166,7 @@ mod tests {
     fn realestate_feed_keeps_every_home_and_commercial_row_up_to_the_collector_caps() {
         // a 200 cap, then a 1200 cap, dropped rows the collector kept: "Showing N of M" read M = the cap for a 1572-home feed
         let homes: Vec<Value> = (0..6100)
-            .map(|i| json!({"addr": format!("{i} Test St"), "city": "Dana Point", "price": 500_000 + i}))
+            .map(|i| json!({"addr": format!("{i} Test St"), "city": "Huntington Beach", "price": 500_000 + i}))
             .collect();
         let com: Vec<Value> = (0..1900)
             .map(|i| json!({"addr": format!("{i} Office Row"), "city": "Irvine", "price": 2_000_000 + i}))
@@ -2295,7 +2295,7 @@ mod tests {
               "url":"https://offerup.com/item/detail/1","condition":"used","t":1790711000}],
             "movers_info":{"computed_at":1790712000,"data_through":1790711000,"stale":false,"window_days":7,"watches":11,"listings_checked":218,
               "candidates":6,"kinds":{"drop":6}},
-            "resale":[{"slug":"a","query":"a","role":"own","area":"Dana Point, CA","n":3,"median":600.0,"sites":[],"vs_retail":null,"paused":[]}],
+            "resale":[{"slug":"a","query":"a","role":"own","area":"Huntington Beach, CA","n":3,"median":600.0,"sites":[],"vs_retail":null,"paused":[]}],
             "private":"DO_NOT_SERVE"}"#;
         let v = deck_feed_from(&ECOM, text, None, NOW);
         assert_eq!(v["movers"][0]["kind"], "drop");

@@ -433,7 +433,7 @@ const ShellServices=env=>{
   try{return ui.dataSheet(Object.assign({},d,{display:disp}),{now:env.now()})}catch(e){return plain(ui,disp,true)}}
  function entryOf(r){const pages=env.pages();if(!pages||typeof pages.resolve!=='function')return null;const key=pages.resolve(r.route),e=key?pages.page(key):null;
   if(!e||typeof e.data!=='function'||(env.guest()&&e.guest!==true))return null;return e}
- // a scope that names a section instead of a record ('setup', not 'zip:92629') opens on that section: its heading is scrolled clear, so a
+ // a scope that names a section instead of a record ('setup', not 'zip:92647') opens on that section: its heading is scrolled clear, so a
  // reader who taps "8 stores need setup" does not land on the sources. An unknown word stays at the top.
  function section(dlg,sc){if(!sc||sc.indexOf(':')>=0)return;const b=dlg.querySelector('.sheet-b');if(!b)return;
   const want=sc.trim().toLowerCase(),heads=b.querySelectorAll('.sh-sec>h3');

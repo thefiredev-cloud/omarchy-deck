@@ -73,7 +73,7 @@ test('L07: Sells locally says what each watched item asks locally against new, a
   // L: under the compact strip beside Trending, so the first row's two halves end together
   assert.match(page(f, { cls: 'L' }), /<section class="sect c-6 s-trending"[^]*?<\/section><div class="c-6 sstack shop-side"><div class="shop-strip">[^]*<section class="sect s-local">/);
   const h = page(f, { cls: 'D' }), sec = h.slice(h.indexOf('s-local'), h.indexOf('</section>', h.indexOf('s-local')));
-  assert.match(vis(sec), /^s-local"> Sells locally Asking prices near Dana Point, CA, against the same item new\./);
+  assert.match(vis(sec), /^s-local"> Sells locally Asking prices near Huntington Beach, CA, against the same item new\./);
   assert.match(sec, /<th scope="row" data-l="Item"><span class="place"><b>RTX 4080<\/b><small>Yours · 11 listings · \d+ min ago<\/small><\/span><\/th><td class="n" data-l="Asks locally">\$1,200<\/td><td class="n" data-l="Of new">71%<small>new \$1,700<\/small><\/td>/);
   // no platform names on the page: they live in the watch sheet
   assert.doesNotMatch(sec, /OfferUp|Craigslist|Facebook/);

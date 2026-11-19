@@ -166,17 +166,17 @@ test('a sheet opens as a dialog with focus on its title and returns focus to the
   const { S, doc } = setup();
   const opener = el(doc, 'button', { class: 'frow', 'data-open': 'zip' });
   opener.focus();
-  const d = S.sheet.open({ id: 'zip', title: '92629', sub: 'Dana Point', body: '<p>Body</p>', actions: '<button class="btn">Find homes</button>', wide: true });
+  const d = S.sheet.open({ id: 'zip', title: '92647', sub: 'Huntington Beach', body: '<p>Body</p>', actions: '<button class="btn">Find homes</button>', wide: true });
   assert.equal(d.tagName, 'DIALOG');
   assert.ok(d.open && d.isConnected, 'open and in the document');
   assert.ok(d.classList.contains('sheet') && d.classList.contains('wide'));
   assert.equal(d.dataset.id, 'zip');
   const h = d.querySelector('.sheet-h h2');
-  assert.equal(h.textContent, '92629');
+  assert.equal(h.textContent, '92647');
   assert.equal(doc.activeElement, h, 'focus lands on the title, not on Close (critique 14)');
   assert.equal(h.tabIndex, -1, 'the title takes focus without joining the tab order');
   assert.equal(d.getAttribute('aria-labelledby'), h.id);
-  assert.equal(d.querySelector('.sheet-h p').textContent, 'Dana Point');
+  assert.equal(d.querySelector('.sheet-h p').textContent, 'Huntington Beach');
   assert.equal(d.querySelector('.sheet-b').innerHTML, '<p>Body</p>');
   assert.match(d.querySelector('.sheet-a').innerHTML, /Find homes/);
   assert.equal(d.querySelector('.sheet-x').getAttribute('aria-label'), 'Close');
@@ -232,9 +232,9 @@ test('opening the id that is on top repaints it in place: same level, same opene
 
 test('the data option adds one Data button; a detail() sheet that has one keeps exactly one', () => {
   const { S } = setup();
-  const d = S.sheet.open({ title: 'ZIP', data: 'zip:92629' });
-  assert.match(d.querySelector('.sheet-a').innerHTML, /<button type="button" class="btn" data-sheet="data" data-scope="zip:92629">Data<\/button>/);
-  const det = DeckUI.detail({ title: 'ZIP', body: 'b', scope: 'zip:92629' });
+  const d = S.sheet.open({ title: 'ZIP', data: 'zip:92647' });
+  assert.match(d.querySelector('.sheet-a').innerHTML, /<button type="button" class="btn" data-sheet="data" data-scope="zip:92647">Data<\/button>/);
+  const det = DeckUI.detail({ title: 'ZIP', body: 'b', scope: 'zip:92647' });
   const e = S.sheet.open(Object.assign({ data: true }, det));
   assert.equal((e.querySelector('.sheet-a').innerHTML.match(/data-sheet="data"/g) || []).length, 1);
   const f = S.sheet.open({ title: 'Plain' });
@@ -247,10 +247,10 @@ test('the Data sheet draws the page data() for the route and the scope, with the
   const t = setup();
   let seen = null;
   t.pages.register('realestate/residential', { show() {}, data(ctx, scope) { seen = [ctx.route, scope]; return { sources: [{ name: 'Zillow Home Value Index', gives: '26,265 ZIPs', asOf: '2026-09', state: 'ok' }], method: [['Gross rent yield', 'Higher is better']] }; } });
-  const d = t.S.sheet.data('zip:92629');
-  assert.deepEqual(seen, ['realestate/residential', 'zip:92629']);
+  const d = t.S.sheet.data('zip:92647');
+  assert.deepEqual(seen, ['realestate/residential', 'zip:92647']);
   assert.equal(d.querySelector('.sheet-h h2').textContent, 'Data');
-  assert.equal(d.querySelector('.sheet-h p').textContent, 'Real estate \u00B7 Residential \u00B7 92629');
+  assert.equal(d.querySelector('.sheet-h p').textContent, 'Real estate \u00B7 Residential \u00B7 92647');
   const body = d.querySelector('.sheet-b').innerHTML;
   assert.match(body, /Zillow Home Value Index/);
   assert.match(body, /Sep 2026/);
@@ -319,7 +319,7 @@ test('a section scope opens the Data sheet on that section; a record scope stays
   const t = setup();
   t.pages.register('realestate/residential', { show() {}, data: () => ({ sources: [{ name: 'Zillow' }], setup: [{ name: 'eBay', state: 'needs_key' }] }) });
   assert.equal(t.S.sheet.data('setup').querySelector('.sheet-h p').textContent, 'Real estate \u00B7 Residential \u00B7 setup', 'the sub line keeps the word');
-  assert.equal(t.S.sheet.data('zip:92629').querySelector('.sheet-h p').textContent, 'Real estate \u00B7 Residential \u00B7 92629');
+  assert.equal(t.S.sheet.data('zip:92647').querySelector('.sheet-h p').textContent, 'Real estate \u00B7 Residential \u00B7 92647');
 });
 
 // ---------------- money ----------------
@@ -443,10 +443,10 @@ test('[data-sheet="data"] opens the Data sheet for its scope and gives focus bac
   const t = setup();
   let scope = null;
   t.pages.register('realestate/residential', { show() {}, data(c, s) { scope = s; return null; } });
-  const btn = el(t.doc, 'button', { 'data-sheet': 'data', 'data-scope': 'zip:92629' });
+  const btn = el(t.doc, 'button', { 'data-sheet': 'data', 'data-scope': 'zip:92647' });
   const inner = el(t.doc, 'span', {}, btn);
   assert.ok(t.S.onClick(click(inner)));
-  assert.equal(scope, 'zip:92629');
+  assert.equal(scope, 'zip:92647');
   t.S.sheet.close();
   assert.equal(t.doc.activeElement, btn);
 });
@@ -481,7 +481,7 @@ test('[data-close] closes the shell sheet, or the page dialog it sits in; a back
 
 test('Enter on a focused tr[data-open] clicks it; Enter elsewhere is left alone', () => {
   const t = setup();
-  const tr = el(t.doc, 'tr', { tabindex: '0', 'data-open': 'zip', 'data-key': '92629' });
+  const tr = el(t.doc, 'tr', { tabindex: '0', 'data-open': 'zip', 'data-key': '92647' });
   const e = { key: 'Enter', target: tr, defaultPrevented: false, preventDefault() { this.defaultPrevented = true; } };
   assert.ok(t.S.onKey(e));
   assert.equal(tr.clicks, 1);

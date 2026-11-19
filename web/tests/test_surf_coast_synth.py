@@ -295,7 +295,7 @@ class AssembleTest(unittest.TestCase):
     def test_home_spot_blends_buoy_and_models_and_comes_first(self):
         self.assertEqual(self.ov["spots"][0]["id"], "salt-creek")
         s = self.spots["salt-creek"]
-        self.assertEqual(s["pinned"], 1)
+        self.assertEqual(s["pinned"], collect.PINNED.index("salt-creek") + 1)
         n = s["now"]
         self.assertFalse(n["confidence"]["model_only"])
         self.assertIn(n["confidence"]["level"], ("high", "medium"))

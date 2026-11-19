@@ -242,7 +242,7 @@ def _compact_market(market):
 @mcp.tool(annotations={"readOnlyHint": True, "openWorldHint": False})
 def housing_market(scope: str = "all", city: str = "", max_price: int = 0, min_beds: int = 0,
                    limit: int = 20) -> dict:
-    """Housing feed: market summary, for-sale homes, or commercial listings near Dana Point.
+    """Housing feed: market summary, for-sale homes, or commercial listings near Huntington Beach.
 
     scope is market, homes, commercial or all. city filters by substring,
     max_price and min_beds filter homes.

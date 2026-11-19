@@ -27,7 +27,7 @@ UA = {"User-Agent": "pixel-deck/1 (+https://meshvault.ai)"}
 
 # The tracked markets, closest first: the "home" tier, then the ring outward. Edit for your own area.
 ZIPS = [
-    ("92629", "Dana Point", "home"),
+    ("92647", "Huntington Beach", "home"),
     ("92624", "Capistrano Beach", "south_oc"),
     ("92672", "San Clemente", "south_oc"),
     ("92673", "San Clemente", "south_oc"),
@@ -356,8 +356,8 @@ def collect(force=False):
     return {
         "generated_at": int(time.time()),
         "scope": {
-            "home": "Dana Point, CA",
-            "order": ["Dana Point", "Capistrano Beach", "San Clemente", "Laguna Niguel",
+            "home": "Huntington Beach, CA",
+            "order": ["Huntington Beach", "Capistrano Beach", "San Clemente", "Laguna Niguel",
                       "Orange County", "Los Angeles County", "San Diego County", "United States"],
             "us_selectable": True,
             "note": "ZIP first, then the county each sits in, then the United States row.",

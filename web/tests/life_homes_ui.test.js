@@ -21,9 +21,9 @@ const feed=(market)=>Object.assign({
 const residential={
  generated_at:T,
  areas_with_zhvi:3,
- scope:{home:'Dana Point, CA',order:['Dana Point','Orange County','United States'],us_selectable:true},
+ scope:{home:'Huntington Beach, CA',order:['Huntington Beach','Orange County','United States'],us_selectable:true},
  areas:[
-  area({slug:'zip-92629',name:'Dana Point',tier:'home',level:'zip',zip:'92629',
+  area({slug:'zip-92647',name:'Huntington Beach',tier:'home',level:'zip',zip:'92647',
    zhvi:{value:1780453.5,as_of:'2026-09-30',yoy_pct:4.12},
    list_price:{value:1800000,as_of:'2026-09-30'},
    sale_price:{value:1650000,as_of:'2026-08-31'},
@@ -51,12 +51,12 @@ const commercial_indicators={
 const full=()=>feed({residential,mortgage,commercial_indicators,
  cluster_take:{t:T-3600,model:'DeepSeek-V4.1-Flash-1017-EXL3',text:'OC values are up 3.2 percent. Commercial prices are up 6.6 percent annualized.',cached:true}});
 
-test('default scope lists Dana Point before Orange County and the United States',()=>{
+test('default scope lists Huntington Beach before Orange County and the United States',()=>{
  const html=D.homes(full(),NOW);
  const list=html.slice(html.indexOf('class="hm-list"'),html.indexOf('Zillow Research: value'));
- const iHome=list.indexOf('Dana Point'),iCounty=list.indexOf('Orange County'),iUS=list.indexOf('United States');
- assert.ok(iHome>0,'Dana Point rendered');
- assert.ok(iCounty>iHome,'Orange County after Dana Point');
+ const iHome=list.indexOf('Huntington Beach'),iCounty=list.indexOf('Orange County'),iUS=list.indexOf('United States');
+ assert.ok(iHome>0,'Huntington Beach rendered');
+ assert.ok(iCounty>iHome,'Orange County after Huntington Beach');
  assert.ok(iUS>iCounty,'United States after Orange County');
 });
 
@@ -92,9 +92,9 @@ test('the cluster take is gone: no block, no model name, no prose, whatever the 
 
 test('United States scope hides the ZIP rows and My markets brings them back',()=>{
  const us=D.homes(full(),NOW,{scope:'us'});
- assert.doesNotMatch(us,/92629/);
+ assert.doesNotMatch(us,/92647/);
  const mine=D.homes(full(),NOW,{scope:'markets'});
- assert.match(mine,/92629/);
+ assert.match(mine,/92647/);
 });
 
 test('a missing series prints -- and never a fabricated zero',()=>{

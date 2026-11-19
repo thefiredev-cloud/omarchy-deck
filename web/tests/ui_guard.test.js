@@ -309,7 +309,7 @@ test('report: whitelisted fields, query strings dropped, one per distinct error,
   const post = (b) => { posts.push(JSON.parse(b)); return Promise.reject(new Error('404')); };
   const err = new Error('x is not a function at https://deck/api/a?token=SECRET');
   err.stack = 'TypeError: x\n    at paint (https://deck.example/pages/shop.js?v=2:120:7)\n    at y (https://deck.example/deck.js:9:1)';
-  assert.equal(C.report('render', Object.assign({ route: 'shop/market?zip=92629', secret: 'no' }, C.info(err)), post), true);
+  assert.equal(C.report('render', Object.assign({ route: 'shop/market?zip=92647', secret: 'no' }, C.info(err)), post), true);
   assert.deepEqual(posts[0], { e: 'render', route: 'shop/market', src: 'shop.js', line: 120, col: 7, msg: 'x is not a function at https://deck/api/a' });
   assert.equal(C.report('render', C.info(err), post), false, 'the same error once');
   assert.equal(C.report('nope', { msg: 'x' }, post), false, 'unknown kind');

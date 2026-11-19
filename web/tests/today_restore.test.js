@@ -196,7 +196,7 @@ test('calendar sheet: every event of today and the coming days, by day, each wit
 
 // ---- #13, #91, #92 On this day ----
 const almanac = { now: { date: '2026-11-15', time: '10:00', tz_abbr: 'PST', weekday: 'Sunday', month: 'November', day_of_year: 319, days_left_in_year: 46, iso_week: 46 },
-  location: { label: 'Dana Point, California' }, sun: { available: true, sunrise: '06:24', sunset: '16:46', day_length: '10 h 22 min' },
+  location: { label: 'Huntington Beach, California' }, sun: { available: true, sunrise: '06:24', sunset: '16:46', day_length: '10 h 22 min' },
   moon: { phase: 'Waxing crescent', illumination_percent: 23 },
   events: { available: true, total: 5, years: [{ year: 2024, years_ago: 2, total: 3 }, { year: 2019, years_ago: 7, total: 1 }, { year: 2012, years_ago: 14, total: 1 }] },
   places: { available: true, years: [{ year: 2019, exact: [{ place: 'San Clemente' }], near: [] }, { year: 2015, exact: [], near: [{ place: '<i>Big Sur</i>' }] }] },

@@ -157,12 +157,12 @@ function oldHome(re) {
 }
 test('Real estate tile: home_area names the market the full feed names; no market prints the missing form with the server\'s reason', async () => {
   const summary = { t: T, mortgage: { rate_30y: 6.31 } };
-  const zip = { zip: '92629', city: 'Dana Point', value_trend_1y: 2.1, x: { m: { value_trend_1y: { v: 2.1, c: 0.7 } } } };
+  const zip = { zip: '92647', city: 'Huntington Beach', value_trend_1y: 2.1, x: { m: { value_trend_1y: { v: 2.1, c: 0.7 } } } };
   const areas = (a) => ({ t: T, market: { residential: { areas: a } }, homes: [] });
   const cases = {
-    home: areas([{ zip: '92672', name: 'San Clemente' }, { zip: '92629', name: 'Dana Point', tier: 'home' }]),
-    first: areas([{ zip: 92629, name: 'Dana Point' }]),
-    'long name': areas([{ zip: '92629', name: 'A place name that runs on well past forty characters', tier: 'home' }]),
+    home: areas([{ zip: '92672', name: 'San Clemente' }, { zip: '92647', name: 'Huntington Beach', tier: 'home' }]),
+    first: areas([{ zip: 92647, name: 'Huntington Beach' }]),
+    'long name': areas([{ zip: '92647', name: 'A place name that runs on well past forty characters', tier: 'home' }]),
     'bad zip': areas([{ zip: '9262', tier: 'home' }]),
     none: areas([]),
     'error body': { error: 'file missing' },
@@ -214,7 +214,7 @@ test('P3: the idle refresh reads a slow feed at its own pace; never what an aler
   assert.equal(D.tdDue('markets', 'markets', last, now + E.markets * 1000, true), true, 'past it: read');
   assert.equal(D.tdDue('markets', 'markets', last, now, false), true, 'opening the page or Try again: read');
   assert.equal(D.tdDue('markets', 'markets', Object.assign({}, last, { ok: false }), now, true), true, 'a failed or out-of-date read is tried again');
-  assert.equal(D.tdDue('zip', 'housing/zip/92648', { path: 'housing/zip/92629', at: now, ok: true }, now, true), true, 'a new home ZIP is read at once');
+  assert.equal(D.tdDue('zip', 'housing/zip/92648', { path: 'housing/zip/92647', at: now, ok: true }, now, true), true, 'a new home ZIP is read at once');
   assert.equal(D.tdDue('products', 'products', { path: 'products', at: now, ok: true }, now, true), true);
   assert.equal(D.tdDue('markets', 'markets', null, now, true), true);
 });
@@ -259,16 +259,16 @@ const settle = async () => { for (let i = 0; i < 40; i++) await new Promise((r) 
 const fullAnswers = () => {
   const surf = wire(surfFx.feed()); surf.spots.forEach((s) => { s.now.height_basis = 'spot'; });
   const shop = shopFx().market; shop.watches.items.forEach((x) => { x.best_used = null; });
-  return { surf, shop, re: { t: T, market: { residential: { areas: [{ zip: '92629', name: 'Dana Point', tier: 'home' }] } } } };
+  return { surf, shop, re: { t: T, market: { residential: { areas: [{ zip: '92647', name: 'Huntington Beach', tier: 'home' }] } } } };
 };
 
 test('glue: with the slices the page never reads surf-coast, ecom-market or realestate, and the glance equals the one drawn from the full feeds', async () => {
   const f = fullAnswers();
-  const answers = { 'surf-coast': f.surf, 'ecom-market': f.shop, realestate: f.re, 'housing/zip/92629': { t: T, zip: '92629', city: 'Dana Point', value_trend_1y: 2 } };
+  const answers = { 'surf-coast': f.surf, 'ecom-market': f.shop, realestate: f.re, 'housing/zip/92647': { t: T, zip: '92647', city: 'Huntington Beach', value_trend_1y: 2 } };
   const withSlices = sandbox(Object.assign({ today: today({ surf_best: surfBest(f.surf, true), shop_moves: shopMoves(f.shop), home_area: homeArea(f.re) }) }, answers));
   await withSlices.ctx.v7Today(); await settle();
   for (const p of ['surf-coast', 'ecom-market', 'realestate']) assert.ok(!withSlices.urls.includes(p), p + ' is not read');
-  assert.ok(withSlices.urls.includes('housing/zip/92629'));
+  assert.ok(withSlices.urls.includes('housing/zip/92647'));
   // an older server: no slice, so the full feeds are read, and the glance reads the same
   const old = sandbox(Object.assign({ today: today() }, answers));
   await old.ctx.v7Today(); await settle();
@@ -292,7 +292,7 @@ test('glue: every Today read passes a shape; the idle refresh skips a slow feed 
   await s.ctx.v7Today(true); await settle();
   const again = new Set(s.urls);
   for (const p of ['products', 'testflight', 'schedules', 'today', 'replyblock', 'health', 'cams', 'car', 'ha', 'cluster', 'deadlines', 'calendar']) assert.ok(again.has(p), p + ' read on every refresh');
-  for (const p of ['markets', 'watch', 'weather', 'hockey', 'traffic', 'onthisday', 'housing/national?part=summary', 'housing/zip/92629']) assert.ok(!again.has(p), p + ' kept inside its period');
+  for (const p of ['markets', 'watch', 'weather', 'hockey', 'traffic', 'onthisday', 'housing/national?part=summary', 'housing/zip/92647']) assert.ok(!again.has(p), p + ' kept inside its period');
   assert.ok(s.urls.length < first);
   // past the markets period, markets is read again; opening the page reads every feed
   s.at(s.now() + 80000); s.urls.length = 0; await s.ctx.v7Today(true); await settle();
@@ -327,10 +327,10 @@ test('malformed slices fall back to complete feeds, repeatedly, without losing o
     (() => { const shop_moves = wire(valid.shop_moves); delete shop_moves.watches.items[0].best_used.condition; return { shop_moves }; })(),
     { shop_moves: { watches: { items: [{ label: 'Watch', median: 10, change_7d: {}, best: null, best_used: null }] } } },
     { home_area: { zip: {} } }, { home_area: { zip: 'bad', name: 'Home' } },
-    { home_area: { zip: '92629', name: {} } }, { home_area: { zip: null } },
+    { home_area: { zip: '92647', name: {} } }, { home_area: { zip: null } },
   ];
   const feeds = { 'surf-coast': f.surf, 'ecom-market': f.shop, realestate: f.re,
-    'housing/zip/92629': { t: T, zip: '92629', value_trend_1y: 2 } };
+    'housing/zip/92647': { t: T, zip: '92647', value_trend_1y: 2 } };
   const base = sandbox(Object.assign({ today: today(valid) }, feeds));
   await base.ctx.v7Today(); await settle();
   for (const bad of damaged) await t.test(JSON.stringify(bad), async () => {
@@ -351,7 +351,7 @@ test('empty lists and explicit unavailable home markets are valid, not malformed
 
 test('registered Today keeps each failed slice stale while fresh alerts update, then recovers and forgets on role change', async () => {
   const f = fullAnswers(), valid = { surf_best: surfBest(f.surf, true), shop_moves: shopMoves(f.shop), home_area: homeArea(f.re) };
-  const answers = { today: today(valid), 'housing/zip/92629': { t: T, zip: '92629', value_trend_1y: 2 } };
+  const answers = { today: today(valid), 'housing/zip/92647': { t: T, zip: '92647', value_trend_1y: 2 } };
   const s = sandbox(answers), html = [];
   const pact = { querySelector: () => null, insertAdjacentHTML: (where, h) => html.push(h) };
   const header = { querySelector: () => pact };
@@ -396,7 +396,7 @@ test('Shop never calls an unknown seven-day change no drops', () => {
 test('slice recovery clears failed fallback marks and a whole Today failure does not advance the saved read', async () => {
   const f = fullAnswers(), valid = { surf_best: surfBest(f.surf, true), shop_moves: shopMoves(f.shop), home_area: homeArea(f.re) };
   const answers = { today: today(), 'surf-coast': f.surf, 'ecom-market': f.shop, realestate: f.re,
-    'housing/zip/92629': { t: T, zip: '92629', value_trend_1y: 2 } };
+    'housing/zip/92647': { t: T, zip: '92647', value_trend_1y: 2 } };
   const s = sandbox(answers), html = [], pact = { querySelector: () => null, insertAdjacentHTML: (p, h) => html.push(h) };
   s.ctx.DeckPages.register('today', { show: () => s.ctx.v7Today() });
   s.ctx.DeckPages.dispatch('today', false); await settle();

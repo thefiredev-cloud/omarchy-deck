@@ -50,7 +50,7 @@ const MARKET = { generated_at: T(3600),
 const INSIGHT = { t: T(10800), model: 'DeepSeek-V4.1-Flash-1017-EXL3', categories: { ai_software: 'Two strong fits. One local, one remote with real pay.' },
   takes: { 'https://example.com/b2': 'Remote, well paid, and it is the same agent work you already do.' } };
 const FEED = () => ({ t: T(600), refresh: 3600, src: ['ashby', 'dice'], by_site: { linkedin: 182, ashby: 953 }, taxonomy: TAX,
-  rules: { home: 'Dana Point, CA', in_person_metros: ['south_oc', 'oc', 'sd', 'la'], remote_min_pay: 100000, pay_normalization: 'annual USD, hourly x2080' },
+  rules: { home: 'Huntington Beach, CA', in_person_metros: ['south_oc', 'oc', 'sd', 'la'], remote_min_pay: 100000, pay_normalization: 'annual USD, hourly x2080' },
   errors: [{ source: 'themuse', reason: 'HTTP 403 from www.themuse.com' }], disabled: [{ source: 'indeed', reason: 'Cloudflare challenge (HTTP 403)' }],
   market: MARKET, listings: LISTINGS() });
 const SAVED = (items) => ({ person: 'tanner', items, cap: 500, states: D.SJ_STATES, t: NOW / 1000 });

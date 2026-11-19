@@ -88,12 +88,12 @@ const OCAM = () => ({ generated_at: NOV - 600, break_cams: [
   { spot: 'Salt Creek', cam: { id: 'monarch-bay-beach-club', name: 'Monarch Bay Beach Club', operator: 'HDOnTap', kind: 'link',
     view_url: 'https://hdontap.com/stream/621213/monarch-bay-beach-club-live-webcam/', player_url: null,
     snapshot_thumbnail_url: 'https://storage.hdontap.com/wowza_stream_thumbnails/snapshot_hosb6_fulkra_monarch_resort_beach.stream_8FXn5TS.jpg' } },
-  { spot: 'Strands', cam: { id: 'dana-point-harbor', name: 'Dana Point Harbor, Laguna Cliffs Resort', operator: 'HDOnTap', kind: 'link',
-    view_url: 'https://hdontap.com/stream/994481/dana-point-harbor-laguna-cliffs-resort-live-webcam/', player_url: null,
-    snapshot_thumbnail_url: 'https://storage.hdontap.com/wowza_stream_thumbnails/snapshot_hosb6_danapoint-harbor_lgm.stream.jpg' } },
-  { spot: 'Doheny', cam: { id: 'dana-point-harbor', name: 'Dana Point Harbor, Laguna Cliffs Resort', operator: 'HDOnTap', kind: 'link',
-    view_url: 'https://hdontap.com/stream/994481/dana-point-harbor-laguna-cliffs-resort-live-webcam/', player_url: null,
-    snapshot_thumbnail_url: 'https://storage.hdontap.com/wowza_stream_thumbnails/snapshot_hosb6_danapoint-harbor_lgm.stream.jpg' } }
+  { spot: 'Strands', cam: { id: 'huntington-beach-harbor', name: 'Huntington Beach Harbor, Laguna Cliffs Resort', operator: 'HDOnTap', kind: 'link',
+    view_url: 'https://hdontap.com/stream/994481/huntington-beach-harbor-laguna-cliffs-resort-live-webcam/', player_url: null,
+    snapshot_thumbnail_url: 'https://storage.hdontap.com/wowza_stream_thumbnails/snapshot_hosb6_harbor-cam_lgm.stream.jpg' } },
+  { spot: 'Doheny', cam: { id: 'huntington-beach-harbor', name: 'Huntington Beach Harbor, Laguna Cliffs Resort', operator: 'HDOnTap', kind: 'link',
+    view_url: 'https://hdontap.com/stream/994481/huntington-beach-harbor-laguna-cliffs-resort-live-webcam/', player_url: null,
+    snapshot_thumbnail_url: 'https://storage.hdontap.com/wowza_stream_thumbnails/snapshot_hosb6_harbor-cam_lgm.stream.jpg' } }
 ] });
 
 test('L12: the home-break snapshots come back on a tap only, in a fixed 16:9 box with no referrer, the live view beside', () => {
@@ -101,8 +101,8 @@ test('L12: the home-break snapshots come back on a tap only, in a fixed 16:9 box
   assert.equal(count(html, /class="sf-snap"/g), 2, 'Salt Creek; Strands and Doheny');
   assert.doesNotMatch(html, /<img|storage\.hdontap/, 'nothing from their host before a tap');
   assert.equal(count(html, /<a class="ext sf-live" href="https:\/\/hdontap\.com\/stream\/[^"]+" target="_blank" rel="noopener noreferrer">Live view<\/a>/g), 2);
-  html = S.camsSection(OCAM(), true, new Set(['dana-point-harbor']));
-  assert.match(html, /<div class="sf-snap on" data-cam="dana-point-harbor">[^]*aria-expanded="true"[^]*Dana Point Harbor, Laguna Cliffs Resort · snapshot[^]*<div class="sf-snapm"><img src="https:\/\/storage\.hdontap\.com\/wowza_stream_thumbnails\/snapshot_hosb6_danapoint-harbor_lgm\.stream\.jpg" alt="Snapshot: Dana Point Harbor, Laguna Cliffs Resort, near Strands and Doheny" referrerpolicy="no-referrer" decoding="async"><\/div><\/div>/);
+  html = S.camsSection(OCAM(), true, new Set(['huntington-beach-harbor']));
+  assert.match(html, /<div class="sf-snap on" data-cam="huntington-beach-harbor">[^]*aria-expanded="true"[^]*Huntington Beach Harbor, Laguna Cliffs Resort · snapshot[^]*<div class="sf-snapm"><img src="https:\/\/storage\.hdontap\.com\/wowza_stream_thumbnails\/snapshot_hosb6_harbor-cam_lgm\.stream\.jpg" alt="Snapshot: Huntington Beach Harbor, Laguna Cliffs Resort, near Strands and Doheny" referrerpolicy="no-referrer" decoding="async"><\/div><\/div>/);
   assert.equal(count(html, /<img/g), 1, 'only the row tapped open');
   assert.match(css, /\.sf-snapm\{position:relative;aspect-ratio:16\/9;/, 'the box is sized before the picture lands');
   // another host, a path outside the pattern, or the iPhone app: no picture, a plain link row
@@ -110,10 +110,10 @@ test('L12: the home-break snapshots come back on a tap only, in a fixed 16:9 box
   o.break_cams[0].cam.snapshot_thumbnail_url = 'https://evil.example/x.jpg';
   o.break_cams[1].cam.snapshot_thumbnail_url = 'https://storage.hdontap.com/wowza_stream_thumbnails/../x.jpg"onerror="a';
   o.break_cams[2].cam.snapshot_thumbnail_url = 'https://storage.hdontap.com/wowza_stream_thumbnails/../x.jpg"onerror="a';
-  html = S.camsSection(o, true, new Set(['monarch-bay-beach-club', 'dana-point-harbor']));
+  html = S.camsSection(o, true, new Set(['monarch-bay-beach-club', 'huntington-beach-harbor']));
   assert.doesNotMatch(html, /evil|onerror|<img|sf-snap/);
   assert.equal(count(html, /<a class="frow"/g), 2);
-  html = S.camsSection(OCAM(), false, new Set(['dana-point-harbor']));
+  html = S.camsSection(OCAM(), false, new Set(['huntington-beach-harbor']));
   assert.doesNotMatch(html, /<img|sf-snap/, 'the app blocks other hosts: links only');
 });
 

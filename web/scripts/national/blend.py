@@ -52,7 +52,7 @@ ACS_MID = (2022, 7)  # midpoint of the ACS 2020-2024 period the levels are rolle
 # roll_forward_income's growth series (2026-11-15, SeeData D10 follow-up): the county BEA per-capita income 5-year
 # annual rate, a broad and slow series, compounded only up to BEA's own latest year. It replaced the ZIP's single-year
 # IRS AGI-per-return change compounded to today, which turned capital-gains swings into income (10022: ACS $172,026,
-# rolled $12,426; 92629: $142,807, rolled $200,298).
+# rolled $12,426; 92647: $142,807, rolled $200,298).
 INCOME_GROWTH = "bea_per_capita_income_5y_cagr"
 TIER2_CAP = 0.45  # Main 2026-11-14: a fallback value reads low (dots: medium starts at 0.5)
 # metrics other metrics' normalizers, agreement or validity checks read: computed first

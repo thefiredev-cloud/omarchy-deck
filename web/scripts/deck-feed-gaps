@@ -4,7 +4,7 @@
 Reads feeds the Deck already collects (no new site is contacted except the local cluster):
   house-feeds/national-v2/manifest.json  metro housing and commercial fields (Realtor.com, Redfin, Zillow, Census,
                                          BLS, cre listings), each with its source and as-of
-  house-feeds/realestate.json            Dana Point and South OC ZIP markets (Zillow, Realtor.com)
+  house-feeds/realestate.json            Huntington Beach and South OC ZIP markets (Zillow, Realtor.com)
   deck/cre-deals.json                    commercial listings from public broker sites, cap rates, FRED rates
   deck/jobs.json + jobs-market-history   public job board postings by category and metro
   deck/gigs.json                         public freelance boards
@@ -516,7 +516,7 @@ def surf_gaps(sc, jobs):
 # ---------------------------------------------------------------- cluster next steps
 
 OWNER_CONTEXT = (
-    "The reader is a Dana Point, California investor and founder. He runs Kodros (private, local AI for small and "
+    "The reader is a Huntington Beach, California investor and founder. He runs Kodros (private, local AI for small and "
     "medium businesses), buys residential and commercial real estate, buys goods to resell, and bids on freelance gigs "
     "(AI, web, data, Rust, iOS). He owns NONE of the properties, products or companies in these items: every step is "
     "from a buyer, researcher or seller-of-services position. Good shapes: 'Pull five Rockford single-family comps and "

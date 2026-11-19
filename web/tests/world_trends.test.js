@@ -29,7 +29,7 @@ const SURF = { t: 1794927000, refresh: 1800, stale: false, spots: [
   { id: 'rincon', name: 'Rincon', best: { day: 'today', rating: 6, word: 'Fair' } }] };
 const HOUSE = { generated_at: '2026-11-17T12:00:00Z', mortgage: { rate_30y: 7.11, as_of: '2026-11-12', source: 'FRED MORTGAGE30US' },
   us: { zhvi: 367798, zhvi_yoy: 1.63, redfin_inventory_yoy: 13.63, days_on_market: 49 } };
-const HOMES = { generated_at: '2026-11-17T14:00:00Z', total: 1566, rows: [{ type: 'Condo', beds: 1, city: 'Dana Point', price: 435000, url: 'https://www.redfin.com/x', addr: '1 Sample St' }] };
+const HOMES = { generated_at: '2026-11-17T14:00:00Z', total: 1566, rows: [{ type: 'Condo', beds: 1, city: 'Huntington Beach', price: 435000, url: 'https://www.redfin.com/x', addr: '1 Sample St' }] };
 const CRE = { generated_at: '2026-11-17T14:13:00Z', total: 1730, rows: [{ id: 'd1', type: 'Retail', city: 'Apple Valley', state: 'CA', price: 2900000, cap: { kind: 'listed', value: 11.17 } }] };
 const JOBS = { t: 1794925974, refresh: 3600, stale: false, taxonomy: [{ slug: 'ai_software', name: 'AI and software' }, { slug: 'real_estate', name: 'Real estate' }],
   market: { by_category: { real_estate: { total: 88, delta_vs_prev: -3, median_pay_max: 150000 }, ai_software: { total: 1736, delta_vs_prev: 12, median_pay_max: 233000 } } } };
@@ -112,13 +112,13 @@ test('World page: the gaps lead, then Surf, Residential, Commercial, Jobs demand
   assert.doesNotMatch(v, /Rincon/, 'only the pinned home spots');
   assert.match(v, /30-yr rate 7\.11% Nov 12/);
   assert.match(v, /US home value \$368K \+1\.6% 1 yr/);
-  assert.match(v, /1,566 homes listed near home Condo, 1 bd Dana Point \$435K/);
+  assert.match(v, /1,566 homes listed near home Condo, 1 bd Huntington Beach \$435K/);
   assert.doesNotMatch(v, /Sample St/, 'no street address on the World page');
   assert.match(v, /1,730 public deals, best scored first Retail Apple Valley, CA \$2\.90M 11\.17% cap, listed/);
   assert.match(v, /Jobs demand 87 min ago AI and software Median top of range \$233K 1,736 \+12 since last read Real estate/);
   // fastest growing first; unknown growth last and never a zero
   const s = h.slice(h.indexOf('id="wd-search"'));
-  assert.deepEqual([...s.matchAll(/<b>([a-z][^<]*)<\/b>/g)].map((m) => m[1]).slice(0, 4), ['local ai assistant for small business', 'home battery backup', 'surf lessons dana point', 'duplex for sale orange county']);
+  assert.deepEqual([...s.matchAll(/<b>([a-z][^<]*)<\/b>/g)].map((m) => m[1]).slice(0, 4), ['local ai assistant for small business', 'home battery backup', 'surf lessons huntington beach', 'duplex for sale orange county']);
   assert.match(s, /<span class="delta up">\+240%<\/span>/);
   assert.doesNotMatch(s, />0%</);
 });

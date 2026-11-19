@@ -127,7 +127,7 @@ final class DeckBestZipsTests: XCTestCase {
 
         let synthetic = DeckNationalParser.rank(try json(#"""
         {"dataset":"v2","cols":["zip","inventory","price_cuts","home_value","affordability"],"rows":[
-          {"zip":"92629","inventory":77,"price_cuts":null,"home_value":1794052,"affordability":79.86,
+          {"zip":"92647","inventory":77,"price_cuts":null,"home_value":1794052,"affordability":79.86,
            "from":{"inventory":"metro","price_cuts":"county","home_value":"state","affordability":7}}]}
         """#))
         let mixed = try XCTUnwrap(synthetic.rows.first)
@@ -158,10 +158,10 @@ final class DeckBestZipsTests: XCTestCase {
         let columns = BestZips.columns(.multifamily, isV2: true, have: rank.have)
         XCTAssertEqual(columns.map(\.label), ["Multifamily score", "Rent", "Rent 1-yr", "Renters in 5+ unit buildings",
                                               "2-4 unit share", "Vacant for rent", "Units permitted 5+", "MF cap spread"])
-        let dana = try XCTUnwrap(rank.rows.first { $0.zip == "92629" })
-        let cells = columns.map { BestZips.cell(dana, $0, isV2: true).text }
+        let hb = try XCTUnwrap(rank.rows.first { $0.zip == "92647" })
+        let cells = columns.map { BestZips.cell(hb, $0, isV2: true).text }
         XCTAssertEqual(cells, ["56", "$4,113/mo", "+5.5%", "37.9%", "18.3%", "1.7%", "24\u{00A0}units", nil],
-                       "no asking cap spread for Dana Point: a dash")
+                       "no asking cap spread for Huntington Beach: a dash")
         let dyess = try XCTUnwrap(rank.rows.first { $0.zip == "79607" })
         let vacant = try XCTUnwrap(columns.first { $0.key == "vac" })
         XCTAssertEqual(BestZips.cell(dyess, vacant, isV2: true).text, "0.0%", "a reported zero is a value, not a dash")

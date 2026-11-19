@@ -7,7 +7,7 @@ import XCTest
 final class DeckCommercialTests: XCTestCase {
     private func row(_ id: String, type: String = "Retail", price: Double? = 1_000_000, units: Double? = nil,
                      sqft: Double? = 5_000, cap: Double? = 6, capKind: String = "listed", dom: Double? = 30,
-                     score: Double? = 60, county: String = "Orange County", zip: String = "92629",
+                     score: Double? = 60, county: String = "Orange County", zip: String = "92647",
                      dscr: Double? = 1.4, coc: Double? = 8, title: String? = nil, tenancy: String? = nil) -> [String: Any] {
         var d: [String: Any] = ["id": id, "type": type, "county": county, "zip": zip, "city": "Sample City",
                                 "title": title ?? "Deal \(id)", "url": "https://example.com/\(id)"]
@@ -306,7 +306,7 @@ final class DeckCommercialTests: XCTestCase {
 
     func testOverviewSummariesAndCharts() throws {
         var rows: [[String: Any]] = []
-        for i in 0..<4 { rows.append(row("o\(i)", type: "Office", price: Double(1_000_000 + i * 100_000), cap: 5 + Double(i), capKind: i < 2 ? "listed" : "estimate", dom: Double(10 + i * 100), zip: "92629")) }
+        for i in 0..<4 { rows.append(row("o\(i)", type: "Office", price: Double(1_000_000 + i * 100_000), cap: 5 + Double(i), capKind: i < 2 ? "listed" : "estimate", dom: Double(10 + i * 100), zip: "92647")) }
         rows.append(row("r1", type: "Retail", price: 500_000, cap: nil, dom: nil, county: "Los Angeles County", zip: "90001"))
         let d = try desk(rows)
         let o = d.overview
@@ -321,7 +321,7 @@ final class DeckCommercialTests: XCTestCase {
         XCTAssertNil(retail.cap, "no cap shown means no cap, never 0%")
         XCTAssertNil(retail.daysOnMarket)
         XCTAssertEqual(o.byCounty.map(\.key), ["Orange", "Los Angeles"])
-        XCTAssertEqual(o.byZip.map(\.key), ["92629 Sample City"], "ZIPs with 3 or more listings")
+        XCTAssertEqual(o.byZip.map(\.key), ["92647 Sample City"], "ZIPs with 3 or more listings")
         XCTAssertEqual(o.capByType.map(\.label), ["Office"], "asset classes need 3 caps")
         XCTAssertEqual(try XCTUnwrap(o.capByType.first).value, 6.5, accuracy: 0.01, "median of listed and estimated caps 5, 6, 7 and 8")
         XCTAssertEqual(o.domBuckets.map(\.value), [0, 1, 0, 1, 2, 0], "10, 110, 210 and 310 days")

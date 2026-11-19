@@ -1,9 +1,9 @@
 {
  "sources": "ops/bin/deck_jobs_taxonomy.py (the Jobs collector's canonical taxonomy)",
- "home": "Dana Point, CA",
+ "home": "Huntington Beach, CA",
  "metros": {
   "south_oc": [
-   "dana point",
+   "huntington beach",
    "capistrano beach",
    "monarch beach",
    "san clemente",
@@ -374,7 +374,7 @@
   {
    "slug": "surf_outdoor",
    "name": "Surf and outdoor",
-   "definition": "Brands, gear and coastal work. He surfs Salt Creek, Strands, Doheny and Trestles, so this is a lifestyle match, not just a pay match.",
+   "definition": "Brands, gear and coastal work. Brands, gear and coastal work for a surfer: a lifestyle match as well as a pay match.",
    "subs": [
     {
      "slug": "surf_industry",
@@ -427,7 +427,7 @@
   }
  ],
  "rules": {
-  "home": "Dana Point, CA",
+  "home": "Huntington Beach, CA",
   "in_person_metros": [
    "south_oc",
    "oc",

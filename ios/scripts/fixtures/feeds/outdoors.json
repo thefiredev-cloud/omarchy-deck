@@ -23,7 +23,7 @@
    "kind": "surf",
    "title": "Doheny: 2.5 ft SSW, 14 s",
    "summary": "Score 6/10, fair. Light wind, clean.",
-   "location": "Dana Point, CA",
+   "location": "Huntington Beach, CA",
    "price": null,
    "currency": null,
    "source_url": "https://www.ndbc.noaa.gov/station_page.php?station=46224",
@@ -61,12 +61,12 @@
   },
   {
    "kind": "fishing",
-   "title": "Dana Wharf half-day boats",
+   "title": "Harbor Wharf half-day boats",
    "summary": "Calico bass and sculpin, water 66 F",
-   "location": "Dana Point Harbor",
+   "location": "Huntington Beach Harbor",
    "price": null,
    "currency": null,
-   "source_url": "https://www.danawharf.com/fish-counts",
+   "source_url": "https://example.com/fish-counts",
    "as_of": "2026-10-30T15:00:00Z"
   }
  ],

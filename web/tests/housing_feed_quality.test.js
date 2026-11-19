@@ -13,16 +13,16 @@ const D=new Function(src.slice(a,b)+'\nreturn DeckUI;')();
 const NOW=Date.UTC(2026,10,13,9,0,0);
 const T=Math.floor(NOW/1000);
 
-const home=(o)=>Object.assign({addr:'100 Fixture Dr',price:1850000,currency:'USD',city:'Dana Point',type:'Single family',beds:4,baths:2.5,sqft:2359,
- source:'redfin',listed_at:T-7200,url:'https://www.redfin.com/CA/Dana-Point/100-Fixture-Dr/home/1'},o);
-const com=(o)=>Object.assign({addr:'100 Harbor Blvd',price:2000000,currency:'USD',city:'Dana Point',type:'Office',sqft:4000,
+const home=(o)=>Object.assign({addr:'100 Fixture Dr',price:1850000,currency:'USD',city:'Huntington Beach',type:'Single family',beds:4,baths:2.5,sqft:2359,
+ source:'redfin',listed_at:T-7200,url:'https://www.redfin.com/CA/Huntington-Beach/100-Fixture-Dr/home/1'},o);
+const com=(o)=>Object.assign({addr:'100 Harbor Blvd',price:2000000,currency:'USD',city:'Huntington Beach',type:'Office',sqft:4000,
  source:'commercialcafe',url:'https://www.commercialcafe.com/commercial-property/100-harbor/1'},o);
-const feed=(o)=>Object.assign({t:T,refresh:3600,src:['redfin'],errors:[],market:{area:'Dana Point'},homes:[],commercial:[]},o);
+const feed=(o)=>Object.assign({t:T,refresh:3600,src:['redfin'],errors:[],market:{area:'Huntington Beach'},homes:[],commercial:[]},o);
 // distinct listings after the merge, in the words the pages use ("2 homes · 1 commercial")
 const counts=(r)=>{const H=D.homeRows(r);return [H.homes.length?H.homes.length+(H.homes.length===1?' home':' homes'):'',H.com.length?H.com.length+' commercial':''].filter(Boolean).join(' · ')};
 
 test('a listing that comes back twice counts once in the rows and on Homes', () => {
-  const again='https://www.redfin.com/CA/Dana-Point/100-Fixture-Dr/home/1?again';
+  const again='https://www.redfin.com/CA/Huntington-Beach/100-Fixture-Dr/home/1?again';
   const cagain='https://www.commercialcafe.com/commercial-property/100-harbor/1?again';
   const r=feed({homes:[home(),home({url:again})],commercial:[com(),com({url:cagain})]});
   assert.equal(counts(r),'1 home · 1 commercial','totals count distinct listings');
@@ -48,7 +48,7 @@ test('a non-USD listing price is unknown and never passes a USD budget', () => {
 });
 
 test('a listing with no usable price is unknown: never $0 and never inside a budget', () => {
-  const unknown=home({price:0,addr:'1 Unpriced Ln',url:'https://www.redfin.com/CA/Dana-Point/1-Unpriced-Ln/home/2'});
+  const unknown=home({price:0,addr:'1 Unpriced Ln',url:'https://www.redfin.com/CA/Huntington-Beach/1-Unpriced-Ln/home/2'});
   assert.equal(D.listFilter([unknown],{within:true},2000000,'homes').length,0);
   const page=D.homes(feed({homes:[unknown]}),NOW,{page:'short'});
   assert.doesNotMatch(page,/\$0/);
@@ -134,7 +134,7 @@ test('a short list that hides rows says how many it shows of how many it has', (
 
 test('the same address spelled two ways (Drive/Dr, Unit/#, North/N) counts once', () => {
   const zillow=home({source:'zillow',addr:'100 Fixture Drive',url:'https://www.zillow.com/homedetails/100-Fixture-Drive/2_zpid/'});
-  const u1=home({addr:'10 Main St Unit 4',url:'https://www.redfin.com/CA/Dana-Point/10-Main-St-4/unit/1'});
+  const u1=home({addr:'10 Main St Unit 4',url:'https://www.redfin.com/CA/Huntington-Beach/10-Main-St-4/unit/1'});
   const u2=home({source:'zillow',addr:'10 Main Street #4',url:'https://www.zillow.com/homedetails/10-Main-St-4/3_zpid/'});
   const n1=com({addr:'200 North Coast Highway',url:'https://www.commercialcafe.com/commercial-property/200/1'});
   const n2=com({source:'realmo',addr:'200 N. Coast Hwy',url:'https://www.realmo.com/listing/200'});
@@ -154,14 +154,14 @@ test('a listing date of 0 or in the future reads as unknown, never "20770 d ago"
 });
 
 test('an address printed with city, state and ZIP counts once beside the plain street row, with or without a city field', () => {
-  const full=home({source:'zillow',addr:'100 Fixture Dr, Dana Point, CA 92629',city:'',url:'https://www.zillow.com/homedetails/100-Fixture-Dr/2_zpid/'});
+  const full=home({source:'zillow',addr:'100 Fixture Dr, Huntington Beach, CA 92647',city:'',url:'https://www.zillow.com/homedetails/100-Fixture-Dr/2_zpid/'});
   const nocity=home({source:'realtor',addr:'100 Fixture Dr',city:'',url:'https://www.realtor.com/realestateandhomes-detail/100-Fixture-Dr/9'});
   assert.equal(counts(feed({homes:[home(),full,nocity]})),'1 home','one row for one home');
   assert.match(D.homes(feed({homes:[home(),full,nocity]}),NOW,{page:'short'}),/<span>1 home<\/span>/);
 });
 
 test('the same street address in two different cities stays two listings', () => {
-  const a=home({addr:'100 Main St',city:'Dana Point',url:'https://x.test/a'}),b=home({addr:'100 Main St, Irvine, CA 92614',city:'',url:'https://x.test/b'});
+  const a=home({addr:'100 Main St',city:'Huntington Beach',url:'https://x.test/a'}),b=home({addr:'100 Main St, Irvine, CA 92614',city:'',url:'https://x.test/b'});
   assert.equal(counts(feed({homes:[a,b]})),'2 homes');
 });
 
@@ -191,7 +191,7 @@ test('a city field that carries the state still counts the same street once', ()
 });
 
 test('an address printed with its own city, state and ZIP but no commas counts once beside the plain street row', () => {
-  const a=home(),b=home({source:'zillow',addr:'100 Fixture Dr Dana Point CA 92629',city:'Dana Point',url:'https://x.test/b'});
+  const a=home(),b=home({source:'zillow',addr:'100 Fixture Dr Huntington Beach CA 92647',city:'Huntington Beach',url:'https://x.test/b'});
   assert.equal(counts(feed({homes:[a,b]})),'1 home');
 });
 
@@ -201,7 +201,7 @@ test('a street name is never cut for a city that the row does not name', () => {
 });
 
 test('two units under one street address, named by a building, space or letter-number code, stay two listings', () => {
-  const e110=com({addr:'24901 Dana Point Harbor, E110, Dana Point, CA 92629',url:'https://x.test/e110'}),e120=com({addr:'24901 Dana Point Harbor, E120, Dana Point, CA 92629',url:'https://x.test/e120'});
+  const e110=com({addr:'24901 Huntington Beach Harbor, E110, Huntington Beach, CA 92647',url:'https://x.test/e110'}),e120=com({addr:'24901 Huntington Beach Harbor, E120, Huntington Beach, CA 92647',url:'https://x.test/e120'});
   assert.equal(counts(feed({commercial:[e110,e120]})),'2 commercial');
   const a=home({addr:'700 Fixture Dr, A-202, Murrieta, CA 92563',city:'Murrieta',url:'https://x.test/a202'}),b=home({addr:'700 Fixture Dr, A-203, Murrieta, CA 92563',city:'Murrieta',url:'https://x.test/a203'});
   assert.equal(counts(feed({homes:[a,b]})),'2 homes');
@@ -292,18 +292,18 @@ test('a non-USD price never prints a dollar $/SF figure', () => {
 });
 
 test('one unit written "Space 74" or "APT C", or with its code in front ("E110-24901 ...", "915-#C ..."), counts once beside the plain row from another source', () => {
-  // live 2026-11-14: redfin "1880 N El Camino Real #74" and zillow "... Space 74"; redfin "915-#C Buena Vis" and zillow "915 Buena Vis APT C"; century21 "24901 Dana Point Harbor Dr, E110" and realmo "E110-24901 Dana Point Harbor Dr"
+  // live 2026-11-14: redfin "1880 N El Camino Real #74" and zillow "... Space 74"; redfin "915-#C Buena Vis" and zillow "915 Buena Vis APT C"; century21 "24901 Huntington Beach Harbor Dr, E110" and realmo "E110-24901 Huntington Beach Harbor Dr"
   const a1=home({addr:'1880 N El Camino Real #74, San Clemente, CA 92672',city:'San Clemente',url:'https://www.redfin.com/CA/San-Clemente/unit-74/home/1'});
   const a2=home({source:'zillow',addr:'1880 N El Camino Real Space 74, San Clemente, CA 92672',city:'San Clemente',url:'https://www.zillow.com/homedetails/1880-74/1_zpid/'});
   const b1=home({addr:'915-#C Buena Vis, San Clemente, CA 92672',city:'San Clemente',url:'https://www.redfin.com/CA/San-Clemente/unit-c/home/2'});
   const b2=home({source:'zillow',addr:'915 Buena Vis APT C, San Clemente, CA 92672',city:'San Clemente',url:'https://www.zillow.com/homedetails/915-c/2_zpid/'});
-  const c1=com({source:'century21',addr:'24901 Dana Point Harbor Dr, E110, Dana Point, CA 92629',url:'https://commercial.century21.com/listing/e110'});
-  const c2=com({source:'realmo',addr:'E110-24901 Dana Point Harbor Dr, Dana Point, CA 92629',url:'https://www.realmo.com/listing/13191118'});
+  const c1=com({source:'century21',addr:'24901 Huntington Beach Harbor Dr, E110, Huntington Beach, CA 92647',url:'https://commercial.century21.com/listing/e110'});
+  const c2=com({source:'realmo',addr:'E110-24901 Huntington Beach Harbor Dr, Huntington Beach, CA 92647',url:'https://www.realmo.com/listing/13191118'});
   const r=feed({homes:[a1,a2,b1,b2],commercial:[c1,c2]});
   assert.equal(counts(r),'2 homes · 1 commercial');
   assert.match(D.homes(r,NOW,{page:'all'}),/<span>2 homes<\/span>/);
   // a different unit behind the same prefix form stays its own listing
-  const d1=home({addr:'E120-24901 Dana Point Harbor Dr, Dana Point, CA 92629',url:'https://x.test/e120'}),d2=home({addr:'E110-24901 Dana Point Harbor Dr, Dana Point, CA 92629',url:'https://x.test/e110'});
+  const d1=home({addr:'E120-24901 Huntington Beach Harbor Dr, Huntington Beach, CA 92647',url:'https://x.test/e120'}),d2=home({addr:'E110-24901 Huntington Beach Harbor Dr, Huntington Beach, CA 92647',url:'https://x.test/e110'});
   assert.equal(counts(feed({homes:[d1,d2]})),'2 homes');
   // a number range is not a unit code
   const e1=com({addr:'1700-1720 North Main Street, Los Angeles, CA 90012',city:'Los Angeles',url:'https://x.test/r1'}),e2=com({addr:'1700 North Main Street, Los Angeles, CA 90012',city:'Los Angeles',source:'realmo',url:'https://x.test/r2'});
@@ -336,8 +336,8 @@ test('an auction row with no starting bid stays unknown, not a bid of --', () =>
 
 // The live feed (2026-11-15) lists 10 buildings in both `homes` (Redfin, Zillow) and `commercial` (Century 21, Realmo) under one street address.
 test('a building the feed lists under both homes and commercial counts once', () => {
-  const h=home({addr:'34244 Via Santa Rosa',city:'Dana Point',type:'Multifamily',price:1290000,url:'https://www.redfin.com/CA/Dana-Point/34244-Via-Santa-Rosa-92624/home/22143597'});
-  const c=com({source:'century21',addr:'34244 Via Santa Rosa, Dana Point, CA 92624',city:'Dana Point',type:'Multifamily',price:1290000,sqft:null,url:'https://www.century21commercial.com/listing/REN036062828'});
+  const h=home({addr:'34244 Via Santa Rosa',city:'Huntington Beach',type:'Multifamily',price:1290000,url:'https://www.redfin.com/CA/Huntington-Beach/34244-Via-Santa-Rosa-92624/home/22143597'});
+  const c=com({source:'century21',addr:'34244 Via Santa Rosa, Huntington Beach, CA 92624',city:'Huntington Beach',type:'Multifamily',price:1290000,sqft:null,url:'https://www.century21commercial.com/listing/REN036062828'});
   assert.equal(counts({homes:[h,home({addr:'2 Other Ln',url:'https://www.redfin.com/x/2'})],commercial:[c,com()]}),'2 homes · 1 commercial');
   const R=D.homeRows({homes:[h],commercial:[c]});
   assert.equal(R.homes.length+R.com.length,1);
@@ -377,7 +377,7 @@ test('one source lists two homes at one street and one price with different size
 
 // 2026-11-16 live feed: Redfin lands print their acreage in sqft (14 Fixture Cove Dr 0.78, 500 E Sample Way 0.25, 3900 Fixture Way 0.32).
 test('a size under 100 SF is an acreage: unknown, never "1 SF" and never an absurd price per square foot', () => {
-  const lot=home({addr:'14 Fixture Cove Dr',city:'Dana Point',type:'Land',price:16900000,sqft:0.78,beds:null,baths:null,url:'https://www.redfin.com/CA/Dana-Point/14-Ritz-Cove-Dr/home/9'});
+  const lot=home({addr:'14 Fixture Cove Dr',city:'Huntington Beach',type:'Land',price:16900000,sqft:0.78,beds:null,baths:null,url:'https://www.redfin.com/CA/Huntington-Beach/14-Ritz-Cove-Dr/home/9'});
   assert.equal(D.hListMeta(lot,{type:false}),'');
   assert.doesNotMatch(D.homes(feed({homes:[lot]}),NOW,{page:'short'}),/ SF|\/SF/);
   assert.equal(D.hListMeta(home({sqft:100}),{type:false}).includes('100 SF'),true,'a real small unit still shows its size');

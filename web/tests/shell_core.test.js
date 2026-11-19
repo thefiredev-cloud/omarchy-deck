@@ -24,7 +24,7 @@ test('old links and stored page names land on the new routes (PageBlueprints 1.1
     life: 'work/jobs', 'life/life': 'work/jobs', jobs: 'work/jobs', 'life/gigs': 'work/gigs', gigs: 'work/gigs',
     fleet: 'home/fleet', cluster: 'home/cluster', dev: 'home/dev', launch: 'home/launch', keys: 'pad/keys', house: 'home/house',
     surf: 'surf', today: 'today', money: 'money', 'money/accounts': 'money/accounts', 'pad/pad': 'pad/pad',
-    'realestate/residential?zip=92629': 'realestate/residential?zip=92629', '#fleet': 'home/fleet', '/Housing/': 'realestate/residential',
+    'realestate/residential?zip=92647': 'realestate/residential?zip=92647', '#fleet': 'home/fleet', '/Housing/': 'realestate/residential',
   };
   for (const [from, to] of Object.entries(cases)) assert.equal(C.redirect(from), to, from);
   // a sub the tab does not have keeps the tab; something that names no page is empty, so the shell falls back to the stored page

@@ -32,6 +32,6 @@ test('the board names its blocks; homes sit in the first column, Best ZIPs alone
 
 test('Your markets: "39 days to sell" and "$4,234/mo rent" never break inside; the line breaks between them',()=>{
  const {DeckRE:R}=new Function('localStorage','DeckUI',src+'\nreturn {DeckScope,DeckRE};')(store(),D);
- const h=R.mineHtml([{name:'92629 Dana Point',zip:'92629',value:1790000,chg:7.1,rent:4234,days:39}]);
+ const h=R.mineHtml([{name:'92647 Huntington Beach',zip:'92647',value:1790000,chg:7.1,rent:4234,days:39}]);
  assert.match(h,/<small>\$4,234\/mo\u00a0rent \u00b7 39\u00a0days\u00a0to\u00a0sell<\/small>/);
 });

@@ -113,12 +113,12 @@ test('Needs you: an empty read says what it knows: nothing needs you only when c
 
 // L21: Home Assistant's weather entity goes unavailable when met.no answers 502 or 503; the deck's own weather line still reads
 test('L21: the weather row falls back to the deck weather line when Home Assistant has none; nothing either way, no row', () => {
-  const wx = { text: 'Dana Point  \u00B7  Temp 68\u00B0F  \u00B7  Wind 5 mph' };
+  const wx = { text: 'Huntington Beach  \u00B7  Temp 68\u00B0F  \u00B7  Wind 5 mph' };
   const down = { entities: { 'weather.forecast_home': { state: 'unavailable' } } };
-  assert.match(visible(D.tdHome({ ha: down, wx }, NOW).html), /Weather Dana Point · Wind 5 mph 68°F/);
-  assert.match(visible(D.tdHome({ ha: { error: 'no answer' }, wx }, NOW).html), /Weather Dana Point · Wind 5 mph 68°F/, 'Home Assistant down too');
+  assert.match(visible(D.tdHome({ ha: down, wx }, NOW).html), /Weather Huntington Beach · Wind 5 mph 68°F/);
+  assert.match(visible(D.tdHome({ ha: { error: 'no answer' }, wx }, NOW).html), /Weather Huntington Beach · Wind 5 mph 68°F/, 'Home Assistant down too');
   assert.match(visible(D.tdHome({ ha: { entities: { 'weather.forecast_home': { state: 'sunny' } } }, wx }, NOW).html), /Weather Sunny/, 'a live entity wins');
-  for (const w of [{ text: 'Weather unavailable' }, { error: 'no answer' }, null, { text: 'Dana Point' }])
+  for (const w of [{ text: 'Weather unavailable' }, { error: 'no answer' }, null, { text: 'Huntington Beach' }])
     assert.doesNotMatch(visible(D.tdHome({ ha: down, wx: w }, NOW).html), /Weather/);
   assert.match(glue, /Promise\.all\(\[P\.cams,P\.car,P\.ha,P\.watch,P\.weather\]\)\.then\(\(\)=>tdPaint\('home',\(\)=>DeckUI\.tdHome\(\{cams:F\.cams,car:F\.car,ha:F\.ha,watch:F\.watch,wx:F\.weather\},now\(\)\)\)\)/);
 });

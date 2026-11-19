@@ -87,7 +87,7 @@ class NextStepRule(unittest.TestCase):
 
     def test_ownership_and_restated_numbers_fail(self):
         for s in ("List a Rockford property for sale to capture the tight market demand",
-                  "List a Dana Point property for sale to capitalize on rising home values",
+                  "List a Huntington Beach property for sale to capitalize on rising home values",
                   "Raise rents on your Boise units before leases renew",
                   "Sell your San Jose building while caps are low",
                   "Review Santa Clara industrial caps of 3.44% against the spread",
