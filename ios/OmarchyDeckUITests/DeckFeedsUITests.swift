@@ -522,6 +522,19 @@ final class DeckFeedsUITests: XCTestCase {
         let device = UIDevice.current.userInterfaceIdiom == .pad ? "ipad" : "iphone"
         let any = app.descendants(matching: .any)
         openFeeds(app, section: "surf")
+        let sidebar = any["feeds.sidebar"].firstMatch
+        let tabs = any["feeds.tabs"].firstMatch
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            XCTAssertTrue(sidebar.waitForExistence(timeout: 5), "wide iPad feeds use the section sidebar")
+            XCTAssertFalse(tabs.exists, "wide iPad feeds do not show the phone tab strip")
+            XCTAssertTrue(app.staticTexts["Cabo to the Columbia River. Your spots first."].exists,
+                          "the wide page shows its section tagline")
+        } else {
+            XCTAssertTrue(tabs.waitForExistence(timeout: 5), "phone feeds use the tab strip")
+            XCTAssertFalse(sidebar.exists, "phone feeds do not show the section sidebar")
+            XCTAssertFalse(app.staticTexts["Cabo to the Columbia River. Your spots first."].exists,
+                           "the phone moves its tagline into Data")
+        }
         XCTAssertTrue(any["surf.card.salt-creek"].firstMatch.waitForExistence(timeout: 20))
         sleep(1)
         shoot("\(device)-surf-1-top")
