@@ -11,6 +11,7 @@ sys.path.insert(0, str(ROOT / "scripts" / "national" / "sources"))
 
 import _bls_ces  # noqa: E402
 import _bps  # noqa: E402
+from ctx import SourceUnavailable  # noqa: E402
 
 
 class BlsCesParserTests(unittest.TestCase):
@@ -43,6 +44,60 @@ class BlsCesParserTests(unittest.TestCase):
         self.assertEqual(data["31080"]["cesm_nonfarm"], 110000)
         self.assertEqual(data["31080"]["cesm_nonfarm_yoy"], 10.0)
         self.assertEqual(history["31080"]["cesm_nonfarm"], [["2024-01", 100000], ["2025-01", 110000]])
+
+
+    def test_cbsa_uses_unadjusted_series_when_adjusted_latest_month_is_missing(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            paths = {name: root / name for name in ("sm.area", "sm.series", "data")}
+            paths["sm.area"].write_text(
+                "area_code\tarea_name\n31080\tLos Angeles-Long Beach-Anaheim, CA\n",
+                encoding="utf-8",
+            )
+            paths["sm.series"].write_text(
+                "series_id\tstate_code\tarea_code\tindustry_code\tdata_type_code\tseasonal\tend_year\tend_period\n"
+                f"sa\t06\t31080\t{_bls_ces.NONFARM}\t01\tS\t2025\tM02\n"
+                f"nsa\t06\t31080\t{_bls_ces.NONFARM}\t01\tU\t2025\tM02\n",
+                encoding="utf-8",
+            )
+            paths["data"].write_text(
+                "series_id\tyear\tperiod\tvalue\n"
+                "sa\t2025\tM01\t200\n"
+                "nsa\t2024\tM02\t100\n"
+                "nsa\t2025\tM01\t100\n"
+                "nsa\t2025\tM02\t110\n",
+                encoding="utf-8",
+            )
+
+            data, _, as_of, history, _ = _bls_ces.parse(paths, "cbsa", "cesm_", 1)
+
+        self.assertEqual(as_of, "2025-02")
+        self.assertEqual(data["31080"]["cesm_nonfarm_yoy"], 10.0)
+        self.assertEqual(
+            history["31080"]["cesm_nonfarm"],
+            [["2024-02", 100000], ["2025-01", 100000], ["2025-02", 110000]],
+        )
+
+
+class BuildingPermitsTrailingTests(unittest.TestCase):
+    def test_trailing_falls_back_to_ytd_arithmetic_and_drops_negative_areas(self):
+        def row(value):
+            return {key: value for key in _bps.KEYS}
+
+        class MissingMonths:
+            def get(self, flavor, year, month=None):
+                if flavor == "c":
+                    raise SourceUnavailable("monthly file unavailable")
+                if flavor == "y" and year == 2025:
+                    return {"good": row(20), "revised_down": row(1)}
+                if flavor == "a":
+                    return {"good": row(100), "revised_down": row(5)}
+                return {"good": row(60), "revised_down": row(10)}
+
+        data, via = _bps.trailing(MissingMonths(), 2025, 6)
+
+        self.assertEqual(via, "year-to-date")
+        self.assertEqual(data, {"good": row(60)})
 
 
 class BuildingPermitsParserTests(unittest.TestCase):
