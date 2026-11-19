@@ -1,0 +1,683 @@
+#!/usr/bin/env python3
+"""Pixel Deck market gaps feed -> ~/.kodros/status/deck/gaps.json: where demand outruns supply.
+
+Reads feeds the Deck already collects (no new site is contacted except the local cluster):
+  house-feeds/national-v2/manifest.json  metro housing and commercial fields (Realtor.com, Redfin, Zillow, Census,
+                                         BLS, cre listings), each with its source and as-of
+  house-feeds/realestate.json            Dana Point and South OC ZIP markets (Zillow, Realtor.com)
+  deck/cre-deals.json                    commercial listings from public broker sites, cap rates, FRED rates
+  deck/jobs.json + jobs-market-history   public job board postings by category and metro
+  deck/gigs.json                         public freelance boards
+  house-feeds/ecom-market.json           store movers, resale offers under their median, official CPI
+  deck/listings.json                     marketplace resale price spreads
+  house-feeds/surf-coast.json            South OC surf forecast (NOAA, NWS, models)
+  deck/trends.json                       this program's trends feed (Product Hunt launches)
+  deck/interest-profile.json             tag weights only: a ranking nudge, never evidence or output
+Scoring: deck_gaps_score.gap_score (formula in `method`). next_step: one batched call to the local cluster
+(http://127.0.0.1:8080, cluster-current) with public evidence only; a template when it fails or times out.
+  deck-feed-gaps                          # one run
+  deck-feed-gaps --no-cluster             # templates only
+  DECK_FEED_DIR=/tmp/x deck-feed-gaps     # read trends.json from and write gaps.json to another directory
+"""
+import collections
+import datetime as dt
+import json
+import os
+import re
+import statistics
+import sys
+import time
+import urllib.error
+import urllib.request
+
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+import deck_feed_common as F  # noqa: E402
+import deck_gaps_score as G  # noqa: E402
+
+NAME = "gaps"
+REFRESH = 3600
+DECK_DIR = F.OUT_DIR
+OUT_DIR = os.environ.get("DECK_FEED_DIR") or DECK_DIR
+HOUSE_DIR = os.environ.get("DECK_HOUSE_DIR") or F.HOUSE_OUT_DIR
+CLUSTER = "http://127.0.0.1:8080/v1/chat/completions"
+MODEL = "cluster-current"
+CLUSTER_TIMEOUT = 120
+TOP_N = 30
+CAPS = {"residential": 6, "local": 3, "commercial": 7, "ecom": 5, "jobs": 4, "gigs": 2, "ai": 2, "surf": 1}
+FIT_TAGS = {"ecom": "ecommerce", "ai": "ai_engineering", "surf": "surf", "residential": "real_estate",
+            "commercial": "real_estate", "local": "real_estate", "gigs": "founder_startup", "jobs": "founder_startup"}
+METRO_MIN_POP = 300_000
+CRE_TYPES = {"Retail": "retail_score", "Office": "office_score", "Industrial": "industrial_score",
+             "Multifamily": "multifamily_score", "Mixed use": None}
+num, scale, pct_rank, mean = G.num, G.scale, G.pct_rank, G.mean
+
+
+def read_json(path):
+    try:
+        with open(path, encoding="utf-8") as fh:
+            return json.load(fh)
+    except (OSError, ValueError):
+        return None
+
+
+def ev(source, metric, value, as_of):
+    """One evidence row, or None when the value or its date is unknown (never published undated)."""
+    iso = G.iso_as_of(as_of)
+    if value is None or value == "" or iso is None:
+        return None
+    return {"source": source, "metric": metric, "value": str(value), "as_of": iso}
+
+
+def money(v):
+    v = num(v)
+    if v is None:
+        return None
+    if abs(v) >= 1e6:
+        return "$%.2fM" % (v / 1e6)
+    return "$" + format(round(v), ",")
+
+
+def pct(v, places=1, sign=True):
+    v = num(v)
+    return None if v is None else (("%+." if sign else "%.") + str(places) + "f%%") % v
+
+
+def short_metro(name):
+    head = (name or "").split(",")[0]
+    parts = head.split("-")
+    state = (name or "").split(",")[-1].strip().split("-")[0] if "," in (name or "") else ""
+    return (parts[0] + (", " + state if state else "")).strip()
+
+
+def slug(*parts):
+    return re.sub(r"[^a-z0-9]+", "-", "-".join(str(p) for p in parts).lower()).strip("-")
+
+
+def cand(cid, title, domain, demand, supply, demand_signal, supply_signal, evidence, next_step):
+    return {"id": cid, "title": title, "domain": domain, "demand": demand, "supply": supply,
+            "demand_signal": demand_signal, "supply_signal": supply_signal,
+            "evidence": [e for e in evidence if e], "next_step": next_step}
+
+
+# ---------------------------------------------------------------- national metros
+
+class National:
+    def __init__(self, man):
+        self.man = man
+        self.src_name = {s.get("id"): s.get("name") or s.get("id") for s in man.get("sources") or [] if isinstance(s, dict)}
+        self.metros = [m for m in man.get("metros") or [] if isinstance(m, dict) and (num(m.get("pop")) or 0) >= METRO_MIN_POP]
+        for m in self.metros:
+            pend, inv = num(m.get("redfin_pending")), num(m.get("redfin_inventory"))
+            m["_pend_ratio"] = round(pend / inv, 3) if pend is not None and inv else None
+            listings, estabs = num(m.get("com_listings")), num(m.get("biz_estabs"))
+            m["_com_per_1k_estabs"] = round(listings / estabs * 1000, 3) if listings is not None and estabs else None
+        self.cols = collections.defaultdict(list)
+        for m in self.metros:
+            for k, v in m.items():
+                if num(v) is not None:
+                    self.cols[k].append(v)
+
+    def pr(self, m, key, invert=False):
+        r = pct_rank(self.cols.get(key, []), m.get(key))
+        return None if r is None else (1 - r if invert else r)
+
+    def field(self, key):
+        f = (self.man.get("fields") or {}).get(key) or {}
+        srcs = [s for s in f.get("sources") or [] if isinstance(s, dict) and s.get("id") != "derived"]
+        if not srcs:
+            return f.get("label") or key, None, None
+        s = srcs[-1]
+        return f.get("label") or key, "%s (%s)" % (self.src_name.get(s["id"], s["id"]), s["id"]), s.get("as_of")
+
+    def ev(self, m, key, fmt):
+        label, src, as_of = self.field(key)
+        v = num(m.get(key))
+        if src is None or v is None:
+            return None
+        return ev(src, "%s, %s" % (label, short_metro(m["name"])), fmt(v), as_of)
+
+    def by_name(self, name):
+        return next((m for m in self.metros if m.get("name") == name), None)
+
+
+FMT = {
+    "pct": lambda v: "%.1f%%" % v, "signed": lambda v: "%+.1f%%" % v, "score": lambda v: "%.0f" % v,
+    "ratio": lambda v: "%.1f" % v, "count": lambda v: format(round(v), ","), "per1k": lambda v: "%.2f per 1,000" % v,
+    "usd": lambda v: money(v),
+}
+
+
+def residential_gaps(nat):
+    out = []
+    for m in nat.metros:
+        if num(m.get("rdc_demand_score")) is None or num(m.get("redfin_months_supply")) is None:
+            continue
+        demand = mean([nat.pr(m, "rdc_demand_score"), nat.pr(m, "redfin_sale_to_list"), nat.pr(m, "_pend_ratio"),
+                       nat.pr(m, "pep_pop_change_1y")])
+        supply = mean([nat.pr(m, "redfin_months_supply"), nat.pr(m, "redfin_inventory_yoy"), nat.pr(m, "new_supply"),
+                       nat.pr(m, "price_cut_share")])
+        city = short_metro(m["name"])
+        d_sig = "; ".join(x for x in (
+            "Realtor.com demand score %.0f" % m["rdc_demand_score"],
+            "sale-to-list %.1f%%" % m["redfin_sale_to_list"] if num(m.get("redfin_sale_to_list")) else None,
+            "%.2f pending sales per home for sale" % m["_pend_ratio"] if m.get("_pend_ratio") else None) if x)
+        s_sig = "; ".join(x for x in (
+            "%.1f months of supply" % m["redfin_months_supply"],
+            "homes for sale %+.1f%% YoY" % m["redfin_inventory_yoy"] if num(m.get("redfin_inventory_yoy")) is not None else None,
+            "%.2f homes permitted per 1,000 people" % m["new_supply"] if num(m.get("new_supply")) is not None else None) if x)
+        out.append(cand(
+            slug("residential-forsale", m["cbsa"]), "Tight for-sale housing in %s" % city, "residential", demand, supply,
+            d_sig, s_sig,
+            [nat.ev(m, "rdc_demand_score", FMT["score"]), nat.ev(m, "redfin_months_supply", FMT["ratio"]),
+             nat.ev(m, "redfin_inventory_yoy", FMT["signed"]), nat.ev(m, "redfin_sale_to_list", FMT["pct"]),
+             nat.ev(m, "new_supply", FMT["per1k"])],
+            "Open %s in Deck Housing, filter ZIPs under 3 months of supply and compare rent yields." % city))
+        if num(m.get("rent_yoy")) is not None and num(m.get("vacancy_rate")) is not None:
+            r_demand = mean([nat.pr(m, "rent_yoy"), nat.pr(m, "pep_pop_change_1y"), nat.pr(m, "migration")])
+            r_supply = mean([nat.pr(m, "vacancy_rate"), nat.pr(m, "new_supply"), nat.pr(m, "acs_vacant_for_rent_share")])
+            out.append(cand(
+                slug("residential-rental", m["cbsa"]), "Rental shortage in %s" % city, "residential", r_demand, r_supply,
+                "; ".join(x for x in ("rent %+.1f%% YoY" % m["rent_yoy"],
+                                      "population %+.1f%% last year" % m["pep_pop_change_1y"]
+                                      if num(m.get("pep_pop_change_1y")) is not None else None) if x),
+                "; ".join(x for x in ("%.1f%% of homes vacant (not seasonal)" % m["vacancy_rate"],
+                                      "%.2f homes permitted per 1,000 people" % m["new_supply"]
+                                      if num(m.get("new_supply")) is not None else None) if x),
+                [nat.ev(m, "rent_yoy", FMT["signed"]), nat.ev(m, "vacancy_rate", FMT["pct"]),
+                 nat.ev(m, "new_supply", FMT["per1k"]), nat.ev(m, "pep_pop_change_1y", FMT["signed"]),
+                 nat.ev(m, "typical_rent", FMT["usd"])],
+                "Shortlist %s ZIPs with rent growth above the metro and low permits; price small multifamily." % city))
+    return out
+
+
+def commercial_metro_gaps(nat, t10):
+    out = []
+    for m in nat.metros:
+        if num(m.get("asking_cap")) is None or (num(m.get("com_listings")) or 0) < 5 or num(m.get("qcew_emp_yoy")) is None:
+            continue
+        spread = num(m["asking_cap"]) - t10[0] if t10 else None
+        demand = mean([nat.pr(m, "qcew_emp_yoy"), nat.pr(m, "bfs_apps_yoy"), nat.pr(m, "pep_pop_change_1y")])
+        supply = mean([nat.pr(m, "_com_per_1k_estabs"),
+                       None if spread is None else 1 - scale(spread, -2.0, 4.0)])
+        city = short_metro(m["name"])
+        out.append(cand(
+            slug("commercial-metro", m["cbsa"]), "Commercial demand ahead of listings in %s" % city, "commercial",
+            demand, supply,
+            "; ".join(x for x in ("jobs %+.1f%% YoY" % m["qcew_emp_yoy"],
+                                  "business applications %+.1f%% YoY" % m["bfs_apps_yoy"]
+                                  if num(m.get("bfs_apps_yoy")) is not None else None) if x),
+            "; ".join(x for x in ("%d commercial listings (%.2f per 1,000 businesses)" % (m["com_listings"], m["_com_per_1k_estabs"])
+                                  if m.get("_com_per_1k_estabs") is not None else None,
+                                  "median asking cap %.2f%%" % m["asking_cap"],
+                                  "%+.2f pts over the 10-year Treasury" % spread if spread is not None else None) if x),
+            [nat.ev(m, "qcew_emp_yoy", FMT["signed"]), nat.ev(m, "bfs_apps_yoy", FMT["signed"]),
+             nat.ev(m, "asking_cap", lambda v: "%.2f%%" % v), nat.ev(m, "com_listings", FMT["count"]),
+             ev(t10[1], "10-year Treasury yield", "%.2f%%" % t10[0], t10[2]) if t10 else None],
+            "Pull %s commercial listings with caps above %.1f%% and check tenant demand by use." % (city, num(m["asking_cap"]))))
+    return out
+
+
+# ---------------------------------------------------------------- commercial (cre-deals)
+
+def cre_gaps(cre, nat, t10):
+    deals = [d for d in cre.get("deals") or [] if isinstance(d, dict) and d.get("state") == "CA" and d.get("county")
+             and d.get("type") in CRE_TYPES]
+    groups = collections.defaultdict(list)
+    for d in deals:
+        groups[(d["county"], d["type"])].append(d)
+    groups = {k: v for k, v in groups.items() if len(v) >= 6}
+    sizes = [len(v) for v in groups.values()]
+    asof = cre.get("generated_at") or cre.get("t")
+    brokers = ", ".join(sorted((cre.get("counts") or {}).get("by_source", {}).keys())) or "public broker sites"
+    out = []
+    for (county, typ), rows in groups.items():
+        caps = [num(d["cap"].get("value")) for d in rows if isinstance(d.get("cap"), dict) and num(d["cap"].get("value"))]
+        listed = sum(1 for d in rows if isinstance(d.get("cap"), dict) and d["cap"].get("kind") == "listed")
+        # only a broker's own listed date measures time on market; "first seen in this feed" measures the collector
+        doms = [num(d["dom"].get("days")) for d in rows if isinstance(d.get("dom"), dict)
+                and str(d["dom"].get("basis") or "").startswith("listed date")]
+        doms = [x for x in doms if x is not None] if len(doms) >= 3 else []
+        if len(caps) < 3:
+            continue
+        med_cap = statistics.median(caps)
+        med_dom = statistics.median(doms) if doms else None
+        metro_name = collections.Counter(d.get("metro") for d in rows if d.get("metro")).most_common(1)
+        m = nat.by_name(metro_name[0][0]) if metro_name and nat else None
+        type_key = CRE_TYPES.get(typ)
+        demand = mean([nat.pr(m, "qcew_emp_yoy") if m else None, nat.pr(m, "bfs_apps_yoy") if m else None,
+                       scale(m.get(type_key), 30, 80) if m and type_key else None])
+        spread = med_cap - t10[0] if t10 else None
+        supply = mean([pct_rank(sizes, len(rows)), None if spread is None else 1 - scale(spread, -2.0, 4.0),
+                       scale(med_dom, 30, 365)])
+        if demand is None:
+            continue
+        place = county.replace(" County", "")
+        evidence = [
+            ev("cre-deals: public broker listings (%s)" % brokers, "%s listings for sale, %s County" % (typ, place),
+               "%d listings; median cap %.2f%% (%d listed, %d estimated)" % (len(rows), med_cap, listed, len(caps) - listed), asof),
+            ev("cre-deals: listing dates from the broker sites", "Median days listed, %s %s" % (place, typ),
+               "%d days" % med_dom if med_dom is not None else None, asof),
+            ev(t10[1], "10-year Treasury yield", "%.2f%%" % t10[0], t10[2]) if t10 else None,
+            nat.ev(m, "qcew_emp_yoy", FMT["signed"]) if m else None,
+            nat.ev(m, "bfs_apps_yoy", FMT["signed"]) if m else None,
+        ]
+        out.append(cand(
+            slug("commercial", county, typ), "%s %s: cap rates vs local demand" % (place, typ.lower()), "commercial",
+            demand, supply,
+            "; ".join(x for x in ("metro jobs %+.1f%% YoY" % m["qcew_emp_yoy"] if m and num(m.get("qcew_emp_yoy")) is not None else None,
+                                  "business applications %+.1f%% YoY" % m["bfs_apps_yoy"] if m and num(m.get("bfs_apps_yoy")) is not None else None)
+                      if x) or "metro demand fields missing",
+            "; ".join(x for x in ("%d listings" % len(rows), "median cap %.2f%%" % med_cap,
+                                  "%+.2f pts over the 10-year" % spread if spread is not None else None,
+                                  "median %d days listed" % med_dom if med_dom is not None else None) if x),
+            evidence,
+            "Sort Deck Commercial by score for %s %s and underwrite the top three with real rent rolls." % (place, typ.lower())))
+    return out
+
+
+# ---------------------------------------------------------------- local (South OC)
+
+def local_gaps(re_doc):
+    areas = (((re_doc or {}).get("market") or {}).get("residential") or {}).get("areas") or []
+    out = []
+    for a in areas:
+        if not isinstance(a, dict) or a.get("level") != "zip":
+            continue
+        zh, lp = a.get("zhvi") or {}, a.get("list_price") or {}
+        zyoy, lyoy = num(zh.get("yoy_pct")), num(lp.get("yoy_pct"))
+        act, dom = num(a.get("active_listings")), num(a.get("days_on_market"))
+        if zyoy is None or act is None:
+            continue
+        demand = mean([scale(zyoy, -5, 12), scale(lyoy, -5, 20)])
+        supply = mean([scale(act, 10, 150), scale(dom, 20, 120)])
+        name = "%s (%s)" % (a.get("name"), a.get("zip"))
+        out.append(cand(
+            slug("local", a.get("zip")), "%s: values vs for-sale supply" % name, "local", demand, supply,
+            "; ".join(x for x in ("Zillow home value %+.1f%% YoY" % zyoy,
+                                  "list price %+.1f%% YoY" % lyoy if lyoy is not None else None) if x),
+            "; ".join(x for x in ("%d active listings" % act, "median %d days on market" % dom if dom is not None else None) if x),
+            [ev("Zillow Home Value Index (ZHVI)", "Typical home value, %s" % name,
+                "%s, %+.1f%% YoY" % (money(zh.get("value")), zyoy), zh.get("as_of")),
+             ev("Zillow median list price", "Median list price, %s" % name,
+                "%s, %+.1f%% YoY" % (money(lp.get("value")), lyoy) if lyoy is not None else None, lp.get("as_of")),
+             ev("Realtor.com ZIP listing metrics", "Active listings and median days on market, %s" % name,
+                "%d listings, %s days" % (act, "%d" % dom if dom is not None else "n/a"), a.get("realtor_as_of"))],
+            "Compare %s list prices to recent sales in Deck Housing before making offers." % name))
+    return out
+
+
+# ---------------------------------------------------------------- e-commerce
+
+def ecom_gaps(em):
+    movers = [m for m in em.get("movers") or [] if isinstance(m, dict) and m.get("category")]
+    risers = collections.Counter(b.get("category") for b in em.get("bestsellers") or []
+                                 if isinstance(b, dict) and (num(b.get("rank_change")) or 0) > 0)
+    cats = {c.get("key"): c for c in em.get("categories") or [] if isinstance(c, dict)}
+    asof = em.get("generated_at") or em.get("t")
+    up_k, down_k = ("price_rise", "rank_gain"), ("price_drop", "on_sale", "under_median")
+    by = collections.defaultdict(lambda: collections.Counter())
+    srcs = collections.defaultdict(set)
+    for m in movers:
+        by[m["category"]][m.get("kind")] += 1
+        for o in (m.get("detail") or {}).get("offers") or []:
+            if isinstance(o, dict) and o.get("source"):
+                srcs[m["category"]].add(o["source"])
+    out = []
+    for cat, cnt in by.items():
+        up, down = sum(cnt[k] for k in up_k), sum(cnt[k] for k in down_k)
+        if up + down < 5:
+            continue
+        c = cats.get(cat) or {}
+        cpi = num(c.get("value")) if c.get("basis") == "official_mom" else None
+        demand = mean([up / (up + down), scale(cpi, -1.0, 1.0), scale(risers.get(cat, 0), 0, 10)])
+        supply = down / (up + down)
+        src = "ecom-market movers (%s)" % ", ".join(sorted(srcs[cat]))
+        cpi_part = (c.get("parts") or [{}])[0] if c.get("parts") else {}
+        out.append(cand(
+            slug("ecom-category", cat), "%s: price and rank momentum" % (c.get("label") or cat.title()), "ecom",
+            demand, supply,
+            "; ".join(x for x in ("%d price rises or rank gains" % up,
+                                  "%d best sellers climbing" % risers[cat] if risers.get(cat) else None,
+                                  "official CPI %+.2f%% month over month" % cpi if cpi is not None else None) if x),
+            "%d price drops, sales or under-median offers" % down,
+            [ev(src, "Products with a price rise or rank gain, %s" % cat, "%d" % up, asof),
+             ev(src, "Products with a price drop, sale or under-median offer, %s" % cat, "%d" % down, asof),
+             ev("BLS CPI (%s)" % cpi_part.get("series", "series n/a"), "%s price change, month over month" % (c.get("label") or cat),
+                "%+.2f%%" % cpi, c.get("period")) if cpi is not None else None],
+            "Source 3 rising %s products wholesale and list them where rank gains appear first." % cat))
+    # resale: offers well under their own 7-day median (market data, not a watch list)
+    cat_total = {cat: sum(cnt.values()) for cat, cnt in by.items()}
+    for m in movers:
+        if m.get("kind") != "under_median":
+            continue
+        o = ((m.get("detail") or {}).get("offers") or [{}])[0]
+        price, ref, ch = num(o.get("price")), num(o.get("reference")), num(m.get("change_pct"))
+        if price is None or ref is None or ch is None:
+            continue
+        share = by[m["category"]]["under_median"] / max(1, cat_total.get(m["category"], 1))
+        out.append(cand(
+            slug("ecom-resale", m.get("gid")), "Resale spread: %s" % m.get("title", "")[:70], "ecom",
+            scale(-ch, 10, 60), share,
+            "%s listed %.0f%% under the 7-day median" % (o.get("platform"), -ch),
+            "%d of %d tracked %s offers sit under their median" % (by[m["category"]]["under_median"], cat_total.get(m["category"], 0), m["category"]),
+            [ev("%s (%s)" % (o.get("platform"), o.get("source")), "Listed price", money(price), o.get("as_of")),
+             ev("ecom-market shop listings, %s" % (m.get("period") or "7 days"), "Median price of matching listings", money(ref), m.get("as_of"))],
+            "Check condition and pickup for %s; resale at the median nets about %s before fees." % (o.get("platform"), money(ref - price))))
+    return out
+
+
+def listing_gaps(lst):
+    out = []
+    for g in (lst or {}).get("groups") or []:
+        if not isinstance(g, dict) or (g.get("count") or 0) < 2 or len(g.get("sites") or []) < 2:
+            continue
+        lo, hi = num(g.get("best_price")), num(g.get("max_price"))
+        if not lo or not hi or lo < 20 or hi <= lo * 1.1:
+            continue
+        items = [i for i in g.get("items") or [] if isinstance(i, dict) and num(i.get("price"))]
+        cheap = min(items, key=lambda i: i["price"], default=None)
+        dear = max(items, key=lambda i: i["price"], default=None)
+        if not cheap or not dear:
+            continue
+        spread = (hi - lo) / lo * 100
+        out.append(cand(
+            slug("ecom-listing", g.get("title")), "Resale spread: %s" % g.get("title", "")[:70], "ecom",
+            scale(spread, 5, 40), scale(g.get("count"), 1, 12),
+            "same item listed %.0f%% apart across %s" % (spread, ", ".join(g["sites"])),
+            "%d live listings" % g["count"],
+            [ev("%s listing" % cheap.get("source"), "Lowest live price", money(lo), cheap.get("last_seen")),
+             ev("%s listing" % dear.get("source"), "Highest live price", money(hi), dear.get("last_seen"))],
+            "Buy the %s listing only if the %s price holds; recheck both before committing." % (cheap.get("source"), dear.get("source"))))
+    return out
+
+
+# ---------------------------------------------------------------- jobs, gigs, AI, surf
+
+def jobs_gaps(jobs, hist):
+    by = ((jobs or {}).get("market") or {}).get("by_category") or {}
+    names = {t.get("slug"): t.get("name") for t in (jobs or {}).get("taxonomy") or [] if isinstance(t, dict)}
+    entries = [e for e in (hist or {}).get("entries") or [] if isinstance(e, dict) and e.get("t")]
+    first = min(entries, key=lambda e: e["t"]) if entries else None
+    asof = (jobs or {}).get("t")
+    boards = ", ".join((jobs or {}).get("src") or []) or "public job boards"
+    rows = {k: v for k, v in by.items() if isinstance(v, dict) and (num(v.get("total")) or 0) >= 10}
+    totals = [v["total"] for v in rows.values()]
+    pays = [v.get("median_pay_max") for v in rows.values()]
+    out = []
+    for k, v in rows.items():
+        metro = v.get("by_metro") or {}
+        local = (metro.get("south_oc") or 0) + (metro.get("oc") or 0)
+        old = (((first or {}).get("by_category") or {}).get(k) or {}).get("total")
+        growth = (v["total"] / old - 1) * 100 if old else None
+        demand = mean([pct_rank(totals, v["total"]), pct_rank(pays, v.get("median_pay_max")), scale(growth, -10, 10)])
+        supply = scale(local / v["total"], 0, 0.5)
+        label = names.get(k) or k.replace("_", " ")
+        out.append(cand(
+            slug("jobs", k), "%s: hiring demand mostly outside Orange County" % label, "jobs", demand, supply,
+            "; ".join(x for x in ("%d open postings" % v["total"],
+                                  "median top pay %s" % money(v["median_pay_max"]) if num(v.get("median_pay_max")) else None,
+                                  "%+.1f%% since %s" % (growth, dt.date.fromtimestamp(first["t"]).isoformat()) if growth is not None else None) if x),
+            "%d of %d postings in Orange County (%.0f%%)" % (local, v["total"], 100.0 * local / v["total"]),
+            [ev("public job boards (%s)" % boards, "Open postings, %s" % label, "%d" % v["total"], asof),
+             ev("public job boards (%s)" % boards, "Postings in Orange County, %s" % label, "%d" % local, asof),
+             ev("public job boards (%s)" % boards, "Median top of pay range, %s" % label, money(v.get("median_pay_max")), asof),
+             ev("jobs-market-history", "Open postings %s, %s" % (dt.date.fromtimestamp(first["t"]).isoformat(), label), "%d" % old,
+                first["t"]) if old else None],
+            "Package a local %s service for OC businesses that cannot hire this talent nearby." % label.lower()))
+    return out
+
+
+PRIVATE_AI = re.compile(r"\b(private|on[- ]?prem\w*|self[- ]?hosted|local(ly)?[- ](run|hosted|llm|model|ai)|offline|air[- ]?gapped"
+                        r"|hipaa|confidential|data privacy|sovereign\w*)\b", re.I)
+AI_WORD = re.compile(r"\b(ai|llm|gpt|chatbot|rag|machine learning|ml model|agent)\b", re.I)
+
+
+def gigs_gaps(gigs):
+    rows = [g for g in (gigs or {}).get("gigs") or [] if isinstance(g, dict)]
+    asof = (gigs or {}).get("t")
+    by = collections.defaultdict(list)
+    for g in rows:
+        for s in g.get("skills") or []:
+            by[s].append(g)
+    by = {k: v for k, v in by.items() if len(v) >= 5}
+    counts = [len(v) for v in by.values()]
+    meds = {k: statistics.median([g["usd_total"] for g in v if num(g.get("usd_total"))] or [0]) for k, v in by.items()}
+    out = []
+    for k, v in by.items():
+        sites = {g.get("site") for g in v if g.get("site")}
+        med = meds[k] or None
+        out.append(cand(
+            slug("gigs", k), "Freelance demand for %s work" % k.replace("_", " "), "gigs",
+            mean([pct_rank(counts, len(v)), pct_rank([m for m in meds.values() if m], med)]), scale(len(sites), 1, 20),
+            "%d open gigs%s" % (len(v), "; median budget %s" % money(med) if med else ""),
+            "posted on %d boards" % len(sites),
+            [ev("public freelance boards (%s)" % ", ".join(sorted(sites)[:8]), "Open gigs tagged %s" % k, "%d" % len(v), asof),
+             ev("public freelance boards", "Median gig budget (USD), %s" % k, money(med), asof),
+             ev("public freelance boards", "Boards carrying %s gigs" % k, "%d" % len(sites), asof)],
+            "Turn the three most repeated %s gig asks into a fixed-price offer." % k))
+    return out
+
+
+def ai_gaps(gigs, jobs, trends):
+    rows = [g for g in (gigs or {}).get("gigs") or [] if isinstance(g, dict)]
+    hits = [g for g in rows if PRIVATE_AI.search("%s %s" % (g.get("title") or "", g.get("summary") or ""))
+            and AI_WORD.search("%s %s" % (g.get("title") or "", g.get("summary") or ""))]
+    if not hits:
+        return []
+    budgets = [g["usd_total"] for g in hits if num(g.get("usd_total"))]
+    med = statistics.median(budgets) if budgets else None
+    ai = (((jobs or {}).get("market") or {}).get("by_category") or {}).get("ai_software") or {}
+    metro = ai.get("by_metro") or {}
+    local = (metro.get("south_oc") or 0) + (metro.get("oc") or 0)
+    ph = [p for p in (trends or {}).get("products") or [] if isinstance(p, dict) and p.get("source") == "Product Hunt launches feed"]
+    ph_ok = any(s.get("id") == "product_hunt_feed" and s.get("ok") for s in (trends or {}).get("sources") or [])
+    return [cand(
+        "ai-private-local", "Private, local AI for small businesses", "ai",
+        mean([scale(len(hits), 0, 15), scale(med, 0, 5000)]), scale(local, 0, 200),
+        "%d open gigs ask for private, on-prem or confidential AI%s" % (len(hits), "; median budget %s" % money(med) if med else ""),
+        "%d AI and software job postings in Orange County" % local,
+        [ev("public freelance boards (%s)" % ", ".join(sorted({g.get('site') for g in hits if g.get('site')})[:8]),
+            "Open gigs asking for private or on-prem AI", "%d" % len(hits), (gigs or {}).get("t")),
+         ev("public freelance boards", "Median budget of those gigs (USD)", money(med), (gigs or {}).get("t")),
+         ev("public job boards (%s)" % ", ".join((jobs or {}).get("src") or []), "AI and software postings in Orange County",
+            "%d" % local, (jobs or {}).get("t")) if ai else None,
+         ev("Product Hunt launches feed", "AI product launches in the feed", "%d" % len(ph), (trends or {}).get("generated_at"))
+         if ph_ok and ph else None],
+        "Pitch a fixed-price private AI pilot to the top 3 matching gig posters and 3 OC firms.")]
+
+
+def surf_gaps(sc, jobs):
+    spots = [s for s in (sc or {}).get("spots") or [] if isinstance(s, dict) and s.get("sub") == "South OC"]
+    sessions = good = 0
+    for s in spots:
+        for d in s.get("days") or []:
+            for half in ("am", "pm"):
+                r = num(((d or {}).get(half) or {}).get("rating"))
+                if r is not None:
+                    sessions += 1
+                    good += r >= 6
+    so = ((((jobs or {}).get("market") or {}).get("by_category") or {}).get("surf_outdoor") or {})
+    if not sessions or not so:
+        return []
+    local = (so.get("by_metro") or {}).get("south_oc", 0) + (so.get("by_metro") or {}).get("oc", 0)
+    srcs = ", ".join(x if isinstance(x, str) else (x.get("name") or x.get("id") or "") for x in ((sc or {}).get("src") or [])[:5])
+    return [cand(
+        "surf-south-oc", "South OC surf days vs thin local surf-industry hiring", "surf",
+        good / sessions, scale(local, 0, 30),
+        "%d of %d forecast sessions rated Fair or better across %d South OC spots" % (good, sessions, len(spots)),
+        "%d surf and outdoor job postings in Orange County" % local,
+        [ev("surf-coast forecast (%s)" % srcs, "South OC sessions rated Fair+ in the forecast window", "%d of %d" % (good, sessions),
+            (sc or {}).get("generated_at")),
+         ev("public job boards (%s)" % ", ".join((jobs or {}).get("src") or []), "Surf and outdoor postings in Orange County",
+            "%d" % local, (jobs or {}).get("t"))],
+        "Test demand with a weekend surf-lesson or board-rental listing timed to the next Fair+ swell.")]
+
+
+# ---------------------------------------------------------------- cluster next steps
+
+OWNER_CONTEXT = (
+    "The reader is a Dana Point, California investor and founder. He runs Kodros (private, local AI for small and "
+    "medium businesses), buys residential and commercial real estate, buys goods to resell, and bids on freelance gigs "
+    "(AI, web, data, Rust, iOS). He owns NONE of the properties, products or companies in these items: every step is "
+    "from a buyer, researcher or seller-of-services position. Good shapes: 'Pull five Rockford single-family comps and "
+    "check rent-to-price', 'Shortlist Orange County AI employers for Kodros pilots', 'Call two Alameda multifamily "
+    "listing brokers for rent rolls', 'Bid on the private-AI gigs with a fixed-price Kodros pilot'. Never tell him to "
+    "sell, list, lease, rent out, reprice or refinance something, and never assume he has tenants, inventory or a "
+    "portfolio there."
+)
+# A step that assumes he already owns the asset (list it for sale, raise rents, your portfolio) falls back to the template.
+OWNS_ASSET = re.compile(
+    r"(\b(sell|selling|list|listing|lease|leasing|rent out|renting out|reprice|refinance|flip)\b[^.]{0,40}"
+    r"\b(property|properties|home|homes|house|unit|units|building|buildings|portfolio|inventory|asset|assets)\b"
+    r"|\b(list|put)\b[^.]{0,40}\bfor sale\b|\b(raise|increase|hike)\b[^.]{0,20}\brents?\b"
+    r"|\byour (property|properties|home|homes|house|building|buildings|portfolio|tenants?|units?|listings?|inventory"
+    r"|holdings|store|shop|employees)\b|\bcapitali[sz]e on rising\b|\bexisting (tenants?|portfolio|holdings)\b)", re.I)
+# a decimal, a percent or a dollar amount means the model restated (and in tests misread) a number from the item;
+# a small count ("pull five comps", "call 3 brokers") is fine
+RESTATED_NUMBER = re.compile(r"\d+\.\d|\d\s*%|\$\s*\d|\d{3,}")
+REFUSAL = re.compile(r"\b(I can't|I cannot|as an AI|sorry)\b", re.I)
+
+
+def step_ok(text):
+    return (12 <= len(text) <= 200 and not RESTATED_NUMBER.search(text) and not OWNS_ASSET.search(text)
+            and not REFUSAL.search(text))
+
+
+def cluster_next_steps(items):
+    """One batched call; returns {id: text} for the steps that pass step_ok. Raises on any failure (the caller keeps
+    the templates)."""
+    brief = [{"id": i["id"], "title": i["title"], "demand": i["demand_signal"], "supply": i["supply_signal"]} for i in items]
+    prompt = (OWNER_CONTEXT + "\nFor each market gap below, write ONE concrete next step he can take this week: "
+              "imperative, at most 20 words. Do not restate prices, percents or other figures from the item, and name no "
+              "place, company or fact that is not in the item. Reply with JSON only: an object mapping id to the step.\n"
+              + json.dumps(brief, ensure_ascii=False))
+    # one sentence per item needs no reasoning pass; with it the batch ran past the timeout (2026-11-17 test)
+    payload = json.dumps({"model": MODEL, "messages": [{"role": "user", "content": prompt}], "max_tokens": 3000,
+                          "temperature": 0.2, "stream": False, "cluster_class": "background",
+                          "chat_template_kwargs": {"enable_thinking": False}}).encode()
+    req = urllib.request.Request(CLUSTER, data=payload, headers={"Content-Type": "application/json",
+                                                                 "Authorization": "Bearer local"})
+    with urllib.request.urlopen(req, timeout=CLUSTER_TIMEOUT) as resp:
+        doc = json.load(resp)
+    text = (doc["choices"][0]["message"].get("content") or "").strip()
+    text = re.sub(r"(?s)<think>.*?</think>", "", text).strip()
+    m = re.search(r"(?s)\{.*\}", text)
+    if not m:
+        raise ValueError("no JSON object in the cluster reply")
+    got = json.loads(m.group(0))
+    out = {}
+    for k, v in got.items():
+        v = re.sub(r"\s+", " ", str(v)).strip().strip('"')
+        if step_ok(v):
+            out[str(k)] = v
+    return out
+
+
+# ---------------------------------------------------------------- main
+
+def treasury(cre, man):
+    r = ((cre or {}).get("rates") or {}).get("treasury_10y") or {}
+    if num(r.get("value")) is not None and r.get("as_of"):
+        return num(r["value"]), "FRED %s" % (r.get("src") or "DGS10").replace("FRED ", ""), r["as_of"]
+    return None
+
+
+def select(cands, fit):
+    scored = []
+    for c in cands:
+        s = G.gap_score(c["demand"], c["supply"], len(c["evidence"]), fit.get(FIT_TAGS.get(c["domain"]), 0.0))
+        if s is not None:
+            c["gap_score"] = s
+            scored.append(c)
+    scored.sort(key=lambda c: (-c["gap_score"], c["id"]))
+    taken, per = [], collections.Counter()
+    for c in scored:
+        if per[c["domain"]] < CAPS.get(c["domain"], 3):
+            per[c["domain"]] += 1
+            taken.append(c)
+    # a domain with fewer candidates than its cap leaves slots: fill them with the next best items of any domain
+    ids = {c["id"] for c in taken}
+    taken += [c for c in scored if c["id"] not in ids][:max(0, TOP_N - len(taken))]
+    taken.sort(key=lambda c: (-c["gap_score"], c["id"]))
+    return taken[:TOP_N]
+
+
+def main(argv=None):
+    argv = sys.argv[1:] if argv is None else argv
+    now = int(time.time())
+    errors, src = [], []
+
+    def load(path, label):
+        doc = read_json(path)
+        if not isinstance(doc, dict):
+            errors.append({"source": label, "reason": "missing or unreadable"})
+            return None
+        src.append(label)
+        return doc
+
+    man = load(os.path.join(HOUSE_DIR, "national-v2", "manifest.json"), "house-feeds/national-v2/manifest.json")
+    re_doc = load(os.path.join(HOUSE_DIR, "realestate.json"), "house-feeds/realestate.json")
+    em = load(os.path.join(HOUSE_DIR, "ecom-market.json"), "house-feeds/ecom-market.json")
+    sc = load(os.path.join(HOUSE_DIR, "surf-coast.json"), "house-feeds/surf-coast.json")
+    cre = load(os.path.join(DECK_DIR, "cre-deals.json"), "deck/cre-deals.json")
+    jobs = load(os.path.join(DECK_DIR, "jobs.json"), "deck/jobs.json")
+    hist = load(os.path.join(DECK_DIR, "jobs-market-history.json"), "deck/jobs-market-history.json")
+    gigs = load(os.path.join(DECK_DIR, "gigs.json"), "deck/gigs.json")
+    lst = load(os.path.join(DECK_DIR, "listings.json"), "deck/listings.json")
+    trends = load(os.path.join(OUT_DIR, "trends.json"), "deck/trends.json")
+    prof = read_json(os.path.join(DECK_DIR, "interest-profile.json")) or {}
+    fit = {i.get("tag"): num(i.get("weight")) or 0.0 for i in prof.get("interests") or [] if isinstance(i, dict)}
+
+    nat = National(man) if man else None
+    t10 = treasury(cre, man)
+    cands = []
+    for label, fn in (
+            ("residential", lambda: residential_gaps(nat) if nat else []),
+            ("commercial metros", lambda: commercial_metro_gaps(nat, t10) if nat else []),
+            ("commercial listings", lambda: cre_gaps(cre, nat, t10) if cre and nat else []),
+            ("local", lambda: local_gaps(re_doc)),
+            ("ecom", lambda: ecom_gaps(em) if em else []),
+            ("listings", lambda: listing_gaps(lst)),
+            ("jobs", lambda: jobs_gaps(jobs, hist)),
+            ("gigs", lambda: gigs_gaps(gigs)),
+            ("ai", lambda: ai_gaps(gigs, jobs, trends)),
+            ("surf", lambda: surf_gaps(sc, jobs))):
+        try:
+            cands += fn()
+        except Exception as exc:  # noqa: BLE001 - one bad builder never sinks the feed; it is listed
+            errors.append({"source": "builder " + label, "reason": F.short_reason(exc)})
+    items = select(cands, fit)
+
+    steps_note = "template"
+    if items and "--no-cluster" not in argv:
+        try:
+            steps = cluster_next_steps(items)
+            used = 0
+            for i in items:
+                if steps.get(i["id"]):
+                    i["next_step"] = steps[i["id"]]
+                    used += 1
+            steps_note = "local cluster (%s) for %d of %d items, template for the rest" % (MODEL, used, len(items))
+        except (urllib.error.URLError, OSError, ValueError, KeyError, IndexError, TypeError) as exc:
+            errors.append({"source": "local cluster next_step", "reason": F.short_reason(exc)})
+            steps_note = "template (local cluster unavailable)"
+
+    out_items = [{"id": i["id"], "title": i["title"], "domain": i["domain"], "demand_signal": i["demand_signal"],
+                  "supply_signal": i["supply_signal"], "gap_score": i["gap_score"], "evidence": i["evidence"],
+                  "next_step": i["next_step"]} for i in items]
+    method = G.METHOD + " next_step: " + steps_note + "."
+    F.write_feed(NAME, REFRESH, src, errors, {
+        "generated_at": dt.datetime.fromtimestamp(now).astimezone().replace(microsecond=0).isoformat(),
+        "method": method,
+        "items": out_items,
+    }, out_dir=OUT_DIR)
+    per = collections.Counter(i["domain"] for i in out_items)
+    print("gaps: %d items from %d candidates (%s); next_step %s"
+          % (len(out_items), len(cands), ", ".join("%s %d" % kv for kv in sorted(per.items())), steps_note))
+    for e in errors:
+        print("  part failed: %s: %s" % (e["source"], e["reason"]))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

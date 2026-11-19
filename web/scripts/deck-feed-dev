@@ -1,0 +1,629 @@
+#!/usr/bin/env python3
+"""Collect developer-surface facts for the Pixel Deck: ~/.kodros/status/deck/dev.json.
+
+Read-only. Sources: gh (GitHub), Vercel REST, Supabase Management API, herdr CLI,
+Chromium CDP (/json/list), grok CLI + local auth file. Failed sources are reported in
+`errors` and their key is null; nothing is ever turned into 0. Secrets are read from
+local stores into memory only and never written to the feed or to logs.
+GitHub: GraphQL first; on a rate limit the reset time is stored (GH_STATE) and the run uses authenticated REST;
+if REST fails too the last good block is served with `stale` + `stale_reason` and its original `at`.
+"""
+import json
+import os
+import re
+import subprocess
+import sys
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+from concurrent.futures import ThreadPoolExecutor
+
+REFRESH = 300
+OUT = os.path.expanduser("~/.kodros/status/deck/dev.json")
+HOME = os.path.expanduser("~")
+HERMES_ENV = os.path.join(HOME, ".hermes/.env")
+MCP_TOKENS = os.path.join(HOME, ".hermes/mcp-tokens")
+GH_OWNER = "thefiredev-cloud"
+RECENT_REPOS = 40          # most recently pushed owner repos checked for failing default-branch runs
+MAX_WATCH = 60
+MAX_FAILING = 30
+FAIL_CONCLUSIONS = {"failure", "timed_out", "startup_failure"}
+CDP = "http://127.0.0.1:9333/json/list"
+CDP_V6 = "http://[::1]:9333/json/list"  # Chromium binds ::1 alone when its IPv4 bind fails; every agent client dials 127.0.0.1
+GROK_AUTH = os.path.join(HOME, ".grok/auth.json")
+GH_STATE = os.path.join(HOME, ".cache/deck-feeds/dev-github.json")  # last good GitHub block + GraphQL backoff
+GH_STALE_MAX = 24 * 3600   # a cached GitHub block older than this is dropped: the card goes red rather than lie
+GH_BACKOFF = 900           # seconds to skip GraphQL after a rate limit when the reset time is unknown
+RATE_LIMITED = re.compile(r"rate limit|RATE_LIMITED|abuse detection|secondary rate", re.I)
+ROLLUP_FAIL = {"failure", "timed_out", "cancelled", "action_required", "startup_failure", "stale"}
+
+PR_QUERY = """
+query($q: String!, $recent: Int!) {
+  search(query: $q, type: ISSUE, first: 50) {
+    nodes { ... on PullRequest {
+      number title url
+      repository { nameWithOwner defaultBranchRef { name } isArchived }
+      commits(last: 1) { nodes { commit { statusCheckRollup { state } } } }
+    } }
+  }
+  viewer { repositories(first: $recent, ownerAffiliations: OWNER, orderBy: {field: PUSHED_AT, direction: DESC}) {
+    nodes { nameWithOwner isArchived defaultBranchRef { name } }
+  } }
+}
+"""
+
+
+class Fail(Exception):
+    """A source failed; the message is the short reason stored in the feed (never contains secrets)."""
+
+
+def run(cmd, timeout, env=None):
+    try:
+        p = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, env=env)
+    except FileNotFoundError:
+        raise Fail(f"{os.path.basename(cmd[0])} not installed")
+    except subprocess.TimeoutExpired:
+        raise Fail(f"{os.path.basename(cmd[0])} timed out after {timeout}s")
+    if p.returncode != 0:
+        lines = [ln for ln in (p.stderr or p.stdout).strip().splitlines() if ln.strip()]
+        raise Fail(f"{os.path.basename(cmd[0])} exit {p.returncode}: {(lines[-1] if lines else 'no output')[:160]}")
+    return p.stdout
+
+
+def http_json(url, token=None, timeout=15):
+    req = urllib.request.Request(url, headers={"Authorization": f"Bearer {token}"} if token else {})
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return json.load(r)
+    except urllib.error.HTTPError as e:
+        raise Fail(f"HTTP {e.code} from {urllib.parse.urlsplit(url).netloc}")
+    except (urllib.error.URLError, TimeoutError, OSError) as e:
+        raise Fail(f"{urllib.parse.urlsplit(url).netloc} unreachable: {type(e).__name__}")
+    except ValueError:
+        raise Fail(f"{urllib.parse.urlsplit(url).netloc} returned non-JSON")
+
+
+def env_value(name):
+    """Non-empty value of `name` from the process env or ~/.hermes/.env, else None."""
+    v = os.environ.get(name)
+    if v:
+        return v
+    try:
+        with open(HERMES_ENV) as f:
+            for line in f:
+                if line.startswith(name + "="):
+                    v = line.split("=", 1)[1].strip().strip("'\"")
+                    return v or None
+    except OSError:
+        pass
+    return None
+
+
+# Stores whose grant rotates on every use (Vercel) cannot be copied: a second copy goes stale and breaks
+# the profile that owns the grant, which is how this profile's vercel link died (2026-10-25 last good
+# token, invalid_grant by 10-29). For these, read the freshest live store in place and never write it.
+READ_ONLY_FALLBACK = frozenset({"vercel"})
+# Profiles that are a separate tenant: never read their stores.
+FOREIGN_PROFILES = frozenset({"quill", "quill-morgan"})
+
+
+def _store_token(path):
+    """-> (token, None, expires_at) when usable, else (None, reason, None)."""
+    try:
+        with open(path) as f:
+            d = json.load(f)
+    except FileNotFoundError:
+        return None, "missing", None
+    except (OSError, ValueError):
+        return None, "unreadable", None
+    tok = d.get("access_token")
+    if not tok:
+        return None, "no access_token", None
+    exp = d.get("expires_at")
+    if isinstance(exp, (int, float)) and exp < time.time():
+        return None, f"expired {int(time.time() - exp)}s ago", None
+    return tok, None, exp if isinstance(exp, (int, float)) else 0
+
+
+def _store_reason(where, why):
+    if why == "missing":
+        return f"no {where} OAuth token store"
+    if why == "unreadable":
+        return f"{where} OAuth token store unreadable"
+    if why == "no access_token":
+        return f"{where} OAuth token store has no access_token"
+    return f"{where} OAuth access token {why}"
+
+
+def _owner_profile_stores(store):
+    """Token store paths of the owner's other Hermes profiles, by profile name."""
+    root = os.path.join(os.path.dirname(MCP_TOKENS), "profiles")
+    try:
+        names = sorted(os.listdir(root))
+    except OSError:
+        return []
+    found = []
+    for name in names:
+        if name in FOREIGN_PROFILES:
+            continue
+        path = os.path.join(root, name, "mcp-tokens", store + ".json")
+        if os.path.isfile(path):
+            found.append(path)
+    return found
+
+
+def stored_token(env_name, store):
+    """Return a bearer token: explicit env/.env value first, else the first unexpired Hermes OAuth store
+    (this profile's, then the freshest owner profile store for rotating grants). Raises Fail when none is
+    usable. Rotating grants are read, never copied, so no profile loses its refresh token."""
+    v = env_value(env_name)
+    if v:
+        return v
+    tok, why, _ = _store_token(os.path.join(MCP_TOKENS, store + ".json"))
+    if tok:
+        return tok
+    if why == "missing":
+        reasons = [f"no {env_name} and no {store} OAuth token store"]
+    else:
+        reasons = [_store_reason(store, why)]
+    if store in READ_ONLY_FALLBACK:
+        best, best_exp, checked = None, -1, 0
+        for path in _owner_profile_stores(store):
+            checked += 1
+            cand, _why, exp = _store_token(path)
+            if cand and exp > best_exp:
+                best, best_exp = cand, exp
+        if best:
+            return best
+        if checked:
+            reasons.append(f"{checked} owner profile store(s) also unusable")
+    raise Fail("; ".join(reasons) + f"; owner must re-link {store} in Hermes")
+
+
+# ---------------------------------------------------------------- github
+
+def ci_state(rollup):
+    if rollup in ("SUCCESS",):
+        return "pass"
+    if rollup in ("FAILURE", "ERROR"):
+        return "fail"
+    if rollup in ("PENDING", "EXPECTED"):
+        return "pending"
+    return None
+
+
+def parse_github_graphql(data):
+    """-> (open_prs, watch) where watch = {nameWithOwner: default_branch}."""
+    prs, watch = [], {}
+    for n in (data.get("data", {}).get("search", {}) or {}).get("nodes", []) or []:
+        if not n or "number" not in n:
+            continue
+        repo = n["repository"]
+        commits = (n.get("commits") or {}).get("nodes") or []
+        rollup = None
+        if commits:
+            rollup = ((commits[0].get("commit") or {}).get("statusCheckRollup") or {}).get("state")
+        prs.append({"repo": repo["nameWithOwner"], "num": n["number"], "title": n["title"],
+                    "ci": ci_state(rollup), "url": n["url"]})
+        if not repo.get("isArchived") and repo.get("defaultBranchRef"):
+            watch[repo["nameWithOwner"]] = repo["defaultBranchRef"]["name"]
+    for r in ((data.get("data", {}).get("viewer", {}) or {}).get("repositories", {}) or {}).get("nodes", []) or []:
+        if r and not r.get("isArchived") and r.get("defaultBranchRef"):
+            watch.setdefault(r["nameWithOwner"], r["defaultBranchRef"]["name"])
+    return prs, watch
+
+
+def failing_workflows(repo, runs, active=None):
+    """Latest completed non-PR run per workflow on the default branch; return failing ones.
+
+    Dependabot's updater (event `dynamic`) is not CI, and a workflow that is disabled or deleted can never go
+    green again, so neither counts as a failing main. `active` is the set of workflow ids that are enabled
+    (None = unknown, filter nothing: an unknown state must not hide a real failure)."""
+    seen, out = set(), []
+    for r in runs:
+        if r.get("event") in ("pull_request", "dynamic") or r.get("status") != "completed":
+            continue
+        wid = r.get("workflow_id")
+        if wid in seen:
+            continue
+        seen.add(wid)
+        if active is not None and wid not in active:
+            continue
+        if r.get("conclusion") in FAIL_CONCLUSIONS:
+            out.append({"repo": repo, "workflow": r.get("name") or str(wid), "url": r.get("html_url")})
+    return out
+
+
+def active_workflow_ids(repo):
+    """Ids of enabled workflows, or None when the lookup fails or has an unexpected shape."""
+    try:
+        wf = json.loads(run(["gh", "api", f"repos/{repo}/actions/workflows?per_page=100"], 30)).get("workflows")
+    except (Fail, ValueError):
+        return None
+    if not isinstance(wf, list):
+        return None
+    return {w.get("id") for w in wf if w.get("state") == "active"}
+
+
+def is_rate_limited(exc):
+    return bool(RATE_LIMITED.search(str(exc)))
+
+
+def load_gh_state():
+    """{"good": last good github block or None, "blocked_until": epoch before which GraphQL is skipped}."""
+    empty = {"good": None, "blocked_until": 0}
+    try:
+        with open(GH_STATE) as f:
+            d = json.load(f)
+    except (OSError, ValueError):
+        return empty
+    if not isinstance(d, dict):
+        return empty
+    good, blocked = d.get("good"), d.get("blocked_until")
+    return {"good": good if isinstance(good, dict) and isinstance(good.get("at"), int) else None,
+            "blocked_until": blocked if isinstance(blocked, int) else 0}
+
+
+def save_gh_state(state):
+    try:
+        write_atomic(GH_STATE, state)
+    except OSError:
+        pass  # an unwritable cache only costs the stale fallback; never fail the feed over it
+
+
+def graphql_discovery():
+    out = run(["gh", "api", "graphql", "-f", f"query={PR_QUERY}", "-f", f"q=is:pr is:open owner:{GH_OWNER}",
+               "-F", f"recent={RECENT_REPOS}"], 40)
+    try:
+        data = json.loads(out)
+    except ValueError:
+        raise Fail("gh graphql returned non-JSON")
+    errs = data.get("errors") if isinstance(data, dict) else None
+    if errs and not data.get("data"):
+        first = errs[0] if isinstance(errs[0], dict) else {}
+        raise Fail(f"gh graphql error: {first.get('type') or first.get('message') or 'unknown'}"[:160])
+    return parse_github_graphql(data)
+
+
+def graphql_reset(now):
+    """Epoch the GraphQL quota resets (the rate_limit endpoint is free), else a fixed backoff from now."""
+    try:
+        reset = int(json.loads(run(["gh", "api", "rate_limit"], 20))["resources"]["graphql"]["reset"])
+    except (Fail, ValueError, KeyError, TypeError):
+        return now + GH_BACKOFF
+    return reset if now < reset <= now + 3700 else now + GH_BACKOFF
+
+
+def gh_rest(path, timeout=30):
+    try:
+        return json.loads(run(["gh", "api", path], timeout))
+    except ValueError:
+        raise Fail(f"gh api {path.split('?')[0]} returned non-JSON")
+
+
+def rest_ci_state(check_runs, combined):
+    """Roll check runs and legacy commit statuses up like GraphQL statusCheckRollup: fail beats pending beats pass."""
+    states = []
+    for c in check_runs if isinstance(check_runs, list) else []:
+        if not isinstance(c, dict):
+            continue
+        states.append("pending" if c.get("status") != "completed"
+                      else "fail" if c.get("conclusion") in ROLLUP_FAIL else "pass")
+    if isinstance(combined, dict) and combined.get("total_count"):
+        s = ci_state({"success": "SUCCESS", "failure": "FAILURE", "error": "ERROR", "pending": "PENDING"}
+                     .get(combined.get("state"), ""))
+        if s:
+            states.append(s)
+    if "fail" in states:
+        return "fail"
+    if "pending" in states:
+        return "pending"
+    return "pass" if states else None
+
+
+def repo_of(item):
+    """owner/name from a search/issues item's repository_url."""
+    return item["repository_url"].split("/repos/", 1)[-1]
+
+
+def rest_discovery():
+    """-> (open_prs, watch) from authenticated REST (core quota, separate from GraphQL's)."""
+    found = gh_rest("search/issues?q=" + urllib.parse.quote(f"is:pr is:open user:{GH_OWNER}") + "&per_page=50")
+    recent = gh_rest(f"user/repos?affiliation=owner&sort=pushed&direction=desc&per_page={RECENT_REPOS}")
+    if not isinstance(found, dict) or not isinstance(found.get("items"), list) or not isinstance(recent, list):
+        raise Fail("gh rest returned unexpected payload")
+    info = {r["full_name"]: (bool(r.get("archived")), r.get("default_branch"))
+            for r in recent if isinstance(r, dict) and r.get("full_name")}
+    items = [i for i in found["items"] if isinstance(i, dict) and i.get("number") and i.get("repository_url")]
+    for i in items:
+        repo = repo_of(i)
+        if repo not in info:
+            try:
+                r = gh_rest(f"repos/{repo}")
+                info[repo] = (bool(r.get("archived")), r.get("default_branch"))
+            except (Fail, AttributeError):
+                info[repo] = (True, None)  # unknown repo state: keep the PR row, do not watch the repo
+
+    def ci_for(i):
+        repo = repo_of(i)
+        try:
+            sha = gh_rest(f"repos/{repo}/pulls/{i['number']}")["head"]["sha"]
+            runs = gh_rest(f"repos/{repo}/commits/{sha}/check-runs?per_page=100").get("check_runs")
+            return rest_ci_state(runs, gh_rest(f"repos/{repo}/commits/{sha}/status"))
+        except (Fail, KeyError, TypeError, AttributeError):
+            return None  # unknown CI stays null, never pass
+
+    with ThreadPoolExecutor(max_workers=8) as ex:
+        states = list(ex.map(ci_for, items))
+    prs, watch = [], {}
+    for i, ci in zip(items, states):
+        repo = repo_of(i)
+        prs.append({"repo": repo, "num": i["number"], "title": i.get("title") or "", "ci": ci,
+                    "url": i.get("html_url")})
+        archived, branch = info[repo]
+        if not archived and branch:
+            watch[repo] = branch
+    for repo, (archived, branch) in info.items():
+        if not archived and branch:
+            watch.setdefault(repo, branch)
+    return prs, watch
+
+
+def fresh_github(now, state, extra_watch):
+    """Live GitHub block plus part errors. GraphQL first; a rate limit records a backoff and falls back to REST."""
+    prs = watch = None
+    if now >= state["blocked_until"]:
+        try:
+            prs, watch = graphql_discovery()
+            state["blocked_until"] = 0
+        except Fail as e:
+            if is_rate_limited(e):
+                state["blocked_until"] = graphql_reset(now)
+    if prs is None:
+        prs, watch = rest_discovery()
+    for r in extra_watch:
+        watch.setdefault(r[0], r[1])
+    watch = dict(list(watch.items())[:MAX_WATCH])
+
+    def one(item):
+        repo, branch = item
+        try:
+            # No `status=completed` filter: GitHub serves that filter from a lagging index (2026-10-05 it
+            # returned nothing newer than 2026-09-23); failing_workflows() skips incomplete runs itself.
+            o = run(["gh", "api", f"repos/{repo}/actions/runs?branch={branch}&per_page=50"], 30)
+            runs = json.loads(o).get("workflow_runs", [])
+            failing = failing_workflows(repo, runs)
+            if failing:
+                failing = failing_workflows(repo, runs, active_workflow_ids(repo))
+            return failing, None
+        except (Fail, ValueError) as e:
+            return [], f"{repo}: {e}"
+    failing, run_errs = [], []
+    with ThreadPoolExecutor(max_workers=8) as ex:
+        for f, e in ex.map(one, watch.items()):
+            failing.extend(f)
+            if e:
+                run_errs.append(e)
+    if watch and len(run_errs) == len(watch):
+        # Nothing was measured: an empty failing_main would read as green, so treat the source as failed.
+        raise Fail(f"all {len(watch)} repos failed run lookup, e.g. {run_errs[0]}"[:240])
+    part_errors = []
+    if run_errs:
+        part_errors.append({"source": "github.actions",
+                            "reason": f"{len(run_errs)}/{len(watch)} repos failed run lookup, e.g. {run_errs[0]}"[:240]})
+    return {"open_prs": prs, "failing_main": failing[:MAX_FAILING], "at": now}, part_errors
+
+
+def stale_github(good, exc, now):
+    """Last good block labelled stale. The original `at` stays so the card reads 'as of HH:MM'. With no usable
+    cache the failure is raised and the card shows the source as unavailable."""
+    if good is None:
+        raise exc
+    if now - good["at"] > GH_STALE_MAX:
+        raise Fail(f"last good GitHub data is over {GH_STALE_MAX // 3600}h old; {exc}"[:240])
+    return dict(good, stale=True, stale_reason="rate_limited" if is_rate_limited(exc) else "unavailable")
+
+
+def collect_github(errors, extra_watch=()):
+    now = int(time.time())
+    state = load_gh_state()
+    try:
+        block, part_errors = fresh_github(now, state, extra_watch)
+    except Fail as e:
+        save_gh_state(state)  # keeps the GraphQL backoff for the next run
+        return stale_github(state["good"], e, now)
+    errors.extend(part_errors)
+    state["good"] = block
+    save_gh_state(state)
+    return block
+
+
+# ---------------------------------------------------------------- vercel
+
+def parse_vercel(projects):
+    out = []
+    for p in projects:
+        latest = (p.get("latestDeployments") or [None])[0] or {}
+        prod = (p.get("targets") or {}).get("production") or {}
+        alias = (prod.get("alias") or [None])[0]
+        dep_url = latest.get("url")
+        url = f"https://{alias}" if alias else (f"https://{dep_url}" if dep_url else None)
+        created = latest.get("createdAt")
+        # `state` is the production deployment's: the newest deployment of any kind is often a preview or a
+        # skipped/cancelled branch build and says nothing about whether the live site is serving.
+        prod_created = prod.get("createdAt")
+        out.append({"name": p.get("name"), "state": prod.get("readyState") or latest.get("readyState"),
+                    "latest_state": latest.get("readyState"),
+                    "paused": bool(p.get("paused")),
+                    "last_deploy_at": int(created / 1000) if isinstance(created, (int, float)) else None,
+                    "production_deploy_at": int(prod_created / 1000) if isinstance(prod_created, (int, float)) else None,
+                    "url": url})
+    return out
+
+
+def collect_vercel():
+    tok = stored_token("VERCEL_TOKEN", "vercel")
+    projects, until = [], None
+    for _ in range(5):
+        q = "https://api.vercel.com/v9/projects?limit=100" + (f"&until={until}" if until else "")
+        d = http_json(q, tok)
+        projects.extend(d.get("projects", []))
+        until = (d.get("pagination") or {}).get("next")
+        if not until:
+            break
+    return {"projects": parse_vercel(projects)}
+
+
+# ---------------------------------------------------------------- supabase
+
+def collect_supabase():
+    tok = stored_token("SUPABASE_ACCESS_TOKEN", "supabase")
+    d = http_json("https://api.supabase.com/v1/projects", tok)
+    if not isinstance(d, list):
+        raise Fail("supabase returned unexpected payload")
+    return {"projects": [{"name": p.get("name"), "ref": p.get("id"), "status": p.get("status"),
+                          "region": p.get("region")} for p in d]}
+
+
+# ---------------------------------------------------------------- herdr
+
+def herdr_json(*args):
+    try:
+        d = json.loads(run(["herdr", *args], 10))
+    except ValueError:
+        raise Fail(f"herdr {' '.join(args)} returned non-JSON")
+    return d.get("result", {})
+
+
+def parse_herdr(workspaces, tabs, agents):
+    label = {w["workspace_id"]: w.get("label") for w in workspaces}
+    per_ws = {}
+    for t in tabs:
+        per_ws[t["workspace_id"]] = per_ws.get(t["workspace_id"], 0) + 1
+    out = []
+    for t in tabs:
+        ws = label.get(t["workspace_id"]) or t["workspace_id"]
+        name = ws if per_ws[t["workspace_id"]] == 1 else f"{ws}/{t.get('label') or t.get('number')}"
+        out.append({"name": name, "panes": t.get("pane_count")})
+    busy = sum(1 for a in agents if a.get("agent_status") == "working")
+    return {"tabs": out, "agents_busy": busy}
+
+
+def collect_herdr():
+    ws = herdr_json("workspace", "list").get("workspaces", [])
+    tabs = herdr_json("tab", "list").get("tabs", [])
+    agents = herdr_json("agent", "list").get("agents", [])
+    return parse_herdr(ws, tabs, agents)
+
+
+# ---------------------------------------------------------------- chromium
+
+TOKENISH = re.compile(r"[A-Za-z0-9_\-+/=]{24,}")
+URLISH = re.compile(r"https?://\S+")
+
+
+def clean_title(t):
+    t = URLISH.sub("[url]", t or "")
+    t = TOKENISH.sub("[redacted]", t)
+    t = " ".join(t.split())
+    return t[:80]
+
+
+def parse_chromium(tabs):
+    pages = [t for t in tabs if t.get("type") == "page"]
+    return {"cdp_up": True, "tabs": len(pages), "titles": [clean_title(t.get("title")) for t in pages[:8]]}
+
+
+def collect_chromium():
+    try:
+        tabs = http_json(CDP, timeout=5)
+    except Fail as e:
+        try:
+            http_json(CDP_V6, timeout=5)
+        except Fail:
+            raise Fail(f"CDP 9333 down: {e}")
+        # The browser is alive, so "down" would send the owner to the wrong fix. cdp_up stays false: nothing dials ::1.
+        raise Fail(f"CDP 9333 answers on [::1] only; 127.0.0.1:9333 refuses ({e}). Restart the owner Chromium")
+    return parse_chromium(tabs)
+
+
+# ---------------------------------------------------------------- grok (Grok Build only)
+
+def parse_grok_version(text):
+    m = re.match(r"\s*grok\s+(\d+(?:\.\d+)+\S*)", text)
+    return m.group(1) if m else None
+
+
+def grok_logged_in(auth):
+    """True when any stored credential has a key or refresh token; False when none does."""
+    entries = [v for v in auth.values() if isinstance(v, dict)]
+    return any(e.get("key") or e.get("refresh_token") for e in entries)
+
+
+def collect_grok(errors):
+    version = logged = None
+    try:
+        version = parse_grok_version(run(["grok", "--version"], 10))
+        if version is None:
+            errors.append({"source": "grok", "reason": "could not parse `grok --version`"})
+    except Fail as e:
+        errors.append({"source": "grok", "reason": str(e)})
+    try:
+        with open(GROK_AUTH) as f:
+            logged = grok_logged_in(json.load(f))
+    except FileNotFoundError:
+        logged = False
+    except (OSError, ValueError, AttributeError):
+        errors.append({"source": "grok.auth", "reason": "~/.grok/auth.json unreadable"})
+    return {"build_cli": version, "logged_in": logged}
+
+
+# ---------------------------------------------------------------- main
+
+def write_atomic(path, doc):
+    os.makedirs(os.path.dirname(path), mode=0o700, exist_ok=True)
+    tmp = path + ".tmp"
+    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, "w") as f:
+        json.dump(doc, f, separators=(",", ":"))
+    os.chmod(tmp, 0o600)
+    os.replace(tmp, path)
+
+
+def build():
+    errors, src = [], []
+    doc = {"t": int(time.time()), "refresh": REFRESH, "src": src, "errors": errors}
+
+    def part(key, label, fn):
+        try:
+            doc[key] = fn()
+            src.append(label)
+        except Fail as e:
+            doc[key] = None
+            errors.append({"source": key, "reason": str(e)})
+
+    part("github", "gh api", lambda: collect_github(errors))
+    part("vercel", "vercel api", collect_vercel)
+    part("supabase", "supabase api", collect_supabase)
+    part("herdr", "herdr cli", collect_herdr)
+    try:
+        doc["chromium"] = collect_chromium()
+        src.append("chromium cdp")
+    except Fail as e:
+        doc["chromium"] = {"cdp_up": False, "tabs": None, "titles": []}
+        errors.append({"source": "chromium", "reason": str(e)})
+    doc["grok"] = collect_grok(errors)
+    src.append("grok cli")
+    return doc
+
+
+def main():
+    doc = build()
+    write_atomic(OUT, doc)
+    print(f"dev.json written: {len(doc['src'])} sources, {len(doc['errors'])} errors")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

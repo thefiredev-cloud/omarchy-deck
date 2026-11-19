@@ -1,0 +1,127 @@
+{
+ "products": [
+  {
+   "id": 7133068525754,
+   "title": "Atlas Sweatpant",
+   "handle": "m-atlas-sweatpant",
+   "vendor": "tentree",
+   "product_type": "Mens",
+   "variants": [
+    {
+     "id": 41607077134522,
+     "title": "METEORITE BLACK MARLED / S",
+     "price": "78.00",
+     "compare_at_price": null,
+     "available": true,
+     "sku": "TCM1471-0361-S"
+    },
+    {
+     "id": 41607077167290,
+     "title": "METEORITE BLACK MARLED / M",
+     "price": "78.00",
+     "compare_at_price": null,
+     "available": true,
+     "sku": "TCM1471-0361-M"
+    },
+    {
+     "id": 41607077200058,
+     "title": "METEORITE BLACK MARLED / L",
+     "price": "78.00",
+     "compare_at_price": null,
+     "available": true,
+     "sku": "TCM1471-0361-L"
+    },
+    {
+     "id": 41607077232826,
+     "title": "METEORITE BLACK MARLED / XL",
+     "price": "78.00",
+     "compare_at_price": null,
+     "available": true,
+     "sku": "TCM1471-0361-XL"
+    }
+   ]
+  },
+  {
+   "id": 4599801413719,
+   "title": "Quilted Colville Overshirt",
+   "handle": "colville-button-up",
+   "vendor": "tentree",
+   "product_type": "Mens",
+   "variants": [
+    {
+     "id": 32310351331415,
+     "title": "METEORITE BLACK HEATHER / S",
+     "price": "108.00",
+     "compare_at_price": null,
+     "available": true,
+     "sku": "TCM2676-0451-S"
+    },
+    {
+     "id": 32310351364183,
+     "title": "METEORITE BLACK HEATHER / M",
+     "price": "108.00",
+     "compare_at_price": null,
+     "available": true,
+     "sku": "TCM2676-0451-M"
+    },
+    {
+     "id": 32310351396951,
+     "title": "METEORITE BLACK HEATHER / L",
+     "price": "108.00",
+     "compare_at_price": null,
+     "available": true,
+     "sku": "TCM2676-0451-L"
+    },
+    {
+     "id": 32310351429719,
+     "title": "METEORITE BLACK HEATHER / XL",
+     "price": "108.00",
+     "compare_at_price": null,
+     "available": true,
+     "sku": "TCM2676-0451-XL"
+    }
+   ]
+  },
+  {
+   "id": 7133062365370,
+   "title": "Granville Legging",
+   "handle": "inmotion-high-rise-legging",
+   "vendor": "tentree",
+   "product_type": "Womens",
+   "variants": [
+    {
+     "id": 41607053902010,
+     "title": "METEORITE BLACK / XS",
+     "price": "68.00",
+     "compare_at_price": null,
+     "available": true,
+     "sku": "TCW2801-0164-XS"
+    },
+    {
+     "id": 41607053934778,
+     "title": "METEORITE BLACK / S",
+     "price": "68.00",
+     "compare_at_price": null,
+     "available": true,
+     "sku": "TCW2801-0164-S"
+    },
+    {
+     "id": 41607053967546,
+     "title": "METEORITE BLACK / M",
+     "price": "68.00",
+     "compare_at_price": null,
+     "available": true,
+     "sku": "TCW2801-0164-M"
+    },
+    {
+     "id": 41607054000314,
+     "title": "METEORITE BLACK / L",
+     "price": "68.00",
+     "compare_at_price": null,
+     "available": true,
+     "sku": "TCW6228-0164-L"
+    }
+   ]
+  }
+ ]
+}

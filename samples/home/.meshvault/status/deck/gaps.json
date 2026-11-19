@@ -1,0 +1,27 @@
+{
+  "generated_at": "2026-11-17T14:30:00Z",
+  "t": 1794925800,
+  "refresh": 3600,
+  "src": ["google-trends", "amazon-bestsellers", "loopnet-public", "bls-oes", "census-acs"],
+  "errors": [],
+  "method": "gap_score = demand growth percentile x (1 - supply percentile), 0 to 100; every input is a public source with its as_of.",
+  "items": [
+    {"id": "ecom-home-battery", "title": "Home battery backup kits under $500", "domain": "ecom", "demand_signal": "Searches up 180% in 30 days (US-CA)", "supply_signal": "3 of top 20 best sellers under $500", "gap_score": 78,
+      "evidence": [
+        {"source": "google-trends", "metric": "search growth, 30 d", "value": "+180%", "as_of": "2026-11-17T14:00:00Z"},
+        {"source": "amazon-bestsellers", "metric": "listings under $500 in top 20", "value": 3, "as_of": "2026-11-17"},
+        {"metric": "no source, dropped", "value": "1"}
+      ],
+      "next_step": "Price 3 LiFePO4 kits on Alibaba and compare landed cost to the $449 median."},
+    {"id": "ai-smb-local", "title": "Local private AI for small businesses in South OC", "domain": "ai", "demand_signal": "Searches up 240% in 90 days", "supply_signal": "2 local providers listed", "gap_score": 85,
+      "evidence": [{"source": "google-trends", "metric": "search growth, 90 d", "value": "+240%", "as_of": "2026-11-16T00:00:00Z"}],
+      "next_step": "List the 2 providers and their pricing; draft one Kodros offer for dental offices."},
+    {"id": "cre-small-nnn", "title": "Sub-$2M NNN retail in Inland Empire", "domain": "commercial", "demand_signal": "Cap rates 7.5% median", "supply_signal": "14 public listings", "gap_score": 52,
+      "evidence": [{"source": "loopnet-public", "metric": "median cap rate", "value": "7.5%", "as_of": "not a date"}],
+      "next_step": "Screen the 14 listings for DSCR over 1.25."},
+    {"id": "jobs-ai-oc", "title": "AI engineering roles in Orange County", "domain": "jobs", "demand_signal": "43 open roles", "supply_signal": "", "gap_score": 140, "evidence": [], "next_step": ""},
+    {"id": "bad-domain", "title": "Unknown domain, dropped", "domain": "crypto", "gap_score": 90},
+    {"id": "surf-lessons", "title": "Surf lessons at Doheny on weekday mornings", "domain": "surf", "demand_signal": "Searches up 65%", "supply_signal": "4 schools, weekends only", "gap_score": null,
+      "evidence": [{"source": "google-trends", "metric": "search growth", "value": "+65%", "as_of": "2026-11-15"}], "next_step": "Call the 4 schools about weekday slots."}
+  ]
+}

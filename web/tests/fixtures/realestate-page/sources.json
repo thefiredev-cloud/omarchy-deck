@@ -1,0 +1,90 @@
+{
+"dataset": "v2",
+"part": "sources",
+"sources": [
+{
+"id": "acs5_housing_people",
+"name": "American Community Survey 5-year: housing costs, housing stock and residents",
+"publisher": "US Census Bureau",
+"side": "residential",
+"status": "ok",
+"reason": null,
+"key_env": null,
+"as_of": "2020-2024",
+"rows": 33772,
+"coverage": 33285,
+"group": "people",
+"level": "zip"
+},
+{
+"id": "bea_cainc1",
+"name": "BEA personal income and per-capita income by county",
+"publisher": "US Bureau of Economic Analysis",
+"side": "residential",
+"status": "ok",
+"reason": null,
+"key_env": null,
+"as_of": "2024",
+"rows": 3149,
+"coverage": 38407,
+"group": "people",
+"level": "county"
+},
+{
+"id": "bls_qcew_county",
+"name": "BLS Quarterly Census of Employment and Wages by county",
+"publisher": "US Bureau of Labor Statistics",
+"side": "residential",
+"status": "ok",
+"reason": null,
+"key_env": null,
+"as_of": "2026-Q1",
+"rows": 3224,
+"coverage": 38888,
+"group": "people",
+"level": "county"
+},
+{
+"id": "cdc_places_zcta",
+"name": "CDC PLACES adult health measures by ZIP code area",
+"publisher": "Centers for Disease Control and Prevention",
+"side": "residential",
+"status": "ok",
+"reason": null,
+"key_env": null,
+"as_of": "2023",
+"rows": 32520,
+"coverage": 32520,
+"group": "risk",
+"level": "zip"
+},
+{
+"id": "fbi_cde_agency",
+"name": "FBI Crime Data Explorer: crime rates by reporting agency",
+"publisher": "FBI Criminal Justice Information Services (api.usa.gov)",
+"side": "residential",
+"status": "needs_key",
+"reason": "needs the API key DATA_GOV_API_KEY (not set)",
+"key_env": "DATA_GOV_API_KEY",
+"as_of": null,
+"rows": null,
+"coverage": null,
+"group": "risk",
+"level": "zip"
+},
+{
+"id": "bea_cagdp2",
+"name": "BEA gross domestic product by county",
+"publisher": "US Bureau of Economic Analysis",
+"side": "commercial",
+"status": "ok",
+"reason": null,
+"key_env": null,
+"as_of": "2024",
+"rows": 3127,
+"coverage": 38407,
+"group": "commercial",
+"level": "county"
+}
+]
+}

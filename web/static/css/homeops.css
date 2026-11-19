@@ -1,0 +1,134 @@
+/* Home > Dev, Crons and Launch (PgHomeOps, design v3). Rows, chips, sections and sheets come from ui.css; this file lays out the three pages.
+   Classes: P max-width 599; L min-width 600 and max-height 499; T 600-1099 and min-height 500; D min-width 1100 and min-height 500; XL 1600; TV html.tv. */
+
+/* the control row: search, then the filter (Crons) or the Filters button (Launch), and Fix these when something needs a look.
+   One row in every class, so the first job or mission starts right under it. */
+.hops-bar{display:flex;flex-wrap:nowrap;align-items:center;gap:var(--s-2);margin:0 0 var(--s-3);min-width:0}
+.hops-bar>.search{flex:1 1 16rem;min-width:0;max-width:28rem}
+.hops-bar>#scfw{flex:0 1 auto;min-width:0;display:flex;align-items:center;gap:var(--s-2)}
+.hops-bar .chips{flex-wrap:nowrap;min-width:0}
+.hops-bar>*{flex-shrink:0}
+.hops-bar>.search,.hops-bar>#scfw{flex-shrink:1}
+html.tv .hops-bar{display:none}
+
+/* ---- Crons: one list of jobs. From L up it flows into balanced columns so a row stays a readable width. ---- */
+#hcrons.broken .hops-bar{display:none}
+/* the filter: four chips on a desk, one select below 1100 px and on L, where four chips do not fit beside the search */
+#scsel{display:none;min-width:0;max-width:12rem}
+@media (max-width:1099px),(max-height:499px){#scf{display:none}#scsel{display:inline-flex}.hops-bar>.search{flex-basis:0;min-width:6.5rem}}
+/* G7: where the select stands in for the chips, "Failing N" (it opens Failing) and Fix these stand beside it while something needs a
+   look. A phone has no room for both beside the search, so there they move to a second row under the bar, drawn only then: both one tap
+   from the first screen. Where the four chips show, their counts carry it and the bar keeps Fix these. Not on the TV board. */
+.scneed,.hops-bar .scfail{display:none}
+.scfail{flex:none;gap:var(--s-1)}
+/* the bar's buttons keep their words whole; the search gives up the room (at 908 Fix these was squeezed to its border) */
+#scfw>.fix{flex:none}
+.scfail b{font-weight:var(--fw-med);font-variant-numeric:tabular-nums}
+@media (max-width:1099px),(max-height:499px){.hops-bar .scfail{display:inline-flex}}
+@media (max-width:599px){.hops-bar .scfail,#hcrons .hops-bar .fix{display:none}#scsec>.scneed{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-2);margin:0 0 var(--s-3)}}
+/* P: one row still, so the select gives the search its room: at 9.5rem and 16 px sides the search was 105 px and showed "Searc" */
+@media (max-width:599px){#scsel{max-width:8.75rem;padding-left:var(--s-3)}#hcrons .fix,#hcrons .scfail{padding-left:var(--s-3);padding-right:var(--s-3)}}
+#sclist>.frow{break-inside:avoid}
+/* a double gap between job columns: at one gap a Failed pill almost touched the next column's titles (laptop and desktop) */
+@media (min-width:600px) and (max-height:499px),(min-width:1100px) and (min-height:500px){#sclist{display:block;columns:26rem 3;column-gap:calc(var(--gap) * 2)}#sclist>.frow:first-child{border-top:var(--hair)}}
+html.tv #sclist{display:block;columns:2;column-gap:var(--gap)}
+/* TV: the job list is the read-only board; paging is a desk control */
+html.tv #scsec .more-row{display:none}
+.scrow .fr{gap:var(--s-1)}
+.scrow.off .fl b{color:var(--c-text-2)}
+/* a Hermes job says so first on its second line, in bone: the rows with Run now, Pause and Resume */
+.scrow .kd{color:var(--c-text-1);font-weight:var(--fw-med)}
+/* the Hermes status line (the halt notice or the lane tally) sits above the job list as its own row; nothing new on the TV board */
+#scsec>.sc-st{margin:0 0 var(--s-3)}
+html.tv #scsec>.sc-st{display:none}
+
+/* ---- Dev: whole sections in balanced columns (ui.css data-balance); a section shows five rows on a phone, ten from T up, until Show more ---- */
+.c5 .more5,.c5 .less5{display:none}
+.more5 .m-wide{display:none}
+/* TV: four tiles are the board, the sections follow one Down press below; off TV the tiles are not drawn */
+.dev-tv{display:none}
+html.tv .dev-tv{display:block;margin-bottom:var(--gap)}
+/* D up to XL (1366, 1440): two columns, not three. At three a column was 365 px: app names wrapped to three lines and the pill
+   "Approved, not released" broke in two. XL keeps three (about 500 px each) */
+@media (min-width:1100px) and (max-width:1599px) and (min-height:500px){html:not(.tv) #hdev{--col-max:2}}
+/* P and L are phones: five rows a section until Show more, so on L the two columns balance instead of one long Pull requests
+   section filling the left half while the right ends early (main 2026-11-15) */
+@media (max-width:599px),(min-width:600px) and (max-height:499px){.c5:not(.open) .flist>:nth-child(n+6){display:none}.c5:not(.open) .more5{display:flex}.c5.open .less5{display:flex}}
+/* commit titles are cut at a word in the model (DEV_TITLE) and may wrap to two lines on a phone; nothing is hidden by CSS.
+   A long state word ("Approved, not released") wraps inside its pill instead of leaving the right column. */
+#hdev .frow .fr{max-width:55%}
+#hdev .fr .pill{white-space:normal;text-align:right}
+/* T, D and XL: ten rows a section until Show more (the button names the rows it opens), so a 40-row Pull requests list is not
+   many screens tall and the whole sections balance (layout second pass, 2026-11-15: a list never continues in another column) */
+@media (min-width:600px) and (min-height:500px){html:not(.tv) .c10:not(.open) .flist>:nth-child(n+11){display:none}html:not(.tv) .c10:not(.open) .more5{display:flex}html:not(.tv) .c10.open .less5{display:flex}
+  html:not(.tv) .more5 .m-ph{display:none}html:not(.tv) .more5 .m-wide{display:inline}}
+
+/* ---- Launch: missions, apps and the list in the main column; launch results beside it on D. The filters sit behind the Filters button
+   in every class (W11: on a laptop the chips took the right 40% of the first screen). Where #lnmain draws columns (L, D, XL) its blocks
+   (missions, apps, favorites, each group) balance whole (ui.css data-balance): a group never continues in another column and never runs
+   on alone at the foot of the list. ---- */
+.lgrid{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--gap)}
+.lmain .sect{break-inside:avoid;margin:0 0 var(--gap)}
+.lside{display:flex;flex-direction:column;gap:var(--gap);min-width:0}
+@media (min-width:1100px) and (min-height:500px){.lgrid{grid-template-columns:minmax(0,1fr) minmax(15rem,21rem);align-items:start}}
+@media (min-width:600px) and (max-height:499px){#lnmain{columns:2;column-gap:var(--gap)}#lnmain .sect,#lnmain>.lmis{margin:0;padding-bottom:var(--gap)}}
+@media (min-width:1100px) and (min-height:500px){.lside{position:sticky;top:var(--s-5)}#lnmain{columns:24rem 2;column-gap:var(--gap)}}
+/* the side column sticks under the page header (--sticky-top is the header's bottom, set by app.js settle()), never under it, and is
+   never taller than the screen below it: a taller one scrolls inside itself. The foot gap (s-8) is at least the page's space under the
+   list, so at the page's foot, where the grid's end pushes the column up, its title still clears the header. At 27 px it hid the side
+   column's title under the bar, and at 1,004 px Launches stayed below the fold of a 900 px screen (layout third pass). Not on the TV. */
+@media (min-width:1100px) and (min-height:500px){html:not(.tv) .lside{top:calc(var(--sticky-top) + var(--s-3));max-height:calc(100vh - var(--sticky-top) - var(--s-3) - var(--s-8));max-height:calc(100dvh - var(--sticky-top) - var(--s-3) - var(--s-8));overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}}
+html:not(.tv) .lside::-webkit-scrollbar{width:8px;background:var(--c-ground)}html:not(.tv) .lside::-webkit-scrollbar-thumb{background:var(--c-line-strong);border-radius:4px}
+@media (min-width:1600px) and (min-height:500px){#lnmain{columns:24rem 3}}
+/* the legacy .lnrow card (app.css: raised fill, radius, padding) does not apply inside the v3 list: a row is a hairline row like every other .frow */
+#hlaunch .frow.lnrow{background:none;box-shadow:none;border-radius:0;padding:var(--row-pad) 0;min-height:var(--hit)}
+/* a launch row: the text is one tap target (it opens the item's sheet), the Hermes button sits at the end. The target takes the row's
+   own padding, so it is the row's full height (at least --hit, 44 px on touch) without making the row taller; it was 23 px */
+.lnrow .lninfo{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;align-self:stretch;min-height:var(--hit);margin:calc(var(--row-pad) * -1) 0;padding:var(--row-pad) 0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.lnrow .fr{flex-direction:row;align-items:center;gap:var(--s-2);max-width:none}
+.lnb.armed,.chips>button.lnb.armed{background:var(--c-signal);border-color:var(--c-signal);color:var(--c-on-signal)}
+/* the scope note ("On everything we ship") reads on one line in a phone-landscape column (second pass N7); a narrower column wraps it */
+.agm .fr{max-width:48%}
+.agm .fr small.cx{white-space:normal;text-align:right;color:var(--c-text-1);text-wrap:balance}
+.agtgt{margin:var(--s-3) 0 0}
+/* W4-5: from 1100 px wide (laptop, desktop, his 2470 window) the target chips wrap as whole words: at 1440 and 2470 a sideways row cut "omarchy-de" and
+   "amphours" at the column edge with nothing to say it scrolls. Phones and tablets keep the swipe row; the TV hides these chips. */
+@media (min-width:1100px) and (min-height:500px){html:not(.tv) .agtgt{flex-wrap:wrap;overflow:visible}}
+/* favorites: a chip row in the list on phones, tablets and the TV; on a desk they are rows in the side column above Launches, so they stay
+   on the first screen instead of under the eight Apps tiles (reviewer of #362) */
+#lnfavd{display:none}
+@media (min-width:1100px) and (min-height:500px){html:not(.tv) #lnfavd{display:block}html:not(.tv) #lnfav{display:none}}
+/* P and L: the control row says where you are, so the first mission starts right under it; the title returns from T up */
+@media (max-width:599px),(min-width:600px) and (max-height:499px){.lmis .secttl{display:none}}
+/* TV: the missions are the board (no title above them; Show more and the target chips are desk controls) */
+html.tv .lmis .secttl,html.tv .lmis .more-row,html.tv .lmis .agtgt{display:none}
+/* filter counts read as secondary text, not the quiet tier: the Filters sheet holds many of them */
+.lnflt .chips small{color:var(--c-text-2)}
+.lnfg+.lnfg{margin-top:var(--s-1)}
+.lnfg .sub-h{margin-top:var(--s-2)}
+/* Apps (L30): a tile per app on this computer, two or more across, name, state word with its mark, what it does, then Open, Wake
+   (armed on the first tap, sent on the second) or the server's reason. Not a .tile, so a tap never opens a sheet. */
+.appgr{display:grid;grid-template-columns:repeat(auto-fill,minmax(10.5rem,1fr));gap:var(--s-2)}
+.appt{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0;padding:var(--s-3);background:var(--c-panel);border:var(--hair);border-radius:var(--r-panel)}
+.appt .apn{font-weight:var(--fw-med);color:var(--c-text-1);overflow-wrap:anywhere}
+.appt .aps{display:inline-flex;align-items:center;gap:.4em;font-size:var(--fs-meta);color:var(--c-text-1)}
+.appt .apd{font-size:var(--fs-meta);color:var(--c-text-2);line-height:var(--lh-row)}
+/* the action sits at the tile's foot, so Open buttons line up across a row; the line before it keeps a step of air */
+.appt>:nth-last-child(2){margin-bottom:var(--s-2)}
+.appt .btn,.appt .apnote{margin-top:auto}
+.appt .apnote{font-size:var(--fs-meta);color:var(--c-text-2)}
+.appt .lk{margin-left:var(--s-1);color:inherit}
+.apwake.armed{background:var(--c-signal);border-color:var(--c-signal);color:var(--c-on-signal)}
+.apdell{display:block;margin-top:var(--s-2);font-size:var(--fs-meta);color:var(--c-text-2)}
+/* Open here: the app fills the wide sheet's body; Close, Back and "Open in a new tab" stay in the sheet's own header and footer */
+dialog.sheet .appfrm{display:block;width:100%;height:min(72dvh,760px);border:0;border-radius:var(--r-panel);background:var(--c-panel)}
+/* launch results: the last three lines, then Last run */
+#lnmsg:empty{display:none}
+.lnres{display:flex;align-items:baseline;gap:var(--s-2);padding:var(--s-2) 0;border-top:var(--hair);font-size:var(--fs-meta)}
+.lnres span{flex:1;min-width:0;overflow-wrap:anywhere}
+.lnres small{flex:none;font-family:var(--mono);font-size:var(--fs-micro);color:var(--c-text-2)}
+#lnlast{width:100%;margin-top:var(--s-2)}
+
+/* the run window's Run again button keeps the second-tap look (moved here with the old Launch block) */
+button.b#runagain.armed{background:var(--c-signal);border-color:var(--c-signal);color:var(--c-on-signal)}
+button.b#runagain:disabled{opacity:.5}

@@ -1,0 +1,10 @@
+[Unit]
+Description=Pixel Deck website traffic feed (read-only Search Console clicks, writes ~/.kodros/status/traffic/traffic.json)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 %h/ops/bin/deck_traffic.py
+# exit 2 = cache written, but a site such as an unverified property has no number. That is a reading, not a failed unit.
+SuccessExitStatus=2
+TimeoutStartSec=180
+Nice=10

@@ -1,0 +1,139 @@
+/* TV view: the opt-in 10-foot deck driven by a remote (DESIGN-v3 section 5, UiApi 1.5). Owner: lane ShellTv.
+   Every html.tv rule lives in this file; it loads after ui.css. Type sizes, the ring width and the overscan come from the
+   html.tv block in tokens.css. Overscan: 5% sides, 4% bottom; the top is 5% plus the room the focus ring and its 1.04 lift
+   take above a top-row stop (--tv-top), so no ink sits in the top 5% (SeeReference R13). No hover states on TV. */
+
+/* --tv-top: 5% of the height, then the ring (its 3 px offset and 4 px width) and half the 4% lift of a tab one --hit tall */
+html.tv{--tv-top:calc(5vh + var(--focus-off) + 4px + var(--hit) * .02)}
+
+/* ===== shell: a top row of eight large tabs (focusable), no host switch ===== */
+html.tv #top{position:static;inset:auto;width:auto;height:auto;flex-direction:row;align-items:center;overflow:visible;padding:var(--tv-top) 5vw var(--s-2);gap:var(--s-5);border:0;background:none}
+html.tv body{padding:0}
+html.tv #hosts{display:none}
+html.tv #pgs{position:static;flex-direction:row;height:auto;overflow:visible;gap:var(--s-2);background:none;border:0;padding:0;-webkit-mask-image:none;mask-image:none}
+html.tv #pgs button{flex:none;flex-direction:row;min-height:var(--hit);padding:0 var(--s-4);font-size:var(--fs-lead);border-radius:var(--r-ctl)}
+html.tv #pgs button svg.i,html.tv #pgs .rsub{display:none}
+html.tv #pgs button.on{background:var(--c-panel-2)}
+html.tv #pgs button.on::before{left:var(--s-4);right:var(--s-4);top:auto;bottom:0;width:auto;height:4px}
+html.tv #topr{margin-left:auto;margin-top:0;padding:0;border-top:0}
+
+/* ===== page: the tab row names the page, so no page title (CRITIQUE 2); sub-tabs are a row of pills. A page without
+   sub-tabs spends no row on its header: the freshness mark sits at the top right of the board's first row ===== */
+html.tv .page{position:relative;padding:0 5vw 4vh}
+html.tv .phead{position:static;margin:0 0 var(--s-2);padding:0;background:none;min-height:0}
+html.tv .phead:not(:has(.subrow)){position:absolute;top:0;right:5vw;z-index:1;margin:0}
+html.tv .phead .ptitle{display:none}
+html.tv .phead .subrow{display:flex;gap:var(--s-2);border:0;overflow:visible}
+html.tv .phead .subrow>button{border:1px solid var(--c-line-strong);border-radius:var(--r-pill);min-height:var(--hit)}
+/* no filters on TV: scope comes from the Display settings in the Data sheet */
+html.tv .data-btn,html.tv .pscope,html.tv .fbar-open,html.tv .fbar .chips,html.tv .fbar-panel{display:none!important}
+html.tv .fbar:not(:has(.seg)){display:none}
+html.tv .tv-hide{display:none!important}
+/* a small button keeps its TV step (the remote ring, not a finger, finds it), whatever pointer the set reports */
+html.tv .btn-sm{min-height:calc(var(--ctl-h) - 8px)}
+html.tv .g12>.c-3{grid-column:span 3}html.tv .g12>.c-4{grid-column:span 4}html.tv .g12>.c-5{grid-column:span 5}html.tv .g12>.c-6{grid-column:span 6}html.tv .g12>.c-7{grid-column:span 7}html.tv .g12>.c-8{grid-column:span 8}
+html.tv .g12{margin-bottom:var(--s-4)}html.tv .flow>*{padding-bottom:var(--s-4)}
+/* one figure size on the TV strip: 56 px at 1080p in the six-cell strip (CRITIQUE 20). Any other column count keeps the
+   shared clamp in ui.css, which steps the whole strip down before a long value can reach its neighbour. */
+html.tv .strip[data-nb="6"]>.tile .v{font-size:var(--fs-fig)}
+/* strips keep their first six cells; tables show P1 and eight rows */
+html.tv .strip>.tile.dx{display:none}
+html.tv .strip[data-nb="6"]{--cols:6}html.tv .strip[data-nb="4"],html.tv .strip[data-nb="8"]{--cols:4}
+html.tv .htbl [data-pri]{display:none}
+/* Rows are capped by HEIGHT inside a .board only (tv.js marks them data-tv-cut, see the board block below). A page that has
+   not adopted .board shows every row and scrolls, so TV view never hides content a page still needs. */
+html.tv .place{flex-direction:row;align-items:baseline;gap:.6em}
+html.tv .htbl th,html.tv .htbl td{padding-top:.35rem;padding-bottom:.35rem}
+html.tv .coast-ends .sel{display:none}
+html.tv .cs b,html.tv .cs small{display:block}
+/* TV coast: one row of 14 every size (the ribbon the blueprint draws), short names, bar 1.4rem, panel padding and the ends
+   row trimmed. Measured forms on Surf (RevSurfShop, same page and tree, the owner's 1536x864 set): one row with names and
+   values 285 px and 0 of 7 spot cards; names only 229 px and 7 of 7; two rows with both 314 px and 0 of 7. So the value is
+   painted only where a segment holds it on one line (1600 and up), and the labels wrap instead of colliding. */
+html.tv .coast{padding:var(--s-2) var(--s-3)}
+html.tv .coast-ends{margin-top:0;font-size:var(--fs-micro);line-height:1.15}
+html.tv .coast ol{grid-template-columns:repeat(14,minmax(0,1fr));row-gap:0}
+/* under 1600 a 82 px segment cannot hold the value on one line, so it stays in the accessibility tree and the region card
+   without painting a second line (sr-only, not display:none: a value a viewer could need is never removed from the page) */
+@media (max-width:1599px){html.tv .cs b{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}}
+html.tv .cs{min-width:0;gap:var(--s-1)}
+html.tv .cs b{font-size:var(--fs-micro);white-space:normal;line-height:1.15}
+html.tv .cs>i{height:1.4rem}
+html.tv .cs small{font-size:var(--fs-micro);overflow-wrap:break-word;word-break:normal;hyphens:none;line-height:1.15;text-align:center}
+
+/* ===== the board (CRITIQUE 2): one 1080p screen inside the overscan, secondary content one Down press below =====
+   A page puts its blueprint 1.3 sections in one .board as the first thing in its sub container. tv.js sets
+   --tv-board-top (the board's top edge in the document) and marks list rows that would cross the bottom with
+   data-tv-cut, so lists cap their rows by height and never by a guess. .board-fill takes the height left over. */
+html.tv .board{--tv-board-top:calc(var(--tv-top) + var(--hit) + var(--s-2) + var(--hit) + var(--s-2));
+  display:flex;flex-direction:column;gap:var(--s-4);box-sizing:border-box;min-height:0;
+  height:calc(100vh - var(--tv-board-top) - 4vh);height:calc(100dvh - var(--tv-board-top) - 4vh);
+  overflow:hidden;overflow:clip;overflow-clip-margin:var(--s-4)}
+html.tv .board>*{flex:none;min-height:0;margin-bottom:0;overflow:hidden;overflow:clip;overflow-clip-margin:var(--s-4)}
+html.tv .board>.board-fill{flex:1 1 0;overflow:hidden;overflow:clip;overflow-clip-margin:var(--s-4)}
+html.tv .board [data-tv-cut]{display:none!important}
+html.tv .board+*{margin-top:8vh}
+/* columns in a fixed-height box spill sideways, so a .flow inside a board lays its sections in a grid instead */
+html.tv .board .flow{display:grid;grid-template-columns:repeat(var(--col-max),minmax(0,1fr));gap:var(--gap);align-items:start;align-content:start;columns:auto}
+html.tv .board .flow>*{margin:0;padding-bottom:0}
+/* one Down press past the board scrolls the next section to the top edge, inside the overscan and below the ring's room */
+html.tv .page :is(a[href],button,summary,[tabindex]),html.tv .page section{scroll-margin:var(--tv-top) 0 4vh}
+
+/* ===== one headline a board (PlanDesign M8; tv.js placeLeads): the count at the display step, its words at the title step,
+   at the head of the section it sums up. It takes the place of the section title it restates ("4 need you" over Needs
+   you). The page-scoped rules below are the page lanes' boards changed for TV only (tv.css owns every html.tv rule). ===== */
+html.tv .tv-lead{display:flex;align-items:baseline;flex-wrap:wrap;gap:0 .35em;margin:0 0 var(--s-2);font-size:var(--fs-title);font-weight:var(--fw-med);line-height:1;color:var(--c-text-1)}
+html.tv .tv-lead>b{font-family:var(--mono);font-size:var(--fs-display);font-weight:var(--fw-med);line-height:.85;letter-spacing:-.02em}
+/* a headline that is the board's own first child sits as close to its list as one under a section title: the board's gap is
+   taken back, so the 5% top inset and the headline together cost no list row where the row is short of the bottom */
+html.tv .board>.tv-lead{margin-bottom:calc(var(--s-2) - var(--s-4))}
+html.tv .board .tv-lead+.secttl{display:none}
+/* Today: its small quote tiles take the shared strip step on TV, as the Money board's do (56 px in four whole cells, W7) */
+html.tv #td-mkt .strip>.tile.sm .v{font-size:clamp(var(--fs-lead),calc((100cqi / var(--cols,2) - 2 * var(--s-4)) / 4.8),var(--fs-fig))}
+/* Fleet: the four counts lead the board, the rows that need a look under them (W8) */
+html.tv #fsum.board>.strip{order:-1}
+/* under the counts a row keeps its height and tv.js cuts the rows that cross the bottom; none is squeezed to fit */
+html.tv #fsum .fsum-rows>.frow{flex-shrink:0}
+/* Cluster: the second row (tv.js copyRow: speed with its last benchmark, context, proxy) under the four tiles (W9) */
+html.tv #clboard>.tv-row2{--cols:3}
+/* the copies keep the calm single-urgent rule of their source column (css/home.css: no wash on a bad or stale tile) */
+html.tv #clboard>.tv-row2>.tile.bad,html.tv #clboard>.tv-row2>.tile.stale{background:var(--c-panel)}
+/* House: the readings strip (#hrd: CPU, RAM, GPU, the car, the inside temperature) under the status card, two across so each
+   figure keeps the strip's figure step, an odd last cell across the row; the cameras two by two beside it (W6). The Watch,
+   the weather and the ink stay off the board (css/home.css), so the board still fits at 1536x864 */
+html.tv body #hal>#hrd{display:grid;--cols:2}
+html.tv body #hal>#hrd>.tile:last-child:nth-child(odd){grid-column:1/-1}
+
+/* ===== sheets: full screen; Up and Down walk the sections (CRITIQUE 3) ===== */
+html.tv dialog.sheet{inset:0;width:100vw;height:100dvh;max-height:100dvh;border:0;border-radius:0;padding:var(--tv-top) 5vw 4vh}
+html.tv dialog.sheet .sheet-h::before{display:none}
+html.tv #sheetp{inset:0;width:100vw;height:100dvh;max-height:none;border:0;border-radius:0;padding:var(--tv-top) 5vw 4vh}
+html.tv :is(.sheet-b,#sheetb) :is(a[href],button,[tabindex]){scroll-margin:var(--s-4) 0}
+html.tv .sh-sec:focus{outline-offset:var(--s-2);border-radius:var(--r-panel)}
+
+/* ===== focus: 4 px signal ring with offset and a 1.04 lift (CRITIQUE 1) =====
+   TV uses :focus, not :focus-visible: a game controller is not a keyboard, so after one mouse click (pc-desktop on the TV
+   input) Chrome would stop matching :focus-visible on remote-driven focus and the ring would vanish. A sheet title focused
+   on open (tabindex=-1) gets no ring.
+   A rule that changes a focused element's background also sets its text colour, so the text inside keeps 4.5:1 or
+   better. Map tiles and coast segments keep their own ramp fill and get only the ring and the lift. */
+html.tv :focus:not([tabindex="-1"]){outline:var(--focus);outline-offset:var(--focus-off)}
+html.tv [tabindex="-1"]:focus{outline:none}
+html.tv :is(#pgs button,.seg>button,.btn,.fresh,.frow,.rank-row,.spot,.tile,.card,.st,.cs):focus{position:relative;z-index:3;transform:scale(1.04);transition:transform var(--t-press) var(--ease)}
+html.tv :is(#pgs button,.seg>button,.btn:not(.btn-primary),.fresh:not(.warn):not(.bad),.frow,.rank-row,.spot,.tile,.card):focus{background:var(--c-panel-2);color:var(--c-text-1)}
+html.tv .flist>.frow:focus{margin-inline:calc(var(--s-4) * -1);padding-inline:var(--s-4);width:calc(100% + 2 * var(--s-4))}
+html.tv .rank-row:focus .rank-n{color:var(--c-text-2)}
+html.tv .cs:focus{background:none}
+html.tv .usmap .st:focus{background:var(--c-ramp-0)}
+html.tv .usmap .st[data-q="1"]:focus{background:var(--c-ramp-1)}html.tv .usmap .st[data-q="2"]:focus{background:var(--c-ramp-2)}html.tv .usmap .st[data-q="3"]:focus{background:var(--c-ramp-3)}
+html.tv .usmap .st[data-q="4"]:focus{background:var(--c-ramp-4)}html.tv .usmap .st[data-q="5"]:focus{background:var(--c-ramp-5)}html.tv .usmap .st[data-q="x"]:focus{background:var(--c-hatch)}
+/* table rows: the ring plus the 3 px signal edge, bone text on panel-2 */
+html.tv .htbl tbody tr:focus{outline:var(--focus);outline-offset:calc(var(--focus-off) * -1)}
+html.tv .htbl tbody tr:focus>*{background:var(--c-panel-2);color:var(--c-text-1)}
+
+/* ===== the one-time "Use TV view?" prompt on a TV browser (shown outside TV view, so not html.tv) ===== */
+.tv-ask{position:fixed;left:50%;bottom:6vh;z-index:90;transform:translateX(-50%);display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-3);max-width:90vw;padding:var(--s-4) var(--s-5);background:var(--c-bar);border:1px solid var(--c-line-strong);border-radius:var(--r-panel);box-shadow:0 12px 40px rgba(0,0,0,.5);font-size:var(--fs-lead);color:var(--c-text-1)}
+.tv-ask p{margin:0 var(--s-3) 0 0}
+.tv-ask .btn:focus{outline:4px solid var(--c-signal);outline-offset:3px}
+
+@media (prefers-reduced-motion:reduce){html.tv :focus{transform:none!important}}

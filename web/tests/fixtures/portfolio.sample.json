@@ -1,0 +1,54 @@
+{
+ "t": 1791263121,
+ "refresh": 300,
+ "src": [
+  "SAMPLE fixture, fake symbols and round numbers"
+ ],
+ "errors": [],
+ "basis": {
+  "equity_qty_as_of": 1790658321,
+  "equity_qty_age_days": 7,
+  "equity_qty_source": "owner screenshot snapshot",
+  "crypto_qty_as_of": 1791263121,
+  "crypto_live": true,
+  "crypto_qty_source": "Kraken balance read-only",
+  "price_note": "sample"
+ },
+ "totals": {
+  "day_pct": -1.5,
+  "equity_day_pct": -1.0,
+  "crypto_day_pct": -2.0,
+  "positions": 3,
+  "priced": 3,
+  "margin_in_use": true
+ },
+ "positions": [
+  {
+   "symbol": "AAA",
+   "kind": "equity",
+   "name": "Alpha Corp",
+   "price": 100.0,
+   "chg": -1.0,
+   "pct": -0.99,
+   "t": 1791263121
+  },
+  {
+   "symbol": "BBB",
+   "kind": "equity",
+   "name": "Beta Inc",
+   "price": 50.5,
+   "chg": 0.5,
+   "pct": 1.0,
+   "t": 1791263121
+  },
+  {
+   "symbol": "XRP",
+   "kind": "crypto",
+   "name": "XRP",
+   "price": 1.5,
+   "chg": 0.0,
+   "pct": 0.0,
+   "t": 1791263121
+  }
+ ]
+}

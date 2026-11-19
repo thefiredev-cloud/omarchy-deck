@@ -1,0 +1,11 @@
+[Unit]
+Description=Refresh the Pixel Deck national ZIP housing dataset weekly (publishers update monthly)
+
+[Timer]
+OnCalendar=Mon *-*-* 05:20:00
+RandomizedDelaySec=30min
+Persistent=true
+Unit=deck-feed-housing-national.service
+
+[Install]
+WantedBy=timers.target

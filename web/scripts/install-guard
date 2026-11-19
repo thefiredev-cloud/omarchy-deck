@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# Run the repo-vs-live audit (qa/audit_repo_live.py) on the repo files an installer is about to copy, before it copies them.
+#   scripts/install-guard [--force] [--bin DIR] [--units DIR] -- REPO_FILE...
+# Exit 0: install. Exit 1: a live copy holds lines no repo version ever had (LIVE AHEAD) and --force was not given, or the
+# audit could not run; nothing may be installed. The audit reads live files only and prints no file content.
+# The installers in this folder call it first (round Better 2026-11-15, after deck-feed-products was found 69 lines ahead).
+set -uo pipefail
+
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+audit="$here/../qa/audit_repo_live.py"
+force=0
+opts=()
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --force) force=1 ;;
+    --bin|--units) [ "$#" -ge 2 ] || { echo "install-guard: $1 needs a folder" >&2; exit 2; }; opts+=("$1" "$2"); shift ;;
+    --) shift; break ;;
+    *) echo "install-guard: unknown argument $1" >&2; exit 2 ;;
+  esac
+  shift
+done
+[ "$#" -gt 0 ] || { echo "install-guard: no repo files named" >&2; exit 2; }
+[ -f "$audit" ] || { echo "install-guard: missing $audit; nothing was installed" >&2; exit 1; }
+
+python3 "$audit" --quiet ${opts[@]+"${opts[@]}"} --only "$@"
+rc=$?
+case "$rc" in
+  0) exit 0 ;;
+  1)
+    if [ "$force" = 1 ]; then
+      echo "install-guard: LIVE AHEAD above; --force given, installing over it" >&2
+      exit 0
+    fi
+    echo "install-guard: a live copy holds work the repo lacks (above). Nothing was installed." >&2
+    echo "  Bring it into the repo, or record a reviewed difference (qa/README.md), or re-run the installer with --force." >&2
+    exit 1 ;;
+  *) echo "install-guard: the audit failed (exit $rc); nothing was installed" >&2; exit 1 ;;
+esac

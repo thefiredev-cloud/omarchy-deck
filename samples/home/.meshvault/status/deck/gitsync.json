@@ -1,0 +1,76 @@
+{
+ "src": "~/.meshvault/status/deck/gitsync.json",
+ "t": 1795051391,
+ "age": 60,
+ "stale": false,
+ "refresh": 1800,
+ "basis": "local tracking refs; no fetch or GitHub verification",
+ "hosts": [
+  {
+   "host": "pc-desktop",
+   "label": "Desktop",
+   "checkouts": 214,
+   "repos": 190,
+   "own_repos": 152,
+   "clean": 140,
+   "unpushed": 0,
+   "no_remote": 0,
+   "dirty": 3,
+   "third_party": 38,
+   "unknown": 0,
+   "stale_s": 0,
+   "at": 1795051331
+  },
+  {
+   "host": "mac-mini",
+   "label": "Mac mini",
+   "checkouts": 31,
+   "repos": 27,
+   "own_repos": 23,
+   "clean": 20,
+   "unpushed": 3,
+   "no_remote": 0,
+   "dirty": 0,
+   "third_party": 4,
+   "unknown": 0,
+   "stale_s": 0,
+   "at": 1795051341
+  },
+  {
+   "host": "dell",
+   "label": "Dell",
+   "checkouts": null,
+   "repos": null,
+   "own_repos": null,
+   "clean": null,
+   "unpushed": null,
+   "no_remote": null,
+   "dirty": null,
+   "third_party": null,
+   "unknown": null,
+   "stale_s": null,
+   "at": null,
+   "error": "unreachable"
+  }
+ ],
+ "unpushed": [
+  {
+   "host": "mac-mini",
+   "repo": "projects/meshvault/ios-app",
+   "branch": "premium/deck-20261005",
+   "ahead": 4
+  },
+  {
+   "host": "mac-mini",
+   "repo": "projects/meshvault/pixel-deck",
+   "branch": "main",
+   "ahead": 2
+  },
+  {
+   "host": "mac-mini",
+   "repo": "work/scratch/notes",
+   "branch": "main",
+   "ahead": 1
+  }
+ ]
+}

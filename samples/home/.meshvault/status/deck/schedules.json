@@ -1,0 +1,65 @@
+{
+ "t": 1795051391,
+ "refresh": 300,
+ "stale": false,
+ "src": "fixture (synthetic)",
+ "errors": [],
+ "counts": {
+  "total": 3,
+  "failing": 2,
+  "running": 0,
+  "never": 0,
+  "paused": 0,
+  "sources_down": 0,
+  "next_run": 1795051511
+ },
+ "groups": [
+  {
+   "id": "hermes",
+   "label": "Hermes jobs",
+   "host": "pc-desktop",
+   "kind": "hermes",
+   "ok": true,
+   "error": null,
+   "n": 3,
+   "jobs": [
+    {
+     "id": "hermes:a1",
+     "name": "Fixture: network security",
+     "host": "pc-desktop",
+     "kind": "hermes",
+     "schedule": "every 15m",
+     "enabled": true,
+     "last": 1795050591,
+     "next": 1795051511,
+     "result": "failed",
+     "detail": "error"
+    },
+    {
+     "id": "hermes:a2",
+     "name": "Fixture: asc-watch",
+     "host": "dell",
+     "kind": "systemd",
+     "schedule": "every 10m",
+     "enabled": true,
+     "last": 1794792191,
+     "next": 1795051451,
+     "result": "overdue",
+     "detail": "no scheduled run for 3d"
+    },
+    {
+     "id": "hermes:a3",
+     "name": "Fixture: engagement watch",
+     "host": "pc-desktop",
+     "kind": "hermes",
+     "schedule": "every 30m",
+     "enabled": true,
+     "last": 1795050791,
+     "next": 1795052591,
+     "result": "ok",
+     "detail": ""
+    }
+   ]
+  }
+ ]
+}

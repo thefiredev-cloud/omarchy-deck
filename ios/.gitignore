@@ -1,0 +1,23 @@
+build/
+*.xcodeproj/
+.DS_Store
+xcuserdata/
+DerivedData/
+*.ipa
+*.xcarchive
+
+# Secrets and local artifacts
+.env
+.env.*
+!.env*.example
+!.env.EXAMPLE
+*.pem
+*.key
+*.p8
+*.p12
+__pycache__/
+*.pyc
+omarchy-xtool/.build/
+omarchy-xtool/xtool.env
+# xtool build output: the built app, its code signature and the signing cert/entitlements it writes (I23).
+omarchy-xtool/xtool/

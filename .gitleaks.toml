@@ -1,0 +1,11 @@
+title = "omarchy-deck"
+
+[extend]
+useDefault = true
+
+# A housing metric field name in web/scripts/national/metrics.json, not a credential.
+[[allowlists]]
+description = "metric field names"
+condition = "AND"
+paths = ['''web/scripts/national/metrics\.json''']
+regexes = ['''mf_permits_5plus_per_1k''']

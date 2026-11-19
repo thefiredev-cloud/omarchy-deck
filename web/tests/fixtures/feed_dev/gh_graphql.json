@@ -1,0 +1,12 @@
+{"data":{"search":{"nodes":[
+ {"number":501,"title":"fix(ci): install pnpm","url":"https://github.com/o/A/pull/501","repository":{"nameWithOwner":"o/A","isArchived":false,"defaultBranchRef":{"name":"main"}},"commits":{"nodes":[{"commit":{"statusCheckRollup":{"state":"FAILURE"}}}]}},
+ {"number":7,"title":"green","url":"https://github.com/o/B/pull/7","repository":{"nameWithOwner":"o/B","isArchived":false,"defaultBranchRef":{"name":"trunk"}},"commits":{"nodes":[{"commit":{"statusCheckRollup":{"state":"SUCCESS"}}}]}},
+ {"number":3,"title":"waiting","url":"https://github.com/o/C/pull/3","repository":{"nameWithOwner":"o/C","isArchived":false,"defaultBranchRef":{"name":"main"}},"commits":{"nodes":[{"commit":{"statusCheckRollup":{"state":"PENDING"}}}]}},
+ {"number":1,"title":"no checks","url":"https://github.com/o/D/pull/1","repository":{"nameWithOwner":"o/D","isArchived":true,"defaultBranchRef":{"name":"main"}},"commits":{"nodes":[{"commit":{"statusCheckRollup":null}}]}},
+ {}
+]},"viewer":{"repositories":{"nodes":[
+ {"nameWithOwner":"o/A","isArchived":false,"defaultBranchRef":{"name":"main"}},
+ {"nameWithOwner":"o/E","isArchived":false,"defaultBranchRef":{"name":"main"}},
+ {"nameWithOwner":"o/old","isArchived":true,"defaultBranchRef":{"name":"main"}},
+ {"nameWithOwner":"o/empty","isArchived":false,"defaultBranchRef":null}
+]}}}}

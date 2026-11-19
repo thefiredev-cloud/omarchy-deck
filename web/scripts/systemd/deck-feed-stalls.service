@@ -1,0 +1,8 @@
+[Unit]
+Description=Pixel Deck stall watch (read-only: OMP sessions, swarm lanes, Hermes cron, user units; writes ~/.kodros/status/deck/stalls.json, toasts new stalls)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 %h/ops/bin/deck-feed-stalls
+TimeoutStartSec=90
+Nice=10

@@ -1,0 +1,70 @@
+{
+ "t": 1795051391,
+ "refresh": 300,
+ "stale": false,
+ "src": "fixture (synthetic)",
+ "errors": [],
+ "listings": [
+  {
+   "title": "Senior AI Infrastructure Engineer",
+   "company": "Example Corp",
+   "location": "Costa Mesa, CA",
+   "remote": null,
+   "salary": null,
+   "site": "linkedin",
+   "url": "https://www.linkedin.com/jobs/view/1",
+   "posted_at": 1795029791,
+   "score": 87
+  },
+  {
+   "title": "Staff Engineer, Distributed Systems",
+   "company": "Sample Labs",
+   "location": "Remote",
+   "remote": null,
+   "salary": null,
+   "site": "ashby",
+   "url": "https://jobs.ashbyhq.com/sample/2",
+   "posted_at": 1794979391,
+   "score": 86
+  },
+  {
+   "title": "Machine Learning Infrastructure",
+   "company": "Fixture AI",
+   "location": "Los Angeles, CA",
+   "remote": null,
+   "salary": null,
+   "site": "greenhouse",
+   "url": "https://job-boards.greenhouse.io/fixture/jobs/3",
+   "posted_at": 1794907391,
+   "score": 84
+  },
+  {
+   "title": "Software Engineer, Platform",
+   "company": "Demo Industries",
+   "location": "Newport Beach, CA",
+   "remote": null,
+   "salary": null,
+   "site": "linkedin",
+   "url": "https://www.linkedin.com/jobs/view/4",
+   "posted_at": 1794799391,
+   "score": 83
+  },
+  {
+   "title": "Senior Backend Engineer",
+   "company": "Placeholder Inc",
+   "location": "Irvine, CA",
+   "remote": null,
+   "salary": null,
+   "site": "lever",
+   "url": "https://jobs.lever.co/placeholder/5",
+   "posted_at": 1794727391,
+   "score": 80
+  }
+ ],
+ "by_site": {
+  "linkedin": 2,
+  "ashby": 1,
+  "greenhouse": 1,
+  "lever": 1
+ }
+}

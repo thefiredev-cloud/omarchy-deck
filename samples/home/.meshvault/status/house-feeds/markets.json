@@ -1,0 +1,779 @@
+{
+ "t": 1791263121,
+ "refresh": 300,
+ "src": [
+  "api.kraken.com public",
+  "api.nasdaq.com earnings",
+  "bls.gov, bea.gov, federalreserve.gov calendars",
+  "finance.yahoo.com chart"
+ ],
+ "errors": [],
+ "session": {
+  "state": "closed",
+  "last_close": "2026-10-05",
+  "et_date": "2026-10-06"
+ },
+ "headline": "Closed. S&P 500 +0.67%, Nasdaq 100 +0.88%, VIX 15.5, 10y 5.31%, BTC $85,578 (-0.19%)",
+ "board": [
+  {
+   "id": "spy",
+   "label": "S&P 500",
+   "symbol": "SPY",
+   "group": "us",
+   "price": 774.83,
+   "chg": 5.1874,
+   "pct": 0.674,
+   "t": 1791230400,
+   "src": "yahoo"
+  },
+  {
+   "id": "qqq",
+   "label": "Nasdaq 100",
+   "symbol": "QQQ",
+   "group": "us",
+   "price": 756.2,
+   "chg": 6.6188,
+   "pct": 0.883,
+   "t": 1791230400,
+   "src": "yahoo"
+  },
+  {
+   "id": "dia",
+   "label": "Dow",
+   "symbol": "DIA",
+   "group": "us",
+   "price": 512.11,
+   "chg": 1.012,
+   "pct": 0.198,
+   "t": 1791230400,
+   "src": "yahoo"
+  },
+  {
+   "id": "iwm",
+   "label": "Russell 2000",
+   "symbol": "IWM",
+   "group": "us",
+   "price": 283.38,
+   "chg": 1.8608,
+   "pct": 0.661,
+   "t": 1791230400,
+   "src": "yahoo"
+  },
+  {
+   "id": "es",
+   "label": "S&P futures",
+   "symbol": "ES=F",
+   "group": "futures",
+   "price": 7833.25,
+   "chg": 6.9654,
+   "pct": 0.089,
+   "t": 1791262505,
+   "src": "yahoo"
+  },
+  {
+   "id": "nq",
+   "label": "Nasdaq futures",
+   "symbol": "NQ=F",
+   "group": "futures",
+   "price": 31342.5,
+   "chg": 24.741,
+   "pct": 0.079,
+   "t": 1791262507,
+   "src": "yahoo"
+  },
+  {
+   "id": "vix",
+   "label": "VIX",
+   "symbol": "^VIX",
+   "group": "vol",
+   "price": 15.52,
+   "chg": 0.2101,
+   "pct": 1.372,
+   "t": 1791231301,
+   "src": "yahoo"
+  },
+  {
+   "id": "us10y",
+   "label": "10-year yield",
+   "symbol": "^TNX",
+   "group": "rates",
+   "price": 5.311,
+   "chg": 0.034,
+   "pct": 0.644,
+   "t": 1791226791,
+   "src": "yahoo"
+  },
+  {
+   "id": "dxy",
+   "label": "Dollar index",
+   "symbol": "DX-Y.NYB",
+   "group": "fx",
+   "price": 102.171,
+   "chg": 0.0041,
+   "pct": 0.004,
+   "t": 1791262507,
+   "src": "yahoo"
+  },
+  {
+   "id": "eurusd",
+   "label": "EUR/USD",
+   "symbol": "EURUSD=X",
+   "group": "fx",
+   "price": 1.1221,
+   "chg": -0.0003,
+   "pct": -0.022,
+   "t": 1791263088,
+   "src": "yahoo"
+  },
+  {
+   "id": "usdjpy",
+   "label": "USD/JPY",
+   "symbol": "USDJPY=X",
+   "group": "fx",
+   "price": 158.155,
+   "chg": 0.2711,
+   "pct": 0.172,
+   "t": 1791263110,
+   "src": "yahoo"
+  },
+  {
+   "id": "wti",
+   "label": "Crude oil",
+   "symbol": "CL=F",
+   "group": "commodity",
+   "price": 90.01,
+   "chg": 0.5804,
+   "pct": 0.649,
+   "t": 1791262508,
+   "src": "yahoo"
+  },
+  {
+   "id": "gold",
+   "label": "Gold",
+   "symbol": "GC=F",
+   "group": "commodity",
+   "price": 4149.0,
+   "chg": -7.8148,
+   "pct": -0.188,
+   "t": 1791262508,
+   "src": "yahoo"
+  },
+  {
+   "id": "btc",
+   "label": "BTC",
+   "symbol": "BTC",
+   "group": "crypto",
+   "price": 85577.8,
+   "chg": -163.1,
+   "pct": -0.19,
+   "t": 1791263112,
+   "src": "kraken",
+   "basis": "24h"
+  },
+  {
+   "id": "eth",
+   "label": "ETH",
+   "symbol": "ETH",
+   "group": "crypto",
+   "price": 2700.89,
+   "chg": -4.65,
+   "pct": -0.172,
+   "t": 1791263112,
+   "src": "kraken",
+   "basis": "24h"
+  },
+  {
+   "id": "sol",
+   "label": "SOL",
+   "symbol": "SOL",
+   "group": "crypto",
+   "price": 120.03,
+   "chg": -0.38,
+   "pct": -0.316,
+   "t": 1791263112,
+   "src": "kraken",
+   "basis": "24h"
+  },
+  {
+   "id": "xrp",
+   "label": "XRP",
+   "symbol": "XRP",
+   "group": "crypto",
+   "price": 1.5005,
+   "chg": -0.0055,
+   "pct": -0.364,
+   "t": 1791263112,
+   "src": "kraken",
+   "basis": "24h"
+  }
+ ],
+ "watchlist": [
+  {
+   "symbol": "BRK-B",
+   "name": "Berkshire Hathaway Inc. New",
+   "held": false,
+   "price": 504.26,
+   "chg": 1.6085,
+   "pct": 0.32,
+   "t": 1791230452,
+   "src": "yahoo",
+   "next_earnings": null
+  },
+  {
+   "symbol": "GOOG",
+   "name": "Alphabet Inc.",
+   "held": false,
+   "price": 343.83,
+   "chg": 3.4784,
+   "pct": 1.022,
+   "t": 1791230401,
+   "src": "yahoo",
+   "next_earnings": null
+  },
+  {
+   "symbol": "XLE",
+   "name": "State Street Energy Select Sect",
+   "held": false,
+   "price": 63.45,
+   "chg": 0.6301,
+   "pct": 1.003,
+   "t": 1791230400,
+   "src": "yahoo",
+   "next_earnings": null
+  },
+  {
+   "symbol": "INFQ",
+   "name": "Infleqtion, Inc.",
+   "held": false,
+   "price": 12.66,
+   "chg": -0.49,
+   "pct": -3.726,
+   "t": 1791230403,
+   "src": "yahoo",
+   "next_earnings": null
+  },
+  {
+   "symbol": "GFS",
+   "name": "GlobalFoundries Inc.",
+   "held": false,
+   "price": 48.56,
+   "chg": -1.61,
+   "pct": -3.209,
+   "t": 1791230401,
+   "src": "yahoo",
+   "next_earnings": null
+  },
+  {
+   "symbol": "AAPL",
+   "name": "Apple Inc.",
+   "held": false,
+   "price": 332.89,
+   "chg": -0.8009,
+   "pct": -0.24,
+   "t": 1791230402,
+   "src": "yahoo",
+   "next_earnings": null
+  },
+  {
+   "symbol": "MSFT",
+   "name": "Microsoft Corporation",
+   "held": false,
+   "price": 525.18,
+   "chg": 7.6491,
+   "pct": 1.478,
+   "t": 1791230402,
+   "src": "yahoo",
+   "next_earnings": null
+  },
+  {
+   "symbol": "NVDA",
+   "name": "NVIDIA Corporation",
+   "held": false,
+   "price": 238.9,
+   "chg": 4.9504,
+   "pct": 2.116,
+   "t": 1791230401,
+   "src": "yahoo",
+   "next_earnings": null
+  },
+  {
+   "symbol": "SPY",
+   "name": "State Street SPDR S&P 500 ETF T",
+   "held": false,
+   "price": 774.83,
+   "chg": 5.1874,
+   "pct": 0.674,
+   "t": 1791230400,
+   "src": "yahoo",
+   "next_earnings": null
+  },
+  {
+   "symbol": "XLV",
+   "name": "State Street Health Care Select",
+   "held": false,
+   "price": 167.37,
+   "chg": 1.1898,
+   "pct": 0.716,
+   "t": 1791230400,
+   "src": "yahoo",
+   "next_earnings": null
+  }
+ ],
+ "movers": {
+  "gainers": [
+   {
+    "symbol": "PTC",
+    "name": "PTC Inc.",
+    "price": 192.26,
+    "pct": 33.49,
+    "volume": 29525582,
+    "market_cap": 20861413376,
+    "t": 1791230401
+   },
+   {
+    "symbol": "XP",
+    "name": "XP Inc.",
+    "price": 28.15,
+    "pct": 30.93,
+    "volume": 47829489,
+    "market_cap": 14284519424,
+    "t": 1791230400
+   },
+   {
+    "symbol": "PCVX",
+    "name": "Vaxcyte, Inc.",
+    "price": 73.82,
+    "pct": 30.7,
+    "volume": 14838609,
+    "market_cap": 10984805376,
+    "t": 1791230400
+   },
+   {
+    "symbol": "SBS",
+    "name": "Companhia de saneamento Basico ",
+    "price": 6.26,
+    "pct": 16.36,
+    "volume": 28184587,
+    "market_cap": 22013874176,
+    "t": 1791230472
+   },
+   {
+    "symbol": "ITUB",
+    "name": "Itau Unibanco Banco Holding SA",
+    "price": 9.92,
+    "pct": 15.48,
+    "volume": 113265593,
+    "market_cap": 109336969216,
+    "t": 1791230402
+   },
+   {
+    "symbol": "BDORY",
+    "name": "Banco Do Brasil SA",
+    "price": 5.29,
+    "pct": 15.0,
+    "volume": 954767,
+    "market_cap": 30199939072,
+    "t": 1791230400
+   }
+  ],
+  "losers": [
+   {
+    "symbol": "CHRW",
+    "name": "C.H. Robinson Worldwide, Inc.",
+    "price": 140.61,
+    "pct": -10.85,
+    "volume": 8655249,
+    "market_cap": 16430454784,
+    "t": 1791230401
+   },
+   {
+    "symbol": "UMC",
+    "name": "United Microelectronics Corpora",
+    "price": 23.92,
+    "pct": -8.95,
+    "volume": 31792101,
+    "market_cap": 59989172224,
+    "t": 1791230402
+   },
+   {
+    "symbol": "LEN",
+    "name": "Lennar Corporation",
+    "price": 74.44,
+    "pct": -6.73,
+    "volume": 10634062,
+    "market_cap": 17932234752,
+    "t": 1791230402
+   },
+   {
+    "symbol": "INSM",
+    "name": "Insmed Incorporated",
+    "price": 103.83,
+    "pct": -6.56,
+    "volume": 5394454,
+    "market_cap": 22674552832,
+    "t": 1791230401
+   },
+   {
+    "symbol": "SUN",
+    "name": "Sunoco LP",
+    "price": 69.89,
+    "pct": -6.48,
+    "volume": 720351,
+    "market_cap": 13168244736,
+    "t": 1791230400
+   },
+   {
+    "symbol": "INIO",
+    "name": "INNIO N.V.",
+    "price": 18.98,
+    "pct": -5.05,
+    "volume": 4305092,
+    "market_cap": 14234999808,
+    "t": 1791230402
+   }
+  ],
+  "active": [
+   {
+    "symbol": "NVDA",
+    "name": "NVIDIA Corporation",
+    "price": 238.9,
+    "pct": 2.12,
+    "volume": 126384437,
+    "market_cap": 5768717795328,
+    "t": 1791230401
+   },
+   {
+    "symbol": "SPCX",
+    "name": "Space Exploration Technologies ",
+    "price": 171.09,
+    "pct": 7.63,
+    "volume": 134420923,
+    "market_cap": 2255270707200,
+    "t": 1791230401
+   },
+   {
+    "symbol": "MU",
+    "name": "Micron Technology, Inc.",
+    "price": 1063.96,
+    "pct": -1.02,
+    "volume": 17877625,
+    "market_cap": 1201629036544,
+    "t": 1791230402
+   },
+   {
+    "symbol": "TSLA",
+    "name": "Tesla, Inc.",
+    "price": 378.73,
+    "pct": 2.2,
+    "volume": 42006295,
+    "market_cap": 1495812145152,
+    "t": 1791230401
+   },
+   {
+    "symbol": "MSFT",
+    "name": "Microsoft Corporation",
+    "price": 525.18,
+    "pct": 1.48,
+    "volume": 26287910,
+    "market_cap": 3899747991552,
+    "t": 1791230402
+   },
+   {
+    "symbol": "WBD",
+    "name": "Warner Bros. Discovery, Inc. - ",
+    "price": 30.95,
+    "pct": 0.03,
+    "volume": 433479617,
+    "market_cap": 77595885568,
+    "t": 1791230401
+   }
+  ],
+  "basis": "US large caps (market cap $10B+) from the Yahoo day screeners"
+ },
+ "catalysts": [
+  {
+   "date": "2026-10-07",
+   "time_et": "14:00",
+   "title": "FOMC minutes",
+   "impact": "H",
+   "kind": "macro",
+   "source": "federalreserve.gov FOMC calendar (minutes follow the decision by 3 weeks)",
+   "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+  },
+  {
+   "date": "2026-10-08",
+   "time_et": null,
+   "when": "BMO",
+   "kind": "earnings",
+   "symbol": "PEP",
+   "title": "PEP earnings",
+   "detail": "Pepsico, Inc.",
+   "eps_est": "$2.29",
+   "impact": "M",
+   "watch": false,
+   "source": "api.nasdaq.com earnings calendar",
+   "url": "https://api.nasdaq.com/api/calendar/earnings?date=2026-10-08"
+  },
+  {
+   "date": "2026-10-08",
+   "time_et": "08:30",
+   "title": "Initial jobless claims (DOL)",
+   "impact": "M",
+   "kind": "macro",
+   "source": "DOL weekly release, Thursdays",
+   "url": "https://www.dol.gov/ui/data.pdf"
+  },
+  {
+   "date": "2026-10-09",
+   "time_et": null,
+   "when": "BMO",
+   "kind": "earnings",
+   "symbol": "DAL",
+   "title": "DAL earnings",
+   "detail": "Delta Air Lines, Inc.",
+   "eps_est": "$1.96",
+   "impact": "M",
+   "watch": false,
+   "source": "api.nasdaq.com earnings calendar",
+   "url": "https://api.nasdaq.com/api/calendar/earnings?date=2026-10-09"
+  },
+  {
+   "date": "2026-10-13",
+   "time_et": null,
+   "when": "BMO",
+   "kind": "earnings",
+   "symbol": "C",
+   "title": "C earnings",
+   "detail": "Citigroup Inc.",
+   "eps_est": "$2.66",
+   "impact": "M",
+   "watch": false,
+   "source": "api.nasdaq.com earnings calendar",
+   "url": "https://api.nasdaq.com/api/calendar/earnings?date=2026-10-13"
+  },
+  {
+   "date": "2026-10-13",
+   "time_et": null,
+   "when": "BMO",
+   "kind": "earnings",
+   "symbol": "GS",
+   "title": "GS earnings",
+   "detail": "The Goldman Sachs Group, Inc.",
+   "eps_est": "$14.05",
+   "impact": "M",
+   "watch": false,
+   "source": "api.nasdaq.com earnings calendar",
+   "url": "https://api.nasdaq.com/api/calendar/earnings?date=2026-10-13"
+  },
+  {
+   "date": "2026-10-13",
+   "time_et": null,
+   "when": "BMO",
+   "kind": "earnings",
+   "symbol": "JNJ",
+   "title": "JNJ earnings",
+   "detail": "Johnson & Johnson",
+   "eps_est": "$2.90",
+   "impact": "M",
+   "watch": false,
+   "source": "api.nasdaq.com earnings calendar",
+   "url": "https://api.nasdaq.com/api/calendar/earnings?date=2026-10-13"
+  },
+  {
+   "date": "2026-10-13",
+   "time_et": null,
+   "when": "BMO",
+   "kind": "earnings",
+   "symbol": "JPM",
+   "title": "JPM earnings",
+   "detail": "J P Morgan Chase & Co",
+   "eps_est": "$5.88",
+   "impact": "M",
+   "watch": false,
+   "source": "api.nasdaq.com earnings calendar",
+   "url": "https://api.nasdaq.com/api/calendar/earnings?date=2026-10-13"
+  },
+  {
+   "date": "2026-10-13",
+   "time_et": null,
+   "when": "BMO",
+   "kind": "earnings",
+   "symbol": "UNH",
+   "title": "UNH earnings",
+   "detail": "UnitedHealth Group Incorporated",
+   "eps_est": "$4.12",
+   "impact": "M",
+   "watch": false,
+   "source": "api.nasdaq.com earnings calendar",
+   "url": "https://api.nasdaq.com/api/calendar/earnings?date=2026-10-13"
+  },
+  {
+   "date": "2026-10-14",
+   "time_et": null,
+   "when": "BMO",
+   "kind": "earnings",
+   "symbol": "ASML",
+   "title": "ASML earnings",
+   "detail": "ASML Holding N.V.",
+   "eps_est": "$12.54",
+   "impact": "M",
+   "watch": false,
+   "source": "api.nasdaq.com earnings calendar",
+   "url": "https://api.nasdaq.com/api/calendar/earnings?date=2026-10-14"
+  },
+  {
+   "date": "2026-10-14",
+   "time_et": null,
+   "when": "BMO",
+   "kind": "earnings",
+   "symbol": "BAC",
+   "title": "BAC earnings",
+   "detail": "Bank of America Corporation",
+   "eps_est": "$1.13",
+   "impact": "M",
+   "watch": false,
+   "source": "api.nasdaq.com earnings calendar",
+   "url": "https://api.nasdaq.com/api/calendar/earnings?date=2026-10-14"
+  },
+  {
+   "date": "2026-10-14",
+   "time_et": null,
+   "when": "BMO",
+   "kind": "earnings",
+   "symbol": "BLK",
+   "title": "BLK earnings",
+   "detail": "BlackRock, Inc.",
+   "eps_est": "$14.19",
+   "impact": "M",
+   "watch": false,
+   "source": "api.nasdaq.com earnings calendar",
+   "url": "https://api.nasdaq.com/api/calendar/earnings?date=2026-10-14"
+  },
+  {
+   "date": "2026-10-14",
+   "time_et": null,
+   "when": "BMO",
+   "kind": "earnings",
+   "symbol": "MS",
+   "title": "MS earnings",
+   "detail": "Morgan Stanley",
+   "eps_est": "$2.97",
+   "impact": "M",
+   "watch": false,
+   "source": "api.nasdaq.com earnings calendar",
+   "url": "https://api.nasdaq.com/api/calendar/earnings?date=2026-10-14"
+  },
+  {
+   "date": "2026-10-14",
+   "time_et": null,
+   "when": "BMO",
+   "kind": "earnings",
+   "symbol": "WFC",
+   "title": "WFC earnings",
+   "detail": "Wells Fargo & Company",
+   "eps_est": "$1.85",
+   "impact": "M",
+   "watch": false,
+   "source": "api.nasdaq.com earnings calendar",
+   "url": "https://api.nasdaq.com/api/calendar/earnings?date=2026-10-14"
+  },
+  {
+   "date": "2026-10-14",
+   "time_et": "08:30",
+   "title": "CPI (BLS)",
+   "impact": "H",
+   "kind": "macro",
+   "source": "bls.gov release schedule",
+   "url": "https://www.bls.gov/schedule/news_release/"
+  },
+  {
+   "date": "2026-10-15",
+   "time_et": null,
+   "when": "BMO",
+   "kind": "earnings",
+   "symbol": "PLD",
+   "title": "PLD earnings",
+   "detail": "Prologis, Inc.",
+   "eps_est": "$1.58",
+   "impact": "M",
+   "watch": false,
+   "source": "api.nasdaq.com earnings calendar",
+   "url": "https://api.nasdaq.com/api/calendar/earnings?date=2026-10-15"
+  },
+  {
+   "date": "2026-10-15",
+   "time_et": null,
+   "when": "BMO",
+   "kind": "earnings",
+   "symbol": "SCHW",
+   "title": "SCHW earnings",
+   "detail": "The Charles Schwab Corporation",
+   "eps_est": "$1.67",
+   "impact": "M",
+   "watch": false,
+   "source": "api.nasdaq.com earnings calendar",
+   "url": "https://api.nasdaq.com/api/calendar/earnings?date=2026-10-15"
+  },
+  {
+   "date": "2026-10-15",
+   "time_et": null,
+   "when": "BMO",
+   "kind": "earnings",
+   "symbol": "TSM",
+   "title": "TSM earnings",
+   "detail": "Taiwan Semiconductor Manufacturing Company Ltd.",
+   "eps_est": "$4.45",
+   "impact": "M",
+   "watch": false,
+   "source": "api.nasdaq.com earnings calendar",
+   "url": "https://api.nasdaq.com/api/calendar/earnings?date=2026-10-15"
+  },
+  {
+   "date": "2026-10-15",
+   "time_et": null,
+   "when": "BMO",
+   "kind": "earnings",
+   "symbol": "USB",
+   "title": "USB earnings",
+   "detail": "U.S. Bancorp",
+   "eps_est": "$1.32",
+   "impact": "M",
+   "watch": false,
+   "source": "api.nasdaq.com earnings calendar",
+   "url": "https://api.nasdaq.com/api/calendar/earnings?date=2026-10-15"
+  },
+  {
+   "date": "2026-10-15",
+   "time_et": "08:30",
+   "title": "Initial jobless claims (DOL)",
+   "impact": "M",
+   "kind": "macro",
+   "source": "DOL weekly release, Thursdays",
+   "url": "https://www.dol.gov/ui/data.pdf"
+  },
+  {
+   "date": "2026-10-15",
+   "time_et": "08:30",
+   "title": "PPI (BLS)",
+   "impact": "M",
+   "kind": "macro",
+   "source": "bls.gov release schedule",
+   "url": "https://www.bls.gov/schedule/news_release/"
+  },
+  {
+   "date": "2026-10-15",
+   "time_et": null,
+   "when": null,
+   "kind": "earnings",
+   "symbol": "BNY",
+   "title": "BNY earnings",
+   "detail": "The Bank Of New York Mellon Corporation ",
+   "eps_est": "$2.26",
+   "impact": "M",
+   "watch": false,
+   "source": "api.nasdaq.com earnings calendar",
+   "url": "https://api.nasdaq.com/api/calendar/earnings?date=2026-10-15"
+  }
+ ],
+ "_sample": "markets feed captured 2026-10-05 22:05 PDT; public data; held flags cleared"
+}

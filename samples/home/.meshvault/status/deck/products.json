@@ -1,0 +1,22 @@
+{
+ "t": 1795051391,
+ "refresh": 300,
+ "stale": false,
+ "src": "fixture (synthetic)",
+ "errors": [],
+ "products": [],
+ "app_store": {
+  "version": {
+   "string": "1.0",
+   "state": "PREPARE_FOR_SUBMISSION",
+   "build": 6
+  },
+  "review": {},
+  "latest_build": {
+   "number": 6,
+   "state": "VALID",
+   "uploaded": 1795047791
+  }
+ },
+ "needs": []
+}

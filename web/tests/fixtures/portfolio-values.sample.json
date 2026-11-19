@@ -1,0 +1,49 @@
+{
+ "t": 1791263121,
+ "refresh": 300,
+ "src": [
+  "SAMPLE fixture"
+ ],
+ "errors": [],
+ "totals": {
+  "positions_usd": 424242.0,
+  "equity_usd": 313131.0,
+  "crypto_usd": 111111.0,
+  "day_chg_usd": -6363.0,
+  "day_pct": -1.5,
+  "margin_cash_usd": -919191.0,
+  "excess_liquidity_usd": 565656.0,
+  "net_est_usd": 777777.0,
+  "net_note": "sample"
+ },
+ "positions": [
+  {
+   "symbol": "AAA",
+   "kind": "equity",
+   "qty": 1000.0,
+   "value": 100000.0,
+   "day_chg": -1000.0,
+   "weight_pct": 50.0
+  },
+  {
+   "symbol": "BBB",
+   "kind": "equity",
+   "qty": 2000.5,
+   "value": 101025.25,
+   "day_chg": 1000.25,
+   "weight_pct": 30.0
+  },
+  {
+   "symbol": "XRP",
+   "kind": "crypto",
+   "qty": 3341.5,
+   "value": 5012.25,
+   "day_chg": 0.0,
+   "weight_pct": 20.0
+  }
+ ],
+ "basis": {
+  "equity_qty_as_of": 1790658321,
+  "crypto_qty_as_of": 1791263121
+ }
+}

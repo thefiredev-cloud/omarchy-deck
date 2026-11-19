@@ -1,0 +1,91 @@
+/* Today (lane PgToday, design v3, 2026-11-14). Glance and decide: v3 components from ui.css; this file holds only what Today adds.
+   Layout: one balanced .flow (1 column on P, 2 on L and T, 3 on D, 4 on XL); Markets and the glance row span all columns.
+   TV: the board (Needs you, next event, cameras, home spot, markets) fills one 1080p screen; Renewals and Cluster sit one Down press below. */
+
+/* a right-hand figure reads on one line: "2 days", "4 of 4", "96%" */
+#pg-today .frow .fr{flex:none;align-items:flex-end;text-align:right}
+#pg-today .frow .fr b{white-space:nowrap}
+/* Renewals: a one-word name (a domain) never breaks inside itself, at its dot or anywhere; in that row the day count may take two lines instead */
+#td-dead .frow .fl b.td-nb{white-space:nowrap;overflow-wrap:normal}
+#td-dead .frow:has(b.td-nb) .fl{min-width:auto}
+#td-dead .frow:has(b.td-nb) .fr{flex:0 1 auto;min-width:0}
+#td-dead .frow:has(b.td-nb) .fr b{white-space:normal}
+/* Now, Soon and Later are words in a quiet pill; only the lead square carries the signal colour */
+#pg-today .frow.need .pill{flex:none;color:var(--c-text-1);background:var(--c-panel-2)}
+#pg-today .frow .pill{flex:none}
+/* the first list starts within 200 px on a phone: the page's first title keeps a tighter gap to its list */
+#td-needs>.secttl{margin-bottom:var(--s-2)}
+/* the rotated chevron of a row that opens a sheet pokes about 0.1em past the row's edge (2-3 px of sideways overflow on the
+   harness); a little room on its right keeps it inside. Reported to ShellCss for the shared ui.css rule. */
+#pg-today .frow[data-open]::after{margin-right:.2em}
+/* B4: Server page shares Cluster's whole block, with the same gap as neighbouring sections. */
+#td-clu>.flist+.secttl{margin-top:var(--gap)}
+
+/* M4 / G6: a grouped Needs you row. The count and the shared words once, then each member's name as its own link to its action, with a full
+   touch target (44 px coarse, 36 px fine) so the group never costs an extra tap. The names read as one line of underlined links ("Homelab
+   Dictate  JudgeFinder.io  Shellboard"): the side padding is the hit area and the space between names; the row's left edge stays the text's. */
+#pg-today .frow.td-grp{flex-wrap:wrap;row-gap:0}
+/* the names' line spans the row and never leaves it: no negative margin (it put the line 9 px past the row's left edge at 2744 px), the
+   indent is padding, each name wraps inside the line and a long one breaks before it can push past the row's right edge */
+#pg-today .td-grp>.td-chips{flex:1 1 100%;min-width:0;display:flex;flex-wrap:wrap;margin:0;padding-left:calc(.8em + var(--s-3) - .45em)}
+#pg-today .td-chip{display:inline-flex;align-items:center;min-height:var(--hit);padding:0 .45em;border-radius:var(--r-ctl);
+  color:var(--c-text-1);font-size:var(--fs-body);font-weight:var(--fw-reg);line-height:1.2;text-decoration:underline;text-decoration-color:var(--c-line-strong);
+  text-underline-offset:.22em;text-decoration-thickness:1px;overflow-wrap:anywhere;max-width:100%;min-width:0}
+#pg-today a.td-chip:hover{text-decoration-color:var(--c-text-1);background:var(--c-panel-2)}
+#pg-today a.td-chip:focus-visible{outline:var(--focus,2px solid var(--c-signal));outline-offset:var(--focus-off,2px)}
+/* phone caps (P and L are both phones): Needs you shows four rows and Renewals three, six each wider; each size has its own "N more" row */
+#pg-today .td-more-p{display:none}
+html[data-dc="P"] #pg-today .td-ph,html[data-dc="L"] #pg-today .td-ph,html[data-dc="P"] #pg-today .td-more-w,html[data-dc="L"] #pg-today .td-more-w{display:none}
+html[data-dc="P"] #pg-today .td-more-p,html[data-dc="L"] #pg-today .td-more-p{display:flex}
+/* W13, D only: Needs you and Alerts take the left 5/12 (a 365 px third wrapped each step to three and four lines); the other lists balance in
+   two columns in the right 7/12, about 320 px each, so "countymedic.com  10 days late" stays on one line (at 3/12 it broke inside the name) */
+.td-split{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);column-gap:var(--gap);align-items:start}
+.td-split>.td-col{display:flex;flex-direction:column;min-width:0}
+.td-split>.td-col>.sect{margin:0;padding-bottom:var(--gap)}
+.td-split>.flow.td{--col-w:13rem;--col-max:2}
+.td-split~.sect{padding-bottom:var(--gap)}
+
+/* glance row: tiles fill whole rows whatever the count (one to six) */
+#td-glance .strip{--cols:2}
+@media (min-width:600px){#td-glance .strip{--cols:3}#td-glance .strip[data-n="4"]{--cols:4}}
+@media (min-width:1100px) and (min-height:500px){
+  #td-glance .strip[data-n="1"]{--cols:1}#td-glance .strip[data-n="2"]{--cols:2}#td-glance .strip[data-n="3"]{--cols:3}
+  #td-glance .strip[data-n="4"]{--cols:4}#td-glance .strip[data-n="5"]{--cols:5}#td-glance .strip[data-n="6"]{--cols:6}
+}
+/* the quiet Almanac row under the glance tiles (only on a day without the On this day tile) */
+#td-glance .strip+.td-alm{margin-top:var(--s-3)}
+#td-glance .tile .t{display:flex;flex-wrap:wrap;align-items:center;gap:.25em .5em}
+/* a whole part of a tile's small line ("median $1,100", "▼ −14.3% 7 days"): the line wraps between parts, never inside one */
+#td-glance .td-nw{white-space:nowrap}
+/* the markets strip: two columns on a phone, four on T and D, eight on XL */
+#td-mkt .strip{--cols:2}
+@media (min-width:600px){#td-mkt .strip{--cols:4}}
+@media (min-width:1600px) and (min-height:500px){#td-mkt .strip{--cols:8}}
+
+/* sheets opened from Today: sections stacked like the Data sheet; raw reasons in mono, wrapped, never on the page */
+.td-sheet{display:flex;flex-direction:column;gap:var(--s-5)}
+.td-sheet small.raw{font-family:var(--mono);font-size:var(--fs-meta);color:var(--c-text-2);overflow-wrap:anywhere}
+.td-sheet .frow .fr{flex:none;align-items:flex-end;text-align:right}
+.td-sheet .frow .fr b{white-space:nowrap}
+/* a reply thread: its draft and its thread in Gmail, two buttons under the subject */
+.td-links{display:flex;flex-wrap:wrap;gap:var(--s-2);margin-top:var(--s-2)}
+/* photos by year: one column per year, bright where a photo was taken on this date; first and last year under it */
+.td-years{display:flex;align-items:flex-end;gap:2px;height:6rem}
+.td-years i{flex:1 1 0;min-width:0;height:var(--h);background:var(--c-ramp-2);border-radius:1px 1px 0 0;forced-color-adjust:none}
+.td-years i.on{background:var(--c-ramp-5)}
+.td-yax{display:flex;justify-content:space-between;font-size:var(--fs-meta);color:var(--c-text-2)}
+.td-more>summary{cursor:pointer;min-height:var(--hit);display:flex;align-items:center;color:var(--c-text-2);font-size:var(--fs-meta)}
+/* the calendar sheet's day line: a quiet label over that day's events inside the one list */
+.td-sheet .frow.td-day{min-height:0;padding-top:var(--s-4);padding-bottom:var(--s-1)}
+.td-sheet .frow.td-day b{font-size:var(--fs-meta);font-weight:var(--fw-med);color:var(--c-text-2)}
+
+/* ===== TV board (tv.css .board is the fixed-height box; tv.js cuts list rows that would cross .board-fill's bottom) =====
+   .td-top: Needs you on the left, next event, cameras and the home spot stacked on the right. The markets row sits under it,
+   four whole cells (the other quotes are tv-hide), so no figure ever touches its neighbour. */
+html.tv .td-top{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:var(--s-3) var(--s-5);align-items:start;align-content:start}
+html.tv .td-col{display:flex;flex-direction:column;gap:var(--s-3);min-width:0;min-height:0}
+html.tv .td-board .sect{margin:0;min-height:0}
+html.tv .td-board .secttl{margin-bottom:var(--s-2)}
+html.tv #td-mkt .strip{--cols:4}
+html.tv #td-mkt .tile .spark{display:none}
+html.tv #td-glance .strip{--cols:1}

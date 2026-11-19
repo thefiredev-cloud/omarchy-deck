@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Install the Pixel Deck server binary and its user unit.
+#   scripts/install-server                          installs into ~/.local/bin and ~/.config/systemd/user
+#   DECK_BIN_DIR=DIR DECK_UNIT_DIR=DIR scripts/install-server   installs into those directories instead
+#
+# Needs a release build first: (cd rust && cargo build --release). A live binary it replaces is backed
+# up to pixel-deck.bak-<stamp>. The unit is written but the service is NOT restarted: a running deck
+# keeps the old binary until you run `systemctl --user restart pixel-deck.service` yourself.
+# With DECK_NO_ENABLE unset and systemctl available, a service that is not yet enabled is enabled and
+# started; one that is already running is left alone.
+# Roll back: copy the .bak file over ~/.local/bin/pixel-deck and restart the service.
+set -euo pipefail
+
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+root="$(cd "$here/.." && pwd)"
+bin="${DECK_BIN_DIR:-$HOME/.local/bin}"
+units="${DECK_UNIT_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user}"
+stamp="$(date +%Y%m%d-%H%M%S)"
+built="$root/rust/target/release/pixel-deck"
+
+[ -x "$built" ] || { echo "missing $built: run (cd rust && cargo build --release) first" >&2; exit 1; }
+[ -f "$here/systemd/pixel-deck.service" ] || { echo "missing $here/systemd/pixel-deck.service" >&2; exit 1; }
+
+mkdir -p "$bin" "$units"
+if [ -e "$bin/pixel-deck" ]; then
+  cp -p "$bin/pixel-deck" "$bin/pixel-deck.bak-$stamp"
+  echo "backed up $bin/pixel-deck -> pixel-deck.bak-$stamp"
+fi
+install -m 755 "$built" "$bin/pixel-deck"
+echo "installed $bin/pixel-deck"
+install -m 644 "$here/systemd/pixel-deck.service" "$units/pixel-deck.service"
+echo "installed $units/pixel-deck.service"
+
+if [ -z "${DECK_NO_ENABLE:-}" ] && command -v systemctl >/dev/null 2>&1; then
+  systemctl --user daemon-reload
+  if systemctl --user is-active --quiet pixel-deck.service; then
+    echo "pixel-deck.service is running the previous binary; restart it when ready: systemctl --user restart pixel-deck.service"
+  else
+    systemctl --user enable --now pixel-deck.service
+    systemctl --user --no-pager status pixel-deck.service || true
+  fi
+else
+  echo "service not enabled (DECK_NO_ENABLE set or no systemctl). Enable: systemctl --user enable --now pixel-deck.service"
+fi

@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# Install the national dataset v2 collector (integration owner only; DataArch section 12).
+#   scripts/national/**                 -> ~/ops/lib/deck-national/   (previous copy kept as deck-national.bak-<stamp>)
+#   scripts/deck-feed-housing-national  -> ~/ops/bin/deck-feed-housing-national (previous file .bak-<stamp>)
+#   ~/.kodros/status/house-feeds/national    -> national.bak-<stamp> (copy, the live dir stays in place)
+#   ~/.kodros/status/house-feeds/national-v2 -> national-v2.bak-<stamp> (hard-link copy: the writer replaces every file
+#     by rename, so the backup keeps the old contents and costs no space until the next run)
+#   seed_cache.py hard-links the old download cache into ~/.cache/deck-data/<id>/
+# The existing timer unit (deck-feed-housing-national.timer, Mon 05:20) is kept; the first live run is manual:
+#   lowprio ~/ops/bin/deck-feed-housing-national
+# Rollback: scripts/install-national --rollback <stamp> restores the collector, the library, national/ and national-v2/
+# (the live server reads national-v2/ when its manifest says schema 2).
+# scripts/install-national --force installs even when scripts/install-guard finds a live copy ahead of the repo (LIVE AHEAD).
+set -euo pipefail
+repo="$(cd "$(dirname "$0")/.." && pwd)"
+lib="$HOME/ops/lib/deck-national"
+bin="$HOME/ops/bin/deck-feed-housing-national"
+feeds="$HOME/.kodros/status/house-feeds"
+# restore one data dir from its backup: link-copy beside it, then swap, so a reader never sees the dir missing for long
+restore_dir() {
+  local live="$1" bak="$2" how="$3" tmp
+  [[ -d "$bak" ]] || { echo "install-national: no backup $bak; $live left as it is"; return 0; }
+  tmp="$live.restore-$$"
+  rm -rf "$tmp"
+  cp "$how" "$bak" "$tmp"
+  rm -rf "$live"
+  mv "$tmp" "$live"
+}
+if [[ "${1:-}" == "--rollback" ]]; then
+  stamp="${2:?usage: install-national --rollback <stamp>}"
+  [[ -e "$bin.bak-$stamp" ]] && cp -p "$bin.bak-$stamp" "$bin"
+  if [[ -d "$lib.bak-$stamp" ]]; then rm -rf "$lib"; cp -a "$lib.bak-$stamp" "$lib"; fi
+  restore_dir "$feeds/national" "$feeds/national.bak-$stamp" -a
+  restore_dir "$feeds/national-v2" "$feeds/national-v2.bak-$stamp" -al
+  echo "install-national: restored $stamp (collector, library, national/ and national-v2/)"
+  exit 0
+fi
+case "${1:-}" in
+  "") force=() ;;
+  --force) force=(--force) ;;
+  *) echo "usage: install-national [--force | --rollback <stamp>]" >&2; exit 2 ;;
+esac
+"$repo/scripts/install-guard" ${force[@]+"${force[@]}"} -- scripts/national/ scripts/deck-feed-housing-national || exit 1
+stamp="$(date +%Y%m%d-%H%M%S)"
+[[ -e "$bin" ]] && cp -p "$bin" "$bin.bak-$stamp"
+[[ -d "$lib" ]] && cp -a "$lib" "$lib.bak-$stamp"
+[[ -d "$feeds/national" ]] && cp -a "$feeds/national" "$feeds/national.bak-$stamp"
+[[ -d "$feeds/national-v2" ]] && cp -al "$feeds/national-v2" "$feeds/national-v2.bak-$stamp"
+mkdir -p "$lib"
+rsync -a --delete --exclude __pycache__ "$repo/scripts/national/" "$lib/"
+install -m 755 "$repo/scripts/deck-feed-housing-national" "$bin"
+python3 "$lib/seed_cache.py"
+echo "install-national: installed (stamp $stamp). First run: lowprio $bin"

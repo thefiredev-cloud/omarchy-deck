@@ -1,0 +1,147 @@
+{
+ "meta": {
+  "source": "ResearchSurf spots.json regions, south to north"
+ },
+ "regions": [
+  {
+   "id": "baja-sur",
+   "name": "Baja Sur",
+   "order": 1,
+   "tz": "America/Mazatlan",
+   "country": "MX",
+   "lat_min": 22.875,
+   "lat_max": 27.85,
+   "spots": 38
+  },
+  {
+   "id": "baja-norte",
+   "name": "Baja Norte",
+   "order": 2,
+   "tz": "America/Tijuana",
+   "country": "MX",
+   "lat_min": 29.42862,
+   "lat_max": 32.534,
+   "spots": 20
+  },
+  {
+   "id": "san-diego",
+   "name": "San Diego",
+   "order": 3,
+   "tz": "America/Los_Angeles",
+   "country": "US",
+   "lat_min": 32.56,
+   "lat_max": 33.202,
+   "spots": 24
+  },
+  {
+   "id": "orange-county",
+   "name": "Orange County",
+   "order": 4,
+   "tz": "America/Los_Angeles",
+   "country": "US",
+   "lat_min": 33.369,
+   "lat_max": 33.736,
+   "spots": 26
+  },
+  {
+   "id": "los-angeles",
+   "name": "Los Angeles",
+   "order": 5,
+   "tz": "America/Los_Angeles",
+   "country": "US",
+   "lat_min": 33.708,
+   "lat_max": 34.056,
+   "spots": 21
+  },
+  {
+   "id": "ventura",
+   "name": "Ventura",
+   "order": 6,
+   "tz": "America/Los_Angeles",
+   "country": "US",
+   "lat_min": 34.07488,
+   "lat_max": 34.375,
+   "spots": 12
+  },
+  {
+   "id": "santa-barbara",
+   "name": "Santa Barbara",
+   "order": 7,
+   "tz": "America/Los_Angeles",
+   "country": "US",
+   "lat_min": 34.392,
+   "lat_max": 34.511,
+   "spots": 15
+  },
+  {
+   "id": "san-luis-obispo",
+   "name": "San Luis Obispo",
+   "order": 8,
+   "tz": "America/Los_Angeles",
+   "country": "US",
+   "lat_min": 35.108,
+   "lat_max": 35.64,
+   "spots": 12
+  },
+  {
+   "id": "monterey-santa-cruz",
+   "name": "Monterey and Santa Cruz",
+   "order": 9,
+   "tz": "America/Los_Angeles",
+   "country": "US",
+   "lat_min": 36.537,
+   "lat_max": 37.097,
+   "spots": 17
+  },
+  {
+   "id": "san-francisco-marin",
+   "name": "San Francisco and Marin",
+   "order": 10,
+   "tz": "America/Los_Angeles",
+   "country": "US",
+   "lat_min": 37.457,
+   "lat_max": 38.06,
+   "spots": 14
+  },
+  {
+   "id": "sonoma-del-norte",
+   "name": "Sonoma to Del Norte",
+   "order": 11,
+   "tz": "America/Los_Angeles",
+   "country": "US",
+   "lat_min": 38.305,
+   "lat_max": 41.76,
+   "spots": 17
+  },
+  {
+   "id": "oregon-south",
+   "name": "Oregon South",
+   "order": 12,
+   "tz": "America/Los_Angeles",
+   "country": "US",
+   "lat_min": 42.05023,
+   "lat_max": 43.34,
+   "spots": 9
+  },
+  {
+   "id": "oregon-central",
+   "name": "Oregon Central",
+   "order": 13,
+   "tz": "America/Los_Angeles",
+   "country": "US",
+   "lat_min": 43.672,
+   "lat_max": 44.918,
+   "spots": 11
+  },
+  {
+   "id": "oregon-north",
+   "name": "Oregon North",
+   "order": 14,
+   "tz": "America/Los_Angeles",
+   "country": "US",
+   "lat_min": 45.219,
+   "lat_max": 46.179,
+   "spots": 10
+  }
+ ]
+}

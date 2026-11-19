@@ -1,0 +1,10 @@
+[Unit]
+Description=Refresh the server page feed every two minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=120s
+AccuracySec=15s
+
+[Install]
+WantedBy=timers.target

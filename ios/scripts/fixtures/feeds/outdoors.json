@@ -1,0 +1,77 @@
+{
+ "feed": "outdoors",
+ "generated_at": "2026-10-30T15:00:00Z",
+ "sources": [
+  {
+   "name": "NOAA NDBC",
+   "url": "https://www.ndbc.noaa.gov",
+   "fetched_at": "2026-10-30T15:00:00Z"
+  },
+  {
+   "name": "OnTheSnow",
+   "url": "https://www.onthesnow.com",
+   "fetched_at": "2026-10-30T15:00:00Z"
+  },
+  {
+   "name": "Ikon Pass",
+   "url": "https://www.ikonpass.com",
+   "fetched_at": "2026-10-30T15:00:00Z"
+  }
+ ],
+ "items": [
+  {
+   "kind": "surf",
+   "title": "Doheny: 2.5 ft SSW, 14 s",
+   "summary": "Score 6/10, fair. Light wind, clean.",
+   "location": "Dana Point, CA",
+   "price": null,
+   "currency": null,
+   "source_url": "https://www.ndbc.noaa.gov/station_page.php?station=46224",
+   "as_of": "2026-10-30T15:00:00Z"
+  },
+  {
+   "kind": "surf",
+   "title": "Trestles: 3 ft SW, 13 s",
+   "summary": "Score 7/10, good. Offshore until 10 am.",
+   "location": "San Clemente, CA",
+   "price": null,
+   "currency": null,
+   "source_url": "https://www.ndbc.noaa.gov/station_page.php?station=46224",
+   "as_of": "2026-10-30T15:00:00Z"
+  },
+  {
+   "kind": "snow",
+   "title": "Mammoth: 6 in new, 42 in base",
+   "summary": "18 of 25 lifts open",
+   "location": "Mammoth Lakes, CA",
+   "price": null,
+   "currency": null,
+   "source_url": "https://www.onthesnow.com/california/mammoth-mountain-ski-area/skireport",
+   "as_of": "2026-10-30T15:00:00Z"
+  },
+  {
+   "kind": "ikon",
+   "title": "Ikon Pass, adult",
+   "summary": "Price rises after Dec 11",
+   "location": null,
+   "price": 1529,
+   "currency": "USD",
+   "source_url": "https://www.ikonpass.com/en/shop-passes",
+   "as_of": "2026-10-30T15:00:00Z"
+  },
+  {
+   "kind": "fishing",
+   "title": "Dana Wharf half-day boats",
+   "summary": "Calico bass and sculpin, water 66 F",
+   "location": "Dana Point Harbor",
+   "price": null,
+   "currency": null,
+   "source_url": "https://www.danawharf.com/fish-counts",
+   "as_of": "2026-10-30T15:00:00Z"
+  }
+ ],
+ "sections": {
+  "surf": {}
+ },
+ "errors": []
+}

@@ -1,0 +1,11 @@
+[Unit]
+Description=Refresh the Pixel Deck trends feed every 30 minutes (the deck marks it out of date after an hour)
+
+[Timer]
+OnCalendar=*:05,35
+RandomizedDelaySec=90s
+Persistent=true
+Unit=deck-feed-trends.service
+
+[Install]
+WantedBy=timers.target

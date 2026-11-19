@@ -1,0 +1,784 @@
+{
+ "sources": "ops/bin/deck_jobs_taxonomy.py (the Jobs collector's canonical taxonomy)",
+ "home": "Dana Point, CA",
+ "metros": {
+  "south_oc": [
+   "dana point",
+   "capistrano beach",
+   "monarch beach",
+   "san clemente",
+   "san juan capistrano",
+   "laguna niguel",
+   "laguna beach",
+   "laguna hills",
+   "laguna woods",
+   "mission viejo",
+   "ladera ranch",
+   "rancho santa margarita",
+   "aliso viejo",
+   "lake forest",
+   "foothill ranch",
+   "trabuco canyon",
+   "irvine",
+   "south orange county",
+   "salt creek"
+  ],
+  "oc": [
+   "orange county",
+   "anaheim",
+   "santa ana",
+   "newport beach",
+   "costa mesa",
+   "huntington beach",
+   "fountain valley",
+   "garden grove",
+   "westminster",
+   "seal beach",
+   "tustin",
+   "yorba linda",
+   "fullerton",
+   "brea",
+   "buena park",
+   "la habra",
+   "placentia",
+   "orange, ca",
+   "villa park",
+   "la palma",
+   "cypress",
+   "stanton",
+   "los alamitos",
+   "midway city",
+   "corona del mar",
+   "balboa island",
+   "newport coast",
+   "crystal cove"
+  ],
+  "la": [
+   "los angeles",
+   "long beach",
+   "santa monica",
+   "el segundo",
+   "pasadena",
+   "culver city",
+   "burbank",
+   "torrance",
+   "glendale",
+   "venice",
+   "playa vista",
+   "manhattan beach",
+   "redondo beach",
+   "hawthorne",
+   "inglewood",
+   "west hollywood",
+   "beverly hills",
+   "irwindale",
+   "carson",
+   "compton",
+   "downey",
+   "van nuys",
+   "woodland hills",
+   "sherman oaks",
+   "marina del rey",
+   "sierra madre",
+   "santa clarita",
+   "pomona",
+   "ontario, ca",
+   "century city",
+   "universal city",
+   "studio city",
+   "north hollywood",
+   "encino",
+   "calabasas",
+   "malibu",
+   "westchester",
+   "el monte",
+   "whittier",
+   "norwalk",
+   "lakewood",
+   "signal hill",
+   "gardena",
+   "lawndale",
+   "montebello",
+   "alhambra",
+   "arcadia",
+   "monrovia",
+   "sherman oaks",
+   "toluca lake",
+   "la canada",
+   "palmdale"
+  ],
+  "sd": [
+   "san diego",
+   "carlsbad",
+   "oceanside",
+   "escondido",
+   "encinitas",
+   "del mar",
+   "la jolla",
+   "chula vista",
+   "poway",
+   "vista, ca",
+   "san marcos",
+   "temecula",
+   "murrieta",
+   "camp pendleton",
+   "solana beach",
+   "coronado",
+   "el cajon",
+   "santee",
+   "national city",
+   "leucadia",
+   "cardiff"
+  ]
+ },
+ "taxonomy": [
+  {
+   "slug": "ai_software",
+   "name": "AI and software",
+   "definition": "Builds software, and builds AI products on top of models. Most of these jobs are remote or in an office, and most pay well above the county median.",
+   "subs": [
+    {
+     "slug": "ai_engineering",
+     "name": "AI engineering",
+     "definition": "Builds products on top of models: agents, retrieval, evaluation and prompt pipelines."
+    },
+    {
+     "slug": "platform_infra",
+     "name": "Platform and infrastructure",
+     "definition": "Keeps services and model serving running: cloud, containers, reliability, GPU fleets."
+    },
+    {
+     "slug": "software_engineering",
+     "name": "Product software",
+     "definition": "Writes the product itself across the stack: general software engineering roles."
+    },
+    {
+     "slug": "product_frontend",
+     "name": "Frontend and mobile",
+     "definition": "Builds the interface the user touches: web frontend, iOS, Android and design systems."
+    },
+    {
+     "slug": "backend_api",
+     "name": "Backend and APIs",
+     "definition": "Builds the server side: backend endpoints, APIs and service integrations."
+    },
+    {
+     "slug": "data_engineering",
+     "name": "Data engineering",
+     "definition": "Moves and models data: pipelines, warehouses and analytics engineering."
+    },
+    {
+     "slug": "security_engineering",
+     "name": "Security engineering",
+     "definition": "Protects systems and data: application security, cloud security and detection."
+    }
+   ]
+  },
+  {
+   "slug": "fire_ems",
+   "name": "Fire and EMS",
+   "definition": "Career fire suppression, paramedic and ambulance work, prevention and emergency management. Public agencies, tested lists and shift schedules.",
+   "subs": [
+    {
+     "slug": "firefighter",
+     "name": "Firefighter",
+     "definition": "Suppression, rescue and wildland crew work on an engine, truck or hand crew."
+    },
+    {
+     "slug": "fire_paramedic",
+     "name": "Firefighter paramedic",
+     "definition": "A firefighter who also runs advanced life support on scene and in transport."
+    },
+    {
+     "slug": "ems_clinical",
+     "name": "Paramedic and EMT",
+     "definition": "Delivers prehospital care, plus EMS training, quality and education roles."
+    },
+    {
+     "slug": "fire_prevention",
+     "name": "Fire prevention",
+     "definition": "Inspects buildings, reviews plans and enforces fire code."
+    },
+    {
+     "slug": "emergency_management",
+     "name": "Emergency management",
+     "definition": "Plans and runs disaster response, emergency operations centers and grants."
+    },
+    {
+     "slug": "ocean_rescue",
+     "name": "Ocean lifeguard and rescue",
+     "definition": "Watches and rescues swimmers and boaters from the beach and the water."
+    }
+   ]
+  },
+  {
+   "slug": "public_safety_tech",
+   "name": "Public safety tech",
+   "definition": "Software and hardware sold to police, fire and 911 agencies. Domain knowledge from the fire service is the edge here, not just code.",
+   "subs": [
+    {
+     "slug": "dispatch_911",
+     "name": "911 and dispatch",
+     "definition": "Call taking, computer aided dispatch and records software for dispatch centers."
+    },
+    {
+     "slug": "law_enforcement_tech",
+     "name": "Law enforcement tech",
+     "definition": "Reports, evidence and investigation software for police and sheriffs."
+    },
+    {
+     "slug": "fire_ems_tech",
+     "name": "Fire and EMS tech",
+     "definition": "Patient care reporting, fire records and hospital notification software."
+    },
+    {
+     "slug": "emergency_notification",
+     "name": "Alerting and sensors",
+     "definition": "Mass notification, wildfire detection and situational awareness platforms."
+    },
+    {
+     "slug": "drone_platforms",
+     "name": "Drones and field robotics",
+     "definition": "Unmanned aircraft, counter-drone systems and robots flown for first responders."
+    },
+    {
+     "slug": "platform_engineering",
+     "name": "Public safety platforms",
+     "definition": "Builds and runs the dispatch, records and alerting software itself."
+    }
+   ]
+  },
+  {
+   "slug": "health_medtech",
+   "name": "Health and medtech",
+   "definition": "Devices, sales and clinical support inside hospitals and clinics. Close to the clinical work he already knows.",
+   "subs": [
+    {
+     "slug": "medical_device_sales",
+     "name": "Medical device sales",
+     "definition": "Sells capital equipment, implants and devices to hospitals and clinics."
+    },
+    {
+     "slug": "clinical_specialist",
+     "name": "Clinical specialist",
+     "definition": "Covers cases in the room and trains surgeons and staff on the device."
+    },
+    {
+     "slug": "clinical_engineering",
+     "name": "Clinical engineering",
+     "definition": "Installs, maintains and validates medical equipment inside a hospital."
+    },
+    {
+     "slug": "health_data",
+     "name": "Health data",
+     "definition": "Clinical data, informatics, electronic records and population health work."
+    }
+   ]
+  },
+  {
+   "slug": "real_estate",
+   "name": "Real estate",
+   "definition": "Property work as an investor or an employee: brokerage, acquisitions, analysis and management. Local inventory sits in South OC and near the coast.",
+   "subs": [
+    {
+     "slug": "commercial_brokerage",
+     "name": "Commercial brokerage",
+     "definition": "Leasing and investment sales for commercial property."
+    },
+    {
+     "slug": "acquisitions",
+     "name": "Acquisitions",
+     "definition": "Finds, underwrites and closes property purchases."
+    },
+    {
+     "slug": "asset_property_mgmt",
+     "name": "Asset and property management",
+     "definition": "Runs buildings, tenants, budgets and maintenance after the purchase."
+    },
+    {
+     "slug": "real_estate_analyst",
+     "name": "Real estate analysis",
+     "definition": "Models deals, markets and portfolios so someone can decide."
+    },
+    {
+     "slug": "development",
+     "name": "Development and construction",
+     "definition": "Entitlements, design and building projects from dirt to keys."
+    }
+   ]
+  },
+  {
+   "slug": "finance_markets",
+   "name": "Finance and markets",
+   "definition": "Trading, advising, deal work and fintech for people who already trade their own book.",
+   "subs": [
+    {
+     "slug": "trading",
+     "name": "Trading",
+     "definition": "Executes orders and manages position and market risk."
+    },
+    {
+     "slug": "wealth_management",
+     "name": "Wealth management",
+     "definition": "Advises clients on portfolios, planning and retirement."
+    },
+    {
+     "slug": "investment_banking",
+     "name": "Investment banking and deals",
+     "definition": "Raises capital, runs mergers and closes transactions."
+    },
+    {
+     "slug": "fintech_ops",
+     "name": "Fintech and payments",
+     "definition": "Builds and runs payments, lending, brokerage and treasury products."
+    },
+    {
+     "slug": "research_analytics",
+     "name": "Research and analytics",
+     "definition": "Studies companies, sectors and portfolios and writes it up."
+    }
+   ]
+  },
+  {
+   "slug": "hockey_sports",
+   "name": "Hockey and sports",
+   "definition": "Team, league and arena work. He played at a high level and still follows the game.",
+   "subs": [
+    {
+     "slug": "hockey_operations",
+     "name": "Hockey operations",
+     "definition": "Runs rosters, scouting, video and team logistics for a club."
+    },
+    {
+     "slug": "sports_analytics",
+     "name": "Sports analytics",
+     "definition": "Models player and team performance in code for a team or league."
+    },
+    {
+     "slug": "team_business",
+     "name": "Team business",
+     "definition": "Ticket sales, partnerships and marketing for a club."
+    },
+    {
+     "slug": "venue_operations",
+     "name": "Venue and events",
+     "definition": "Runs the arena, events and game day operations."
+    },
+    {
+     "slug": "coaching_development",
+     "name": "Coaching and development",
+     "definition": "Coaches players, runs youth hockey or leads development programs."
+    }
+   ]
+  },
+  {
+   "slug": "surf_outdoor",
+   "name": "Surf and outdoor",
+   "definition": "Brands, gear and coastal work. He surfs Salt Creek, Strands, Doheny and Trestles, so this is a lifestyle match, not just a pay match.",
+   "subs": [
+    {
+     "slug": "surf_industry",
+     "name": "Surf industry",
+     "definition": "Brands, boards, wetsuits and shops that sell surf gear."
+    },
+    {
+     "slug": "outdoor_brand",
+     "name": "Outdoor brand",
+     "definition": "Product, sales and marketing for outdoor gear and apparel makers."
+    },
+    {
+     "slug": "marine_services",
+     "name": "Marine and harbor",
+     "definition": "Boats, marinas, harbor and coastal services work."
+    },
+    {
+     "slug": "outdoor_education",
+     "name": "Outdoor education",
+     "definition": "Guides, instructors and camp programs that teach people to be outside."
+    }
+   ]
+  },
+  {
+   "slug": "founder_startup",
+   "name": "Founder track",
+   "definition": "Early hires and company building. He already runs Kodros, The Fire Dev and Protocol Guide, so these are peer moves rather than beginner jobs.",
+   "subs": [
+    {
+     "slug": "founding_engineer",
+     "name": "Founding engineer",
+     "definition": "Early engineer who owns product end to end with founders."
+    },
+    {
+     "slug": "founding_gtm",
+     "name": "Founding sales and marketing",
+     "definition": "First sales, partnerships or marketing hire at a young company."
+    },
+    {
+     "slug": "generalist_ops",
+     "name": "Generalist operations",
+     "definition": "Runs finance, people, systems and operations for a small company."
+    },
+    {
+     "slug": "product_lead",
+     "name": "Product and design lead",
+     "definition": "Owns what gets built and how it looks as the first product hire."
+    }
+   ]
+  }
+ ],
+ "rules": {
+  "home": "Dana Point, CA",
+  "in_person_metros": [
+   "south_oc",
+   "oc",
+   "sd",
+   "la"
+  ],
+  "remote_min_pay": 100000
+ },
+ "default_sub": {
+  "ai_software": "software_engineering",
+  "fire_ems": "firefighter",
+  "public_safety_tech": "dispatch_911",
+  "health_medtech": "medical_device_sales",
+  "real_estate": "commercial_brokerage",
+  "finance_markets": "trading",
+  "hockey_sports": "hockey_operations",
+  "surf_outdoor": "surf_industry",
+  "founder_startup": "founding_engineer"
+ },
+ "title_drop": "\\b(intern|internship|apprentice|volunteer|recruiter|talent acquisition|paralegal|attorney|custodian|janitor|dishwasher|barista|server|hostess|cashier|driver|warehouse|security guard|loss prevention|legal|counsel|general counsel|licensed clinical social worker|clinical social worker|therapist|counsel+or|lmft|lpc|lpc-?i|lcsw|psychologist|behavior(al)? technician|registered nurse|nurse practitioner)\\b",
+ "keyword_rules": [
+  {
+   "category": "ai_software",
+   "subcategory": "ai_engineering",
+   "weight": 16,
+   "pattern": "\\b(founding |senior |staff |principal )?(ai|ml|llm)[ /-]?(engineer|infrastructure engineer|platform engineer|ops)\\b|\\bllm[ -]?ops\\b|\\bml ?ops\\b|\\bagentic\\b|\\bai agents?\\b|\\bforward[ -]deployed\\b|\\bmodel serving\\b|\\binference (engineer|optimization)\\b|\\bapplied ai\\b|\\bgenerative ai\\b|\\bgen ?ai\\b|\\bprompt engineer|\\bai solutions? engineer\\b|\\bmachine learning engineer\\b|\\bai (developer|architect|specialist)\\b|\\bevaluation engineer\\b|\\brag engineer\\b|\\bai trainer\\b|\\b(ai|ml|llm|genai|gen ai|agentic|inference|machine learning|deep learning)\\b.{0,30}\\b(engineer|engineering|developer|architect)\\b|\\b(engineer|engineering|developer|architect)\\b.{0,30}\\b(ai|ml|llm|genai|agentic|inference|machine learning|deep learning)\\b"
+  },
+  {
+   "category": "ai_software",
+   "subcategory": "platform_infra",
+   "weight": 12,
+   "pattern": "\\b(site reliability|sre)\\b|\\bdevops\\b|\\bplatform engineer\\b|\\binfrastructure engineer\\b|\\bcloud (engineer|architect|infrastructure)\\b|\\bkubernetes\\b|\\bobservability engineer\\b|\\bnetwork engineer\\b|\\bsystems? engineer\\b|\\bgpu cluster\\b|\\bdata center (engineer|technician)\\b|\\bsystems? software engineer\\b|\\b(software|platform|infrastructure|systems) engineer,? ?[-,]? ?(distributed|platform|infrastructure|systems|cloud|storage|reliability)\\b|\\b(distributed|cloud|platform|infrastructure|storage) (software )?engineer\\b|\\b(engineer|engineering)\\b.{0,30}\\b(infrastructure|distributed systems|storage|reliability|observability)\\b"
+  },
+  {
+   "category": "ai_software",
+   "subcategory": "software_engineering",
+   "weight": 10,
+   "pattern": "\\bsoftware (engineer|developer)\\b|\\b(aws|cloud|game) developer\\b|\\bengineering manager\\b|\\btechnical lead\\b"
+  },
+  {
+   "category": "ai_software",
+   "subcategory": "backend_api",
+   "weight": 11,
+   "pattern": "\\b(backend|back[ -]end|api|application|integrations?) (engineer|developer)\\b|\\bmicroservices?\\b|\\b(engineer|developer)\\b.{0,25}\\b(backend|back[ -]?end|api|microservices?)\\b"
+  },
+  {
+   "category": "ai_software",
+   "subcategory": "product_frontend",
+   "weight": 12,
+   "pattern": "\\b(frontend|front[ -]end|web|mobile|ios|android|ui|ux|full[ -]?stack) (engineer|developer|architect)\\b|\\b(front[ -]end|ios|android|mobile|web|full[ -]?stack) developer\\b|\\b(react|swift(ui)?|kotlin|flutter) (engineer|developer)\\b|\\bfull ?stack\\b|\\b(engineer|developer|engineering manager)\\b.{0,30}\\b(front[ -]?end|mobile|ios|android|web|react|swift(ui)?|kotlin|flutter)\\b|\\b(front[ -]?end|mobile|ios|android|web)\\b.{0,30}\\b(engineer|developer)\\b"
+  },
+  {
+   "category": "ai_software",
+   "subcategory": "data_engineering",
+   "weight": 12,
+   "pattern": "\\bdata engineer\\b|\\banalytics engineer\\b|\\betl\\b|\\bdata warehouse\\b|\\bdata pipeline\\b|\\bdbt\\b|\\bdata platform\\b|\\bdata architect\\b|\\b(software engineer|developer)\\b.{0,20}\\bdata\\b"
+  },
+  {
+   "category": "ai_software",
+   "subcategory": "security_engineering",
+   "weight": 12,
+   "pattern": "\\bsecurity (software |platform |cloud )?(engineer|architect|analyst|specialist)\\b|\\bappsec\\b|\\bapplication security\\b|\\bdetection engineer\\b|\\bpenetration test|\\bsoc analyst\\b|\\bincident response\\b|\\btrust and safety\\b"
+  },
+  {
+   "category": "fire_ems",
+   "subcategory": "fire_paramedic",
+   "weight": 18,
+   "pattern": "\\bfire ?fighter[ /-]{0,3}paramedic\\b|\\bfire[ /-]?paramedic\\b|\\bparamedic[ /-]{0,3}fire ?fighter\\b|\\bfirefighter\\s*/\\s*paramedic\\b"
+  },
+  {
+   "category": "fire_ems",
+   "subcategory": "firefighter",
+   "weight": 16,
+   "pattern": "\\bfire ?fighter\\b|\\bfire (captain|apparatus (operator|engineer)|engineer)\\b|\\bwildland fire\\b|\\bfire crew\\b|\\bfire suppression\\b|\\bfire recruit\\b"
+  },
+  {
+   "category": "fire_ems",
+   "subcategory": "ocean_rescue",
+   "weight": 16,
+   "pattern": "\\b(ocean|beach|marine safety) lifeguard\\b|\\blifeguard\\b|\\bmarine safety (officer|division)\\b|\\bocean rescue\\b"
+  },
+  {
+   "category": "fire_ems",
+   "subcategory": "fire_prevention",
+   "weight": 14,
+   "pattern": "\\bfire (inspector|prevention|marshal)\\b|\\bplan review\\b|\\bfire code\\b|\\bcode enforcement|\\bhazardous materials specialist\\b|\\bfire protection engineer\\b"
+  },
+  {
+   "category": "fire_ems",
+   "subcategory": "ems_clinical",
+   "weight": 14,
+   "pattern": "\\bparamedic\\b|\\bemt\\b|\\bemergency medical technician\\b|\\bems (coordinator|educator|instructor|chief|manager|program|specialist)\\b|\\bambulance\\b|\\bcritical care transport\\b|\\bflight (nurse|paramedic)\\b|\\bprehospital\\b"
+  },
+  {
+   "category": "fire_ems",
+   "subcategory": "emergency_management",
+   "weight": 14,
+   "pattern": "\\bemergency management\\b|\\bemergency preparedness\\b|\\bdisaster (response|recovery|planning)\\b|\\bhazard mitigation\\b|\\beoc\\b|\\bemergency operations\\b|\\bhomeland security\\b|\\bcrisis management\\b"
+  },
+  {
+   "category": "public_safety_tech",
+   "subcategory": "dispatch_911",
+   "weight": 16,
+   "pattern": "\\b(911|psap)\\b|\\bdispatch (software|system|operations|supervisor)\\b|\\bcomputer aided dispatch\\b|\\bcall ?tak(er|ing)\\b|\\bemergency communications\\b"
+  },
+  {
+   "category": "public_safety_tech",
+   "subcategory": "law_enforcement_tech",
+   "weight": 14,
+   "pattern": "\\b(police|law enforcement|sheriff|corrections) (software|technology|tech)\\b|\\brecords management system\\b|\\bbody[ -]worn camera\\b|\\bdigital evidence\\b|\\bcomputer vision engineer\\b|\\bcad\\/rms\\b|\\bpublic safety (software|technology|solutions)\\b"
+  },
+  {
+   "category": "public_safety_tech",
+   "subcategory": "fire_ems_tech",
+   "weight": 16,
+   "pattern": "\\b(epcr|ems software|fire records|nfirs|patient care report)\\b|\\bfire and ems (software|technology)\\b|\\bems (software|technology|solutions) (engineer|specialist|manager)\\b"
+  },
+  {
+   "category": "public_safety_tech",
+   "subcategory": "dispatch_911",
+   "weight": 14,
+   "pattern": "\\b(public safety|dispatch|emergency communications?) (systems?|communications?|technology|software) (analyst|manager|specialist|engineer|director)\\b"
+  },
+  {
+   "category": "public_safety_tech",
+   "subcategory": "drone_platforms",
+   "weight": 16,
+   "pattern": "\\b(drones?|counter[ -]?uas|u ?as|unmanned (aircraft|aerial)|robotic first responder|\\bdfr\\b|drone as first responder|aerial systems?)\\b"
+  },
+  {
+   "category": "public_safety_tech",
+   "subcategory": "emergency_notification",
+   "weight": 14,
+   "pattern": "\\b(mass notification|mass alerting|emergency alerting|wildfire detection|drone as first responder)\\b|\\bsituational awareness\\b|\\b(public safety|first responder)s?\\b.{0,30}\\b(account executive|solutions engineer|sales)\\b|\\b(account executive|solutions engineer|sales)\\b.{0,30}\\b(public safety|first responder)s?\\b"
+  },
+  {
+   "category": "health_medtech",
+   "subcategory": "medical_device_sales",
+   "weight": 16,
+   "pattern": "\\bmedical device (sales|representative|specialist)\\b|\\bterritory (manager|sales representative)\\b|\\bcapital equipment (sales|specialist)\\b|\\bsales (representative|consultant)\\b.{0,40}\\b(medical|surgical|device)\\b|\\bdevice (sales|rep)\\b"
+  },
+  {
+   "category": "health_medtech",
+   "subcategory": "clinical_specialist",
+   "weight": 16,
+   "pattern": "\\bclinical specialist\\b|\\bclinical (application|sales) specialist\\b|\\bcase coverage\\b|\\bsurgical (specialist|technologist)\\b|\\bperfusionist\\b|\\bclinical educator\\b|\\bclinical consultant\\b"
+  },
+  {
+   "category": "health_medtech",
+   "subcategory": "clinical_engineering",
+   "weight": 16,
+   "pattern": "\\bbiomed(ical)? (equipment )?(technician|engineer)\\b|\\bclinical engineer\\b|\\bmedical equipment (technician|specialist)\\b|\\bbiomed\\b|\\bimaging (service|field service) engineer\\b"
+  },
+  {
+   "category": "health_medtech",
+   "subcategory": "health_data",
+   "weight": 12,
+   "pattern": "\\b(health data|clinical informatics|clinical data|population health|ehr|epic analyst|cerner)\\b|\\bmedical (coding|records)\\b|\\bhealth informatics\\b"
+  },
+  {
+   "category": "real_estate",
+   "subcategory": "commercial_brokerage",
+   "weight": 16,
+   "pattern": "\\b(commercial real estate|investment sales|leasing (agent|associate|director)|tenant rep|land (broker|advisor)|real estate broker|brokerage)\\b"
+  },
+  {
+   "category": "real_estate",
+   "subcategory": "acquisitions",
+   "weight": 16,
+   "pattern": "\\b(acquisitions? (analyst|associate|manager|director|officer|specialist|agent)|real estate acquisitions?|property acquisitions?|land acquisitions?)\\b"
+  },
+  {
+   "category": "real_estate",
+   "subcategory": "asset_property_mgmt",
+   "weight": 14,
+   "pattern": "\\bproperty (manager|management)\\b|\\basset manager\\b|\\bportfolio manager\\b.{0,30}\\breal estate\\b|\\bcommunity manager\\b.{0,30}\\b(apartment|residential)\\b|\\bleasing consultant\\b|\\bfacilities manager\\b"
+  },
+  {
+   "category": "real_estate",
+   "subcategory": "real_estate_analyst",
+   "weight": 15,
+   "pattern": "\\breal estate (analyst|associate|financial analyst)\\b|\\b(development|investment) analyst\\b|\\bfinancial analyst\\b.{0,40}\\b(real estate|property)\\b|\\bunderwriting analyst\\b|\\bargus\\b"
+  },
+  {
+   "category": "real_estate",
+   "subcategory": "development",
+   "weight": 12,
+   "pattern": "\\bconstruction (manager|superintendent|project engineer|estimator|project manager)\\b|\\bpreconstruction (manager|lead)\\b|\\bgeneral contractor\\b|\\bland development\\b|\\bentitlements? (manager|associate|director)\\b|\\bdevelopment (manager|associate|director)\\b.{0,30}\\b(construction|real estate|property|homes)\\b"
+  },
+  {
+   "category": "finance_markets",
+   "subcategory": "trading",
+   "weight": 16,
+   "pattern": "\\b(trader|trading (associate|analyst|desk|operations)|quant(itative)? (trader|researcher|developer)|market maker|execution trader|derivatives)\\b|\\bfixed income\\b|\\bequity (trader|trading)\\b"
+  },
+  {
+   "category": "finance_markets",
+   "subcategory": "wealth_management",
+   "weight": 16,
+   "pattern": "\\b(wealth (management|advisor|manager)|financial advisor|financial planner|private client|private wealth|registered investment advisor|client advisor)\\b"
+  },
+  {
+   "category": "finance_markets",
+   "subcategory": "investment_banking",
+   "weight": 15,
+   "pattern": "\\b(investment banking|mergers? and acquisitions|m ?& ?a|capital markets|private equity (associate|analyst|investment|fund|principal|partner|deal team)|leveraged finance|deal (team|execution))\\b"
+  },
+  {
+   "category": "finance_markets",
+   "subcategory": "fintech_ops",
+   "weight": 12,
+   "pattern": "\\b(payments?|fintech|lending|brokerage operations|card (operations|issuing)|financial operations)\\b"
+  },
+  {
+   "category": "finance_markets",
+   "subcategory": "research_analytics",
+   "weight": 14,
+   "pattern": "\\b(equity research|investment research|research analyst|investment analyst|portfolio analyst)\\b|\\bfinancial analyst\\b"
+  },
+  {
+   "category": "hockey_sports",
+   "subcategory": "hockey_operations",
+   "weight": 18,
+   "pattern": "\\b(hockey operations|hockey (ops|analytics)|scouting|scout|player development|video coach|equipment manager|hockey (coach|director))\\b"
+  },
+  {
+   "category": "hockey_sports",
+   "subcategory": "sports_analytics",
+   "weight": 16,
+   "pattern": "\\b(sports? (analytics|research|data)|performance analyst|baseball (analytics|research))\\b|\\bquantitative analyst\\b.{0,40}\\b(sports|team|league)\\b"
+  },
+  {
+   "category": "hockey_sports",
+   "subcategory": "team_business",
+   "weight": 13,
+   "pattern": "\\b(ticket (sales|operations|executive)|premium seating|group sales|partnership activation|game presentation|fan experience|suite sales)\\b"
+  },
+  {
+   "category": "hockey_sports",
+   "subcategory": "venue_operations",
+   "weight": 13,
+   "pattern": "\\b(arena|venue|stadium) (operations|manager|staff|services)\\b|\\bevent operations\\b|\\bgame day\\b"
+  },
+  {
+   "category": "hockey_sports",
+   "subcategory": "coaching_development",
+   "weight": 12,
+   "pattern": "\\b(head coach|assistant coach|skills coach|goaltending coach|youth (hockey|sports) (coach|director))\\b|\\bskating (coach|instructor)\\b"
+  },
+  {
+   "category": "surf_outdoor",
+   "subcategory": "surf_industry",
+   "weight": 16,
+   "pattern": "\\b(surf(ing|board|shop|industry|brand)?\\b|\\bwetsuit|\\bshaper\\b|\\bmarlin\\b|\\bboardriders\\b|\\bhaydenshapes\\b|\\bfirewire surfboards\\b|\\bchannel islands surfboards\\b)"
+  },
+  {
+   "category": "surf_outdoor",
+   "subcategory": "outdoor_brand",
+   "weight": 12,
+   "pattern": "\\b(outdoor (brand|industry|retail|apparel|gear|product)|action sports (brand|marketing|company)|apparel (brand|designer)|gear (designer|engineer)|wetsuit (designer|developer))\\b"
+  },
+  {
+   "category": "surf_outdoor",
+   "subcategory": "marine_services",
+   "weight": 14,
+   "pattern": "\\b(marine (technician|mechanic|services)|boat (captain|mechanic|sales)|marina|harbor (patrol|department)|yacht|dock (hand|attendant)|sailing)\\b"
+  },
+  {
+   "category": "surf_outdoor",
+   "subcategory": "outdoor_education",
+   "weight": 18,
+   "pattern": "\\b(surf (instructor|lesson|camp|school)|ocean safety (instructor|camp)|junior lifeguard)\\b"
+  },
+  {
+   "category": "surf_outdoor",
+   "subcategory": "outdoor_education",
+   "weight": 13,
+   "pattern": "\\b(outdoor education|outdoor guide|surf (instructor|lesson|camp)|camp (counselor|director)|adventure (guide|program)|environmental education)\\b"
+  },
+  {
+   "category": "founder_startup",
+   "subcategory": "founding_engineer",
+   "weight": 20,
+   "pattern": "\\b(founding (engineer|developer|full[ -]?stack|backend|ai)|first (software )?engineer|founding team)\\b"
+  },
+  {
+   "category": "founder_startup",
+   "subcategory": "founding_gtm",
+   "weight": 18,
+   "pattern": "\\b(founding (sales|account executive|marketer|growth)|first (sales|marketing|gtm) hire|founding business development)\\b"
+  },
+  {
+   "category": "founder_startup",
+   "subcategory": "generalist_ops",
+   "weight": 15,
+   "pattern": "\\b(founding (operations|ops)|chief of staff|startup generalist|operator in residence|employee #?1)\\b"
+  },
+  {
+   "category": "founder_startup",
+   "subcategory": "product_lead",
+   "weight": 15,
+   "pattern": "\\b(founding (product|designer)|first product (hire|manager)|head of product|founding product manager)\\b"
+  }
+ ],
+ "context_rules": [
+  {
+   "category": "real_estate",
+   "weight": 7,
+   "pattern": "\\b(real estate|realty|propert(?:y|ies)|reit|multifamily|apartment|rental|lease|commercial building)\\b"
+  },
+  {
+   "category": "fire_ems",
+   "weight": 6,
+   "pattern": "\\b(fire department|fire district|fire protection|cal ?fire|ems agency|ambulance service)\\b"
+  },
+  {
+   "category": "public_safety_tech",
+   "weight": 7,
+   "pattern": "\\b(public safety|first responder|911|dispatch center|police department)\\b"
+  },
+  {
+   "category": "health_medtech",
+   "weight": 6,
+   "pattern": "\\b(hospital|clinic|surgeon|patient|medical center|health system)\\b"
+  },
+  {
+   "category": "finance_markets",
+   "weight": 5,
+   "pattern": "\\b(investment|portfolio|capital|securities|asset management|bank)\\b"
+  },
+  {
+   "category": "hockey_sports",
+   "weight": 7,
+   "pattern": "\\b(nhl|hockey|anaheim ducks|los angeles kings|arena|sports team|professional sports)\\b"
+  },
+  {
+   "category": "surf_outdoor",
+   "weight": 6,
+   "pattern": "\\b(surf|surfboard|wetsuit|outdoor gear|outdoor brand|beach patrol|marine safety|action sports)\\b"
+  },
+  {
+   "category": "founder_startup",
+   "weight": 5,
+   "pattern": "\\b(seed|series a|pre-seed|early stage|startup)\\b"
+  },
+  {
+   "category": "ai_software",
+   "weight": 4,
+   "pattern": "\\b(software|engineering|technology|platform|cloud|data)\\b"
+  }
+ ],
+ "remote_foreign_pattern": "\\b(india|united kingdom|uk|england|scotland|canada|germany|singapore|japan|australia|new zealand|israel|brazil|(?<!new )mexico|france|ireland|netherlands|belgium|austria|denmark|norway|finland|poland|spain|london|bangalore|bengaluru|toronto|paris|berlin|dublin|tokyo|seoul|sydney|melbourne|zurich|amsterdam|warsaw|emea|apac|europe|eu|latam|latin america|south america|china|hong kong|philippines|korea|taiwan|vietnam|indonesia|malaysia|thailand|pakistan|nigeria|kenya|south africa|egypt|uae|dubai|turkey|greece|ukraine|serbia|czechia|czech republic|hungary|switzerland|sweden|italy|portugal|romania|argentina|colombia|chile|peru|uruguay|costa rica|vancouver|montreal|calgary|ottawa|quebec|alberta|british columbia|hyderabad|pune|chennai)\\b",
+ "remote_us_ok_pattern": "\\b(us|u\\.s(?=\\.)|usa|united states|united states of america|americas|north america|worldwide|anywhere|global)\\b"
+}

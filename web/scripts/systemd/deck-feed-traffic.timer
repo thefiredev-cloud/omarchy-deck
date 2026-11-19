@@ -1,0 +1,11 @@
+[Unit]
+Description=Refresh Pixel Deck website traffic every hour (Search Console trails by about 2 days, Vercel page views are current; the deck marks it out of date after 2 hours)
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=3600s
+AccuracySec=1min
+RandomizedDelaySec=60
+
+[Install]
+WantedBy=timers.target

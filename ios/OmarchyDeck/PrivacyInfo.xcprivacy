@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSPrivacyTracking</key>
+	<false/>
+	<key>NSPrivacyTrackingDomains</key>
+	<array/>
+	<key>NSPrivacyCollectedDataTypes</key>
+	<array/>
+	<key>NSPrivacyAccessedAPITypes</key>
+	<array>
+		<!--
+			UserDefaults, reason CA92.1: read and write information accessible only to the app itself.
+			Evidence (OmarchyDeck/DeckModel.swift): UserDefaults.standard stores the saved deck server addresses
+			("deck.savedOrigins.v1"), the selected address ("deck.selectedOrigin.v1"), the per-address WebKit
+			store ids ("deck.originStoreIDs.v1"), the ids of removed decks whose WebKit data is still being
+			deleted ("deck.pendingStoreRemovals.v1", random UUIDs only) and the one-time cookie migration flag
+			("deck.legacyCookieMigration.v1"). @AppStorage (ContentView.swift, DeckFeedsView.swift, DeckNationalView.swift,
+			DeckMarketsView.swift) stores the Decks tip flag ("deck.decksTipSeen"), the last Feeds section
+			("deck.feeds.section"), the Feeds appearance ("deck.feeds.appearance"), the Real estate page and Best ZIPs lens
+			("deck.realestate.page", "deck.realestate.lens") and the Markets level and segment ("deck.markets.level",
+			"deck.markets.segment"). OmarchyDeckApp.swift clears all of these keys in DEBUG only.
+			Nothing is shared with other apps or an app group.
+
+			Checked and not used by shipped source (OmarchyDeck/, Shared/, OmarchyDeckWatch/):
+			disk space APIs (volumeAvailableCapacity, NSFileSystemFreeSize, statfs) and active keyboard (activeInputModes).
+			DeckSnapshotStore reads contentModificationDateKey for cached preview age (DDA9.1).
+			The project has no third-party packages or frameworks.
+		-->
+		<dict>
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategoryFileTimestamp</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>DDA9.1</string>
+			</array>
+		</dict>
+		<dict>
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>CA92.1</string>
+			</array>
+		</dict>
+		<!-- HapticBridge uses systemUptime only to measure intervals between in-app haptic events. -->
+		<dict>
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategorySystemBootTime</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>35F9.1</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

@@ -1,0 +1,8 @@
+[Unit]
+Description=Pixel Deck server page feed (gateway health and local schedule metadata only)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 %h/ops/bin/deck-feed-serverpage
+TimeoutStartSec=120
+Nice=10

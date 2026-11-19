@@ -1,0 +1,18 @@
+{
+ "schema": 1,
+ "generated_at": 1794450000,
+ "zip": "92629",
+ "source": "Fixture listings",
+ "as_of": "2026-11-10",
+ "listings": [
+  {
+   "addr": "1 Harbor Dr",
+   "price": 1650000,
+   "beds": 3,
+   "baths": 2,
+   "sqft": 1800,
+   "url": "https://example.com/l1",
+   "source": "fixture"
+  }
+ ]
+}

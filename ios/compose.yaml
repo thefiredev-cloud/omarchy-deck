@@ -1,0 +1,14 @@
+# One command for the same Linux Foundation harness CI runs: `docker compose up`.
+# The harness is a test package, not a server: no ports, no secrets, no HEALTHCHECK.
+# Optional settings come from .env (copy .env.example). Never put secrets in .env.
+name: omarchy-deck
+
+services:
+  linux-harness:
+    image: ${IMAGE_TAG:-omarchy-deck-linux-harness:local}
+    build:
+      context: .
+      target: test
+    environment:
+      SWIFT_DETERMINISTIC_HASHING: "1"
+    init: true

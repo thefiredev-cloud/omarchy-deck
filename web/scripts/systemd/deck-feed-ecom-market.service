@@ -1,0 +1,10 @@
+[Unit]
+Description=Pixel Deck e-commerce market feed (public statistics, rank lists, catalogs and the shop collector; writes ~/.meshvault/status/house-feeds/ecom-market.json)
+
+[Service]
+Slice=deckwork.slice
+Type=oneshot
+ExecStart=/usr/bin/python3 %h/ops/bin/deck-feed-ecom-market --quiet
+TimeoutStartSec=330
+Nice=10
+IOSchedulingClass=idle

@@ -1,0 +1,48 @@
+/* World (2026-11-17): the world's eye view. The gaps lead in a card grid; the five domain panels sit under them.
+   Columns follow the device class the shell sets (html[data-dc]): P one column; L (the Pixel landscape, 956 x 440) gaps in two and
+   panels in three; T (tablet portrait) two and two; D three and three; XL three gaps and all five panels in one row. */
+#pg-world .wd{display:flex;flex-direction:column;gap:var(--gap);min-width:0}
+#pg-world .wg-list,#pg-world .wd-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--gap);align-items:start}
+html[data-dc="L"] #pg-world .wg-list,html[data-dc="T"] #pg-world .wg-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+html[data-dc="D"] #pg-world .wg-list,html[data-dc="XL"] #pg-world .wg-list{grid-template-columns:repeat(3,minmax(0,1fr))}
+html[data-dc="T"] #pg-world .wd-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+html[data-dc="L"] #pg-world .wd-grid,html[data-dc="D"] #pg-world .wd-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+html[data-dc="XL"] #pg-world .wd-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
+#pg-world .wd-p{min-width:0}
+#pg-world .wd-p .strip{--cols:2;margin-bottom:var(--s-3)}
+#pg-world .wd-p .note.sm{margin:0 0 var(--s-2)}
+#pg-world .frow .fr{flex:none;align-items:flex-end;text-align:right}
+#pg-world .frow .fr b{white-space:nowrap}
+
+/* one gap: score square, then title, domain chip, demand and supply, the next step. The summary is the whole card's tap target. */
+#pg-world details.wg{border:var(--hair);border-radius:var(--r-panel);background:var(--c-panel);min-width:0}
+#pg-world details.wg>summary{display:flex;gap:var(--s-3);align-items:flex-start;padding:var(--s-3) var(--s-4);min-height:var(--hit);cursor:pointer;list-style:none}
+#pg-world details.wg>summary::-webkit-details-marker{display:none}
+#pg-world details.wg>summary:focus-visible{outline:var(--focus,2px solid var(--c-signal));outline-offset:var(--focus-off,2px)}
+#pg-world details.wg[open]>summary{border-bottom:var(--hair)}
+#pg-world .wg-sc{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:3.4rem;padding:var(--s-2) var(--s-1);
+  border-radius:var(--r-ctl);background:var(--c-panel-2);border-left:3px solid var(--c-ramp-3);font-family:var(--mono);font-variant-numeric:tabular-nums}
+#pg-world .wg-sc b{font-size:var(--fs-title);font-weight:var(--fw-semi);line-height:1.1;color:var(--c-text-1)}
+#pg-world .wg-sc small{font-size:var(--fs-micro);color:var(--c-text-2);white-space:nowrap}
+#pg-world .wg-sc[data-band="hi"]{border-left-color:var(--c-ok)}
+#pg-world .wg-sc[data-band="mid"]{border-left-color:var(--c-warn)}
+#pg-world .wg-sc[data-band="lo"]{border-left-color:var(--c-ramp-4)}
+#pg-world .wg-b{display:flex;flex-direction:column;gap:var(--s-1);min-width:0;flex:1 1 0}
+#pg-world .wg-t{font-size:var(--fs-lead);font-weight:var(--fw-med);line-height:var(--lh-title);overflow-wrap:anywhere}
+#pg-world .wg-m{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-1) var(--s-2);font-size:var(--fs-meta);color:var(--c-text-2)}
+#pg-world .wg-dom{color:var(--c-text-1);background:var(--c-panel-2)}
+/* "Why" is the visible handle of the disclosure: underlined like the deck's links, with a chevron at the card's edge (the same chevron as Shop's cost rows) */
+#pg-world .wg-why{color:var(--c-text-1);font-weight:var(--fw-med);text-decoration:underline;text-underline-offset:.2em}
+#pg-world details.wg>summary::after{content:"";flex:none;align-self:center;width:.5em;height:.5em;border:solid var(--c-text-2);border-width:0 2px 2px 0;transform:rotate(45deg);margin:0 .2em 0 var(--s-1)}
+#pg-world details.wg[open]>summary::after{transform:rotate(-135deg)}
+#pg-world .wg-nx{font-size:var(--fs-meta);line-height:var(--lh-body);color:var(--c-text-1);overflow-wrap:anywhere}
+#pg-world .wg-bd{display:flex;flex-direction:column;gap:var(--s-2);padding:var(--s-3) var(--s-4) var(--s-2)}
+#pg-world .wg-bd p{margin:0;font-size:var(--fs-meta);line-height:var(--lh-body);color:var(--c-text-2);overflow-wrap:anywhere}
+#pg-world .wg-bd .wg-wy{color:var(--c-text-1)}
+#pg-world .wg-ds b{color:var(--c-text-1);font-weight:var(--fw-med)}
+#pg-world .wg-ev{padding:0 var(--s-4) var(--s-2)}
+#pg-world details.wg>.note{padding:var(--s-3) var(--s-4);margin:0}
+
+/* TV: the gaps in three columns, the panels in five, every list cut by the board (tv.js) */
+html.tv #pg-world .wg-list{grid-template-columns:repeat(3,minmax(0,1fr))}
+html.tv #pg-world .wd-grid{grid-template-columns:repeat(5,minmax(0,1fr))}

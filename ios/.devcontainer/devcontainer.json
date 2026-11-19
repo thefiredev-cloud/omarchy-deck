@@ -1,0 +1,19 @@
+{
+  "name": "omarchy deck linux harness",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": "..",
+    "target": "test"
+  },
+  "workspaceFolder": "/src",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/src,type=bind",
+  "remoteUser": "runner",
+  "updateRemoteUserUID": true,
+  "overrideCommand": true,
+  "postCreateCommand": "swift build --package-path linux-harness --build-tests",
+  "customizations": {
+    "vscode": {
+      "extensions": ["swiftlang.swift-vscode"]
+    }
+  }
+}

@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# Install the ops feed collectors and their timers: the Fleet stall watch (owner feedback 2026-10-21), the deadlines
+# feed (renewals and paperwork, deck 2026-10-29), and the trends and market gaps feeds (owner 2026-11-17; deck-feed-gaps
+# also needs its scoring module deck_gaps_score.py beside it, installed with it).
+#   scripts/install-ops-feeds                      installs every feed below into ~/ops/bin and ~/.config/systemd/user
+#   scripts/install-ops-feeds deck-feed-deadlines  installs only the named feed(s)
+#   DECK_BIN_DIR=DIR DECK_UNIT_DIR=DIR scripts/install-ops-feeds   installs into those directories instead
+#   scripts/install-ops-feeds --force ...          installs even when the audit finds the live copy ahead of the repo
+#
+# Runs scripts/install-guard first: when a live copy holds lines no repo version ever had (qa/audit_repo_live.py LIVE AHEAD),
+# nothing is installed unless --force is given.
+# Backs up a live script it replaces to <name>.bak-<stamp>. Enables and starts only the timers of the feeds below
+# (when systemctl --user is available and DECK_NO_ENABLE is unset). Nothing else is restarted.
+# Roll back: systemctl --user disable --now <feed>.timer; remove its two unit files and the script in ~/ops/bin.
+# Stall alerts off without uninstalling: touch ~/.meshvault/state/deck-stalls-alerts-off
+set -euo pipefail
+
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+bin="${DECK_BIN_DIR:-$HOME/ops/bin}"
+units="${DECK_UNIT_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user}"
+stamp="$(date +%Y%m%d-%H%M%S)"
+feeds=(deck-feed-stalls deck-feed-deadlines deck-feed-serverpage deck-feed-trends deck-feed-gaps)
+force=()
+named=()
+for a in "$@"; do
+  if [ "$a" = "--force" ]; then force=(--force); else named+=("$a"); fi
+done
+[ "${#named[@]}" -gt 0 ] && feeds=("${named[@]}")
+
+for f in "${feeds[@]}"; do
+  for p in "$f" "systemd/$f.service" "systemd/$f.timer"; do
+    [ -f "$here/$p" ] || { echo "missing $here/$p: nothing was installed" >&2; exit 1; }
+  done
+done
+guarded=()
+for f in "${feeds[@]}"; do guarded+=("scripts/$f" "scripts/systemd/$f.service" "scripts/systemd/$f.timer"); done
+"$here/install-guard" ${force[@]+"${force[@]}"} --bin "$bin" --units "$units" -- "${guarded[@]}" || exit 1
+mkdir -p "$bin" "$units"
+for f in "${feeds[@]}"; do
+  if [ -e "$bin/$f" ]; then
+    cp -p "$bin/$f" "$bin/$f.bak-$stamp"
+    echo "backed up $bin/$f -> $f.bak-$stamp"
+  fi
+  install -m 755 "$here/$f" "$bin/$f"
+  install -m 644 "$here/systemd/$f.service" "$units/$f.service"
+  install -m 644 "$here/systemd/$f.timer" "$units/$f.timer"
+  if [ "$f" = deck-feed-gaps ]; then
+    install -m 644 "$here/deck_gaps_score.py" "$bin/deck_gaps_score.py"
+  fi
+  echo "installed $bin/$f and its two units in $units"
+done
+
+timers=("${feeds[@]/%/.timer}")
+if [ -z "${DECK_NO_ENABLE:-}" ] && command -v systemctl >/dev/null 2>&1; then
+  systemctl --user daemon-reload
+  systemctl --user enable --now "${timers[@]}"
+  systemctl --user list-timers "${timers[@]}" --no-pager || true
+else
+  echo "timers not enabled (DECK_NO_ENABLE set or no systemctl). Enable: systemctl --user enable --now ${timers[*]}"
+fi

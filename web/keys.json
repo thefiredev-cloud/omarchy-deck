@@ -1,0 +1,76 @@
+{
+ "verified": {
+  "at": "2026-10-29",
+  "against": "~/.config/hypr (Hyprland 0.56.2 lua config), the deck helper allowlist, and Home Assistant /api/states plus ~/.homeassistant/scripts.yaml (read only)",
+  "how": "each host action mapped to the helper.py command and the hl.dsp call or binary behind it; each house key mapped to a script.* entity that exists in HA and to its fixed row in ha.rs HA_SCRIPTS",
+  "groups_note": "rows are labels only; the server still indexes the flat keys array, so order is stable. House keys only ever append.",
+  "restored": "Apps and Spaces are back: helper.py dispatches launch apps (app grid) and launch spaces (workspace overview)",
+  "house": "ha-script keys send only their index; the server resolves the script id against ha.rs HA_SCRIPTS (owner only, never a guest). Music plays on the Bedroom HomePod because the house speaker is off."
+ },
+ "groups": [
+  {"id": "apps", "name": "Apps"},
+  {"id": "media", "name": "Media"},
+  {"id": "workspaces", "name": "Go to workspace"},
+  {"id": "window", "name": "Move window"},
+  {"id": "system", "name": "System"},
+  {"id": "tv", "name": "TV"},
+  {"id": "games", "name": "Games"},
+  {"id": "music", "name": "Music"},
+  {"id": "sprinklers", "name": "Sprinklers"},
+  {"id": "house", "name": "House"}
+ ],
+ "keys": [
+  {"label": "Terminal", "icon": "⌨️", "action": "launch", "arg": "terminal", "group": "apps"},
+  {"label": "Browser", "icon": "🌐", "action": "launch", "arg": "browser", "group": "apps"},
+  {"label": "Files", "icon": "📁", "action": "launch", "arg": "files", "group": "apps"},
+  {"label": "Hermes", "icon": "💬", "action": "launch", "arg": "hermes", "group": "apps"},
+  {"label": "Spotify", "icon": "🎧", "action": "launch", "arg": "spotify", "group": "apps"},
+  {"label": "Obsidian", "icon": "📝", "action": "launch", "arg": "obsidian", "group": "apps"},
+  {"label": "Apps", "icon": "🗂️", "action": "launch", "arg": "apps", "group": "apps"},
+  {"label": "Spaces", "icon": "🪟", "action": "launch", "arg": "spaces", "group": "apps"},
+
+  {"label": "Prev", "icon": "⏮️", "action": "media-act", "arg": "prev", "group": "media"},
+  {"label": "Play", "icon": "⏯️", "action": "media-act", "arg": "play-pause", "group": "media"},
+  {"label": "Next", "icon": "⏭️", "action": "media-act", "arg": "next", "group": "media"},
+  {"label": "Mute", "icon": "🔇", "action": "mute", "group": "media"},
+
+  {"label": "WS 1", "icon": "1", "action": "ws", "arg": "1", "group": "workspaces"},
+  {"label": "WS 2", "icon": "2", "action": "ws", "arg": "2", "group": "workspaces"},
+  {"label": "WS 3", "icon": "3", "action": "ws", "arg": "3", "group": "workspaces"},
+  {"label": "WS 4", "icon": "4", "action": "ws", "arg": "4", "group": "workspaces"},
+  {"label": "WS 5", "icon": "5", "action": "ws", "arg": "5", "group": "workspaces"},
+
+  {"label": "To 1", "icon": "➡1", "action": "mvws", "arg": "1", "group": "window"},
+  {"label": "To 2", "icon": "➡2", "action": "mvws", "arg": "2", "group": "window"},
+  {"label": "To 3", "icon": "➡3", "action": "mvws", "arg": "3", "group": "window"},
+  {"label": "To 4", "icon": "➡4", "action": "mvws", "arg": "4", "group": "window"},
+  {"label": "To 5", "icon": "➡5", "action": "mvws", "arg": "5", "group": "window"},
+
+  {"label": "Menu", "icon": "☰", "action": "launch", "arg": "menu", "group": "system"},
+  {"label": "Night", "icon": "🌙", "action": "launch", "arg": "nightlight", "group": "system"},
+  {"label": "Shot", "icon": "📸", "action": "screenshot", "confirm": true, "group": "system"},
+  {"label": "Lock", "icon": "🔒", "action": "lock", "confirm": true, "group": "system"},
+
+  {"label": "TV power", "icon": "📺", "action": "ha-script", "arg": "living_tv_power", "confirm": true, "group": "tv"},
+  {"label": "TV vol +", "icon": "🔊", "action": "ha-script", "arg": "living_volume_up", "group": "tv"},
+  {"label": "TV vol -", "icon": "🔉", "action": "ha-script", "arg": "living_volume_down", "group": "tv"},
+  {"label": "TV mute", "icon": "🔇", "action": "ha-script", "arg": "living_mute", "group": "tv"},
+  {"label": "TV home", "icon": "🏠", "action": "ha-script", "arg": "living_home", "group": "tv"},
+  {"label": "TV back", "icon": "↩️", "action": "ha-script", "arg": "living_back", "group": "tv"},
+  {"label": "Bed vol +", "icon": "🔊", "action": "ha-script", "arg": "tv_volume_up", "group": "tv"},
+  {"label": "Bed vol -", "icon": "🔉", "action": "ha-script", "arg": "tv_volume_down", "group": "tv"},
+
+  {"label": "PS5 input", "icon": "🎮", "action": "ha-script", "arg": "living_ps5", "group": "games"},
+  {"label": "PS5 rest", "icon": "💤", "action": "ha-script", "arg": "living_ps5_standby", "confirm": true, "group": "games"},
+  {"label": "Xbox on", "icon": "🟩", "action": "ha-script", "arg": "living_xbox_on", "confirm": true, "group": "games"},
+
+  {"label": "Play music", "icon": "🎵", "action": "ha-script", "arg": "house_music_play_on", "group": "music"},
+  {"label": "Bed play", "icon": "⏯️", "action": "ha-media", "arg": "play-pause", "group": "music"},
+
+  {"label": "Stop water", "icon": "🚱", "action": "ha-script", "arg": "stop_all_watering", "confirm": true, "group": "sprinklers"},
+  {"label": "Rain delay 2d", "icon": "🌧️", "action": "ha-script", "arg": "rain_delay_2_days", "confirm": true, "group": "sprinklers"},
+  {"label": "Clear delay", "icon": "☀️", "action": "ha-script", "arg": "clear_rain_delay", "confirm": true, "group": "sprinklers"},
+
+  {"label": "House status", "icon": "📲", "action": "ha-script", "arg": "house_status_to_phone", "group": "house"}
+ ]
+}

@@ -1,0 +1,68 @@
+{
+ "v": 1,
+ "t": 1793376000,
+ "generated_at": 1793376000,
+ "as_of": 1793376000,
+ "refresh": 3600,
+ "src": [
+  "shoptrends sqlite",
+  "wikipedia pageviews",
+  "fred"
+ ],
+ "errors": [
+  {
+   "source": "walmart",
+   "reason": "Walmart refused automated search: a bot wall, not bypassed"
+  }
+ ],
+ "deals": [
+  {
+   "slug": "sony-wh-1000xm5",
+   "query": "sony wh-1000xm5",
+   "site": "amazon",
+   "title": "Sony WH-1000XM5 Noise Cancelling Headphones",
+   "price": 198.0,
+   "median": 248.0,
+   "vs_median": -0.2016,
+   "url": "https://www.amazon.com/dp/B09XS7JWHH",
+   "condition": "new"
+  },
+  {
+   "slug": "kitchenaid-mixer",
+   "query": "kitchenaid mixer",
+   "site": "bestbuy",
+   "title": "KitchenAid 7 Quart Bowl-Lift Stand Mixer",
+   "price": 599.0,
+   "median": 644.5,
+   "vs_median": -0.0706,
+   "url": "https://www.bestbuy.com/site/searchpage.jsp?st=kitchenaid",
+   "condition": "new"
+  }
+ ],
+ "movers": [
+  {
+   "slug": "steam-deck-oled",
+   "query": "steam deck oled",
+   "category": "gaming",
+   "median": 489.0,
+   "chg7": -0.081,
+   "chg30": null,
+   "n": 64,
+   "sites_ok": 6
+  },
+  {
+   "slug": "ipad-air",
+   "query": "ipad air",
+   "category": "tablets",
+   "median": 549.0,
+   "chg7": 0.034,
+   "chg30": null,
+   "n": 88,
+   "sites_ok": 7
+  }
+ ],
+ "coverage": {
+  "sites_ok": 7,
+  "sites_total": 14
+ }
+}

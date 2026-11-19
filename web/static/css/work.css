@@ -1,0 +1,91 @@
+/* Work > Jobs and Work > Gigs (design v3, PgWork 2026-11-14). Built on ui.css (.flist .frow .fl .fr .chips .seg .btn .kv .panel .g12 .sect);
+   this file adds only what those do not cover. The page scrolls as one document: no fixed heights and no inner scrollers. */
+
+/* one control row (.fbar .fbar-top, so the shell can move the Filters button into the bar on L and collapse the row there).
+   Jobs: whose search (the person picker as before), Saved, then Filters. Gigs: kind chips and a Newest toggle; its Filters button is for L. */
+.jfbar,.gfbar{margin:0 0 var(--s-4)}
+.fbar>.fbar-top.jctl,.fbar>.fbar-top.gctl{flex-wrap:nowrap;gap:var(--s-2);min-width:0}
+.fbar-top.jctl>.chips,.fbar-top.gctl>.chips{display:flex;flex-wrap:nowrap;gap:var(--s-2);min-width:0}
+.fbar-top.jctl>.fbar-open{display:inline-flex;margin-left:auto;flex:none}
+.fbar-top.gctl>.fbar-open{display:none}
+.fbar-top.gctl .gnew{margin-left:auto}
+.jprov{margin:0 0 var(--s-4)}
+/* D collapses a row of only a Filters button and chips (ui.css); Work's row holds the person picker or the kind chips, so it stays on D.
+   On L the same ui.css rule collapses it on purpose: the button sits in the bar and the picker moves into the Filters sheet. */
+@media (min-width:1100px) and (min-height:500px){.fbar>.fbar-top.jctl,.fbar>.fbar-top.gctl{display:flex}.jfbar,.gfbar{flex:1 1 100%}}
+/* P: the picker and Filters share one row; Saved lives in the Filters sheet; chips step down to the meta size so all four people fit */
+@media (max-width:599px){
+  .fbar-top.jctl>.chips>button.jsaved{display:none}
+  .fbar-top.jctl>.chips>button.b,.fbar-top.gctl>.chips>button,.fbar-top.jctl>.fbar-open{padding:0 var(--s-2);font-size:var(--fs-meta);min-width:0}
+  .fbar-top.jctl>.chips,.fbar-top.gctl>.chips{gap:var(--s-1)}
+}
+/* the Filters sheet: whose search shows on L only (the row is gone there); Saved on P and L */
+.wkf .wk-who,.wkf .wk-sv{display:none}
+@media (min-width:600px) and (max-height:499px){.wkf .wk-who,.wkf .wk-sv{display:flex}}
+@media (max-width:599px){.wkf .wk-sv{display:flex}}
+
+/* a job or saved row: the row button fills the line; the star and the open arrow sit beside it at full touch size */
+.jitem{padding:0;gap:var(--s-1)}
+.jrow{display:flex;align-items:flex-start;gap:var(--s-3);flex:1;min-width:0;min-height:var(--hit);padding:var(--row-pad) 0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.jrow:hover .fl b{text-decoration:underline;text-decoration-color:var(--c-line-strong);text-underline-offset:.2em}
+/* pay is a value of its own: mono, body size, bone (baseline problem 18 had it inside a grey meta line) */
+.jpay{font-family:var(--mono);font-size:var(--fs-body);line-height:var(--lh-row);color:var(--c-text-1);font-variant-numeric:tabular-nums}
+.frow .fl .jpay small{margin-left:var(--s-2);font-family:var(--font)}
+.jstar,.jopen{flex:none;align-self:center;display:inline-flex;align-items:center;justify-content:center;width:var(--hit);height:var(--hit);border:0;border-radius:var(--r-ctl);background:none;color:var(--c-text-2);font-size:var(--fs-lead);line-height:1;text-decoration:none}
+.jstar.on{color:var(--c-text-1)}
+.jstar:hover,.jopen:hover{background:var(--c-panel-2);color:var(--c-text-1)}
+.jopen .lk{margin:0}
+/* reading cues on a row (also on Today's job rows): warn pills and one plain note */
+.frow .fl small.jflags,.jflags{display:flex;flex-wrap:wrap;gap:var(--s-1)}
+.frow .fl small.jnote{color:var(--c-text-2);font-style:normal}
+
+/* under the list. The job list and the gig list are each page's main list, so they take the full width in as many columns of rows as
+   fit (one on P, two on L, T and D, three or more on XL) and the short blocks (Market, By category) follow under them,
+   side by side where they fit, as on a phone. Beside a list many screens long they left half the page empty for 400 to 1,900 px
+   (layout audit 2026-11-15). A row draws its hairline as a shadow above it, so the line runs under every column at once; the first
+   row's lands on the list's own border. The TV board keeps one column of rows and its blocks stacked (tv.js measures the board). */
+.jcount{margin-top:var(--s-3)}
+.jside{display:flex;flex-direction:column;gap:var(--gap)}
+html:not(.tv) .jlist,html:not(.tv) .glist{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,20rem),1fr));column-gap:var(--s-5)}
+html:not(.tv) .jlist>.frow,html:not(.tv) .glist>.gitem{border-top:0;box-shadow:0 -1px 0 var(--c-line)}
+/* a row stretched to its neighbour's height keeps its text at the top, so titles line up across a row of columns */
+html:not(.tv) .jlist>.frow{align-items:stretch}
+html:not(.tv) .jside{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr));align-items:start}
+/* Market fills its card the way By category beside it does: the figures end at the card's right edge, never 110 px short of it */
+.jmkt .kv{max-width:none}
+.jmkt .panel>.note,.jtake,.jmkt .hbars+.kv{margin-top:var(--s-3)}
+/* Market's one set of bars says what it counts in its head; By category says "Median top pay" once, as its column's head (SeeViz V20) */
+.jmh{margin:0 0 var(--s-2);font-size:var(--fs-meta);font-weight:var(--fw-reg);color:var(--c-text-2)}
+.jch{display:flex;justify-content:space-between;gap:var(--s-3);margin:0 0 var(--s-1);padding:0 calc(var(--s-4) + 1px);font-size:var(--fs-meta);color:var(--c-text-2)}
+/* what a Posted window or a pay floor leaves out, on its group's head line in the Filters sheet (review of #365) */
+.wkf .sh-sec>h3>small{font-size:var(--fs-meta);font-weight:var(--fw-reg);color:var(--c-text-2)}
+.jtake{font-size:var(--fs-body);line-height:var(--lh-body);color:var(--c-text-1);max-width:var(--measure)}
+.jmore{margin-top:var(--s-2)}
+.jmore>summary{list-style:none;cursor:pointer}
+.jmore>summary::-webkit-details-marker{display:none}
+.jmore[open]>summary{margin-bottom:var(--s-2)}
+
+/* gigs: At a glance leads the page, as every page's strip does (SeeWs4 W4-11: under twelve cards it crossed a 2470x1286 window's fold);
+   one gig is a row plus a closed Draft pitch, one hairline between gigs */
+.gglance{margin:0 0 var(--gap)}
+.glist>.gitem+.gitem{border-top:var(--hair)}
+.gitem>.frow{border-top:0}
+.gpitch{padding:0 0 var(--s-3)}
+.gpitch>summary{display:flex;align-items:center;min-height:var(--hit);font-size:var(--fs-meta);color:var(--c-text-2);cursor:pointer}
+.gpitch .gpt{max-width:var(--measure);padding:var(--s-3);border:var(--hair);border-radius:var(--r-panel);background:var(--c-bar);color:var(--c-text-1);font-size:var(--fs-body);line-height:var(--lh-body);white-space:pre-wrap;user-select:text}
+.gpitch .note{margin-top:var(--s-2)}
+
+/* sheets: job detail and Filters */
+.wkj,.wkf{display:flex;flex-direction:column;gap:var(--s-5)}
+.jwhy{display:flex;flex-direction:column;gap:var(--s-1);padding-left:1.2em;list-style:disc;font-size:var(--fs-body);line-height:var(--lh-body)}
+.jtrack .jrm{color:var(--c-text-2)}
+.note.jerr{color:var(--c-warn)}
+
+/* TV: a board of jobs that fits one screen (tv.js cuts the rows that would cross its bottom), secondary sections one Down press below.
+   No control row (Filters, the person picker, kind or order), no count line and no Show more on the board. */
+html.tv .jfbar,html.tv .gfbar,html.tv .wkdlg{display:none}
+html.tv .jmain>.jcount,html.tv .jmain>.more-row,html.tv .jmain>.secttl{display:none}
+/* TV: the Gigs board keeps the top of the screen as before W4-11 (three gigs, not the strip and two); At a glance follows it as a
+   secondary section one Down press below. Order only: the reading order and the rows are the same as on every other class. */
+html.tv .gbody{display:flex;flex-direction:column}
+html.tv .gbody>.gglance{order:1;margin:0}

@@ -1,0 +1,678 @@
+{
+ "schema": 2,
+ "generated_at": 1794835481,
+ "sources": [
+  {
+   "id": "acs5_housing_people",
+   "name": "American Community Survey 5-year: housing costs, housing stock and residents",
+   "status": "ok",
+   "as_of": "2020-2024"
+  },
+  {
+   "id": "bls_laus_county",
+   "name": "BLS local area unemployment by county",
+   "status": "ok",
+   "as_of": "2026-09"
+  },
+  {
+   "id": "census_acs5",
+   "name": "Census ACS 5-year, ZCTA (population, income, rent, housing units)",
+   "status": "ok",
+   "as_of": "2020-2024"
+  },
+  {
+   "id": "census_popest_county",
+   "name": "Census population estimates by county: growth and migration",
+   "status": "ok",
+   "as_of": "2025-07-01"
+  },
+  {
+   "id": "fhfa_hpi_tract",
+   "name": "FHFA House Price Index by census tract",
+   "status": "ok",
+   "as_of": "2025"
+  },
+  {
+   "id": "fhfa_hpi_zip3",
+   "name": "FHFA House Price Index by three-digit ZIP",
+   "status": "ok",
+   "as_of": "2026Q2"
+  },
+  {
+   "id": "fhfa_uad_tract",
+   "name": "FHFA appraisal statistics by tract (single-family purchase appraisals)",
+   "status": "ok",
+   "as_of": "2023"
+  },
+  {
+   "id": "fred_mortgage_rates",
+   "name": "Freddie Mac Primary Mortgage Market Survey, 30-year and 15-year fixed",
+   "status": "ok",
+   "as_of": "2026-11-12"
+  },
+  {
+   "id": "hud_fmr_county",
+   "name": "HUD Fair Market Rents by county",
+   "status": "ok",
+   "as_of": "FY2027"
+  },
+  {
+   "id": "lehd_lodes_wac",
+   "name": "LEHD LODES jobs by workplace location and sector",
+   "status": "ok",
+   "as_of": "2024"
+  },
+  {
+   "id": "realtor_zip",
+   "name": "Realtor.com listings core metrics, ZIP, latest month",
+   "status": "ok",
+   "as_of": "2026-10"
+  },
+  {
+   "id": "redfin_zip_market",
+   "name": "Redfin Data Center housing market by ZIP",
+   "status": "ok",
+   "as_of": "2026-10"
+  },
+  {
+   "id": "redfin_zip_supply_signals",
+   "name": "Redfin price drops, contract cancellations and delistings by ZIP",
+   "status": "ok",
+   "as_of": "2026-10"
+  },
+  {
+   "id": "sec_absee_cmbs",
+   "name": "SEC ABS-EE commercial mortgage trusts, property performance by ZIP",
+   "status": "ok",
+   "as_of": "2026-11-12"
+  },
+  {
+   "id": "usa_structures_county",
+   "name": "FEMA USA Structures, buildings by use per county",
+   "status": "ok",
+   "as_of": "2026-10-29"
+  },
+  {
+   "id": "zillow_zori",
+   "name": "Zillow Observed Rent Index, ZIP",
+   "status": "ok",
+   "as_of": "2026-09"
+  }
+ ],
+ "fields": {
+  "home_value": {
+   "label": "Typical home value",
+   "unit": "usd",
+   "group": "metric",
+   "agg": "none",
+   "better": null,
+   "rankable": true,
+   "level": null,
+   "sources": [
+    {
+     "id": "acs5_housing_people",
+     "as_of": "2020-2024"
+    },
+    {
+     "id": "fhfa_uad_tract",
+     "as_of": "2023"
+    }
+   ]
+  },
+  "value_trend_1y": {
+   "label": "Home value change, 1 year",
+   "unit": "pct",
+   "group": "metric",
+   "agg": "none",
+   "better": "higher",
+   "rankable": true,
+   "level": null,
+   "sources": [
+    {
+     "id": "fhfa_hpi_tract",
+     "as_of": "2025"
+    },
+    {
+     "id": "fhfa_hpi_zip3",
+     "as_of": "2026Q2"
+    }
+   ]
+  },
+  "typical_rent": {
+   "label": "Typical rent",
+   "unit": "usd_month",
+   "group": "metric",
+   "agg": "none",
+   "better": null,
+   "rankable": true,
+   "level": null,
+   "sources": [
+    {
+     "id": "census_acs5",
+     "as_of": "2020-2024"
+    },
+    {
+     "id": "hud_fmr_county",
+     "as_of": "FY2027"
+    }
+   ]
+  },
+  "gross_yield": {
+   "label": "Gross rent yield",
+   "unit": "pct",
+   "group": "metric",
+   "agg": "none",
+   "better": "higher",
+   "rankable": true,
+   "level": null,
+   "sources": [
+    {
+     "id": "derived",
+     "as_of": null
+    }
+   ]
+  },
+  "days_on_market": {
+   "label": "Days to sell",
+   "unit": "days",
+   "group": "metric",
+   "agg": "none",
+   "better": "lower",
+   "rankable": true,
+   "level": null,
+   "sources": [
+    {
+     "id": "realtor_zip",
+     "as_of": "2026-10"
+    },
+    {
+     "id": "redfin_zip_market",
+     "as_of": "2026-10"
+    }
+   ]
+  },
+  "price_cuts": {
+   "label": "Listings with a price cut",
+   "unit": "pct",
+   "group": "metric",
+   "agg": "none",
+   "better": "lower",
+   "rankable": true,
+   "level": null,
+   "sources": [
+    {
+     "id": "realtor_zip",
+     "as_of": "2026-10"
+    },
+    {
+     "id": "redfin_zip_supply_signals",
+     "as_of": "2026-10"
+    }
+   ]
+  },
+  "affordability": {
+   "label": "Payment as share of income",
+   "unit": "pct",
+   "group": "metric",
+   "agg": "none",
+   "better": "lower",
+   "rankable": true,
+   "level": null,
+   "sources": [
+    {
+     "id": "derived",
+     "as_of": null
+    }
+   ]
+  },
+  "mortgage_rate": {
+   "label": "30-year mortgage rate",
+   "unit": "pct",
+   "group": "metric",
+   "agg": "none",
+   "better": null,
+   "rankable": false,
+   "level": null,
+   "sources": [
+    {
+     "id": "fred_mortgage_rates",
+     "as_of": "2026-11-12"
+    }
+   ]
+  },
+  "rent_trend_1y": {
+   "label": "Rent change, 1 year",
+   "unit": "pct",
+   "group": "metric",
+   "agg": "none",
+   "better": "higher",
+   "rankable": true,
+   "level": null,
+   "sources": [
+    {
+     "id": "hud_fmr_county",
+     "as_of": "FY2027"
+    },
+    {
+     "id": "zillow_zori",
+     "as_of": "2026-09"
+    }
+   ]
+  },
+  "vacancy_rate": {
+   "label": "Vacant homes, not counting seasonal",
+   "unit": "pct",
+   "group": "metric",
+   "agg": "none",
+   "better": "lower",
+   "rankable": true,
+   "level": null,
+   "sources": [
+    {
+     "id": "acs5_housing_people",
+     "as_of": "2020-2024"
+    },
+    {
+     "id": "census_acs5",
+     "as_of": "2020-2024"
+    }
+   ]
+  },
+  "acs_units_5plus_share": {
+   "label": "Homes in buildings with 5 or more units",
+   "unit": "pct",
+   "group": "people",
+   "agg": "pop_weighted_mean",
+   "better": null,
+   "rankable": false,
+   "level": "zip",
+   "sources": [
+    {
+     "id": "acs5_housing_people",
+     "as_of": "2020-2024"
+    }
+   ]
+  },
+  "cmbs_multifamily_cap": {
+   "label": "CMBS multifamily implied cap rate",
+   "unit": "pct",
+   "group": null,
+   "agg": "pop_weighted_mean",
+   "better": null,
+   "rankable": false,
+   "level": "zip",
+   "sources": [
+    {
+     "id": "sec_absee_cmbs",
+     "as_of": "2026-11-12"
+    }
+   ]
+  },
+  "multifamily_score": {
+   "label": "Multifamily property score",
+   "unit": "score",
+   "group": "score",
+   "agg": "none",
+   "better": "higher",
+   "rankable": true,
+   "level": null,
+   "sources": [
+    {
+     "id": "derived",
+     "as_of": null
+    }
+   ]
+  },
+  "retail_score": {
+   "label": "Retail property score",
+   "unit": "score",
+   "group": "score",
+   "agg": "none",
+   "better": "higher",
+   "rankable": true,
+   "level": null,
+   "sources": [
+    {
+     "id": "derived",
+     "as_of": null
+    }
+   ]
+  },
+  "lodes_jobs_retail": {
+   "label": "Retail jobs located here",
+   "unit": "count",
+   "group": "commercial",
+   "agg": "sum",
+   "better": "higher",
+   "rankable": false,
+   "level": "zip",
+   "sources": [
+    {
+     "id": "lehd_lodes_wac",
+     "as_of": "2024"
+    }
+   ]
+  },
+  "office_score": {
+   "label": "Office property score",
+   "unit": "score",
+   "group": "score",
+   "agg": "none",
+   "better": "higher",
+   "rankable": true,
+   "level": null,
+   "sources": [
+    {
+     "id": "derived",
+     "as_of": null
+    }
+   ]
+  },
+  "acs_wfh_share": {
+   "label": "Workers who work from home",
+   "unit": "pct",
+   "group": "people",
+   "agg": "pop_weighted_mean",
+   "better": null,
+   "rankable": false,
+   "level": "zip",
+   "sources": [
+    {
+     "id": "acs5_housing_people",
+     "as_of": "2020-2024"
+    }
+   ]
+  },
+  "industrial_score": {
+   "label": "Industrial property score",
+   "unit": "score",
+   "group": "score",
+   "agg": "none",
+   "better": "higher",
+   "rankable": true,
+   "level": null,
+   "sources": [
+    {
+     "id": "derived",
+     "as_of": null
+    }
+   ]
+  },
+  "bldg_warehouse_sqft": {
+   "label": "Wholesale and warehouse building footprint (county share)",
+   "unit": "sqft",
+   "group": null,
+   "agg": "sum",
+   "better": null,
+   "rankable": false,
+   "level": "county",
+   "sources": [
+    {
+     "id": "usa_structures_county",
+     "as_of": "2026-10-29"
+    }
+   ]
+  },
+  "pop": {
+   "label": "Population",
+   "unit": "count",
+   "group": "people",
+   "agg": "none",
+   "better": null,
+   "rankable": true,
+   "level": null,
+   "sources": [
+    {
+     "id": "census_acs5",
+     "as_of": "2020-2024"
+    }
+   ]
+  },
+  "pep_pop_change_1y": {
+   "label": "Population change, last year",
+   "unit": "pct",
+   "group": "people",
+   "agg": "pop_weighted_mean",
+   "better": "higher",
+   "rankable": false,
+   "level": "county",
+   "sources": [
+    {
+     "id": "census_popest_county",
+     "as_of": "2025-07-01"
+    }
+   ]
+  },
+  "unemployment": {
+   "label": "Unemployment rate",
+   "unit": "pct",
+   "group": "metric",
+   "agg": "none",
+   "better": "lower",
+   "rankable": true,
+   "level": null,
+   "sources": [
+    {
+     "id": "acs5_housing_people",
+     "as_of": "2020-2024"
+    },
+    {
+     "id": "bls_laus_county",
+     "as_of": "2026-09"
+    }
+   ]
+  }
+ },
+ "states": [
+  {
+   "state": "CA",
+   "name": "California",
+   "home_value": 777102.0,
+   "value_trend_1y": 0.83,
+   "typical_rent": 2691.0,
+   "gross_yield": 4.14,
+   "days_on_market": 41.0,
+   "price_cuts": 24.78,
+   "affordability": 50.2,
+   "mortgage_rate": 7.11,
+   "rent_trend_1y": 2.97,
+   "vacancy_rate": 4.08,
+   "acs_units_5plus_share": 22.38,
+   "cmbs_multifamily_cap": 6.28,
+   "multifamily_score": 53.8,
+   "retail_score": 68.1,
+   "lodes_jobs_retail": 1534662.0,
+   "office_score": 57.4,
+   "acs_wfh_share": 16.53,
+   "industrial_score": 53.1,
+   "bldg_warehouse_sqft": 162731613.2,
+   "pop": 39286484,
+   "pep_pop_change_1y": -0.03,
+   "unemployment": 4.7
+  },
+  {
+   "state": "NV",
+   "name": "Nevada",
+   "home_value": 417293.0,
+   "value_trend_1y": 0.14,
+   "typical_rent": 1786.0,
+   "gross_yield": 4.87,
+   "days_on_market": 56.0,
+   "price_cuts": 30.08,
+   "affordability": 33.13,
+   "mortgage_rate": 7.11,
+   "rent_trend_1y": 1.26,
+   "vacancy_rate": 5.46,
+   "acs_units_5plus_share": 20.48,
+   "cmbs_multifamily_cap": 6.81,
+   "multifamily_score": 53.3,
+   "retail_score": 76.3,
+   "lodes_jobs_retail": 148805.0,
+   "office_score": 54.3,
+   "acs_wfh_share": 11.82,
+   "industrial_score": 61.4,
+   "bldg_warehouse_sqft": 57324649.55,
+   "pop": 3184048,
+   "pep_pop_change_1y": 0.87,
+   "unemployment": 4.8
+  },
+  {
+   "state": "TX",
+   "name": "Texas",
+   "home_value": 283913.0,
+   "value_trend_1y": -0.26,
+   "typical_rent": 1545.0,
+   "gross_yield": 6.36,
+   "days_on_market": 62.0,
+   "price_cuts": 29.95,
+   "affordability": 25.52,
+   "mortgage_rate": 7.11,
+   "rent_trend_1y": 0.79,
+   "vacancy_rate": 6.44,
+   "acs_units_5plus_share": 19.2,
+   "cmbs_multifamily_cap": 6.63,
+   "multifamily_score": 46.2,
+   "retail_score": 68.9,
+   "lodes_jobs_retail": 1407983.0,
+   "office_score": 55.7,
+   "acs_wfh_share": 13.71,
+   "industrial_score": 68.7,
+   "bldg_warehouse_sqft": 379835232.43,
+   "pop": 30187922,
+   "pep_pop_change_1y": 1.2,
+   "unemployment": 4.3
+  }
+ ],
+ "metros": [
+  {
+   "cbsa": "35620",
+   "name": "New York-Newark-Jersey City, NY-NJ",
+   "home_value": 717175.0,
+   "value_trend_1y": 5.19,
+   "typical_rent": 2903.0,
+   "gross_yield": 4.91,
+   "days_on_market": 50.0,
+   "price_cuts": 15.7,
+   "affordability": 50.57,
+   "mortgage_rate": 7.11,
+   "rent_trend_1y": 4.59,
+   "vacancy_rate": 4.61,
+   "acs_units_5plus_share": 36.75,
+   "cmbs_multifamily_cap": 6.38,
+   "multifamily_score": 51.7,
+   "retail_score": 66.5,
+   "lodes_jobs_retail": 811027.0,
+   "office_score": 62.8,
+   "acs_wfh_share": 16.16,
+   "industrial_score": 56.6,
+   "bldg_warehouse_sqft": 13010358.35,
+   "pop": 19705657,
+   "pep_pop_change_1y": 0.16,
+   "unemployment": 4.62
+  },
+  {
+   "cbsa": "31080",
+   "name": "Los Angeles-Long Beach-Anaheim, CA",
+   "home_value": 899850.0,
+   "value_trend_1y": 0.98,
+   "typical_rent": 2752.0,
+   "gross_yield": 3.67,
+   "days_on_market": 50.0,
+   "price_cuts": 23.38,
+   "affordability": 63.26,
+   "mortgage_rate": 7.11,
+   "rent_trend_1y": 1.87,
+   "vacancy_rate": 4.07,
+   "acs_units_5plus_share": 30.66,
+   "cmbs_multifamily_cap": 5.85,
+   "multifamily_score": 51.2,
+   "retail_score": 70.4,
+   "lodes_jobs_retail": 567486.0,
+   "office_score": 56.4,
+   "acs_wfh_share": 16.93,
+   "industrial_score": 56.3,
+   "bldg_warehouse_sqft": 33759616.62,
+   "pop": 12945832,
+   "pep_pop_change_1y": -0.48,
+   "unemployment": 4.5
+  },
+  {
+   "cbsa": "19100",
+   "name": "Dallas-Fort Worth-Arlington, TX",
+   "home_value": 349004.0,
+   "value_trend_1y": -0.61,
+   "typical_rent": 1706.0,
+   "gross_yield": 5.69,
+   "days_on_market": 55.0,
+   "price_cuts": 34.64,
+   "affordability": 26.98,
+   "mortgage_rate": 7.11,
+   "rent_trend_1y": 0.83,
+   "vacancy_rate": 5.31,
+   "acs_units_5plus_share": 23.32,
+   "cmbs_multifamily_cap": 5.95,
+   "multifamily_score": 48.2,
+   "retail_score": 73.5,
+   "lodes_jobs_retail": 424710.0,
+   "office_score": 59.0,
+   "acs_wfh_share": 17.33,
+   "industrial_score": 69.8,
+   "bldg_warehouse_sqft": 238015404.09,
+   "pop": 7985823,
+   "pep_pop_change_1y": 1.44,
+   "unemployment": 4.1
+  },
+  {
+   "cbsa": "40140",
+   "name": "Riverside-San Bernardino-Ontario, CA",
+   "home_value": 586047.0,
+   "value_trend_1y": 0.83,
+   "typical_rent": 2535.0,
+   "gross_yield": 5.16,
+   "days_on_market": 51.0,
+   "price_cuts": 24.49,
+   "affordability": 42.23,
+   "mortgage_rate": 7.11,
+   "rent_trend_1y": 2.89,
+   "vacancy_rate": 3.5,
+   "acs_units_5plus_share": 12.7,
+   "cmbs_multifamily_cap": 6.19,
+   "multifamily_score": 55.5,
+   "retail_score": 70.1,
+   "lodes_jobs_retail": 171812.0,
+   "office_score": 47.7,
+   "acs_wfh_share": 11.58,
+   "industrial_score": 51.0,
+   "bldg_warehouse_sqft": 67418587.45,
+   "pop": 4671718,
+   "pep_pop_change_1y": 0.44,
+   "unemployment": 5.87
+  },
+  {
+   "cbsa": "41740",
+   "name": "San Diego-Chula Vista-Carlsbad, CA",
+   "home_value": 882048.0,
+   "value_trend_1y": 1.73,
+   "typical_rent": 2857.0,
+   "gross_yield": 3.73,
+   "days_on_market": 31.0,
+   "price_cuts": 29.28,
+   "affordability": 56.8,
+   "mortgage_rate": 7.11,
+   "rent_trend_1y": 2.24,
+   "vacancy_rate": 3.97,
+   "acs_units_5plus_share": 27.43,
+   "cmbs_multifamily_cap": 6.09,
+   "multifamily_score": 50.5,
+   "retail_score": 72.3,
+   "lodes_jobs_retail": 127018.0,
+   "office_score": 71.2,
+   "acs_wfh_share": 18.47,
+   "industrial_score": 55.6,
+   "bldg_warehouse_sqft": 769152.36,
+   "pop": 3322512,
+   "pep_pop_change_1y": -0.16,
+   "unemployment": 4.7
+  }
+ ]
+}

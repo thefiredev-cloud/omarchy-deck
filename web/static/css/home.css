@@ -1,0 +1,353 @@
+/* Home > House, Fleet and Cluster (design v3, lane PgHome). Classes and tokens come from tokens.css and ui.css; this file only
+   lays the three pages out per device class and styles the controls that live nowhere else (now playing, volume, system,
+   workspaces, cameras). The document is the one scroller: no column scrolls on its own.
+   Classes: P width < 600 · L height < 500 and width >= 600 · T 600-1099 · D >= 1100 · TV html.tv (wins over D). */
+
+/* ===== the top bar date (app.js #tdate, before the clock): D and XL only, in the rail foot, where it costs no tab and no freshness
+   mark. P, L, T and TV keep the clock alone (data-dc is the shell's device class). ===== */
+#tdate{display:none}
+html[data-dc="D"] #tdate,html[data-dc="XL"] #tdate{display:inline;font-size:var(--fs-meta);color:var(--c-text-2);white-space:nowrap}
+
+/* ===== House: one 12-column grid. #ha, #hal, #har and #grid only group the markup; their children are placed directly,
+   so a phone can put the status and the controls before the cameras without new markup. ===== */
+div.sub[data-sub="house"]:not([hidden]){display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-auto-flow:row dense;gap:var(--gap);align-items:start;height:auto;min-height:0;overflow:visible}
+#ha,#hal,#har,#grid{display:contents}
+#hn,#hrd,#vit,#ink,#cams,#bed,#np,#cc,#prod,#needs,#hax,#grid>.card{min-width:0;height:auto;min-height:0}
+/* every block runs full width unless a class places it; the default has no specificity (:where), so a placement by id in any
+   class wins (#grid>.card used to outrank #np and #cc at L, T and D and strand Volume and System beside an empty half) */
+:where(#hn,#hrd,#vit,#ink,#cams,#bed,#np,#cc,#prod,#needs,#hax,#grid>.card){grid-column:1/-1}
+#grid>.card{overflow:visible}
+
+/* house now: one mark and one line (R1). The word ("Partly reported") is read out, the header mark carries the page state on screen; amber
+   only when a part that answered is partly up, the dash when a part did not report, the wash when one is down */
+#hn,#hn.flist{display:block;padding:var(--s-2) var(--s-4);background:var(--c-panel);border:var(--hair);border-radius:var(--r-panel)}
+#hn .hnl{display:flex;align-items:baseline;gap:var(--s-2);min-width:0;font-size:var(--fs-body);line-height:var(--lh-row)}
+#hn .hnl>.sd{align-self:center}
+#hn .hnf{min-width:0;color:var(--c-text-1);overflow-wrap:anywhere}
+#hn[data-mark=bad]{border-color:rgba(255,92,119,.55);background:var(--c-bad-wash)}
+#hn[data-mark=warn]{border-color:rgba(242,194,48,.45)}
+
+/* the readings strip (House row 1, #hrd): CPU, RAM, GPU, the car and the inside temperature when there is one, each figure with its unit
+   beside it at the strip's figure step. All in one row from L up; on a phone two across, an odd last cell across the row */
+#hrd .tile{gap:2px;padding:var(--s-3) var(--s-4)}
+#hrd .v .na{font-family:var(--font);font-size:var(--fs-body);font-weight:var(--fw-reg);letter-spacing:0;color:var(--c-text-2)}
+#hrd .v .u{white-space:nowrap}
+#hrd .tile .t{font-size:var(--fs-meta)}
+/* the car's battery bar carries a tick at the charge limit (DeckUI.carReading); the tick stands a little above and below the bar */
+#car .bar{overflow:visible}
+#car .bar>u{position:absolute;top:-3px;bottom:-3px;width:2px;margin-left:-1px;background:var(--c-text-1)}
+@media (min-width:600px){#hrd[data-nb="5"]{--cols:5}}
+
+/* status tiles: the mark and the word carry the state; no tile is filled */
+#vit{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,10rem),1fr));gap:var(--s-3)}
+#vit>.es,#vit>.flist{grid-column:1/-1}
+/* from L up the one watch row (no readings yet) and the weather tile share a row instead of leaving the tile alone (after the
+   rule above, which it overrides) */
+@media (min-width:600px){#vit>.flist{grid-column:1/-2}}
+#vit .tile .v{font-size:var(--fs-title)}
+#vit .tile.wxt .v{font-family:var(--font);font-size:var(--fs-lead);white-space:normal}
+#ink{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-3)}
+/* an offline printer is one quiet row across (W5), never a card per cartridge */
+#ink>.flist{grid-column:1/-1}
+#ink .tile .v{font-size:var(--fs-title)}
+#hal .tile.bad,#hal .tile.stale,#har .tile.bad,#har .tile.stale{background:var(--c-panel)}
+#hrd>.tile.stale{background:none}
+
+/* cameras: 16:9 tiles; the picture rules are behaviour (rotation, fit, snapshot fallback) and stay as they were */
+#cams{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s-3)}
+.cam{position:relative;display:block;width:100%;aspect-ratio:16/9;min-height:0;padding:0;border:var(--hair);border-radius:var(--r-panel);overflow:hidden;background:var(--c-panel);color:var(--c-text-1);text-align:left;cursor:pointer;transition:transform var(--t-press) var(--ease)}
+.cam:active{transform:scale(.98)}
+.cam-media{position:absolute;inset:0;display:block;overflow:hidden;background:var(--c-panel)}
+.cam-media video,.cam-media img{position:absolute;left:50%;top:50%;width:var(--media-w,100%);height:var(--media-h,100%);transform:translate(-50%,-50%) rotate(var(--rotation,0deg));object-fit:contain;background:transparent}
+.cam-media img{display:none}
+.cam.snap .cam-media video{display:none}
+.cam.snap .cam-media img,.cam.poster .cam-media img{display:block}
+.cam.live .cam-media{background:#000}
+.cam.rot .cam-media video,.cam.rot .cam-media img{object-fit:cover}
+.cam .nm{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s-2);padding:var(--s-5) var(--s-3) var(--s-2);font-size:var(--fs-meta);font-weight:var(--fw-med);color:var(--c-text-1);background:linear-gradient(transparent,rgba(5,6,8,.82));pointer-events:none}
+.cam .nm i{font-style:normal;font-size:var(--fs-micro);font-weight:var(--fw-med);max-width:75%;padding:2px var(--s-2);border-radius:var(--r-pill);background:rgba(5,6,8,.78);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cam .nm i:empty{display:none}
+.cam.black .nm i,.cam.nofeed .nm i{background:var(--c-text-1);color:var(--c-ground)}
+.cam.stale .nm i,.cam.old .nm i{box-shadow:inset 0 0 0 1px var(--c-warn)}
+.cam em{position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:var(--s-3);font-style:normal;font-size:var(--fs-meta);font-weight:var(--fw-med);color:var(--c-text-1);text-align:center;pointer-events:none}
+.cam.black em,.cam.nofeed:not(.old) em{display:flex;background:rgba(23,26,31,.86)}
+.cam.connecting em{display:flex;background:none;color:var(--c-text-2)}
+
+/* bedroom speaker: a status tile and one play or pause button, side by side */
+#bed{display:flex;align-items:stretch;gap:var(--s-3);height:auto}
+#bed .tile{flex:1;height:auto;justify-content:center}
+#bed .tile .v{font-family:var(--font);font-size:var(--fs-lead)}
+#bed .tile .t{display:none}
+#bed button{flex:none;width:auto;height:auto;min-width:5.5rem;min-height:max(44px,var(--ctl-h));aspect-ratio:auto;font-size:var(--fs-title)}
+#bed button svg{width:1.1em;height:1.1em}
+
+/* the control cards: one surface each, real gaps, every target at least 44 px */
+#grid>.card{gap:var(--s-3)}
+#grid .card h3{flex-wrap:wrap;row-gap:var(--s-1)}
+#grid button.b,#grid a.b{min-height:max(44px,var(--ctl-h));min-width:max(44px,var(--ctl-h))}
+#np h3{flex-wrap:nowrap;gap:var(--s-2)}
+#np h3 #npstate{flex:none}
+#np h3 #pl{min-width:0;margin-left:auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#npstate.on{background:var(--c-ok-wash);border-color:rgba(61,214,140,.55)}
+#npbody{display:flex;align-items:center;gap:var(--s-4);min-height:0}
+#art{flex:none;width:clamp(4.5rem,11vh,7.5rem);aspect-ratio:1;border-radius:var(--r-ctl);background:var(--c-panel-2);object-fit:cover}
+#npt{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--s-1)}
+#title{font-size:var(--fs-lead);font-weight:var(--fw-med);line-height:var(--lh-row);overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#artist{font-size:var(--fs-body);color:var(--c-text-2);overflow-wrap:anywhere}
+#transport{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:var(--s-3);height:auto}
+#transport button{height:clamp(3.25rem,8vh,5.5rem);font-size:var(--fs-title)}
+#transport button svg,#mute svg{width:1em;height:1em}
+#np.idle #art{display:none!important}
+#np.idle #title{font-size:var(--fs-body);-webkit-line-clamp:1}
+#np.idle #transport button{height:clamp(2.75rem,6vh,3.75rem)}
+#volrow{display:flex;align-items:center;gap:var(--s-2)}
+#volrow button{flex:none;font-size:var(--fs-title)}
+#vs{flex:1;min-width:0;height:max(44px,var(--ctl-h));margin:0;background:transparent;-webkit-appearance:none;appearance:none;touch-action:none}
+#vs::-webkit-slider-runnable-track{height:max(44px,var(--ctl-h));border:1px solid var(--c-line-strong);border-radius:var(--r-ctl);background:linear-gradient(90deg,var(--c-text-2) var(--p,50%),var(--c-panel-2) var(--p,50%))}
+#vs::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:calc(max(44px,var(--ctl-h)) - 2px);border-radius:2px;background:var(--c-text-1)}
+#vs::-moz-range-track{height:max(44px,var(--ctl-h));border:1px solid var(--c-line-strong);border-radius:var(--r-ctl);background:var(--c-panel-2)}
+#vs::-moz-range-progress{height:max(44px,var(--ctl-h));border-radius:var(--r-ctl) 0 0 var(--r-ctl);background:var(--c-text-2)}
+#vs::-moz-range-thumb{width:10px;height:max(44px,var(--ctl-h));border:0;border-radius:2px;background:var(--c-text-1)}
+#volp{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s-2)}
+#volp button{font-size:var(--fs-body);font-family:var(--mono)}
+#mute.on,#cc .ws button.on,#cc.move .wsmd{background:var(--c-panel-2);border-color:var(--c-text-1);box-shadow:inset 0 -3px 0 var(--c-text-1)}
+/* the one launcher (Terminal, Browser, Files, Hermes, Spotify, Obsidian, Dell, Lock): four across, two rows */
+#lnch .apps{grid-template-columns:repeat(4,minmax(0,1fr))}
+#cc .wsmd{min-height:max(44px,var(--ctl-h));font-size:var(--fs-body)}
+#cc .tnote{font-size:var(--fs-meta)}
+.ws{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--s-2)}
+.ws button{flex-direction:column;gap:2px;min-width:0;height:clamp(3rem,7vh,4.75rem);padding:var(--s-1);font-family:var(--mono);font-size:var(--fs-title)}
+.ws .wn{line-height:1}
+.ap{display:block;width:100%;container-type:inline-size;min-height:1.2em;overflow:hidden;font-family:var(--font);font-size:var(--fs-micro);font-weight:var(--fw-reg);color:var(--c-text-2);text-align:center;text-overflow:ellipsis;white-space:nowrap}
+.ap .ac{display:none}
+@container (max-width:72px){.ap .af{display:none}.ap .ac{display:inline}}
+.apps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:minmax(clamp(3rem,7vh,4.5rem),auto);gap:var(--s-2)}
+.apps button{flex-direction:column;gap:var(--s-1);min-width:0;padding:var(--s-2);white-space:normal;text-align:center;font-size:var(--fs-meta)}
+.apps button svg{width:1.4em;height:1.4em}
+#lock.warn{border-color:rgba(242,194,48,.6)}
+
+/* products on House: one list grouped by state (DeckUI.productGroups: "Waiting for review · 5 apps", each name its own link); a product
+   alone in its state keeps its own row with its details. A feed that did not answer is its empty state above the list. */
+#prodg{display:flex;flex-direction:column;gap:var(--s-3)}
+/* P and L are phones: five rows, then Show more (#prodmore, deck.js v7Home), as Dev's sections */
+#prodmore{display:none}
+@media (max-width:599px),(min-width:600px) and (max-height:499px){#prod:not(.open) #prodg .pgrp>:nth-child(n+6){display:none}#prod:not(.open) #prodmore:not([hidden]){display:flex}}
+#prodt{font-weight:var(--fw-reg);color:var(--c-text-2);font-size:var(--fs-meta)}
+#needl{overflow:visible}
+#needl>*+.tsec{margin-top:var(--s-4)}
+/* an empty decisions list is the one bare empty state, never a card in a card */
+#needl .es{background:none;border:0;padding:var(--s-3) 0}
+
+/* the house details (house.js): sections in balanced columns */
+#hax:empty{display:none}
+#hax>.secttl{margin-top:var(--s-2)}
+#hax .hxg{columns:var(--col-w) var(--col-max);column-gap:var(--gap)}
+#hax .hxg>.tsec{display:block;break-inside:avoid;margin:0 0 var(--s-5)}
+.tsec>.secttl{font-size:var(--fs-lead)}
+.tsec .chips{gap:var(--s-2)}
+.tsec .chips.wrap{margin-top:var(--s-3)}
+.tsec .frow .fr{flex-direction:row;align-items:center;gap:var(--s-2);max-width:60%;flex-wrap:wrap;justify-content:flex-end}
+.tsec .frow .fr b.na{font-family:var(--font);font-size:var(--fs-body);font-weight:var(--fw-reg);color:var(--c-text-2)}
+
+/* P: one column. The status line, the readings, then the controls (now playing, volume, the launcher, the bedroom speaker) before the
+   cameras (baseline problem 22); decisions, products and workspaces under them */
+@media (max-width:599px){
+  div.sub[data-sub="house"]:not([hidden]){gap:var(--s-4)}
+  #hn{order:1}#hrd{order:2}#np{order:3}#grid>.card:has(#volrow){order:4}#lnch{order:5}#bed{order:6}
+  #cams{order:7;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-2)}#needs{order:8}#prod{order:9}#cc{order:10}#vit{order:11}#ink{order:12}#hax{order:13}
+  .cam .nm{flex-direction:column;align-items:flex-start;gap:2px;padding:var(--s-4) var(--s-2) var(--s-1)}
+  .cam .nm i{max-width:100%;text-align:left}
+  /* with no watch readings the one watch row and the weather tile each take the width; a half-width weather tile left a half empty */
+  #vit>.flist+.wxt{grid-column:1/-1}
+  /* the readings strip two across; an odd last cell takes the row */
+  #hrd>.tile:last-child:nth-child(odd){grid-column:1/-1}
+}
+/* L (phone landscape; the Pixel under the monitor, tapped for control): the status line and the readings strip, then now playing beside
+   volume and the bedroom speaker, so every control is on the first screen. One screen down the 2 x 2 cameras beside the one launcher,
+   the workspaces beside the watch and weather, then the ink, decisions and products across. Every half has a partner beside it. */
+@media (min-width:600px) and (max-height:499px){
+  div.sub[data-sub="house"]:not([hidden]){row-gap:var(--s-3)}
+  #hn{order:1}#hrd{order:2}
+  #np{order:3;grid-column:1/span 6;grid-row:span 2}#grid>.card:has(#volrow){order:4;grid-column:7/-1}#bed{order:5;grid-column:7/-1}
+  #cams{order:6;grid-column:1/span 6;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-2)}#lnch{order:7;grid-column:7/-1}
+  #cc{order:8;grid-column:1/span 6}#vit{order:9;grid-column:7/-1}
+  /* the readings half is narrow here: the one watch row and the weather tile each take its width (a third-width watch row broke every word) */
+  #vit>.flist,#vit>.flist+.wxt{grid-column:1/-1}
+  #ink{order:10;grid-column:1/-1}
+  #needs{order:11}#prod{order:12}#hax{order:13}
+  /* a half-width camera tile stacks its name over its status, as on a phone, so neither is cut */
+  .cam .nm{flex-direction:column;align-items:flex-start;gap:2px;padding:var(--s-4) var(--s-2) var(--s-1)}
+  .cam .nm>span{white-space:nowrap}
+  .cam .nm i{max-width:100%;text-align:left}
+  html.guest #bed,html.guest #cams{grid-column:1/-1}
+  #transport button{height:3rem}
+  #grid>.card{padding:var(--s-3) var(--s-4)}
+}
+/* T: the status line, the readings, the camera wall, then the controls in two columns; rows grow with the screen height */
+@media (min-width:600px) and (max-width:1099px) and (min-height:500px){
+  #hn{order:1}#hrd{order:2}#cams{order:3;grid-template-columns:repeat(2,minmax(0,1fr))}#bed{order:4}
+  #np{order:5;grid-column:1/span 6;grid-row:span 2;min-height:clamp(14rem,24vh,22rem)}#grid>.card:has(#volrow){order:6;grid-column:7/-1}
+  #lnch{order:7;grid-column:7/-1}
+  #cc{order:8;grid-column:1/-1}
+  #vit{order:9}#ink{order:10}
+  #needs{order:11}#prod{order:12}#hax{order:13}
+}
+/* D and XL (laptop, desktop, the owner's 2470 px window): the status line and the readings strip across; then two halves in pairs,
+   so the house and what waits on him share the first screen (PlanDesign section 3, House laptop):
+   - the camera wall and the bedroom speaker (#har, one box) beside Your decisions, grouped by kind (DeckUI.group);
+   - the watch and weather, the printer row, Now playing and Volume beside Products, grouped by state (DeckUI.group);
+   - Launch beside Workspaces.
+   Grouped, each pair's halves end within about 50 px of each other at 1440 and 2470 (kit shots); Products span their four rows, and the
+   Volume row is the one flexible row, so when Products run longer the spare height collects under Volume, never between the cards.
+   Never on TV (#ha is the board there; the TV keeps the control row below it). */
+@media (min-width:1100px) and (min-height:500px){
+  html:not(.tv) div.sub[data-sub="house"]:not([hidden]){grid-template-rows:auto auto auto auto auto auto 1fr}
+  html:not(.tv) #ha,html:not(.tv) #hal{display:contents}
+  html:not(.tv) #hn{order:1}html:not(.tv) #hrd{order:2}
+  html:not(.tv) #har{order:3;display:flex;flex-direction:column;gap:var(--s-3);min-width:0;grid-column:1/span 6}
+  html:not(.tv) #needs{order:4;grid-column:7/-1}
+  html:not(.tv) #vit{order:5;grid-column:1/span 6}html:not(.tv) #prod{order:6;grid-column:7/-1;grid-row:span 4}html:not(.tv) #ink{order:7;grid-column:1/span 6}
+  #np{order:8;grid-column:1/span 6}
+  #grid>.card:has(#volrow){order:9;grid-column:1/span 6}
+  #lnch{order:10;grid-column:1/span 6}#cc{order:11;grid-column:7/-1}
+  #cams{grid-template-columns:repeat(2,minmax(0,1fr))}
+  /* a half-width camera keeps its name whole beside two state chips ("Cam / 2" broke at 2470 when a camera was offline) */
+  .cam .nm>span{white-space:nowrap}
+  /* the readings half: the one watch row and the weather tile each take its width (a half-width watch row was cramped) */
+  #vit>.flist,#vit>.flist+.wxt{grid-column:1/-1}
+  #hax{order:12}
+  #np,#cc{justify-content:space-between}
+  html.guest #har{grid-column:1/-1}
+}
+/* TV: #ha is the board (cams() marks it .board; tv.css gives it the screen height inside the overscan): the house status on the
+   left, the 2 x 2 camera wall and the bedroom speaker on the right, nothing past the bottom edge. The readings (watch, car, ink)
+   stay off the board; the controls sit one Down press below and take the remote's focus (Enter on Lock arms, a second Enter locks).
+   Products, decisions and the house details are not on TV. */
+html.tv #ha{display:grid;order:1;grid-column:1/-1;grid-template-columns:minmax(0,2fr) minmax(0,3fr);grid-template-rows:minmax(0,1fr);gap:var(--gap);align-items:stretch}
+/* the board height from tv.css, restated at id weight: the legacy app.css rule #ha{height:100%} would otherwise win and the board
+   would shrink to its content, leaving the camera wall with no height */
+html.tv #ha.board{height:calc(100vh - var(--tv-board-top) - 4vh - 2px);height:calc(100dvh - var(--tv-board-top) - 4vh - 2px);min-height:0}
+html.tv #hal,html.tv #har{display:flex;flex-direction:column;gap:var(--s-3);min-width:0;min-height:0}
+html.tv #hal{grid-column:1}html.tv #har{grid-column:2}
+html.tv #hrd,html.tv #vit,html.tv #ink{display:none}
+html.tv #cams{flex:1 1 0;min-height:0;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr))}
+html.tv .cam{aspect-ratio:auto;height:100%;min-height:0}
+html.tv #bed{flex:none}
+html.tv.guest #ha{grid-template-columns:minmax(0,1fr)}html.tv.guest #har{grid-column:1}
+html.tv #prod,html.tv #needs,html.tv #hax,html.tv #cc .tnote{display:none}
+html.tv .cam:focus-visible,html.tv #grid button:focus-visible,html.tv #bed button:focus-visible{outline:var(--focus);outline-offset:var(--focus-off);transform:scale(1.04)}
+/* the TV's control row, one Down press below the board (the D arrangement above is off TV only) */
+html.tv #np{order:8;grid-column:1/span 4;grid-row:span 2;min-height:clamp(16rem,36vh,28rem)}
+html.tv #grid>.card:has(#volrow){order:9;grid-column:5/span 4;min-height:clamp(8rem,17vh,13rem)}
+html.tv #cc{order:10;grid-column:9/-1;grid-row:span 2;min-height:clamp(16rem,36vh,28rem)}
+html.tv #lnch{order:11;grid-column:5/span 4;min-height:clamp(8rem,17vh,13rem)}
+
+/* guest (rust/src/guest.rs is the control): House is the cameras and the bedroom speaker only */
+html.guest #grid,html.guest #prod,html.guest #needs,html.guest #lock,html.guest .apps [data-v=hermes],html.guest #hal,html.guest #hax{display:none}
+
+/* ===== Fleet's first block #fsum (fleet() inserts it before #fleet): the urgent row, then one strip of counters. Off TV only the
+   first row shows (the calm single-urgent rule: the rest are in their sections below). On TV it is the board: every urgent row,
+   cut by height (tv.js data-tv-cut on the .board-fill list), the strip at the foot, the columns one Down press below. ===== */
+#fsum{display:flex;flex-direction:column;gap:var(--s-3);margin:0 0 var(--gap)}
+#fsum:empty{display:none}
+#fsum .fsum-rows>.frow:nth-child(n+2){display:none}
+/* the one computed line (R1), each part once, what needs a look first and by name: "3 down: Spark, Dell and Mini · 6 not reported" */
+#fsum .fsum-line{margin:0;font-size:var(--fs-meta);line-height:var(--lh-row);color:var(--c-text-2)}
+html.tv #fsum.board{height:calc(100vh - var(--tv-board-top) - 4vh - 2px);height:calc(100dvh - var(--tv-board-top) - 4vh - 2px);margin:0;gap:var(--s-4)}
+html.tv #fsum .fsum-rows>.frow:nth-child(n+2){display:flex}
+html.tv #fsum .fsum-rows>.frow[data-tv-cut]{display:none!important}
+html.tv #fsum .strip{flex:none}
+
+/* ===== Fleet: on TV three columns (#fl1, #fl2, #fl3) under the board; elsewhere whole sections (app.js fleetPlace), one column on P,
+   balanced columns from L up. ===== */
+#fleet{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--gap);align-items:start;height:auto;min-height:0}
+#fleet>#fl1,#fleet>#fl2,#fleet>#fl3,#cluster>#cl1,#cluster>#cl2,#cluster>#cl3{display:flex;flex-direction:column;gap:var(--s-3);min-width:0;min-height:0;height:auto;margin-top:0;padding-top:0;overflow:visible;-webkit-mask-image:none;mask-image:none;animation:none}
+/* a section: its title and its blocks, laid out the same inside the balancer's column boxes. As a direct child (P, plain columns) the
+   space under it is padding, as in .flow (WebKit keeps a bottom margin across a column break); ui.css keeps every balanced block whole
+   and gives it the same padding inside a column box */
+html:not(.tv) #fleet{display:block}
+#fleet .fsec{display:flex;flex-direction:column;gap:var(--s-3);min-width:0}
+#fleet>.fsec{margin:0;padding:0 0 var(--gap)}
+#fleet .secttl:not(:first-child),#cluster .secttl:not(:first-child){margin-top:var(--s-4)}
+#fleet .secttl,#cluster .secttl{margin-bottom:0}
+#stalls{display:flex;flex-direction:column;gap:var(--s-3)}
+#stalls:empty{display:none}
+#fsv,#frc,#fnd,#fst{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,11rem),1fr));gap:var(--s-2)}
+#fnd{grid-template-columns:repeat(auto-fill,minmax(min(100%,14rem),1fr))}
+/* off TV the last row's chips share its width, so an odd chip never sits beside an empty cell (as Shop's category cards) */
+html:not(.tv) #fsv,html:not(.tv) #frc,html:not(.tv) #fst{display:flex;flex-wrap:wrap}html:not(.tv) #fsv>*,html:not(.tv) #frc>*,html:not(.tv) #fst>*{flex:1 1 11rem}
+#fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,14rem),1fr));gap:var(--s-2)}
+.mach{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,15rem),1fr));gap:var(--s-3);align-items:start}
+.mach .tile{justify-content:flex-start}
+.mach .tile .t,.node .t{display:block;white-space:normal}
+.tile .bar{margin-top:var(--s-1)}
+.tile .bar.hot>i{background:var(--c-warn)}
+.dk{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr) 3.5ch;align-items:center;gap:var(--s-3);min-height:var(--hit);padding:var(--s-2) var(--s-3);background:var(--c-panel);border:var(--hair);border-radius:var(--r-panel)}
+.dk span{font-size:var(--fs-body);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dk span small{font-size:var(--fs-meta);color:var(--c-text-2)}
+.dk b{font-family:var(--mono);font-size:var(--fs-body);font-weight:var(--fw-med);text-align:right}
+.dk.hot .bar>i,.dk.hot .bar i{background:var(--c-warn)}
+/* calm single-urgent rule: a failing item reads from its mark and its word; only the most urgent one (app.js markUrgent) is filled */
+#fleet .tile.bad,#fleet .chip.bad,#fleet .tile.stale,#fleet .chip.stale,#cluster .tile.bad,#cluster .tile.stale{background:var(--c-panel)}
+#fleet .tile.bad.urgent,#fleet .chip.bad.urgent,#fleet .frow.bad.urgent{background:var(--c-bad-wash);border-color:rgba(255,92,119,.55)}
+/* Fleet tile values are words ("Reachable", "Internet up · Router up"), not figures: title size in the text face, wrapping */
+#fleet .tile .v{font-family:var(--font);font-size:var(--fs-title);letter-spacing:-.01em;white-space:normal;overflow-wrap:anywhere}
+/* a fleet fact tile never lets a long value run out of its box */
+#fgrid .tile .v{font-family:var(--font);font-size:var(--fs-lead);white-space:normal;overflow-wrap:anywhere}
+#fleet .frow .fl b,#cluster .frow .fl b{overflow-wrap:anywhere}
+#fleet .tnote{font-size:var(--fs-meta)}
+#fleet .muted{font-size:var(--fs-meta);color:var(--c-text-2)}
+#stlist .stb{display:block;margin-top:2px}
+/* Devices (Fleet) and Models by machine (Cluster): one quiet heading row a group, then a row a device or a model */
+.fdev .dgh,.fmod .dgh{min-height:0;padding-top:var(--s-3)}
+.fdev .dgh .fl b,.fmod .dgh .fl b{font-size:var(--fs-meta);font-weight:var(--fw-med);color:var(--c-text-2)}
+.fmod .frow:not(.dgh) .fl b{font-size:var(--fs-body);font-weight:var(--fw-reg);overflow-wrap:anywhere}
+/* benchmarks: a short figure list, the figure and its unit right-aligned in the mono face (V13) */
+.bench .frow .fr{flex-direction:row;align-items:baseline;gap:var(--s-2)}
+.bench .frow .fr .fig{font-family:var(--mono);font-size:var(--fs-lead);font-weight:var(--fw-med);font-variant-numeric:tabular-nums}
+.bench .bh .fl b{font-size:var(--fs-meta);color:var(--c-text-2)}
+
+/* From L up (TV keeps its own grid): the whole sections balance into the columns drawn here (DeckBalance, data-balance on #fleet), two
+   on L and T with the third column's sections (machines, models, fleet checks) across the width under them. From D up the count follows
+   the shared column tokens, as every .flow page does (--col-w, --col-max: three on a laptop, four on a wide desktop and on the owner's
+   2470 px window), so Fleet's columns stay as wide as the other pages' instead of three wide ones (W4-1 wide step, W4-9). Before
+   the script runs, or if it fails, the same sections flow as plain CSS columns, each whole. (A title split from its blocks at 1920 and
+   columns ending 250 to 500 px early at 834, 1366, 1440 and 1920: layout second pass, 2026-11-15.) */
+@media (min-width:600px){
+  html:not(.tv) #fleet{columns:2;column-gap:var(--gap)}
+  html:not(.tv) #fleet.bal{display:grid;columns:auto;grid-template-columns:repeat(var(--bal-n,2),minmax(0,1fr));row-gap:0}
+  html:not(.tv) #fleet>.span-all{column-span:all}
+}
+@media (min-width:1100px) and (min-height:500px){html:not(.tv) #fleet{columns:var(--col-w) var(--col-max)}}
+html.tv #fleet{grid-template-columns:repeat(3,minmax(0,1fr))}
+html.tv #fleet>#fl3{grid-column:auto}
+
+/* ===== Cluster: the engine strip across the top, nodes and candidates under it. Short: about one and a half screens. ===== */
+/* a one-value line in a wide panel (the tuning card, the perf loop, its last result) stops at the reading measure: on the owner's
+   2470 px window two of them ran 1,700 px across (W4-9) */
+#cluster .tile.wrap>:is(.v,.t),#cluster .flist .fl>small{max-width:var(--measure)}
+#cluster{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--gap);align-items:start;height:auto;min-height:0}
+#cluster .strip>.tile .v{font-size:clamp(var(--fs-lead),11cqi,var(--fs-title))}
+#cluster .strip>.tile .v.w{font-family:var(--font);white-space:normal;flex-wrap:wrap}
+/* P: the Model and Proxy tiles carry long names ("DeepSeek-V4.1-Flash-1017-EXL3"), so each takes the row; in a half they broke at every
+   hyphen over three lines. One figure size across the strip, as the strip check wants. */
+@media (max-width:599px){#cluster .strip>.tile:first-child,#cluster .strip>.tile:last-child{grid-column:1/-1}#cluster .strip>.tile .v{font-size:var(--fs-lead)}}
+@media (min-width:600px){
+  #cluster{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #cluster>#cl1{grid-column:1/-1}
+}
+@media (min-width:1100px) and (min-height:500px){
+  #cluster{grid-template-columns:repeat(12,minmax(0,1fr))}
+  #cluster>#cl1{grid-column:1/-1}#cluster>#cl2{grid-column:1/span 7}#cluster>#cl3{grid-column:8/-1}
+}
+html.tv #cluster{grid-template-columns:repeat(12,minmax(0,1fr))}
+html.tv #cluster>#cl1{grid-column:1/-1}html.tv #cluster>#cl2{grid-column:1/span 7}html.tv #cluster>#cl3{grid-column:8/-1}
+/* TV: a long tile value below the board (the tuning run, the perf loop line) wraps instead of being cut at the tile edge */
+html.tv #cluster .tile .v,html.tv #cluster .tile.wrap .v{display:flex;-webkit-line-clamp:unset;overflow:visible;white-space:normal;word-break:normal;overflow-wrap:anywhere}
+/* the Cluster TV board (#clboard, v6Cluster inserts it before #cluster): engine, nodes and the tuning loop in one strip, then
+   every error row. TV only: phone, tablet, laptop and desktop keep the page as it was. The columns sit one Down press below. */
+#clboard{display:none}
+html.tv #clboard.board{display:flex;height:calc(100vh - var(--tv-board-top) - 4vh - 2px);height:calc(100dvh - var(--tv-board-top) - 4vh - 2px);margin:0;gap:var(--s-4)}
+html.tv #clboard .strip{flex:none}
+html.tv #clboard .strip>.tile .v{font-size:clamp(var(--fs-title),9cqi,var(--fs-fig));white-space:normal;flex-wrap:wrap;overflow-wrap:anywhere}
+html.tv #clboard .strip>.tile .t{font-size:var(--fs-meta)}

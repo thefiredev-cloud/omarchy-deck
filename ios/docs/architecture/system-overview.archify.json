@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Omarchy Deck iOS Architecture",
+    "output": "docs/architecture/system-overview.html",
+    "locale": "en",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "demo",
+      "type": "frontend",
+      "label": "Offline demo",
+      "sublabel": "native sample deck",
+      "pos": [
+        300,
+        110
+      ],
+      "size": [
+        150,
+        60
+      ],
+      "tag": "no network, no WebView"
+    },
+    {
+      "id": "storekit",
+      "type": "security",
+      "label": "StoreKit 2",
+      "sublabel": "Deck Pro entitlement",
+      "pos": [
+        470,
+        110
+      ],
+      "size": [
+        150,
+        60
+      ],
+      "tag": "verified, unrevoked only"
+    },
+    {
+      "id": "watch",
+      "type": "frontend",
+      "label": "Apple Watch",
+      "sublabel": "confirmed quick actions",
+      "pos": [
+        40,
+        262
+      ],
+      "size": [
+        150,
+        60
+      ],
+      "tag": "action IDs only"
+    },
+    {
+      "id": "user",
+      "type": "external",
+      "label": "Deck owner",
+      "sublabel": "address + token",
+      "pos": [
+        40,
+        372
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "app",
+      "type": "frontend",
+      "label": "Deck shell",
+      "sublabel": "SwiftUI + WKWebView",
+      "pos": [
+        300,
+        270
+      ],
+      "size": [
+        320,
+        160
+      ],
+      "tag": "haptic bridge, snapshots"
+    },
+    {
+      "id": "stores",
+      "type": "security",
+      "label": "WebKit data stores",
+      "sublabel": "one per HTTPS origin",
+      "pos": [
+        300,
+        520
+      ],
+      "size": [
+        150,
+        60
+      ],
+      "tag": "pdeck cookie"
+    },
+    {
+      "id": "prefs",
+      "type": "database",
+      "label": "Preferences",
+      "sublabel": "addresses, no tokens",
+      "pos": [
+        470,
+        520
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "server",
+      "type": "backend",
+      "label": "Omarchy Deck server",
+      "sublabel": "self-hosted Pixel Deck",
+      "pos": [
+        800,
+        315
+      ],
+      "size": [
+        180,
+        64
+      ],
+      "tag": "HTTPS only"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Customer network or VPN",
+      "wraps": [
+        "server"
+      ],
+      "pad": 22
+    }
+  ],
+  "connections": [
+    {
+      "from": "app",
+      "to": "demo",
+      "label": "Try the demo",
+      "variant": "dashed"
+    },
+    {
+      "from": "app",
+      "to": "storekit",
+      "label": "unlock",
+      "variant": "security"
+    },
+    {
+      "from": "watch",
+      "to": "app",
+      "label": "paired iPhone"
+    },
+    {
+      "from": "user",
+      "to": "app",
+      "label": "connect",
+      "variant": "emphasis"
+    },
+    {
+      "from": "app",
+      "to": "stores",
+      "label": "session",
+      "variant": "security"
+    },
+    {
+      "from": "app",
+      "to": "prefs",
+      "label": "save"
+    },
+    {
+      "from": "app",
+      "to": "server",
+      "label": "HTTPS + ?t= once",
+      "variant": "emphasis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Thin native shell",
+      "items": [
+        "The dashboard is the customer's own Pixel Deck web app rendered full bleed in WKWebView",
+        "Native code owns connection, offline recovery, haptics, keyboard and the watch"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Isolation",
+      "items": [
+        "Each HTTPS origin gets its own persistent WebKit store, so cookies never cross servers",
+        "The token is used once to bootstrap a session; only addresses are saved"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Free and Pro",
+      "items": [
+        "Free keeps one server; Pro is a one-time StoreKit unlock for multiple servers",
+        "The demo is drawn on device and opens no connection"
+      ]
+    }
+  ]
+}

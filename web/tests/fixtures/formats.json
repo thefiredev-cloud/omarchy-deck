@@ -1,0 +1,352 @@
+{
+ "version": 1,
+ "note": "One form per value (PlanDesign section 5, round Better 2026-11-15). Web tests/fixtures/formats.json and app Shared/Fixtures/formats.json are byte copies. money: dollars; opt cents, masked, plus (open end), to (range end). age: seconds. time: local wall clock, no zone. date: calendar day or month; opt year, weekday, month. change: percent, or opt kind pt; opt d places (default 1). missing: opt mode cell or sheet. out null: no value, the caller prints missing. web_before: what the web printed on 2026-11-15 where it differs; the web lane changes these.",
+ "cases": [
+  {
+   "fn": "money",
+   "in": 0,
+   "out": "$0"
+  },
+  {
+   "fn": "money",
+   "in": 850,
+   "out": "$850"
+  },
+  {
+   "fn": "money",
+   "in": 9450,
+   "out": "$9,450"
+  },
+  {
+   "fn": "money",
+   "in": 9999.4,
+   "out": "$9,999"
+  },
+  {
+   "fn": "money",
+   "in": 9999.5,
+   "out": "$10K"
+  },
+  {
+   "fn": "money",
+   "in": 12400,
+   "out": "$12K"
+  },
+  {
+   "fn": "money",
+   "in": 350000,
+   "out": "$350K"
+  },
+  {
+   "fn": "money",
+   "in": 845000,
+   "out": "$845K"
+  },
+  {
+   "fn": "money",
+   "in": 999499,
+   "out": "$999K"
+  },
+  {
+   "fn": "money",
+   "in": 999500,
+   "out": "$1.00M",
+   "web_before": "$1M"
+  },
+  {
+   "fn": "money",
+   "in": 1240000,
+   "out": "$1.24M"
+  },
+  {
+   "fn": "money",
+   "in": 1250000,
+   "out": "$1.25M"
+  },
+  {
+   "fn": "money",
+   "in": 1125000,
+   "out": "$1.13M"
+  },
+  {
+   "fn": "money",
+   "in": 1500000,
+   "out": "$1.50M",
+   "web_before": "$1.5M"
+  },
+  {
+   "fn": "money",
+   "in": 1700000,
+   "out": "$1.70M",
+   "web_before": "$1.7M"
+  },
+  {
+   "fn": "money",
+   "in": 12300000,
+   "out": "$12.30M",
+   "web_before": "$12.3M"
+  },
+  {
+   "fn": "money",
+   "in": 1200000000,
+   "out": "$1.2B"
+  },
+  {
+   "fn": "money",
+   "in": 2000000000,
+   "out": "$2.0B",
+   "web_before": "$2B"
+  },
+  {
+   "fn": "money",
+   "in": -1240000,
+   "out": "−$1.24M"
+  },
+  {
+   "fn": "money",
+   "in": -50,
+   "out": "−$50"
+  },
+  {
+   "fn": "money",
+   "in": null,
+   "out": null
+  },
+  {
+   "fn": "money",
+   "in": 79,
+   "opt": {
+    "cents": true
+   },
+   "out": "$79.00"
+  },
+  {
+   "fn": "money",
+   "in": 879.99,
+   "opt": {
+    "cents": true
+   },
+   "out": "$879.99"
+  },
+  {
+   "fn": "money",
+   "in": 12400.5,
+   "opt": {
+    "cents": true
+   },
+   "out": "$12K"
+  },
+  {
+   "fn": "money",
+   "in": 125000,
+   "opt": {
+    "masked": true
+   },
+   "out": "$•••"
+  },
+  {
+   "fn": "money",
+   "in": 100000,
+   "opt": {
+    "plus": true
+   },
+   "out": "$100K+"
+  },
+  {
+   "fn": "money",
+   "in": 150000,
+   "opt": {
+    "to": 200000
+   },
+   "out": "$150K to $200K",
+   "web_before": "$150K-$200K"
+  },
+  {
+   "fn": "money",
+   "in": 850,
+   "opt": {
+    "to": 1200
+   },
+   "out": "$850 to $1,200",
+   "web_before": "$850-$1,200"
+  },
+  {
+   "fn": "age",
+   "in": 30,
+   "out": "1 min"
+  },
+  {
+   "fn": "age",
+   "in": 80,
+   "out": "1 min"
+  },
+  {
+   "fn": "age",
+   "in": 600,
+   "out": "10 min"
+  },
+  {
+   "fn": "age",
+   "in": 3540,
+   "out": "59 min"
+  },
+  {
+   "fn": "age",
+   "in": 5000,
+   "out": "1 h"
+  },
+  {
+   "fn": "age",
+   "in": 108000,
+   "out": "30 h"
+  },
+  {
+   "fn": "age",
+   "in": 169200,
+   "out": "47 h"
+  },
+  {
+   "fn": "age",
+   "in": 180000,
+   "out": "2 days"
+  },
+  {
+   "fn": "age",
+   "in": 777600,
+   "out": "9 days"
+  },
+  {
+   "fn": "age",
+   "in": null,
+   "out": null
+  },
+  {
+   "fn": "time",
+   "in": "2026-11-15T16:10:00",
+   "out": "4:10 pm"
+  },
+  {
+   "fn": "time",
+   "in": "2026-11-15T00:05:00",
+   "out": "12:05 am"
+  },
+  {
+   "fn": "time",
+   "in": "2026-11-15T12:00:00",
+   "out": "12:00 pm"
+  },
+  {
+   "fn": "time",
+   "in": "2026-11-15T09:07:00",
+   "out": "9:07 am"
+  },
+  {
+   "fn": "date",
+   "in": "2026-11-14",
+   "out": "Nov 14"
+  },
+  {
+   "fn": "date",
+   "in": "2026-11-14",
+   "opt": {
+    "year": true
+   },
+   "out": "Nov 14, 2026"
+  },
+  {
+   "fn": "date",
+   "in": "2026-11-17",
+   "opt": {
+    "weekday": true
+   },
+   "out": "Tue, Nov 17",
+   "web_before": "Nov 17"
+  },
+  {
+   "fn": "date",
+   "in": "2026-09",
+   "opt": {
+    "month": true
+   },
+   "out": "Sep 2026"
+  },
+  {
+   "fn": "change",
+   "in": 1.234,
+   "out": "+1.2%"
+  },
+  {
+   "fn": "change",
+   "in": -2.19,
+   "out": "−2.2%"
+  },
+  {
+   "fn": "change",
+   "in": 7.06,
+   "out": "+7.1%"
+  },
+  {
+   "fn": "change",
+   "in": -0.04,
+   "out": "0.0%"
+  },
+  {
+   "fn": "change",
+   "in": 0,
+   "out": "0.0%"
+  },
+  {
+   "fn": "change",
+   "in": -0.36,
+   "opt": {
+    "d": 2
+   },
+   "out": "−0.36%"
+  },
+  {
+   "fn": "change",
+   "in": 0.004,
+   "opt": {
+    "d": 2
+   },
+   "out": "0.00%"
+  },
+  {
+   "fn": "change",
+   "in": 0.8,
+   "opt": {
+    "kind": "pt"
+   },
+   "out": "+0.8 pt"
+  },
+  {
+   "fn": "change",
+   "in": -1.25,
+   "opt": {
+    "kind": "pt"
+   },
+   "out": "−1.3 pt"
+  },
+  {
+   "fn": "change",
+   "in": null,
+   "out": null
+  },
+  {
+   "fn": "missing",
+   "in": null,
+   "opt": {
+    "mode": "cell"
+   },
+   "out": "·"
+  },
+  {
+   "fn": "missing",
+   "in": null,
+   "opt": {
+    "mode": "sheet"
+   },
+   "out": "No data"
+  }
+ ]
+}

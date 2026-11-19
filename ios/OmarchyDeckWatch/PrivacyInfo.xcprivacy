@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSPrivacyTracking</key>
+	<false/>
+	<key>NSPrivacyTrackingDomains</key>
+	<array/>
+	<key>NSPrivacyCollectedDataTypes</key>
+	<array/>
+	<!--
+		The Watch app is its own bundle, so the iPhone app's manifest does not cover it.
+		It calls no required-reason API (OmarchyDeckWatch/, Shared/): WatchModel only uses WatchConnectivity to ask
+		the iPhone to run fixed action ids, and keeps no UserDefaults, file timestamps, disk space, boot time or
+		keyboard data. scripts/ci/check_repo.py fails the build if a call to one appears here without a category.
+	-->
+	<key>NSPrivacyAccessedAPITypes</key>
+	<array/>
+</dict>
+</plist>

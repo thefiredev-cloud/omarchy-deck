@@ -1,0 +1,2774 @@
+{
+ "schema": 1,
+ "generated_at": "2026-11-14",
+ "owner_lane": "PlanData",
+ "confidence": {
+  "formula": "conf = round(S x A x F x G, 2), 0 to 1",
+  "S_source_count": {
+   "1": 0.6,
+   "2": 0.85,
+   "3+": 1.0,
+   "note": "count of member parts present after tier selection"
+  },
+  "A_agreement": {
+   "levels": "max(0.3, 1 - min(1, cv / 0.25)); cv = weighted stdev / weighted mean of normalized parts",
+   "rates": "max(0.3, 1 - min(1, spread_pp / 10)); trend parts with opposite signs cap A at 0.4",
+   "scores": "max(0.3, 1 - min(1, spread_pctile / 40))",
+   "forecast": "1.0, times 0.7 when the sign disagrees with value_trend_1y",
+   "derived": "min of the input metric confidences (S, A, F, G not applied again)",
+   "single": "A = 1 when one part"
+  },
+  "F_freshness": "blend-weighted mean over used parts of 0.5 ** (age_months / half_life_months); age from the source's as_of period end to the run date",
+  "G_geography": {
+   "zip": 1.0,
+   "zcta": 1.0,
+   "block": 0.95,
+   "blockgroup": 0.95,
+   "point": 0.95,
+   "tract": 0.9,
+   "place": 0.8,
+   "zip3": 0.7,
+   "county": 0.6,
+   "cbsa": 0.4,
+   "state": 0.25,
+   "us": 0.1
+  },
+  "fallback_cap": "a value from tier 2 or lower caps conf at 0.45, so it reads low (0.4 for safety on the homicide proxy alone)",
+  "dots": {
+   "3": "conf >= 0.75",
+   "2": "conf >= 0.5",
+   "1": "conf > 0",
+   "0": "null"
+  }
+ },
+ "blend": {
+  "weighted_median": "weight w_i = base weight x F_i x G_i (x sample factor); weighted median of tier-1 parts",
+  "tiered_weighted_median": "weighted median of the best non-empty tier; lower tiers never mix with a higher one",
+  "first_present": "first member by order that has a value; the others set S and A only",
+  "percentile_weighted_median": "each part becomes a national percentile among ZIPs with a value (pctile_lower inverts), then weighted median; result 0 to 100",
+  "weighted_mean": "weighted mean of present parts",
+  "max": "largest present part",
+  "derived": "formula over metrics",
+  "context": "not blended; carried for display",
+  "normalize": {
+   "none": "as published",
+   "sales_floor_10": "weight x 0.4 when the period's homes sold < 10",
+   "roll_forward_value": "x fhfa_zip3_index_ratio scaled from the part's period midpoint",
+   "roll_forward_rent": "x (1 + rent_trend_1y/100) per year since the ACS midpoint (2022-07)",
+   "roll_forward_income": "x (1 + bea_per_capita_income_5y_cagr/100) per year from the ACS midpoint (2022-07) to the middle of the latest year BEA reports (county per-capita income, 5-year annual rate; the state's median rate where the county has none but the state has rates, as in Virginia, Hawaii and Alaska; the national median where the state has none, as in Connecticut and Puerto Rico); never past BEA's own year",
+   "list_to_sale": "list_price x sale_to_list / 100, only with active >= 10",
+   "metro_ratio_zori": "x median(rent_zori / that field) over the metro's ZIPs with both",
+   "ratio_to_national": "x national median(hh_income) / national median(field)",
+   "annualize_5y": "((1 + v/100) ** 0.2 - 1) x 100",
+   "x52": "x 52",
+   "pctile_higher": "percentile",
+   "pctile_lower": "100 - percentile",
+   "pctile_higher_min10_policies": "percentile, only where nfip_policies >= 10",
+   "min3_props": "null when cmbs_props < 3",
+   "min3_listings": "kept with any count; S from the listing count",
+   "flag_x100": "flag x 100"
+  },
+  "parts_kept": "Each ZIP's shard record keeps m[metric] = {v, c, n, p: [[field, weight, tier], ...]}; member values stay in their own fields, so blended values keep their parts.",
+  "area_fallback": "Thin ZIPs (Blender.area_fallback, 2026-11-17): a metric with `area_fallback` fills a ZIP it left empty (no source, or nulled by the validity table) from a larger area. First the county value: the listing-weighted median (how weighted_median) or mean (how weighted_mean) over the ZIPs of the ZIP's county that kept their own valid value, weight `weight` (inventory). Else the median of the metro context fields listed in `metro` that the build has (skipped when absent), range-checked. conf = the area value's conf x the geography factor of the area (county 0.6, metro 0.4, G_geography), capped at 0.45 (fallback_cap); a county value's conf is the listing-weighted median of its ZIPs' confs, a metro value's S x F. The shard parts are {v, c, n, p, from: county | metro, area: county FIPS | CBSA}, plus listings for a county value and zip_reason when the ZIP's own value was nulled. A fallback value is shown in the ZIP table but never enters a metro, state or US rollup or a score (h_score and the segment scores read only a ZIP's own values). Counts are never filled from a larger area: inventory stays null."
+ },
+ "validity": {
+  "note": "A value outside its allowed range, or without the least evidence it needs, is written null with a short reason, never clamped to a bound. A value computed from a nulled input is null with that input's reason. Checks run in order; the first that fails gives the reason. Keys are metric ids, derived field names (fields.json kind derived) or source fields; a source field is checked before any blend, percentile or derived field reads it. A check's range is min and max, inclusive; min_listings needs the ZIP's inventory (homes for sale) at least that, and an unknown count fails it with reason_unknown when the check sets one (source fields cannot use min_listings: inventory is blended later); if_pop_at_least and if_pop_below limit a check to ZIPs by population (unknown counts as 0); max_ratio_to fails a value more than max_ratio times another field of the ZIP or under 1 / max_ratio of it (no check when that field is missing).",
+  "where": "The ZIP record's m[name] is {v: null, reason, from} for a nulled metric, source field or derived field (from names the nulled input when inherited); manifest metrics[id] carries limits (these checks) and nulled ({reason: ZIPs}); manifest methods.validity repeats this table with the counts of every nulled name.",
+  "follows": {
+   "note": "Legacy fields computed from the same published inputs as a metric (the v1 columns kept in v2 and used as grade factors) are null with that metric's reason where the metric was nulled: 11930's annual rent as share of income read 1,010.1% from the seasonal rent the rent rule rejected.",
+   "rent_to_income": ["typical_rent", "income"],
+   "price_to_income": ["home_value", "income"],
+   "yield_gross": ["typical_rent", "home_value"]
+  },
+  "rules": {
+   "home_value": [
+    {"min": 20000, "reason": "placeholder value", "why": "SeeData D2: 45 ZIPs under $20,000 (62927 at $1) are placeholder or artifact values; gross yield, GRM and affordability follow"}
+   ],
+   "typical_rent": [
+    {"max": 20000, "reason": "seasonal rentals", "why": "SeeData D3: the 7 ZORI rents over $20,000 a month are the Hamptons East End (11930 $103,750 to 11954 $27,500, gross yields 12 to 37%), summer rentals read as monthly; the next value is Aspen at $17,626 with a 5.9% yield like its luxury peers, so the cap sits in the gap"}
+   ],
+   "gross_yield": [
+    {"max": 30, "if_pop_below": 1000, "reason": "out of range", "why": "SeeData D2: yields over 30% under 1,000 people are small-sample noise; over 1,000 people they stay (East St Louis 48%)"}
+   ],
+   "days_on_market": [
+    {"min_listings": 5, "reason": "too few listings", "reason_unknown": "no listing count", "why": "SeeData D4"},
+    {"min": 0, "max": 365, "reason": "out of range", "why": "SeeData D4: 238 ZIPs over a year, up to 9,581 days"}
+   ],
+   "price_cuts": [
+    {"min_listings": 5, "reason": "too few listings", "reason_unknown": "no listing count", "why": "SeeData D1: 92% of ZIPs with under 5 listings read 0%"},
+    {"min": 0, "max": 100, "reason": "out of range", "why": "SeeData D1: 69 ZIPs over 100%"}
+   ],
+   "income": [
+    {"min": 10000, "if_pop_at_least": 1000, "reason": "out of range", "why": "SeeData D10: campus and group-quarters ZIPs (33139 $5,844, 60425 $706); affordability follows"},
+    {"max_ratio_to": "hh_income", "max_ratio": 2, "reason": "sources disagree", "why": "SeeData D10 follow-up: a blended income more than twice or under half the Census survey's median household income (hh_income) is not a reading; the roll-forward fix leaves almost none"}
+   ],
+   "lodes_daytime_pop": [
+    {"min": 0, "reason": "out of range", "why": "SeeData D12: 327 ZIPs where resident workers exceed residents plus jobs (92092 -565); daytime_pop and lodes_daytime_ratio follow"}
+   ],
+   "redfin_cancel_rate": [
+    {"min": 0, "max": 100, "reason": "out of range", "why": "SeeData phase 4: Redfin cancellations as a share of pending sales reach 288.7% in 27 ZIPs (more cancellations than pending sales in the window); market heat then ranks without it"}
+   ]
+  }
+ },
+ "metrics": [
+  {
+   "id": "home_value",
+   "label": "Typical home value",
+   "unit": "usd",
+   "side": "residential",
+   "better": null,
+   "blend": "weighted_median",
+   "members": [
+    {
+     "field": "zhvi",
+     "weight": 0.4,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "redfin_median_sale",
+     "weight": 0.25,
+     "tier": 1,
+     "normalize": "sales_floor_10"
+    },
+    {
+     "field": "zillow_median_sale",
+     "weight": 0.1,
+     "tier": 1,
+     "normalize": "sales_floor_10"
+    },
+    {
+     "field": "acs_value_median",
+     "weight": 0.15,
+     "tier": 1,
+     "normalize": "roll_forward_value"
+    },
+    {
+     "field": "uad_median_value",
+     "weight": 0.1,
+     "tier": 1,
+     "normalize": "roll_forward_value"
+    },
+    {
+     "field": "list_price",
+     "weight": 1.0,
+     "tier": 2,
+     "normalize": "list_to_sale"
+    }
+   ],
+   "half_life_months": 12,
+   "agreement": "levels",
+   "fallback": "tier 2 (Realtor median list x sale-to-list, only with 10+ active listings) only when tier 1 is empty",
+   "formula": null,
+   "note": "Survey and appraisal levels are rolled forward with fhfa_zip3_index_ratio from their period midpoint.",
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "value_trend_1y",
+   "label": "Home value change, 1 year",
+   "unit": "pct",
+   "side": "residential",
+   "better": "higher",
+   "blend": "weighted_median",
+   "members": [
+    {
+     "field": "zhvi_yoy",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "fhfa_zip3_hpi_1y",
+     "weight": 0.6,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "fhfa_tract_hpi_1y",
+     "weight": 0.6,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "redfin_median_sale_yoy",
+     "weight": 0.5,
+     "tier": 1,
+     "normalize": "sales_floor_10"
+    }
+   ],
+   "half_life_months": 6,
+   "agreement": "rates",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "value_trend_5y",
+   "label": "Home value change, 5 years",
+   "unit": "pct",
+   "side": "residential",
+   "better": "higher",
+   "blend": "weighted_median",
+   "members": [
+    {
+     "field": "zhvi_5y",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "fhfa_hpi_5y",
+     "weight": 0.8,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "fhfa_tract_hpi_5y",
+     "weight": 0.7,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "fhfa_zip3_hpi_5y",
+     "weight": 0.5,
+     "tier": 2,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 12,
+   "agreement": "rates",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "value_forecast_1y",
+   "label": "Home value forecast, 12 months",
+   "unit": "pct",
+   "side": "residential",
+   "better": "higher",
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "zillow_zhvf_12m",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 3,
+   "agreement": "forecast",
+   "fallback": null,
+   "formula": null,
+   "note": "One source: conf = 0.6 x F x G, times 0.7 when the forecast sign disagrees with value_trend_1y.",
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "typical_rent",
+   "label": "Typical rent",
+   "unit": "usd_month",
+   "side": "residential",
+   "better": null,
+   "blend": "tiered_weighted_median",
+   "members": [
+    {
+     "field": "rent_zori",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "safmr_2br",
+     "weight": 0.5,
+     "tier": 2,
+     "normalize": "metro_ratio_zori"
+    },
+    {
+     "field": "acs_gross_rent",
+     "weight": 0.3,
+     "tier": 2,
+     "normalize": "roll_forward_rent"
+    },
+    {
+     "field": "hud_fmr_county_2br",
+     "weight": 0.2,
+     "tier": 2,
+     "normalize": "metro_ratio_zori"
+    }
+   ],
+   "half_life_months": 12,
+   "agreement": "levels",
+   "fallback": "tier 2 weighted median when ZORI is absent; a tier-2 value caps conf at 0.45",
+   "formula": null,
+   "note": "metro_ratio_zori: multiply by the median ZORI / SAFMR ratio of the metro's ZIPs that have both (state ratio outside metros).",
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "rent_trend_1y",
+   "label": "Rent change, 1 year",
+   "unit": "pct",
+   "side": "residential",
+   "better": "higher",
+   "blend": "tiered_weighted_median",
+   "members": [
+    {
+     "field": "rent_yoy",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "hud_fmr_2br_yoy",
+     "weight": 0.5,
+     "tier": 2,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 6,
+   "agreement": "rates",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "gross_yield",
+   "label": "Gross rent yield",
+   "unit": "pct",
+   "side": "residential",
+   "better": "higher",
+   "blend": "derived",
+   "members": [],
+   "half_life_months": 12,
+   "agreement": "derived",
+   "fallback": null,
+   "formula": "typical_rent x 12 / home_value x 100; conf = min(conf of both)",
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "inventory",
+   "label": "Homes for sale",
+   "unit": "count",
+   "rollup": "sum",
+   "side": "residential",
+   "better": null,
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "active",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "zillow_inventory",
+     "weight": 0.8,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "redfin_inventory",
+     "weight": 0.6,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 3,
+   "agreement": "levels",
+   "fallback": null,
+   "formula": null,
+   "note": "Definitions differ (active now, end of month, 3-month): headline is the first present; the others only set agreement.",
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "days_on_market",
+   "label": "Days to sell",
+   "area_fallback": {"how": "weighted_median", "weight": "inventory", "metro": ["rdm_dom", "zm_days_pending"]},
+   "unit": "days",
+   "side": "residential",
+   "better": "lower",
+   "blend": "weighted_median",
+   "members": [
+    {
+     "field": "redfin_dom",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "zillow_days_to_pending",
+     "weight": 0.8,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "dom",
+     "weight": 1.0,
+     "tier": 2,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 3,
+   "agreement": "levels",
+   "fallback": "Realtor days listed (active listings) only when no sold-home measure exists; a ZIP with no value takes its county's value, else its metro's (area_fallback)",
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "sale_to_list",
+   "label": "Sale to list price",
+   "unit": "pct",
+   "side": "residential",
+   "better": "higher",
+   "blend": "weighted_median",
+   "members": [
+    {
+     "field": "redfin_sale_to_list",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "zillow_sale_to_list",
+     "weight": 0.8,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 3,
+   "agreement": "rates",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "price_cuts",
+   "label": "Listings with a price cut",
+   "area_fallback": {"how": "weighted_mean", "weight": "inventory", "metro": ["rdm_price_reduced_share", "zm_price_cut_share"]},
+   "unit": "pct",
+   "side": "residential",
+   "better": "lower",
+   "blend": "weighted_median",
+   "members": [
+    {
+     "field": "price_cut_share",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "zillow_price_cut_share",
+     "weight": 0.8,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "redfin_active_price_drop_share",
+     "weight": 0.6,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 3,
+   "agreement": "rates",
+   "fallback": "a ZIP with no value takes its county's value, else its metro's (area_fallback)",
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "market_heat",
+   "label": "Market heat",
+   "unit": "score",
+   "side": "residential",
+   "better": "higher",
+   "blend": "percentile_weighted_median",
+   "members": [
+    {
+     "field": "rdc_hotness",
+     "weight": 0.4,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    },
+    {
+     "field": "redfin_off_market_2w",
+     "weight": 0.25,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    },
+    {
+     "field": "redfin_cancel_rate",
+     "weight": 0.15,
+     "tier": 1,
+     "normalize": "pctile_lower"
+    },
+    {
+     "field": "redfin_delisted_share",
+     "weight": 0.2,
+     "tier": 1,
+     "normalize": "pctile_lower"
+    }
+   ],
+   "half_life_months": 3,
+   "agreement": "scores",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "affordability",
+   "label": "Monthly payment as share of income",
+   "unit": "pct",
+   "side": "residential",
+   "better": "lower",
+   "blend": "derived",
+   "members": [],
+   "half_life_months": 12,
+   "agreement": "derived",
+   "fallback": null,
+   "formula": "Monthly principal and interest on 80% of home_value (20% down) at mortgage_30y (Freddie Mac 30-year fixed, FRED) over 360 months, plus home_value x property_tax_rate / 1200 when the ZIP's effective property tax rate is known (the parts then list property_tax_rate), divided by monthly household income (income / 12), x 100. r = mortgage_30y / 1200; P&I = 0.8 x home_value x r / (1 - (1 + r) ^ -360). conf = min(conf of home_value, income)",
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "property_tax_rate",
+   "label": "Effective property tax rate",
+   "unit": "pct",
+   "side": "residential",
+   "better": "lower",
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "acs_tax_rate_eff",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 24,
+   "agreement": "levels",
+   "fallback": null,
+   "formula": null,
+   "note": "Check only: irs_re_tax_per_itemizer / home_value; a gap over 30% halves A.",
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "vacancy_rate",
+   "label": "Vacant homes, not counting seasonal",
+   "unit": "pct",
+   "side": "residential",
+   "better": "lower",
+   "blend": "tiered_weighted_median",
+   "members": [
+    {
+     "field": "acs_vacancy_ex_seasonal",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "vacancy",
+     "weight": 1.0,
+     "tier": 2,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 24,
+   "agreement": "rates",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "population",
+   "label": "Population",
+   "unit": "count",
+   "rollup": "sum",
+   "side": "residential",
+   "better": "higher",
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "pop",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 24,
+   "agreement": "levels",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "pop_trend",
+   "label": "Population change since 2020 (county)",
+   "unit": "pct",
+   "side": "residential",
+   "better": "higher",
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "pep_pop_change_since2020",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 12,
+   "agreement": "rates",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "migration",
+   "label": "People moving in",
+   "unit": "score",
+   "side": "residential",
+   "better": "higher",
+   "blend": "percentile_weighted_median",
+   "members": [
+    {
+     "field": "irs_mig_net_rate",
+     "weight": 0.4,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    },
+    {
+     "field": "pep_domestic_mig_per_1k",
+     "weight": 0.4,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    },
+    {
+     "field": "coa_net_per_1k",
+     "weight": 0.2,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    }
+   ],
+   "half_life_months": 18,
+   "agreement": "scores",
+   "fallback": null,
+   "formula": null,
+   "note": "ZIP-level USPS moves end mid-2023, so they carry the lowest weight and decay by freshness.",
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "income",
+   "label": "Household income",
+   "unit": "usd",
+   "side": "residential",
+   "better": "higher",
+   "blend": "tiered_weighted_median",
+   "members": [
+    {
+     "field": "hh_income",
+     "weight": 0.6,
+     "tier": 1,
+     "normalize": "roll_forward_income"
+    },
+    {
+     "field": "irs_agi_per_return",
+     "weight": 0.4,
+     "tier": 1,
+     "normalize": "ratio_to_national"
+    },
+    {
+     "field": "saipe_hh_income_median",
+     "weight": 1.0,
+     "tier": 2,
+     "normalize": "none"
+    },
+    {
+     "field": "hud_ami",
+     "weight": 1.0,
+     "tier": 3,
+     "normalize": "ratio_to_national"
+    }
+   ],
+   "half_life_months": 18,
+   "agreement": "levels",
+   "fallback": null,
+   "formula": null,
+   "note": "ratio_to_national: scale by the national median of hh_income / that field. roll_forward_income: x (1 + county BEA per-capita income 5-year annual rate / 100) per year from the ACS midpoint (2022-07) to the middle of BEA's latest year.",
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "income_trend",
+   "label": "Income change per year",
+   "unit": "pct",
+   "side": "residential",
+   "better": "higher",
+   "blend": "weighted_median",
+   "members": [
+    {
+     "field": "irs_agi_per_return_yoy",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "bea_per_capita_income_5y_cagr",
+     "weight": 0.5,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 12,
+   "agreement": "rates",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "jobs_trend",
+   "label": "Job change, 1 year (county)",
+   "unit": "pct",
+   "side": "residential",
+   "better": "higher",
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "qcew_emp_yoy",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 6,
+   "agreement": "rates",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "wages",
+   "label": "Average annual wage",
+   "unit": "usd",
+   "side": "residential",
+   "better": "higher",
+   "blend": "weighted_median",
+   "members": [
+    {
+     "field": "qcew_avg_wkly_wage",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "x52"
+    },
+    {
+     "field": "cbpc_pay_per_emp",
+     "weight": 0.5,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "biz_pay_per_emp",
+     "weight": 0.5,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 12,
+   "agreement": "levels",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "unemployment",
+   "label": "Unemployment rate",
+   "unit": "pct",
+   "side": "residential",
+   "better": "lower",
+   "blend": "weighted_median",
+   "members": [
+    {
+     "field": "laus_unemployment",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "acs_unemployment_rate",
+     "weight": 0.6,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 6,
+   "agreement": "rates",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "schools",
+   "label": "School test results",
+   "unit": "score",
+   "side": "residential",
+   "better": "higher",
+   "blend": "weighted_mean",
+   "members": [
+    {
+     "field": "school_score",
+     "weight": 0.4,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "school_prof_pctile_2018",
+     "weight": 0.4,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "opp_child_income_p25",
+     "weight": 0.2,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    }
+   ],
+   "half_life_months": 24,
+   "agreement": "scores",
+   "fallback": null,
+   "formula": null,
+   "note": "State tests differ, so the grade 3 proficiency percentile ranks a ZIP inside its own state and is not comparable across states. Two school years (2020-21 and 2018-19) weigh the same; where they disagree the agreement factor lowers the confidence.",
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "safety",
+   "label": "Safety",
+   "unit": "score",
+   "side": "residential",
+   "better": "higher",
+   "blend": "percentile_weighted_median",
+   "members": [
+    {
+     "field": "fbi_violent_rate",
+     "weight": 0.6,
+     "tier": 1,
+     "normalize": "pctile_lower"
+    },
+    {
+     "field": "fbi_property_rate",
+     "weight": 0.2,
+     "tier": 1,
+     "normalize": "pctile_lower"
+    },
+    {
+     "field": "homicide_rate",
+     "weight": 0.2,
+     "tier": 1,
+     "normalize": "pctile_lower"
+    }
+   ],
+   "half_life_months": 24,
+   "agreement": "scores",
+   "fallback": "With only the county homicide proxy, conf is capped at 0.4.",
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "climate_risk",
+   "label": "Natural hazard risk",
+   "unit": "score",
+   "side": "residential",
+   "better": "lower",
+   "blend": "percentile_weighted_median",
+   "members": [
+    {
+     "field": "nri_risk_score",
+     "weight": 0.4,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "usfs_risk_to_homes",
+     "weight": 0.2,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "fema_disasters_10y",
+     "weight": 0.2,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    },
+    {
+     "field": "storm_events_10y",
+     "weight": 0.2,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    }
+   ],
+   "half_life_months": 60,
+   "agreement": "scores",
+   "fallback": null,
+   "formula": null,
+   "note": "Higher is riskier.",
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "flood_risk",
+   "label": "Flood risk",
+   "unit": "score",
+   "side": "residential",
+   "better": "lower",
+   "blend": "percentile_weighted_median",
+   "members": [
+    {
+     "field": "nri_flood_score",
+     "weight": 0.4,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "nfip_claims_per_1k",
+     "weight": 0.3,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    },
+    {
+     "field": "nfip_sfha_share",
+     "weight": 0.3,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    }
+   ],
+   "half_life_months": 60,
+   "agreement": "scores",
+   "fallback": null,
+   "formula": null,
+   "note": "Higher is riskier.",
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "insurance_cost",
+   "label": "Insurance cost pressure",
+   "unit": "score",
+   "side": "residential",
+   "better": "lower",
+   "blend": "percentile_weighted_median",
+   "members": [
+    {
+     "field": "nfip_premium_avg",
+     "weight": 0.5,
+     "tier": 1,
+     "normalize": "pctile_higher_min10_policies"
+    },
+    {
+     "field": "nri_eal_rate_bldg",
+     "weight": 0.5,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    }
+   ],
+   "half_life_months": 24,
+   "agreement": "scores",
+   "fallback": null,
+   "formula": null,
+   "note": "Higher is costlier. The ZIP sheet also shows nfip_premium_avg in dollars.",
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "health",
+   "label": "Community health",
+   "unit": "score",
+   "side": "residential",
+   "better": "higher",
+   "blend": "percentile_weighted_median",
+   "members": [
+    {
+     "field": "places_obesity",
+     "weight": 0.1,
+     "tier": 1,
+     "normalize": "pctile_lower"
+    },
+    {
+     "field": "places_diabetes",
+     "weight": 0.1,
+     "tier": 1,
+     "normalize": "pctile_lower"
+    },
+    {
+     "field": "places_depression",
+     "weight": 0.1,
+     "tier": 1,
+     "normalize": "pctile_lower"
+    },
+    {
+     "field": "places_checkup",
+     "weight": 0.1,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    },
+    {
+     "field": "places_access2",
+     "weight": 0.1,
+     "tier": 1,
+     "normalize": "pctile_lower"
+    },
+    {
+     "field": "places_ghlth",
+     "weight": 0.1,
+     "tier": 1,
+     "normalize": "pctile_lower"
+    },
+    {
+     "field": "svi_overall",
+     "weight": 0.15,
+     "tier": 1,
+     "normalize": "pctile_lower"
+    },
+    {
+     "field": "ej_pm25",
+     "weight": 0.1,
+     "tier": 1,
+     "normalize": "pctile_lower"
+    },
+    {
+     "field": "aqi_median",
+     "weight": 0.05,
+     "tier": 1,
+     "normalize": "pctile_lower"
+    }
+   ],
+   "half_life_months": 24,
+   "agreement": "scores",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "broadband",
+   "label": "Homes with broadband",
+   "unit": "pct",
+   "side": "residential",
+   "better": "higher",
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "acs_broadband_share",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 24,
+   "agreement": "rates",
+   "fallback": null,
+   "formula": null,
+   "note": "Ookla speed joins as a second dimension if the stretch source lands; it does not blend with adoption.",
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "walkability",
+   "label": "Walkability",
+   "unit": "score",
+   "side": "residential",
+   "better": "higher",
+   "blend": "percentile_weighted_median",
+   "members": [
+    {
+     "field": "epa_walk_index",
+     "weight": 0.6,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    },
+    {
+     "field": "lodes_jobs_per_sqmi",
+     "weight": 0.2,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    },
+    {
+     "field": "sram_lowaccess_half_share",
+     "weight": 0.2,
+     "tier": 1,
+     "normalize": "pctile_lower"
+    }
+   ],
+   "half_life_months": 60,
+   "agreement": "scores",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "new_supply",
+   "label": "Homes permitted per 1,000 residents",
+   "unit": "per_1k",
+   "side": "residential",
+   "better": null,
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "bps_units_per_1k",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 6,
+   "agreement": "levels",
+   "fallback": null,
+   "formula": null,
+   "note": "lihtc_units_5y shows beside it on the ZIP sheet.",
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "mortgage_rate",
+   "label": "30-year mortgage rate",
+   "unit": "pct",
+   "side": "residential",
+   "better": null,
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "mortgage_30y",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 1,
+   "agreement": "levels",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": false,
+   "shown": [
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "business_base",
+   "label": "Businesses",
+   "unit": "count",
+   "rollup": "sum",
+   "side": "commercial",
+   "better": "higher",
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "biz_estabs",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 24,
+   "agreement": "levels",
+   "fallback": null,
+   "formula": null,
+   "note": "nes_firms (self-employed) shows beside it; it does not add in.",
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "business_growth",
+   "label": "Business growth",
+   "unit": "score",
+   "side": "commercial",
+   "better": "higher",
+   "blend": "percentile_weighted_median",
+   "members": [
+    {
+     "field": "biz_estabs_5y",
+     "weight": 0.6,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    },
+    {
+     "field": "bea_gdp_5y",
+     "weight": 0.2,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    },
+    {
+     "field": "qcew_emp_yoy",
+     "weight": 0.2,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    }
+   ],
+   "half_life_months": 24,
+   "agreement": "scores",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "business_formation",
+   "label": "New business starts",
+   "unit": "score",
+   "side": "commercial",
+   "better": "higher",
+   "blend": "percentile_weighted_median",
+   "members": [
+    {
+     "field": "bfs_apps_per_1k",
+     "weight": 0.6,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    },
+    {
+     "field": "bds_estab_entry_rate",
+     "weight": 0.4,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    }
+   ],
+   "half_life_months": 12,
+   "agreement": "scores",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "jobs_total",
+   "label": "Jobs located here",
+   "unit": "count",
+   "rollup": "sum",
+   "side": "commercial",
+   "better": "higher",
+   "blend": "tiered_weighted_median",
+   "members": [
+    {
+     "field": "lodes_jobs_total",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "biz_emp",
+     "weight": 1.0,
+     "tier": 2,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 24,
+   "agreement": "levels",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "jobs_office",
+   "label": "Office-using jobs",
+   "unit": "count",
+   "rollup": "sum",
+   "side": "commercial",
+   "better": "higher",
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "lodes_jobs_office",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 24,
+   "agreement": "levels",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "jobs_retail",
+   "label": "Retail jobs",
+   "unit": "count",
+   "rollup": "sum",
+   "side": "commercial",
+   "better": "higher",
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "lodes_jobs_retail",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 24,
+   "agreement": "levels",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "jobs_industrial",
+   "label": "Industrial jobs",
+   "unit": "count",
+   "rollup": "sum",
+   "side": "commercial",
+   "better": "higher",
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "lodes_jobs_industrial",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 24,
+   "agreement": "levels",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "daytime_pop",
+   "label": "Daytime population",
+   "unit": "count",
+   "rollup": "sum",
+   "side": "commercial",
+   "better": "higher",
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "lodes_daytime_pop",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 24,
+   "agreement": "levels",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "sb_lending",
+   "label": "Small business lending per business",
+   "unit": "usd",
+   "side": "commercial",
+   "better": "higher",
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "sba_dollars_per_estab",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 12,
+   "agreement": "levels",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "deposits",
+   "label": "Bank deposits",
+   "unit": "usd",
+   "rollup": "sum",
+   "side": "commercial",
+   "better": "higher",
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "sod_deposits",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 12,
+   "agreement": "levels",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "deposit_growth",
+   "label": "Bank deposit change, 1 year",
+   "unit": "pct",
+   "side": "commercial",
+   "better": "higher",
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "sod_deposits_yoy",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 12,
+   "agreement": "rates",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "bank_cre_concentration",
+   "label": "Local banks' CRE exposure",
+   "unit": "pct",
+   "side": "commercial",
+   "better": "lower",
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "fdiccre_pct_equity",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 6,
+   "agreement": "rates",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "stock_commercial_sqft",
+   "label": "Commercial building footprint",
+   "unit": "sqft",
+   "rollup": "sum",
+   "side": "commercial",
+   "better": null,
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "bldg_commercial_sqft",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 60,
+   "agreement": "levels",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": false,
+   "shown": [
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "stock_industrial_sqft",
+   "label": "Industrial building footprint",
+   "unit": "sqft",
+   "rollup": "sum",
+   "side": "commercial",
+   "better": null,
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "bldg_industrial_sqft",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 60,
+   "agreement": "levels",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": false,
+   "shown": [
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "cmbs_occupancy",
+   "label": "Occupancy of CMBS-financed buildings",
+   "unit": "pct",
+   "side": "commercial",
+   "better": "higher",
+   "blend": "tiered_weighted_median",
+   "members": [
+    {
+     "field": "cmbs_occ_median",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "min3_props"
+    },
+    {
+     "field": "cmbs_occ_5mi",
+     "weight": 1.0,
+     "tier": 2,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 3,
+   "agreement": "rates",
+   "fallback": "5-mile ring when the ZIP has under 3 properties (G = 0.8)",
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "cmbs_dscr",
+   "label": "Debt coverage of CMBS-financed buildings",
+   "unit": "ratio",
+   "side": "commercial",
+   "better": "higher",
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "cmbs_dscr_median",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "min3_props"
+    }
+   ],
+   "half_life_months": 3,
+   "agreement": "levels",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": false,
+   "shown": [
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "cmbs_delinquency",
+   "label": "CMBS loans behind on payments",
+   "unit": "pct",
+   "side": "commercial",
+   "better": "lower",
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "cmbs_delinq_share",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "min3_props",
+     "coverage": ["cmbs_status_known", "cmbs_props"]
+    }
+   ],
+   "half_life_months": 3,
+   "agreement": "rates",
+   "fallback": null,
+   "formula": null,
+   "note": "Share of a ZIP's CMBS properties on loans 30 days or more late or non-performing at maturity, among properties whose loan reports a payment status. Confidence is multiplied by that reporting share; a ZIP where no loan reports a status has no value.",
+   "rankable": false,
+   "shown": [
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "cmbs_cap",
+   "label": "CMBS implied cap rate",
+   "unit": "pct",
+   "side": "commercial",
+   "better": null,
+   "blend": "tiered_weighted_median",
+   "members": [
+    {
+     "field": "cmbs_cap_rate",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "min3_props"
+    },
+    {
+     "field": "cmbs_cap_5mi",
+     "weight": 1.0,
+     "tier": 2,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 12,
+   "agreement": "rates",
+   "fallback": null,
+   "formula": null,
+   "note": "NOI over the most recent appraisal, often at securitization: labelled implied, never mixed with asking caps.",
+   "rankable": false,
+   "shown": [
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "asking_cap",
+   "label": "Asking cap rate",
+   "unit": "pct",
+   "side": "commercial",
+   "better": null,
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "com_median_cap",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "min3_listings"
+    }
+   ],
+   "half_life_months": 3,
+   "agreement": "rates",
+   "fallback": null,
+   "formula": null,
+   "note": "Broker asking caps from listings; conf S uses the listing count (1-2 listings: 0.6, 3-9: 0.85, 10+: 1.0).",
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "cap_spread",
+   "label": "Asking cap minus 10-year Treasury",
+   "unit": "pct_pts",
+   "side": "commercial",
+   "better": "higher",
+   "blend": "derived",
+   "members": [],
+   "half_life_months": 3,
+   "agreement": "derived",
+   "fallback": null,
+   "formula": "asking_cap - fred_treasury_10y; conf = conf of asking_cap",
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "incentives",
+   "label": "Share of ZIP in an incentive area",
+   "unit": "pct",
+   "side": "commercial",
+   "better": "higher",
+   "blend": "max",
+   "members": [
+    {
+     "field": "oz_share",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "qct_share",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "dda_flag",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "flag_x100"
+    }
+   ],
+   "half_life_months": 24,
+   "agreement": "levels",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "commercial_risk",
+   "label": "Commercial property risk",
+   "unit": "score",
+   "side": "commercial",
+   "better": "lower",
+   "blend": "percentile_weighted_median",
+   "members": [
+    {
+     "field": "nri_risk_score",
+     "weight": 0.3,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "nfip_nonres_claims_10y",
+     "weight": 0.2,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    },
+    {
+     "field": "epa_brownfields",
+     "weight": 0.15,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    },
+    {
+     "field": "ej_superfund",
+     "weight": 0.1,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    },
+    {
+     "field": "fdiccre_pct_equity",
+     "weight": 0.2,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    },
+    {
+     "field": "gsa_expiring_24m_share",
+     "weight": 0.05,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    },
+    {
+     "field": "tri_releases_lb",
+     "weight": 0.1,
+     "tier": 1,
+     "normalize": "pctile_higher"
+    }
+   ],
+   "half_life_months": 24,
+   "agreement": "scores",
+   "fallback": null,
+   "formula": null,
+   "note": "Higher is riskier. Toxic release pounds (EPA TRI) rank only among ZIPs with a reporting facility; a ZIP with none has no part from it.",
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "power_cost",
+   "label": "Commercial electricity price",
+   "unit": "kwh_cents",
+   "side": "commercial",
+   "better": "lower",
+   "blend": "weighted_median",
+   "members": [
+    {
+     "field": "openei_com_cents",
+     "weight": 0.5,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "eia_com_cents",
+     "weight": 0.25,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "eia_state_com_cents",
+     "weight": 0.25,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 24,
+   "agreement": "levels",
+   "fallback": null,
+   "formula": null,
+   "note": "Weighted median of the OpenEI utility commercial rate (0.5), the EIA-861 county price of bundled-service customers (0.25) and the EIA-861 statewide price of all service types (0.25); the statewide part counts as state grain in the confidence.",
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "traffic",
+   "label": "Traffic on the busiest road (county)",
+   "unit": "count",
+   "side": "commercial",
+   "better": "higher",
+   "blend": "first_present",
+   "members": [
+    {
+     "field": "hpms_aadt_max",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 24,
+   "agreement": "levels",
+   "fallback": null,
+   "formula": null,
+   "note": null,
+   "rankable": true,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ]
+  },
+  {
+   "id": "cre_market",
+   "label": "US commercial property prices and delinquency",
+   "unit": "pct",
+   "side": "commercial",
+   "better": null,
+   "blend": "context",
+   "members": [
+    {
+     "field": "fred_cre_price_yoy",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    },
+    {
+     "field": "fred_cre_delinquency",
+     "weight": 1.0,
+     "tier": 1,
+     "normalize": "none"
+    }
+   ],
+   "half_life_months": 6,
+   "agreement": "levels",
+   "fallback": null,
+   "formula": null,
+   "note": "US-level context for the Commercial page header; not blended or ranked.",
+   "rankable": false,
+   "shown": [
+    "data"
+   ]
+  }
+ ],
+ "scores": {
+  "h_score": {
+   "label": "Home investment score",
+   "universe": "ZIPs with population >= 1000",
+   "kept_name": true,
+   "inputs": [
+    {
+     "key": "gross_yield",
+     "weight": 0.2,
+     "direction": "higher"
+    },
+    {
+     "key": "value_trend_5y",
+     "weight": 0.1,
+     "direction": "higher"
+    },
+    {
+     "key": "value_trend_1y",
+     "weight": 0.05,
+     "direction": "higher"
+    },
+    {
+     "key": "value_forecast_1y",
+     "weight": 0.05,
+     "direction": "higher"
+    },
+    {
+     "key": "rent_trend_1y",
+     "weight": 0.05,
+     "direction": "higher"
+    },
+    {
+     "key": "days_on_market",
+     "weight": 0.05,
+     "direction": "lower"
+    },
+    {
+     "key": "sale_to_list",
+     "weight": 0.04,
+     "direction": "higher"
+    },
+    {
+     "key": "affordability",
+     "weight": 0.08,
+     "direction": "lower"
+    },
+    {
+     "key": "property_tax_rate",
+     "weight": 0.04,
+     "direction": "lower"
+    },
+    {
+     "key": "vacancy_rate",
+     "weight": 0.04,
+     "direction": "lower"
+    },
+    {
+     "key": "migration",
+     "weight": 0.06,
+     "direction": "higher"
+    },
+    {
+     "key": "jobs_trend",
+     "weight": 0.06,
+     "direction": "higher"
+    },
+    {
+     "key": "safety",
+     "weight": 0.05,
+     "direction": "higher"
+    },
+    {
+     "key": "climate_risk",
+     "weight": 0.05,
+     "direction": "lower"
+    },
+    {
+     "key": "population",
+     "weight": 0.02,
+     "direction": "higher"
+    },
+    {
+     "key": "schools",
+     "weight": 0.04,
+     "direction": "higher"
+    },
+    {
+     "key": "insurance_cost",
+     "weight": 0.02,
+     "direction": "lower"
+    }
+   ],
+   "min_inputs": "present weight >= 0.6, at least 6 inputs, and gross_yield or affordability present",
+   "conf_field": "h_conf"
+  },
+  "c_score": {
+   "label": "Business base score (v1, unchanged)",
+   "universe": "ZIPs with population >= 1000",
+   "kept_name": true,
+   "inputs": [
+    {
+     "key": "biz_estabs_5y",
+     "weight": 0.25,
+     "direction": "higher"
+    },
+    {
+     "key": "biz_emp",
+     "weight": 0.15,
+     "direction": "higher"
+    },
+    {
+     "key": "biz_pay_per_emp",
+     "weight": 0.15,
+     "direction": "higher"
+    },
+    {
+     "key": "estabs_per_1k",
+     "weight": 0.15,
+     "direction": "higher"
+    },
+    {
+     "key": "hh_income",
+     "weight": 0.15,
+     "direction": "higher"
+    },
+    {
+     "key": "pop",
+     "weight": 0.15,
+     "direction": "higher"
+    }
+   ],
+   "min_inputs": "at least 3 inputs (v1 rule)",
+   "conf_field": null
+  },
+  "retail_score": {
+   "label": "Retail property score",
+   "universe": "ZIPs with biz_estabs >= 20 or lodes_jobs_total >= 200",
+   "inputs": [
+    {
+     "key": "income",
+     "weight": 0.1,
+     "direction": "higher"
+    },
+    {
+     "key": "daytime_pop",
+     "weight": 0.15,
+     "direction": "higher"
+    },
+    {
+     "key": "business_growth",
+     "weight": 0.1,
+     "direction": "higher"
+    },
+    {
+     "key": "traffic",
+     "weight": 0.1,
+     "direction": "higher"
+    },
+    {
+     "key": "retail_sqft_per_cap",
+     "weight": 0.1,
+     "direction": "lower"
+    },
+    {
+     "key": "cap_spread_retail",
+     "weight": 0.15,
+     "direction": "higher"
+    },
+    {
+     "key": "pop_trend",
+     "weight": 0.1,
+     "direction": "higher"
+    },
+    {
+     "key": "business_formation",
+     "weight": 0.05,
+     "direction": "higher"
+    },
+    {
+     "key": "commercial_risk",
+     "weight": 0.05,
+     "direction": "lower"
+    },
+    {
+     "key": "nes_firms_per_1k",
+     "weight": 0.05,
+     "direction": "higher"
+    },
+    {
+     "key": "sb_lending",
+     "weight": 0.05,
+     "direction": "higher"
+    }
+   ],
+   "min_inputs": "present weight >= 0.5 and at least 4 inputs",
+   "conf_field": "retail_conf"
+  },
+  "office_score": {
+   "label": "Office property score",
+   "universe": "ZIPs with biz_estabs >= 20 or lodes_jobs_total >= 200",
+   "inputs": [
+    {
+     "key": "jobs_office",
+     "weight": 0.15,
+     "direction": "higher"
+    },
+    {
+     "key": "lodes_jobs_office_share",
+     "weight": 0.1,
+     "direction": "higher"
+    },
+    {
+     "key": "qcew_office_wage_yoy",
+     "weight": 0.15,
+     "direction": "higher"
+    },
+    {
+     "key": "lodes_jobs_high_wage_share",
+     "weight": 0.1,
+     "direction": "higher"
+    },
+    {
+     "key": "lodes_daytime_ratio",
+     "weight": 0.1,
+     "direction": "higher"
+    },
+    {
+     "key": "cmbs_office_occ",
+     "weight": 0.15,
+     "direction": "higher"
+    },
+    {
+     "key": "gsa_expiring_24m_share",
+     "weight": 0.05,
+     "direction": "lower"
+    },
+    {
+     "key": "cap_spread_office",
+     "weight": 0.1,
+     "direction": "higher"
+    },
+    {
+     "key": "com_sqft_per_job",
+     "weight": 0.05,
+     "direction": "lower"
+    },
+    {
+     "key": "commercial_risk",
+     "weight": 0.05,
+     "direction": "lower"
+    }
+   ],
+   "min_inputs": "present weight >= 0.5 and at least 4 inputs",
+   "conf_field": "office_conf"
+  },
+  "industrial_score": {
+   "label": "Industrial property score",
+   "universe": "ZIPs with biz_estabs >= 20 or lodes_jobs_total >= 200",
+   "inputs": [
+    {
+     "key": "jobs_industrial",
+     "weight": 0.2,
+     "direction": "higher"
+    },
+    {
+     "key": "qcew_industrial_emp_yoy",
+     "weight": 0.15,
+     "direction": "higher"
+    },
+    {
+     "key": "hpms_truck_aadt_max",
+     "weight": 0.1,
+     "direction": "higher"
+    },
+    {
+     "key": "ind_sqft_per_job",
+     "weight": 0.1,
+     "direction": "lower"
+    },
+    {
+     "key": "power_cost",
+     "weight": 0.1,
+     "direction": "lower"
+    },
+    {
+     "key": "cmbs_industrial_occ",
+     "weight": 0.1,
+     "direction": "higher"
+    },
+    {
+     "key": "cap_spread_industrial",
+     "weight": 0.15,
+     "direction": "higher"
+    },
+    {
+     "key": "flood_risk",
+     "weight": 0.05,
+     "direction": "lower"
+    },
+    {
+     "key": "business_formation",
+     "weight": 0.05,
+     "direction": "higher"
+    }
+   ],
+   "min_inputs": "present weight >= 0.5 and at least 4 inputs",
+   "conf_field": "industrial_conf"
+  },
+  "multifamily_score": {
+   "label": "Multifamily property score",
+   "universe": "ZIPs with population >= 5000 (a real renter base; no merged field counts renter households)",
+   "inputs": [
+    {
+     "key": "rent_trend_1y",
+     "weight": 0.1,
+     "direction": "higher"
+    },
+    {
+     "key": "renter_share",
+     "weight": 0.1,
+     "direction": "higher"
+    },
+    {
+     "key": "vacancy_rate",
+     "weight": 0.1,
+     "direction": "lower"
+    },
+    {
+     "key": "jobs_trend",
+     "weight": 0.1,
+     "direction": "higher"
+    },
+    {
+     "key": "migration",
+     "weight": 0.1,
+     "direction": "higher"
+    },
+    {
+     "key": "new_supply",
+     "weight": 0.1,
+     "direction": "lower"
+    },
+    {
+     "key": "cmbs_multifamily_occ",
+     "weight": 0.1,
+     "direction": "higher"
+    },
+    {
+     "key": "cap_spread_multifamily",
+     "weight": 0.1,
+     "direction": "higher"
+    },
+    {
+     "key": "gross_yield",
+     "weight": 0.05,
+     "direction": "higher"
+    },
+    {
+     "key": "acs_rent_burden_50_share",
+     "weight": 0.05,
+     "direction": "lower"
+    },
+    {
+     "key": "affordable_units_per_1k",
+     "weight": 0.05,
+     "direction": "lower"
+    },
+    {
+     "key": "income",
+     "weight": 0.05,
+     "direction": "higher"
+    },
+    {
+     "key": "acsmf_renter_5plus_share",
+     "weight": 0.1,
+     "direction": "higher",
+     "optional": true
+    },
+    {
+     "key": "zm_zori_mf_yoy",
+     "weight": 0.1,
+     "direction": "higher",
+     "optional": true
+    },
+    {
+     "key": "hvsm_rental_vacancy",
+     "or": ["a1m_rental_vacancy"],
+     "weight": 0.1,
+     "direction": "lower",
+     "optional": true
+    },
+    {
+     "key": "mf_permits_5plus_per_1k",
+     "weight": 0.05,
+     "direction": "lower",
+     "optional": true
+    }
+   ],
+   "min_inputs": "present weight >= 0.5 and at least 4 inputs",
+   "conf_field": "multifamily_conf"
+  }
+ },
+ "score_rules": {
+  "percentiles": "inputs become percentile ranks (mid-rank ties) within the score's universe; lower-is-better inputs invert; score = weighted mean of present inputs re-weighted over those present",
+  "missing": "a missing input is skipped, never zero; a value a thin ZIP took from its county or metro (area_fallback) counts as missing",
+  "conf": "score conf = present weight share x weighted mean conf of present inputs (metric _conf, or the field's source G x F for raw fields)",
+  "kept_names": "h_score (now v2), c_score (v1 unchanged), area_score/area_grade/area_conf (grade v2), score_parts and grade_parts keep their names; h_score_v1 stays in shards for one release",
+  "alternates": "an input with `or` ranks the first of its fields present at each ZIP (key, then each alternate); the ZIP's score_parts name the field used",
+  "optional": "an input marked optional whose fields this build does not produce at all (a source not landed yet) leaves the score's total weight, so the other inputs re-weight and no ZIP's coverage drops; once any ZIP has it, it counts like every input",
+  "multifamily_inputs": "2026-11-17: multifamily_score adds renters in buildings of 5+ units (acsmf_renter_5plus_share, ACS 5-year ZCTA, higher), multifamily rent growth (zm_zori_mf_yoy, Zillow ZORI multifamily by metro, higher), metro rental vacancy (hvsm_rental_vacancy, Census HVS, else a1m_rental_vacancy, ACS 1-year metro; lower) and permits for 5+ unit buildings per 1,000 people (mf_permits_5plus_per_1k: county bps_units_5plus_12m, else metro bpm_units_5plus_12m, over the population of the area it was published for; lower). All four are optional with weights 0.1, 0.1, 0.1, 0.05 on top of the base 1.0, re-weighted over the inputs present. fham_upb_maturing_5y (FHA multifamily loan balance maturing in 5 years) is shown in the segment tables, not scored: maturing debt is a refinance signal whose direction for an investor is not settled."
+ },
+ "rollup_rules": {
+  "note": "How a ZIP field becomes a metro, state or US value (writer.v2_rollups, 2026-11-17). Every field rolls up by the default for its source level and agg (`default`); a state or metro row's `method` map names only a field rolled up another way (an area field that fell back to its ZIPs, see `fallback`). The v1 fields keep aggregate_method and their v1 entries in `method`.",
+  "default": {
+   "county": {"sum": "sum_counties", "pop_weighted_mean": "county_pop_weighted_mean", "pop_weighted_median": "county_pop_weighted_median"},
+   "tract": {"sum": "sum_tracts (when copied or averaged down; apportioned tract counts sum over ZIPs)", "pop_weighted_mean": "pop_weighted_mean", "pop_weighted_median": "pop_weighted_median"},
+   "zip": {"sum": "sum", "pop_weighted_mean": "pop_weighted_mean", "pop_weighted_median": "pop_weighted_median"},
+   "metric": "the metric's `rollup` (sum) when it has one, else pop_weighted_median",
+   "score": "pop_weighted_median",
+   "cbsa, state, us": "published (manifest.context)"
+  },
+  "sum_counties": "a field its source publishes by county with agg sum: the sum of the published county values, each county once (a county belongs to its FIPS state and to the metro most of its ZIP population lies in). Before, a county value copied to each of its ZIPs was summed over ZIPs (California GDP read $729 trillion).",
+  "sum_tracts": "a tract field with agg sum that was copied or averaged down (xwalk assign or mean): the sum of the published tract values, each tract once",
+  "county_pop_weighted_mean": "a county field with agg pop_weighted_mean: the mean of the county values weighted by county population (the sum of its ZIPs' ACS population)",
+  "county_pop_weighted_median": "the same as a weighted median",
+  "sum": "a metric with rollup sum (counts and totals: inventory, population, business_base, jobs, daytime_pop, deposits, building footprint): the sum over the ZIPs with their own value; _n says how many ZIPs entered, so a sum over few ZIPs reads as partial",
+  "pop_weighted_median": "every other metric and every score (h_score, retail, office, industrial, multifamily): the population-weighted median over the ZIPs with their own value; <id>_conf is the median ZIP confidence and <id>_n the ZIPs that entered",
+  "fallback": "a row no county of which reported (Connecticut's planning regions match no ZIP county) rolls an area field up over ZIPs when that is sound (a weighted mean, or a sum of apportioned shares); a sum of copied county values stays null",
+  "area_fallback": "metric values a thin ZIP took from its county or metro (blend.area_fallback) never enter a rollup"
+ },
+ "rental_grade": {
+  "label": "Rental area grade v2 (fields area_score, area_grade, area_conf, grade_parts, grade_flags keep their names)",
+  "factors": [
+   {
+    "key": "renter_share",
+    "weight": 0.15,
+    "zero": 20,
+    "full": 50
+   },
+   {
+    "key": "rent_to_income",
+    "weight": 0.1,
+    "zero": 40,
+    "full": 25
+   },
+   {
+    "key": "gross_yield",
+    "weight": 0.2,
+    "zero": 4,
+    "full": 10
+   },
+   {
+    "key": "rent_trend_1y",
+    "weight": 0.05,
+    "zero": -2,
+    "full": 5
+   },
+   {
+    "key": "value_trend_5y",
+    "weight": 0.05,
+    "zero": 0,
+    "full": 40
+   },
+   {
+    "key": "vacancy_rate",
+    "weight": 0.05,
+    "zero": 12,
+    "full": 3
+   },
+   {
+    "key": "jobs_trend",
+    "weight": 0.05,
+    "zero": -2,
+    "full": 3
+   },
+   {
+    "key": "migration",
+    "weight": 0.05,
+    "zero": 25,
+    "full": 75
+   },
+   {
+    "key": "safety",
+    "weight": 0.1,
+    "zero": 20,
+    "full": 80
+   },
+   {
+    "key": "schools",
+    "weight": 0.05,
+    "zero": 20,
+    "full": 80
+   },
+   {
+    "key": "college_enroll_5mi",
+    "weight": 0.05,
+    "zero": 0,
+    "full": 10000
+   },
+   {
+    "key": "eviction_filing_rate",
+    "weight": 0.03,
+    "zero": 10,
+    "full": 1
+   },
+   {
+    "key": "flood_risk",
+    "weight": 0.04,
+    "zero": 80,
+    "full": 20
+   },
+   {
+    "key": "broadband",
+    "weight": 0.03,
+    "zero": 70,
+    "full": 95
+   }
+  ],
+  "grades": [
+   [
+    "A",
+    70.0
+   ],
+   [
+    "B",
+    55.0
+   ],
+   [
+    "C",
+    40.0
+   ]
+  ],
+  "min_pop": 1000,
+  "required": [
+   "gross_yield"
+  ],
+  "caps": [
+   {
+    "key": "gross_yield",
+    "below": 4.0,
+    "max_grade": "D",
+    "flag": "yield_below_4pct"
+   },
+   {
+    "key": "gross_yield",
+    "below": 5.5,
+    "max_grade": "C",
+    "flag": "yield_below_5_5pct"
+   }
+  ],
+  "min_coverage": 0.6,
+  "a_min_coverage": 0.8,
+  "low_conf_below": 0.8,
+  "conf": "area_conf = present weight share x weighted mean conf of the factors present (v1 used present weight only)"
+ },
+ "zips_json_cols": [
+  "zip",
+  "city",
+  "state",
+  "county",
+  "metro",
+  "lat",
+  "lon",
+  "pop",
+  "hh_income",
+  "zhvi",
+  "zhvi_yoy",
+  "zhvi_5y",
+  "rent",
+  "rent_src",
+  "rent_yoy",
+  "list_price",
+  "active",
+  "dom",
+  "price_cut_share",
+  "yield_gross",
+  "price_to_income",
+  "vacancy",
+  "owner_share",
+  "biz_estabs",
+  "biz_estabs_5y",
+  "biz_emp",
+  "biz_pay_per_emp",
+  "estabs_per_1k",
+  "retail_estabs",
+  "office_estabs",
+  "industrial_estabs",
+  "com_listings",
+  "com_median_price",
+  "com_median_cap",
+  "h_score",
+  "c_score",
+  "renter_share",
+  "median_age",
+  "rent_to_income",
+  "homicide_rate",
+  "colleges_5mi",
+  "college_enroll_5mi",
+  "colleges_10mi",
+  "college_enroll_10mi",
+  "schools_5mi",
+  "area_score",
+  "area_grade",
+  "area_conf",
+  "home_value",
+  "value_trend_1y",
+  "value_trend_5y",
+  "value_forecast_1y",
+  "typical_rent",
+  "rent_trend_1y",
+  "gross_yield",
+  "inventory",
+  "days_on_market",
+  "sale_to_list",
+  "price_cuts",
+  "market_heat",
+  "affordability",
+  "property_tax_rate",
+  "vacancy_rate",
+  "population",
+  "pop_trend",
+  "migration",
+  "income",
+  "income_trend",
+  "jobs_trend",
+  "wages",
+  "unemployment",
+  "schools",
+  "safety",
+  "climate_risk",
+  "flood_risk",
+  "insurance_cost",
+  "health",
+  "broadband",
+  "walkability",
+  "new_supply",
+  "business_base",
+  "business_growth",
+  "business_formation",
+  "jobs_total",
+  "jobs_office",
+  "jobs_retail",
+  "jobs_industrial",
+  "daytime_pop",
+  "sb_lending",
+  "deposits",
+  "deposit_growth",
+  "bank_cre_concentration",
+  "cmbs_occupancy",
+  "asking_cap",
+  "cap_spread",
+  "incentives",
+  "commercial_risk",
+  "power_cost",
+  "traffic",
+  "home_value_conf",
+  "typical_rent_conf",
+  "h_conf",
+  "retail_score",
+  "retail_conf",
+  "office_score",
+  "office_conf",
+  "industrial_score",
+  "industrial_conf",
+  "multifamily_score",
+  "multifamily_conf",
+  "ruca_class",
+  "county_fips",
+  "cbsa",
+  "acs_units_5plus_share",
+  "acs_units_2_4_share",
+  "acs_vacant_for_rent_share",
+  "bps_units_5plus_12m",
+  "cap_spread_multifamily",
+  "acsmf_renter_5plus_share"
+ ]
+}

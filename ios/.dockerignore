@@ -1,0 +1,43 @@
+# The harness sources are symlinks into OmarchyDeck/, Shared/ and OmarchyDeckTests/, so those stay in
+# the context. Everything the Linux harness does not need is dropped, and no secret ever leaves the host.
+.git
+.gitignore
+.github
+.swarm-source
+build
+DerivedData
+*.xcodeproj
+*.xcworkspace
+xcuserdata
+*.xcuserstate
+*.ipa
+*.xcarchive
+.build
+**/.build
+.swiftpm
+**/.swiftpm
+
+# Never send secrets or Apple signing material to the daemon.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p8
+*.p12
+*.mobileprovision
+*.provisionprofile
+Secrets.xcconfig
+testflight
+
+# Host tooling output.
+__pycache__
+*.pyc
+.DS_Store
+node_modules
+
+# Not needed to build or test the harness. project.yml stays: DeckTokensTests checks its UIAppFonts list.
+README.md
+docs
+icon
+OmarchyDeck.storekit

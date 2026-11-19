@@ -1,0 +1,50 @@
+{
+ "feed": "history-goodnews",
+ "generated_at": "2026-10-30T15:00:00Z",
+ "sources": [
+  {
+   "name": "Wikipedia On This Day",
+   "url": "https://en.wikipedia.org/wiki/Main_Page",
+   "fetched_at": "2026-10-30T15:00:00Z"
+  },
+  {
+   "name": "Positive News",
+   "url": "https://www.positive.news",
+   "fetched_at": "2026-10-30T15:00:00Z"
+  }
+ ],
+ "items": [
+  {
+   "section": "on_this_day",
+   "title": "Orson Welles airs The War of the Worlds",
+   "summary": "The radio drama ran on CBS and some listeners took it for news.",
+   "kind": "history",
+   "source": "Wikipedia",
+   "year": 1938,
+   "source_url": "https://en.wikipedia.org/wiki/The_War_of_the_Worlds_(1938_radio_drama)",
+   "as_of": "2026-10-30T15:00:00Z"
+  },
+  {
+   "section": "good_news",
+   "title": "Kelp forests return off Palos Verdes",
+   "summary": "Restoration divers report canopy at the highest level in decades.",
+   "kind": "solutions-journalism",
+   "source": "Positive News",
+   "published": "2026-10-29T08:00:00Z",
+   "source_url": "https://www.positive.news",
+   "as_of": "2026-10-30T15:00:00Z"
+  },
+  {
+   "section": "trend",
+   "title": "Global child mortality",
+   "summary": "Deaths before age five keep falling year over year.",
+   "kind": "long-trend",
+   "source": "Our World in Data",
+   "latest_value": 3.7,
+   "unit": "%",
+   "source_url": "https://ourworldindata.org/child-mortality",
+   "as_of": "2026-10-30T15:00:00Z"
+  }
+ ],
+ "errors": []
+}

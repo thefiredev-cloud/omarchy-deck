@@ -1,0 +1,16 @@
+rust/target/
+__pycache__/
+*.pyc
+static.bak-*/
+*.bak-*
+.env
+*.token
+qa/baseline-static/
+# local screenshots of the live deck (they show the owner's budget): never committed
+proof/
+
+# Secrets and local artifacts
+*.pem
+*.key
+*.p8
+*.p12

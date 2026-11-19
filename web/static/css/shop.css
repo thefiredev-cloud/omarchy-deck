@@ -1,0 +1,159 @@
+/* Shop > Market and Shop > Orders (Deck v3, lane PgShop, 2026-11-14). Builds on ui.css components; only Shop-specific rules here.
+   Titles wrap whole (never clamped or cut): a long seller title takes the lines it needs. */
+
+/* product, deal and order titles: whole words, wrapping; a single overlong token may break, nothing is hidden */
+#pg-shop .ptitle-t{overflow-wrap:break-word;word-break:normal;hyphens:manual;text-wrap:pretty}
+#pg-shop .frow .fl b.ptitle-t{overflow-wrap:break-word}
+
+/* the economy strip is one compact strip at the title step under Trending (PlanDesign M3): three a row on a phone (P and L),
+   six on T, the eight in one row on D and XL. Its units ride in the tile labels ("Shipping, per 40 ft box", shop.js), so a figure
+   never drops a unit onto its own line in a narrow cell (layout audit D 21). A unit never breaks inside itself. The TV keeps its
+   own board strip. One plain takeaway sentence sits above it. */
+html:not(.tv) #pg-shop .shop-strip .strip{--cols:3}
+@media (min-width:600px) and (min-height:500px){html:not(.tv) #pg-shop .shop-strip .strip[data-nb="6"]{--cols:6}}
+@media (min-width:1100px) and (min-height:500px){html:not(.tv) #pg-shop .shop-strip .strip[data-n="8"]{--cols:8}}
+html:not(.tv) #pg-shop .shop-strip .strip>.tile{padding:var(--s-3)}
+html:not(.tv) #pg-shop .shop-strip .strip>.tile .v{font-size:var(--fs-title)}
+#pg-shop .shop-strip .tile .v .u{white-space:nowrap}
+#pg-shop .shop-take{margin:0 0 var(--s-3);max-width:68ch;font-size:var(--fs-body);color:var(--c-text-1);text-wrap:pretty}
+
+/* Trending (trends.json products, 2026-11-17): rank, a title that links to the source list, signal and source with its age, the
+   median price over the rank move. The price column keeps its width; the title wraps whole. A row whose source did not report leads
+   its second line with the warn mark */
+#pg-shop .trank .trow .fr{flex:0 0 auto;align-items:flex-end;text-align:right}
+#pg-shop .trank .trow .fr b{white-space:nowrap}
+#pg-shop .trank .trow .fl small{overflow-wrap:break-word}
+#pg-shop .trank .trow.stl .fl small .sd{margin-right:.35em}
+#pg-shop .trank a.trow[target="_blank"]::after{margin-right:3px}
+
+/* Sells locally: a short table under the movers; the item's role is its second line */
+.s-local>.note{margin:0 0 var(--s-2)}
+/* a listing event that is out of date: its warn mark leads its second line */
+#pg-shop .prow.stl .fl small .sd{margin-right:.35em}
+/* D and XL: the movers share the first row as 4/12, so a mover's price and change sit on one line under its title (as on a phone)
+   and the title keeps the column's width */
+@media (min-width:1100px) and (min-height:500px){
+  html:not(.tv) #pg-shop .shop-top .prow{flex-wrap:wrap;row-gap:var(--s-1)}
+  html:not(.tv) #pg-shop .shop-top .prow .fl{flex:1 1 calc(100% - 2em)}
+  html:not(.tv) #pg-shop .shop-top .prow .fr{order:3;flex:1 1 100%;max-width:none;flex-direction:row;flex-wrap:wrap;align-items:baseline;justify-content:flex-start;gap:0 var(--s-3);text-align:left}
+  html:not(.tv) #pg-shop .shop-top .prow .fr small{justify-content:flex-start}
+}
+
+/* best sellers and movers: kind chips above the list; they wrap rather than run into the panel edge in a half column */
+.s-move .mchips{margin:0 0 var(--s-3);flex-wrap:wrap;overflow:visible}
+/* the right column of a product or deal row shares the row: its change line wraps instead of pushing the row 2 px wide */
+#pg-shop .prow .fr,#pg-shop .drow .fr{flex:0 1 auto;min-width:0}
+.prow .fr small,.drow .fr small{display:inline-flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:0 .35em;white-space:normal}
+/* P and L (both phones): a deal's or a mover's title takes the row and its price and change sit on one line under it, so a
+   title is never squeezed to 150 px and five lines (layout audit P 29), and on L the movers no longer run 200 to 400 px past
+   Category prices beside them (L-2 row 61). The link mark or chevron stays at the row's end. */
+@media (max-width:599px),(min-width:600px) and (max-height:499px){
+  #pg-shop .drow,#pg-shop .prow{flex-wrap:wrap;row-gap:var(--s-1)}
+  #pg-shop .drow .fl,#pg-shop .prow .fl{flex:1 1 calc(100% - 2em)}
+  #pg-shop .drow .fr,#pg-shop .prow .fr{order:3;flex:1 1 100%;max-width:none;flex-direction:row;flex-wrap:wrap;align-items:baseline;justify-content:flex-start;gap:0 var(--s-3);text-align:left}
+  #pg-shop .drow .fr small,#pg-shop .prow .fr small{justify-content:flex-start}
+}
+/* the shared chevron is a rotated square; its corner reached 2 px past the row edge, so the row scrolled */
+#pg-shop .frow[data-open]::after,#pg-shop .frow.go::after,#pg-shop .s-cost>summary::after{margin-right:3px}
+
+/* category cards and the one building line. Off TV the last row's cards share its width, so an odd card never sits beside an
+   empty cell (layout audit L 62, 66); the TV keeps its grid */
+.ccards{grid-template-columns:repeat(auto-fill,minmax(min(100%,10rem),1fr))}
+html:not(.tv) .ccards{display:flex;flex-wrap:wrap}
+html:not(.tv) .ccards>.ccard{flex:1 1 10rem;min-width:0}
+.ccard .fig{font-size:var(--fs-title)}
+.s-cat .ccards+.flist{margin-top:var(--s-3)}
+/* D: the categories share the first row as 4/12 beside the watches and the movers; their cards are compact (tighter padding and
+   gap, the name at body size) so the three columns end within about the same height (review of #354: the laptop's watches
+   column ended 200 px above categories). On XL (1920, his 2470 window) the full cards already end with the others, and the
+   compact ones left a 265 px hole under them at 2470 */
+@media (min-width:1100px) and (max-width:1599px) and (min-height:500px){
+  html:not(.tv) #pg-shop .shop-top .ccard{padding:var(--s-3) var(--s-4);gap:var(--s-1)}
+  html:not(.tv) #pg-shop .shop-top .ccard h3{font-size:var(--fs-body)}
+}
+
+/* section title controls (platform kind, condition) wrap under the title on narrow columns */
+#pg-shop .secttl .seg{font-size:var(--fs-meta)}
+#pg-shop .secttl .seg>button{font-size:var(--fs-meta);padding:0 var(--s-3)}
+
+/* phone platforms: one compact row each (rank, name, kind); the ranks open in the platform sheet */
+.prank>li{border-top:var(--hair)}.prank>li:first-child{border-top:0}
+.prank .frow{border-top:0}
+.prank .rank-n{flex:none;min-width:2.4ch;font-family:var(--mono);font-size:var(--fs-meta);color:var(--c-text-2)}
+
+/* Orders: the one page status is the first row of Return deadlines */
+.ostat .sd{flex:none;align-self:center}
+
+/* Amazon: the right column stacks Amazon price drops over Deals and resale; a stale Amazon view is a pill on its own title */
+.sstack{display:flex;flex-direction:column;gap:var(--gap);min-width:0}
+/* L: Platforms (compact rows, as on P) and the three lists flow as one balanced pair of columns (layout audit L 65) */
+@media (min-width:600px) and (max-height:499px){
+  html:not(.tv) #pg-shop .shop-mid{display:block;columns:2;column-gap:var(--gap)}
+  html:not(.tv) #pg-shop .shop-mid>.sstack{display:contents}
+  html:not(.tv) #pg-shop .shop-mid .sect{break-inside:avoid;margin:0;padding-bottom:var(--gap)}
+}
+/* the market feed is down: its failed state is the first child of the sub-page, and the sections that still answer follow it. The state has no
+   margin of its own, so the next section title (and its Any/New switch) sat 2 px under its border at 390 and at 1920 (2026-11-18 renders) */
+#pg-shop .sub>.es:not(:last-child){margin-bottom:var(--gap)}
+/* T: the Platforms table takes the full row (ui.css), so the three lists take it too instead of the left half (layout audit T 41) */
+@media (min-width:600px) and (max-width:1099px) and (min-height:500px){#pg-shop .g12.shop-mid>.sstack{grid-column:span 12}}
+.s-az h3{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s-2)}
+#pg-shop .azrow .fr,.s-az .azrow .fr{flex:0 1 auto;min-width:0}
+.s-az .flist{margin-top:var(--s-2)}
+a.azrow[target="_blank"]::after{margin-right:3px}
+
+/* Listings (Market and the watch sheet): a group of near-duplicates is a native disclosure; its summary is a row with a
+   chevron, its members a quiet nested list with their own links. The sheet's long list folds behind one Show more. */
+.lst-n{margin:0 0 var(--s-2)}
+.lrow-l .fr,.lgrp .fr{flex:0 1 auto;min-width:0}
+a.lrow-l[target="_blank"]::after{margin-right:3px}
+.lgrp{border-top:var(--hair)}
+.flist>.lgrp:first-child{border-top:0}
+.lgrp>summary{list-style:none;cursor:pointer;border-top:0}
+.lgrp>summary::-webkit-details-marker{display:none}
+.lgrp>summary::after{content:"";flex:none;width:.5em;height:.5em;border:solid var(--c-text-3);border-width:0 2px 2px 0;transform:rotate(45deg);margin:0 .15em 0 var(--s-1)}
+.lgrp[open]>summary::after{transform:rotate(-135deg)}
+.lgrp>.lgi{background:none;border:0;border-left:var(--hair);border-radius:0;padding:0 0 0 var(--s-3);margin:0 0 var(--s-2)}
+.lgrp>.lgi>.note{margin:var(--s-1) 0 0}
+.lmore{margin-top:var(--s-2)}
+.lmore>summary{list-style:none;display:flex;justify-content:center;width:max-content;margin:0 auto var(--s-2);cursor:pointer}
+.lmore>summary::-webkit-details-marker{display:none}
+.lmore[open]>summary{display:none}
+
+/* P: the category chips are their own row under the header; the header's sub-tab row never shrinks or scrolls, so Market
+   and Orders stay whole beside the freshness mark (WebKit defect D3) */
+.shop-cats{margin:0 0 var(--s-4)}
+@media (max-width:599px){#pg-shop .phead .subrow{flex:0 0 auto;overflow:visible}}
+/* A kept read uses the guard's real words, not generated content. On a phone its header stays with the rows while stale,
+   so scrolling or repainting cannot leave old prices looking current. The two whole sub-tabs and the mark may wrap. */
+@media (max-width:599px),(min-width:600px) and (max-height:499px){
+  #pg-shop .phead:has(.subrow){flex-wrap:wrap}
+  #pg-shop .phead:has(.subrow) .pact>.fresh.warn:is([data-short$=" min"],[data-short$=" h"],[data-short$=" days"])::after{content:"Out of date \00B7  " attr(data-short)}
+  #pg-shop .phead:has(.subrow) .pact>.fresh.warn:is([data-short$=" min"],[data-short$=" h"],[data-short$=" days"]){white-space:nowrap}
+  #pg-shop .phead:has(.fresh[data-kept]){position:sticky;top:calc(var(--topbar-h) + var(--safe-t))}
+  #pg-shop .phead:has(.subrow) .pact>.fresh.warn[data-kept]>.fw{display:inline}
+  #pg-shop .phead:has(.subrow) .pact>.fresh.warn[data-kept]::after{content:none}
+  #pg-shop .phead:has(.fresh[data-kept])>.pact{display:flex;flex-wrap:wrap;max-width:100%}
+  #pg-shop .phead:has(.fresh[data-kept]) .fresh[data-kept]{display:inline-flex}
+  body:has(#pg-shop:not([hidden]) .fresh[data-kept]) #tfresh{display:none}
+}
+
+/* selling costs fold on a phone: the summary is the section title */
+.s-cost{margin:0 0 var(--gap)}
+.s-cost>summary{cursor:pointer;list-style:none;min-height:var(--hit);align-items:center}
+.s-cost>summary::-webkit-details-marker{display:none}
+.s-cost>summary::after{content:"";width:.5em;height:.5em;border:solid var(--c-text-2);border-width:0 2px 2px 0;transform:rotate(45deg);margin-left:auto}
+.s-cost[open]>summary::after{transform:rotate(-135deg)}
+
+/* the quiet setup row at the very bottom: on the grid, a plain row with a chevron */
+.shop-setup{border-top:var(--hair);margin-top:var(--s-2);color:var(--c-text-2)}
+.shop-setup .fl b{font-size:var(--fs-body);font-weight:var(--fw-reg);color:var(--c-text-2)}
+.shop-setup:hover .fl b{color:var(--c-text-1)}
+
+/* Orders: launch rows arm on the first tap (3 s), open on the second */
+.lrow.armed{box-shadow:inset 3px 0 0 var(--c-signal)}
+.lrow.armed .fl b{color:var(--c-text-1)}
+
+/* TV: the board holds the strip, six trending rows and six movers; the rest is one Down press below */
+html.tv #pg-shop .mchips,html.tv #pg-shop .more-row,html.tv #pg-shop .secttl .seg{display:none}
+html.tv #pg-shop .s-move .flist>.frow:nth-child(n+7){display:none}

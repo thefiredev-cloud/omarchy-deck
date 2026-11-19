@@ -1,0 +1,19 @@
+[Unit]
+Description=Pixel Deck national ZIP housing and commercial dataset (public bulk files, writes house-feeds/national/)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 %h/ops/bin/deck-feed-housing-national
+# Optional free public-data API keys (owner file). A missing file or an unset key is fine: that source reports needs_key.
+EnvironmentFile=-%h/ops/env/deck-data.env
+# 90 minutes (was 40), deck-mf lane L19, 2026-11-17. Evidence:
+#  - warm runs in the journal (2026-11-15 09:12, 2026-11-15 18:55, 2026-11-16 05:22): 359 s, 325 s and 281 s wall, the plugin
+#    phase 76 to 123 s of it, peak memory 3.5 to 4.3 GB;
+#  - the cold build of 2026-11-14 wrote its 77 source results between 17:52 and 18:42 (50 minutes, with two pauses of 15 and
+#    23 minutes between interrupted dev runs), and the compile after the plugins takes about 200 s: a cold run can pass 40;
+#  - run.py gives each source 20 minutes and runs 3 at once, and lanes L01 to L10 add about 20 more sources.
+# A run that reaches the limit is killed by systemd; the flock in deck-feed-housing-national frees with the process and the
+# writer replaces files by rename, so the previous national-v2/ stays whole.
+TimeoutStartSec=5400
+Slice=agent-periodic.slice
+Nice=10

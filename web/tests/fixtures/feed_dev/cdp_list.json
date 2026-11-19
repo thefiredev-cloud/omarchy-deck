@@ -1,0 +1,7 @@
+[
+ {"type":"page","title":"App Store Connect","url":"https://appstoreconnect.apple.com/"},
+ {"type":"page","title":"Callback https://x.example/cb?code=SECRETSECRETSECRET1234567890 done","url":"https://x"},
+ {"type":"page","title":"token ghp_abcdefghijklmnopqrstuvwxyz0123456789 here","url":"https://y"},
+ {"type":"service_worker","title":"sw","url":"https://z"},
+ {"type":"page","title":"","url":"about:blank"}
+]

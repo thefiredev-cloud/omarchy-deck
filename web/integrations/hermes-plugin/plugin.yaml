@@ -1,0 +1,11 @@
+name: pixel-deck-readonly
+version: 0.1.0
+description: "Read-only Pixel Deck tools: Today summary, website traffic, camera readiness, endpoint audit. Loopback 8796, GET only, counts/status/time only."
+author: "Kodros"
+kind: standalone
+provides_tools:
+  - deck_today
+  - deck_traffic
+  - deck_cameras
+  - deck_sites
+  - deck_endpoint_audit

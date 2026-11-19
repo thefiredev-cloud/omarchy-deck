@@ -1,0 +1,173 @@
+/* ===== DeckScope (design v3): D gets the segment and search in .phead .pscope; P, L and T fold .pscope away (ui.css), so the search
+   leads the page's filter row and the scope is the first group in the Filters sheet ===== */
+.fbar-top>.re-search{display:none}
+@media (max-width:1099px),(max-height:499px){
+  /* critique 16: the row reads [ZIP or city][Filters n] */
+  .fbar-top>.re-search{display:flex;order:-1;flex:1 1 auto;min-width:0;max-width:none}
+}
+/* the scope group in the Filters sheet: four whole choices in two rows of two, never a sideways strip */
+.re-scope-field{display:flex;flex-direction:column;gap:var(--s-2);grid-column:1/-1}
+.re-scope-field .fg-h{font-size:var(--fs-meta);color:var(--c-text-2)}
+.re-scope-field .seg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;max-width:28rem;overflow:visible}
+.re-scope-field .seg>button{min-width:0;white-space:normal;text-align:center;line-height:1.2;padding:var(--s-1) var(--s-3)}
+.re-scope-field .seg>button:nth-child(3){border-left:0}
+.re-scope-field .seg>button:nth-child(n+3){border-top:var(--hair)}
+
+/* ===== Real estate > Residential (design v3): components from ui.css; this part only places sections per device class
+   (PageBlueprints 3 arrangement, critique 10, 11, 24). P max-width 599 · L min-width 600 and max-height 499 ·
+   T 600-1099 and min-height 500 · D min-width 1100 and min-height 500 · TV html.tv. No table, strip or sheet rules here:
+   tables never get their own scroller (one document scroller), ui.css owns them. ===== */
+.re-board{display:flex;flex-direction:column;gap:var(--gap);min-width:0}
+.re-board>.re-strip,.re-cols>.re-col>.sect,.re-cols>.sect{min-width:0}
+/* the strip's caption names the scope in one quiet line, not a title row */
+.re-strip>.secttl{font-size:var(--fs-lead);margin-bottom:var(--s-1)}
+/* P: the [ZIP or city][Filters] row sits close to the data it filters */
+@media (max-width:599px){.re-fbar>.fbar{margin-bottom:var(--s-2)}}
+/* D and XL: the market strip leads; the inline filters sit between it and the ZIPs they filter (first data under the header) */
+@media (min-width:1100px) and (min-height:500px){
+  html:not(.tv) #pg-realestate-residential{display:flex;flex-direction:column}
+  html:not(.tv) #pg-realestate-residential>.re-main,html:not(.tv) #pg-realestate-residential .re-board{display:contents}
+  html:not(.tv) #pg-realestate-residential .re-strip{order:0;margin-bottom:var(--gap)}
+  html:not(.tv) #pg-realestate-residential>.re-fbar{order:1}
+  html:not(.tv) #pg-realestate-residential .re-cols{order:2}
+}
+.re-cols{display:flex;flex-direction:column;gap:var(--gap);min-width:0}
+.re-col{display:flex;flex-direction:column;gap:var(--gap);min-width:0}
+/* P: one column. Best ZIPs (its top 3) right under the strip, then map, areas, your markets, homes (SeeGlanceTouch G8) */
+@media (max-width:599px){
+  .re-cols>.re-col{display:contents}
+  .re-cols .re-best{order:1}.re-cols .re-map{order:2}.re-cols .re-areas{order:3}.re-cols .re-mine{order:4}.re-cols .re-homes{order:5}
+  .re-map .usmap{gap:2px}
+}
+/* T: map beside the ranked areas, Best ZIPs full width. With Your markets the four short blocks pair as two balanced
+   columns before Best ZIPs (map then homes against areas then Your markets: about 1,700 px each at 834), so neither half
+   runs on empty (layout audit T27, T28). The board says which blocks it holds (re-w-areas, re-w-mine) */
+@media (min-width:600px) and (max-width:1099px) and (min-height:500px){
+  .re-cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"map map" "best best" "homes homes";align-items:start}
+  .re-cols>.re-col{display:contents}
+  .re-cols .re-map{grid-area:map}.re-cols .re-areas{grid-area:areas}.re-cols .re-best{grid-area:best}.re-cols .re-mine{grid-area:mine}.re-cols .re-homes{grid-area:homes}
+  .re-w-areas .re-cols{grid-template-areas:"map areas" "best best" "homes homes"}
+  .re-w-mine .re-cols{grid-template-areas:"map mine" "best best" "homes homes"}
+  .re-w-areas.re-w-mine .re-cols{grid-template-areas:"map areas" "homes areas" "homes mine" "best best"}
+}
+/* L: one page scroller; the strip and the map share the first row (critique 11), the strip two tiles a row so it runs about
+   as tall as the map. Best ZIPs (its top 3) comes right after that row (G8), then the ranked areas beside Your markets, then
+   the homes full width (layout audit L41, L45, L46). The caption row goes on L to keep the first row in view (the scope is the
+   Filters sheet's first group) */
+@media (min-width:600px) and (max-height:499px){
+  .re-board{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"strip map" "best best" "homes homes";gap:var(--gap);align-items:start}
+  .re-board.re-w-areas{grid-template-areas:"strip map" "best best" "areas areas" "homes homes"}
+  .re-board.re-w-mine{grid-template-areas:"strip map" "best best" "mine mine" "homes homes"}
+  .re-board.re-w-areas.re-w-mine{grid-template-areas:"strip map" "best best" "areas mine" "homes homes"}
+  .re-board>.re-cols,.re-cols>.re-col{display:contents}
+  .re-board .re-strip{grid-area:strip}.re-board .re-map{grid-area:map}.re-board .re-best{grid-area:best}.re-board .re-areas{grid-area:areas}
+  .re-board .re-homes{grid-area:homes}.re-board .re-mine{grid-area:mine}
+  .re-board .re-strip .strip{--cols:2}
+  .re-board .re-strip>.secttl{display:none}
+}
+/* P, L and T: the legend reads Lower, five bins, Higher on one line; No data takes the next line, so a narrow map never
+   sends "Higher" under "Lower" (layout audit L43). D, XL and TV keep their one-line legend */
+@media (max-width:1099px),(max-height:499px){
+  html:not(.tv) .re-map .legend{column-gap:var(--s-2)}
+  html:not(.tv) .re-map .legend>[data-q="x"]{flex-basis:100%}
+}
+/* D and XL: Best ZIPs is the page's main list, so it takes the full width (DESIGN layout rule 1) and holds its nine columns
+   without dropping any; the short blocks (map, areas, your markets, homes) follow in two balanced columns, whole sections only */
+@media (min-width:1100px) and (min-height:500px){
+  html:not(.tv) .re-cols{display:flex;flex-direction:column}
+  html:not(.tv) .re-cols>.re-b{order:-1}
+  html:not(.tv) .re-cols>.re-a{display:block;columns:2;column-gap:var(--gap)}
+  html:not(.tv) .re-cols>.re-a>.sect{break-inside:avoid;margin:0 0 var(--gap)}
+}
+/* TV board (tv.css): the strip of six, then .board-fill holds the map beside the top ZIPs in the height left; the map's width
+   follows that height (12 by 8 cells), and tv.js cuts table rows that would cross the bottom. Homes and your markets sit one Down below */
+html.tv .re-tv .re-cols{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:start;gap:var(--gap);container-type:size}
+html.tv .re-tv .re-col{min-height:0;height:100%;overflow:hidden}
+html.tv .re-tv .re-map .usmap{width:min(100%,calc((100cqh - 7rem) * 1.5))}
+/* TV: the scope comes from the Display settings, so the strip needs no caption row */
+html.tv .re-tv .re-strip>.secttl{display:none}
+html.tv .re-below{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:start;gap:var(--gap)}
+html.tv .re-areas,html.tv .re-fbar,html.tv .re-mapk,html.tv .re-hctl{display:none}
+/* map */
+.re-mapk{margin:0 0 var(--s-3)}
+.re-map>.panel{padding:var(--s-3)}
+.re-stcard{display:flex;align-items:center;justify-content:space-between;gap:var(--s-3);margin-top:var(--s-3);padding-top:var(--s-3);border-top:var(--hair)}
+.re-stcard>span{display:flex;flex-direction:column;gap:2px;min-width:0}
+.re-stcard b{font-size:var(--fs-lead);font-weight:var(--fw-med)}
+.re-stcard small{font-size:var(--fs-meta);color:var(--c-text-2)}
+/* Best ZIPs: lens switch, More columns and the sort in words above the table; 44 px targets on a coarse pointer (ui.css --ctl-h) */
+.re-btools{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-2) var(--s-3);margin:0 0 var(--s-3)}
+.re-btools>.seg{max-width:100%}
+.re-morecols[aria-pressed="true"]{color:var(--c-text-1);background:var(--c-panel-2);border-color:var(--c-line-strong)}
+.re-sortw{margin-left:auto;font-size:var(--fs-meta);color:var(--c-text-2);white-space:nowrap}
+/* the nine data points stay on screen on a landscape phone too: there the table is full width (L shows P1 only elsewhere) */
+@media (min-width:600px) and (max-height:499px){html:not(.tv) .re-best .htbl [data-pri="2"]{display:table-cell}}
+/* More columns on a phone card: every column the owner asked for, P3 and P4 included (cards have room; a table drops them by width) */
+@media (max-width:599px){.re-best .htw:not(.scroll) .htbl [data-pri="3"],.re-best .htw:not(.scroll) .htbl [data-pri="4"]{display:block}}
+/* a missing value: one quiet dash with its reason in the title and accessible name, never a zero */
+.re-best .re-na{font-family:var(--mono)}
+/* the column help: one tap open under the table, one plain line a column */
+.re-colhelp{margin-top:var(--s-3)}
+.re-colhelp>summary{display:flex;align-items:center;min-height:var(--hit);cursor:pointer;color:var(--c-text-2);font-size:var(--fs-meta)}
+.re-colhelp>summary:hover{color:var(--c-text-1)}
+.re-help{display:grid;grid-template-columns:minmax(7rem,max-content) minmax(0,1fr);gap:var(--s-2) var(--s-4);margin:0;padding:var(--s-3) var(--s-4);background:var(--c-panel);border:var(--hair);border-radius:var(--r-panel);font-size:var(--fs-meta)}
+.re-help>div{display:contents}
+.re-help dt{color:var(--c-text-1);font-weight:var(--fw-med)}
+.re-help dd{margin:0;color:var(--c-text-2)}
+@media (max-width:599px){.re-help{grid-template-columns:minmax(0,1fr);gap:0}.re-help dd{margin-bottom:var(--s-2)}}
+/* ZIP sheet, Multifamily: its labels are long ("Units permitted in 5+ unit buildings, 12 months"), so the label wraps and the
+   value keeps its own width; a figure never breaks inside itself (DESIGN layout rule 3) */
+.sh-sec[data-sec="mf"] .kv{grid-template-columns:minmax(0,1fr) auto}
+.sh-sec[data-sec="mf"] .kv dd{white-space:nowrap;overflow-wrap:normal}
+/* homes for sale */
+.re-hctl{display:flex;flex-wrap:wrap;align-items:flex-end;gap:var(--s-2) var(--s-3);margin:0 0 var(--s-3)}
+.re-hctl>.chips{max-width:100%}
+/* City, Max price and Sort share one row down to a 5/12 column (about 440 px) */
+.re-hcity{flex:1 1 8rem;max-width:16rem}
+.re-hsel{flex:1 1 8rem;min-width:min(100%,8rem);max-width:12rem}
+.re-cut{font-family:var(--mono);color:var(--c-text-2)}
+/* filters: Budget is a two-way choice (Any price / Within $•••); the amount stays masked until Show amounts */
+.re-within{display:flex;flex-direction:column;align-items:stretch;gap:var(--s-2);min-width:0}
+.re-within>span{font-size:var(--fs-meta);color:var(--c-text-2)}
+.re-within .seg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%}
+.re-within .seg>button{min-width:0;white-space:normal;flex-wrap:wrap;justify-content:center;column-gap:.3em;line-height:1.2;padding:var(--s-1) var(--s-2)}
+.re-within .re-amt{font-family:var(--mono)}
+@media (min-width:1100px) and (min-height:500px){.re-within{grid-column:span 2}}
+/* a value, its unit and its meter stay on one line in a table; a narrow phone card lets the meter take the next line */
+.re-nw{white-space:nowrap}
+@media (max-width:599px){.re-nw{white-space:normal}}
+/* "county value" / "metro value": a figure that is the ZIP's area, not its own; a quiet outlined tag after it, its title says why */
+.re-from{display:inline-block;margin-left:var(--s-1);padding:0 .4em;border:1px solid var(--c-line);border-radius:var(--r-pill);font-family:var(--font);font-size:var(--fs-meta);font-weight:var(--fw-reg);line-height:1.35;color:var(--c-text-2);white-space:nowrap;vertical-align:.1em;cursor:help}
+/* Your markets: the rotated chevron after a row that opens a sheet sticks out of its box by its own corner; give it room */
+.re-mine .frow[data-open]::after{margin-right:.2em}
+.re-mine .frow .fr{flex:0 1 auto;min-width:0}
+/* area sheet and the ZIP sheet's Your market: the value, then its 1-yr change and month on a quiet second line */
+.re-akv dd small{display:block;font-family:var(--font);font-size:var(--fs-meta);color:var(--c-text-2)}
+/* ZIP sheet */
+.re-place{display:flex;flex-wrap:wrap;gap:0 var(--s-2);font-size:var(--fs-meta);color:var(--c-text-2)}
+.re-place>span{white-space:nowrap}
+.re-line{margin:0}
+.re-line figcaption{font-size:var(--fs-meta);color:var(--c-text-2)}
+/* risk: one plain 0 to 100 meter a hazard, its name and value in the label column ("Flood 96"), one 0 and 100 scale under the bars */
+.re-risks{display:flex;flex-direction:column;gap:var(--s-2);margin:var(--s-2) 0 var(--s-3)}
+.re-risk{display:grid;grid-template-columns:minmax(5.5rem,24%) minmax(0,1fr);gap:var(--s-3);align-items:center}
+.re-risk>span:first-child{font-size:var(--fs-meta);color:var(--c-text-2);white-space:nowrap}
+.re-risk>span:first-child b{font-family:var(--mono);font-weight:var(--fw-reg);font-variant-numeric:tabular-nums;color:var(--c-text-1);margin-left:.3em}
+.re-risk>.bar>i{background:var(--c-text-1)}
+.re-risk-l{margin-top:calc(var(--s-2) * -1)}
+/* Metros loading: the real row's shape with quiet blocks for its text, so the list keeps its height when the metros land */
+.re-ph .rank-t b,.re-ph .rank-t small,.re-ph .rank-f b{border-radius:var(--r-ctl);background:var(--c-panel-2);animation:skel 1.6s var(--ease) infinite alternate}
+.re-ph .rank-t b{width:55%}.re-ph .rank-t small{width:75%}.re-ph .rank-f b{display:inline-block;width:2.5ch}
+/* the search's suggestions: a list under the field, one 44 px row a ZIP (number, place, score); the marked row is panel-2 */
+.re-sugg{position:absolute;z-index:60;display:flex;flex-direction:column;padding:var(--s-1) 0;background:var(--c-panel);border:var(--hair);border-radius:var(--r-panel);box-shadow:0 16px 40px -12px rgba(0,0,0,.7)}
+.re-sugg[hidden]{display:none}
+.re-sugg-o{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;column-gap:var(--s-3);min-height:var(--hit);padding:0 var(--s-4);cursor:pointer}
+.re-sugg-o b{font-family:var(--mono);font-weight:var(--fw-med);font-variant-numeric:tabular-nums}
+.re-sugg-o span{min-width:0;color:var(--c-text-2)}
+.re-sugg-o small{font-family:var(--mono);font-size:var(--fs-meta);color:var(--c-text-2);white-space:nowrap}
+.re-sugg-o:hover,.re-sugg-o[aria-selected="true"]{background:var(--c-panel-2)}
+.re-sugg-none{padding:var(--s-2) var(--s-4);font-size:var(--fs-meta);color:var(--c-text-2)}
+.re-asm{font-size:var(--fs-meta)}
+.re-pfa{display:flex;flex-wrap:wrap;gap:var(--s-2)}
+.re-pf{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,13rem),1fr));gap:var(--s-3)}
+.re-pf>.note{grid-column:1/-1}

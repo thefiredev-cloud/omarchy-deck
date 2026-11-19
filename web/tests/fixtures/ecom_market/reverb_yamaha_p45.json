@@ -1,0 +1,295 @@
+{
+ "total": 79,
+ "listings": [
+  {
+   "id": 35421798,
+   "make": "Yamaha",
+   "model": "YAMAHA P45 PIANOFORTE DIGITALE 88 TASTI PESATI P-45 STAGE PIANO PEDALE SUSTAIN LEGGIO ALIMENTATORE",
+   "title": "YAMAHA P45 PIANOFORTE DIGITALE 88 TASTI PESATI P-45 STAGE PIANO PEDALE SUSTAIN LEGGIO ALIMENTATORE",
+   "price": {
+    "tax_included": false,
+    "amount": "277.03",
+    "amount_cents": 27703,
+    "currency": "USD",
+    "symbol": "$",
+    "display": "$277.03"
+   },
+   "condition": {
+    "uuid": "7c3f45de-2ae0-4c81-8400-fdb6b1d74890",
+    "display_name": "Brand New",
+    "slug": "brand-new"
+   },
+   "categories": [
+    {
+     "uuid": "62835d2e-ac92-41fc-9b8d-4aba8c1c25d5",
+     "full_name": "Accessories"
+    }
+   ],
+   "state": {
+    "slug": "live",
+    "description": "Live"
+   }
+  },
+  {
+   "id": 103630584,
+   "make": "Yamaha",
+   "model": "P-45 Digital Piano",
+   "title": "Yamaha P-45 Digital Piano - Black - with Stand, Bench, and Sustain pedal",
+   "price": {
+    "tax_included": false,
+    "amount": "499.00",
+    "amount_cents": 49900,
+    "currency": "USD",
+    "symbol": "$",
+    "display": "$499"
+   },
+   "condition": {
+    "uuid": "df268ad1-c462-4ba6-b6db-e007e23922ea",
+    "display_name": "Excellent",
+    "slug": "excellent"
+   },
+   "categories": [
+    {
+     "uuid": "89de4db0-dab0-48b5-bc66-6580cebb6111",
+     "full_name": "Keyboards and Synths / Digital Pianos / Digital Stage Pianos"
+    }
+   ],
+   "state": {
+    "slug": "live",
+    "description": "Live"
+   }
+  },
+  {
+   "id": 96737137,
+   "make": "Yamaha",
+   "model": "P-45 Digital Piano",
+   "title": "Yamaha P-45 Digital Piano - Black",
+   "price": {
+    "tax_included": false,
+    "amount": "449.99",
+    "amount_cents": 44999,
+    "currency": "USD",
+    "symbol": "$",
+    "display": "$449.99"
+   },
+   "condition": {
+    "uuid": "7c3f45de-2ae0-4c81-8400-fdb6b1d74890",
+    "display_name": "Brand New",
+    "slug": "brand-new"
+   },
+   "categories": [
+    {
+     "uuid": "89de4db0-dab0-48b5-bc66-6580cebb6111",
+     "full_name": "Keyboards and Synths / Digital Pianos / Digital Stage Pianos"
+    }
+   ],
+   "state": {
+    "slug": "live",
+    "description": "Live"
+   }
+  },
+  {
+   "id": 30417363,
+   "make": "Yamaha",
+   "model": "P-45 Digital Piano",
+   "title": "Yamaha P-45 88-Weighted Key Digital Piano",
+   "price": {
+    "tax_included": false,
+    "amount": "449.99",
+    "amount_cents": 44999,
+    "currency": "USD",
+    "symbol": "$",
+    "display": "$449.99"
+   },
+   "condition": {
+    "uuid": "7c3f45de-2ae0-4c81-8400-fdb6b1d74890",
+    "display_name": "Brand New",
+    "slug": "brand-new"
+   },
+   "categories": [
+    {
+     "uuid": "89de4db0-dab0-48b5-bc66-6580cebb6111",
+     "full_name": "Keyboards and Synths / Digital Pianos / Digital Stage Pianos"
+    }
+   ],
+   "state": {
+    "slug": "live",
+    "description": "Live"
+   }
+  },
+  {
+   "id": 103406320,
+   "make": "Yamaha",
+   "model": "P-45 Digital Piano",
+   "title": "Yamaha P-45 Digital Piano  Black P 45B Used, with Power Adapter //ARMENS//",
+   "price": {
+    "tax_included": false,
+    "amount": "325.00",
+    "amount_cents": 32500,
+    "currency": "USD",
+    "symbol": "$",
+    "display": "$325"
+   },
+   "condition": {
+    "uuid": "df268ad1-c462-4ba6-b6db-e007e23922ea",
+    "display_name": "Excellent",
+    "slug": "excellent"
+   },
+   "categories": [
+    {
+     "uuid": "89de4db0-dab0-48b5-bc66-6580cebb6111",
+     "full_name": "Keyboards and Synths / Digital Pianos / Digital Stage Pianos"
+    }
+   ],
+   "state": {
+    "slug": "live",
+    "description": "Live"
+   }
+  },
+  {
+   "id": 93341321,
+   "make": "Yamaha",
+   "model": "P-45 Digital Piano",
+   "title": "Yamaha P-45 Digital Piano - Black",
+   "price": {
+    "tax_included": false,
+    "amount": "449.99",
+    "amount_cents": 44999,
+    "currency": "USD",
+    "symbol": "$",
+    "display": "$449.99"
+   },
+   "condition": {
+    "uuid": "7c3f45de-2ae0-4c81-8400-fdb6b1d74890",
+    "display_name": "Brand New",
+    "slug": "brand-new"
+   },
+   "categories": [
+    {
+     "uuid": "89de4db0-dab0-48b5-bc66-6580cebb6111",
+     "full_name": "Keyboards and Synths / Digital Pianos / Digital Stage Pianos"
+    }
+   ],
+   "state": {
+    "slug": "live",
+    "description": "Live"
+   }
+  },
+  {
+   "id": 103777332,
+   "make": "Yamaha",
+   "model": "P-45",
+   "title": "Yamaha P-45 88-key Digital Piano with Speakers",
+   "price": {
+    "tax_included": false,
+    "amount": "449.99",
+    "amount_cents": 44999,
+    "currency": "USD",
+    "symbol": "$",
+    "display": "$449.99"
+   },
+   "condition": {
+    "uuid": "7c3f45de-2ae0-4c81-8400-fdb6b1d74890",
+    "display_name": "Brand New",
+    "slug": "brand-new"
+   },
+   "categories": [
+    {
+     "uuid": "89de4db0-dab0-48b5-bc66-6580cebb6111",
+     "full_name": "Keyboards and Synths / Digital Pianos / Digital Stage Pianos"
+    }
+   ],
+   "state": {
+    "slug": "live",
+    "description": "Live"
+   }
+  },
+  {
+   "id": 40752425,
+   "make": "Yamaha",
+   "model": "P-45 Digital Piano",
+   "title": "Yamaha P-45 Digital Piano",
+   "price": {
+    "tax_included": false,
+    "amount": "439.33",
+    "amount_cents": 43933,
+    "currency": "USD",
+    "symbol": "$",
+    "display": "$439.33"
+   },
+   "condition": {
+    "uuid": "7c3f45de-2ae0-4c81-8400-fdb6b1d74890",
+    "display_name": "Brand New",
+    "slug": "brand-new"
+   },
+   "categories": [
+    {
+     "uuid": "89de4db0-dab0-48b5-bc66-6580cebb6111",
+     "full_name": "Keyboards and Synths / Digital Pianos / Digital Stage Pianos"
+    }
+   ],
+   "state": {
+    "slug": "live",
+    "description": "Live"
+   }
+  },
+  {
+   "id": 97058812,
+   "make": "Yamaha",
+   "model": "P-45 Digital Piano - Black",
+   "title": "Yamaha P-45 Digital Piano - Black",
+   "price": {
+    "tax_included": false,
+    "amount": "439.33",
+    "amount_cents": 43933,
+    "currency": "USD",
+    "symbol": "$",
+    "display": "$439.33"
+   },
+   "condition": {
+    "uuid": "7c3f45de-2ae0-4c81-8400-fdb6b1d74890",
+    "display_name": "Brand New",
+    "slug": "brand-new"
+   },
+   "categories": [
+    {
+     "uuid": "89de4db0-dab0-48b5-bc66-6580cebb6111",
+     "full_name": "Keyboards and Synths / Digital Pianos / Digital Stage Pianos"
+    }
+   ],
+   "state": {
+    "slug": "live",
+    "description": "Live"
+   }
+  },
+  {
+   "id": 102301346,
+   "make": "Yamaha",
+   "model": "P-45 Digital Piano",
+   "title": "Yamaha P-45 Digital Piano 2015 - Present - Black",
+   "price": {
+    "tax_included": false,
+    "amount": "449.99",
+    "amount_cents": 44999,
+    "currency": "USD",
+    "symbol": "$",
+    "display": "$449.99"
+   },
+   "condition": {
+    "uuid": "7c3f45de-2ae0-4c81-8400-fdb6b1d74890",
+    "display_name": "Brand New",
+    "slug": "brand-new"
+   },
+   "categories": [
+    {
+     "uuid": "89de4db0-dab0-48b5-bc66-6580cebb6111",
+     "full_name": "Keyboards and Synths / Digital Pianos / Digital Stage Pianos"
+    }
+   ],
+   "state": {
+    "slug": "live",
+    "description": "Live"
+   }
+  }
+ ]
+}

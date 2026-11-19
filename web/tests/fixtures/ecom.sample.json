@@ -1,0 +1,661 @@
+{
+ "v": 1,
+ "t": 1791030000,
+ "refresh": 3600,
+ "src": [
+  "shoptrends sqlite (~/.local/share/hermes-shop/trends.db)",
+  "wikipedia pageviews",
+  "fred"
+ ],
+ "errors": [
+  {
+   "source": "ebay",
+   "reason": "blocked (HTTP 403)"
+  },
+  {
+   "source": "fred:RSXFS",
+   "reason": "timeout after 20 s"
+  }
+ ],
+ "coverage": {
+  "since": 1790770800,
+  "days": 3,
+  "observations": 1234,
+  "listings": 900,
+  "shops": 310,
+  "sites": [
+   {
+    "site": "ebay",
+    "label": "eBay",
+    "kind": "marketplace",
+    "status": "blocked",
+    "last_ok": null,
+    "n_24h": 0,
+    "reason": "blocked (HTTP 403)",
+    "t": 1791029400
+   },
+   {
+    "site": "amazon",
+    "label": "Amazon",
+    "kind": "retailer",
+    "status": "ok",
+    "last_ok": 1791029000,
+    "n_24h": 96,
+    "reason": null,
+    "t": 1791029000
+   },
+   {
+    "site": "walmart",
+    "label": "Walmart",
+    "kind": "retailer",
+    "status": "ok",
+    "last_ok": 1791028800,
+    "n_24h": 88,
+    "reason": null,
+    "t": 1791028800
+   },
+   {
+    "site": "bestbuy",
+    "label": "Best Buy",
+    "kind": "retailer",
+    "status": "ok",
+    "last_ok": 1791029100,
+    "n_24h": 64,
+    "reason": null,
+    "t": 1791029100
+   },
+   {
+    "site": "costco",
+    "label": "Costco",
+    "kind": "retailer",
+    "status": "stale",
+    "last_ok": 1790853600,
+    "n_24h": 0,
+    "reason": "no answer in 36 h (HTTP 429)",
+    "t": 1791029400
+   },
+   {
+    "site": "newegg",
+    "label": "Newegg",
+    "kind": "retailer",
+    "status": "ok",
+    "last_ok": 1791029200,
+    "n_24h": 72,
+    "reason": null,
+    "t": 1791029200
+   },
+   {
+    "site": "craigslist",
+    "label": "Craigslist",
+    "kind": "local",
+    "status": "ok",
+    "last_ok": 1791028500,
+    "n_24h": 40,
+    "reason": null,
+    "t": 1791028500
+   },
+   {
+    "site": "poshmark",
+    "label": "Poshmark",
+    "kind": "marketplace",
+    "status": "ok",
+    "last_ok": 1791028000,
+    "n_24h": 31,
+    "reason": null,
+    "t": 1791028000
+   },
+   {
+    "site": "backmarket",
+    "label": "Back Market",
+    "kind": "marketplace",
+    "status": "ok",
+    "last_ok": 1791028300,
+    "n_24h": 22,
+    "reason": null,
+    "t": 1791028300
+   },
+   {
+    "site": "gamestop",
+    "label": "GameStop",
+    "kind": "retailer",
+    "status": "never",
+    "last_ok": null,
+    "n_24h": 0,
+    "reason": "no run has reached this site yet",
+    "t": null
+   },
+   {
+    "site": "microcenter",
+    "label": "Micro Center",
+    "kind": "retailer",
+    "status": "ok",
+    "last_ok": 1791028900,
+    "n_24h": 18,
+    "reason": null,
+    "t": 1791028900
+   },
+   {
+    "site": "macys",
+    "label": "Macy's",
+    "kind": "retailer",
+    "status": "ok",
+    "last_ok": 1791027500,
+    "n_24h": 12,
+    "reason": null,
+    "t": 1791027500
+   },
+   {
+    "site": "offerup",
+    "label": "OfferUp",
+    "kind": "local",
+    "status": "ok",
+    "last_ok": 1791028700,
+    "n_24h": 55,
+    "reason": null,
+    "t": 1791028700
+   },
+   {
+    "site": "facebook-marketplace",
+    "label": "Facebook Marketplace",
+    "kind": "local",
+    "status": "never",
+    "last_ok": null,
+    "n_24h": 0,
+    "reason": "needs a location id (not set)",
+    "t": null
+   }
+  ]
+ },
+ "watch": [
+  {
+   "slug": "sony-wh-1000xm5",
+   "query": "sony wh-1000xm5",
+   "category": "audio",
+   "t": 1791029100,
+   "n": 120,
+   "sites_ok": 9,
+   "median": 289.0,
+   "p25": 250.0,
+   "p75": 320.0,
+   "min": 159.99,
+   "max": 449.0,
+   "chg7": -0.021,
+   "chg30": null,
+   "history_days": 3,
+   "spark": [
+    null,
+    291.0,
+    289.0
+   ],
+   "by_site": [
+    {
+     "site": "newegg",
+     "median": 179.0,
+     "min": 159.99,
+     "n": 11,
+     "free_ship": 0.8,
+     "t": 1791029200
+    },
+    {
+     "site": "amazon",
+     "median": 298.0,
+     "min": 248.0,
+     "n": 25,
+     "free_ship": 1.0,
+     "t": 1791029000
+    },
+    {
+     "site": "bestbuy",
+     "median": 329.99,
+     "min": 299.99,
+     "n": 9,
+     "free_ship": 1.0,
+     "t": 1791029100
+    },
+    {
+     "site": "walmart",
+     "median": 305.0,
+     "min": 259.0,
+     "n": 16,
+     "free_ship": 0.9,
+     "t": 1791028800
+    }
+   ],
+   "supply": {
+    "listings": 140,
+    "new_24h": 12,
+    "price_drops_7d": 5
+   },
+   "shipping": {
+    "n": 100,
+    "free_share": 0.61,
+    "median_cost": 6.49,
+    "pickup_only": 3
+   },
+   "condition": {
+    "new": 80,
+    "used": 30,
+    "refurbished": 8,
+    "open_box": 2,
+    "unknown": 0
+   },
+   "best": {
+    "site": "newegg",
+    "title": "Sony WH-1000XM5 Wireless Noise Canceling Headphones, Black",
+    "price": 159.99,
+    "url": "https://www.newegg.com/p/sample-sony-wh-1000xm5",
+    "condition": "new",
+    "vs_median": -0.45
+   },
+   "season": {
+    "basis": "wikipedia:Sony_WH-1000XM5",
+    "by_month": [
+     0.9,
+     0.8,
+     0.8,
+     0.8,
+     0.9,
+     0.9,
+     0.8,
+     0.9,
+     1.0,
+     1.1,
+     1.5,
+     1.6
+    ],
+    "peak": 12,
+    "low": 2,
+    "years": "2023-2025",
+    "t": 1789302000
+   }
+  },
+  {
+   "slug": "nintendo-switch-2",
+   "query": "nintendo switch 2",
+   "category": "gaming",
+   "t": 1791029300,
+   "n": 310,
+   "sites_ok": 9,
+   "median": 386.0,
+   "p25": 361.0,
+   "p75": 396.0,
+   "min": 299.0,
+   "max": 529.99,
+   "chg7": 0.034,
+   "chg30": -0.081,
+   "history_days": 30,
+   "spark": [
+    403.0,
+    402.03,
+    404.62,
+    406.4,
+    407.06,
+    406.44,
+    404.51,
+    405.38,
+    397.29,
+    392.59,
+    387.71,
+    null,
+    null,
+    376.15,
+    378.41,
+    373.99,
+    374.84,
+    376.76,
+    379.45,
+    382.5,
+    385.49,
+    391.98,
+    389.61,
+    390.09,
+    389.27,
+    387.15,
+    383.85,
+    379.65,
+    378.9,
+    370.03
+   ],
+   "by_site": [
+    {
+     "site": "newegg",
+     "median": 379.0,
+     "min": 333.52,
+     "n": 14,
+     "free_ship": 0.9,
+     "t": 1791029300
+    },
+    {
+     "site": "bestbuy",
+     "median": 399.99,
+     "min": 351.99,
+     "n": 22,
+     "free_ship": 1.0,
+     "t": 1791029180
+    },
+    {
+     "site": "walmart",
+     "median": 389.0,
+     "min": 342.32,
+     "n": 19,
+     "free_ship": 0.85,
+     "t": 1791029060
+    },
+    {
+     "site": "amazon",
+     "median": 394.5,
+     "min": 347.16,
+     "n": 25,
+     "free_ship": 1.0,
+     "t": 1791028940
+    },
+    {
+     "site": "costco",
+     "median": 385.0,
+     "min": 338.8,
+     "n": 6,
+     "free_ship": 1.0,
+     "t": 1791028820
+    },
+    {
+     "site": "backmarket",
+     "median": 342.0,
+     "min": 300.96,
+     "n": 5,
+     "free_ship": 0.6,
+     "t": 1791028700
+    },
+    {
+     "site": "offerup",
+     "median": 350.0,
+     "min": 308.0,
+     "n": 8,
+     "free_ship": null,
+     "t": 1791028580
+    },
+    {
+     "site": "craigslist",
+     "median": 340.0,
+     "min": 299.2,
+     "n": 7,
+     "free_ship": 0.0,
+     "t": 1791028460
+    },
+    {
+     "site": "poshmark",
+     "median": 361.0,
+     "min": 317.68,
+     "n": 4,
+     "free_ship": 0.5,
+     "t": 1791028340
+    },
+    {
+     "site": "facebook-marketplace",
+     "median": 335.0,
+     "min": 300.0,
+     "n": 6,
+     "free_ship": null,
+     "t": 1791029300
+    }
+   ],
+   "supply": {
+    "listings": 420,
+    "new_24h": 31,
+    "price_drops_7d": 14
+   },
+   "shipping": {
+    "n": 280,
+    "free_share": 0.72,
+    "median_cost": 0.0,
+    "pickup_only": 22
+   },
+   "condition": {
+    "new": 260,
+    "used": 120,
+    "refurbished": 25,
+    "open_box": 15,
+    "unknown": 0
+   },
+   "best": {
+    "site": "facebook-marketplace",
+    "title": "Nintendo Switch 2 Console Mario Kart World Bundle with Neon Blue and Neon Red Joy-Con Controllers, 256GB Storage, Dock, HDMI Cable, AC Adapter, Carrying Case and Screen Protector - Brand New in Box, Sealed, Free Shipping",
+    "price": 299.0,
+    "url": "https://sfbay.craigslist.org/sample-switch-2",
+    "condition": "used",
+    "vs_median": -0.1321
+   },
+   "season": {
+    "basis": "wikipedia:Nintendo_Switch_2",
+    "by_month": [
+     0.7,
+     0.7,
+     0.8,
+     0.8,
+     0.8,
+     0.9,
+     1.0,
+     0.9,
+     1.0,
+     1.2,
+     1.6,
+     1.6
+    ],
+    "peak": 11,
+    "low": 1,
+    "years": "2025-2025",
+    "t": 1790770800
+   }
+  },
+  {
+   "slug": "lego-75192",
+   "query": "lego 75192 millennium falcon",
+   "category": "toys",
+   "t": 1791028500,
+   "n": 14,
+   "sites_ok": 3,
+   "median": 689.0,
+   "p25": null,
+   "p75": null,
+   "min": 689.0,
+   "max": 689.0,
+   "chg7": null,
+   "chg30": null,
+   "history_days": 1,
+   "spark": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    689.0
+   ],
+   "by_site": [
+    {
+     "site": "amazon",
+     "median": 689.0,
+     "min": 689.0,
+     "n": 8,
+     "free_ship": 1.0,
+     "t": 1791029000
+    },
+    {
+     "site": "walmart",
+     "median": null,
+     "min": null,
+     "n": 0,
+     "free_ship": null,
+     "t": 1791028800
+    }
+   ],
+   "supply": {
+    "listings": 14,
+    "new_24h": null,
+    "price_drops_7d": null
+   },
+   "shipping": null,
+   "condition": {
+    "new": 12,
+    "used": 2,
+    "refurbished": 0,
+    "open_box": 0,
+    "unknown": 0
+   },
+   "best": null,
+   "season": null
+  }
+ ],
+ "movers": [
+  {
+   "slug": "nintendo-switch-2",
+   "query": "nintendo switch 2",
+   "chg7": 0.034,
+   "dir": "up"
+  },
+  {
+   "slug": "sony-wh-1000xm5",
+   "query": "sony wh-1000xm5",
+   "chg7": -0.021,
+   "dir": "down"
+  }
+ ],
+ "deals": [
+  {
+   "slug": "sony-wh-1000xm5",
+   "query": "sony wh-1000xm5",
+   "site": "newegg",
+   "title": "Sony WH-1000XM5 Wireless Noise Canceling Headphones, Black",
+   "price": 159.99,
+   "median": 289.0,
+   "vs_median": -0.45,
+   "url": "https://www.newegg.com/p/sample-sony-wh-1000xm5",
+   "condition": "new"
+  },
+  {
+   "slug": "nintendo-switch-2",
+   "query": "nintendo switch 2",
+   "site": "backmarket",
+   "title": "Nintendo Switch 2 console, refurbished",
+   "price": 342.0,
+   "median": 386.0,
+   "vs_median": -0.114,
+   "url": "https://www.backmarket.com/sample-switch-2",
+   "condition": "new"
+  },
+  {
+   "slug": "lego-75192",
+   "query": "lego 75192 millennium falcon",
+   "site": "amazon",
+   "title": "LEGO Star Wars Millennium Falcon 75192",
+   "price": 689.0,
+   "median": 689.0,
+   "vs_median": 0.0,
+   "url": "https://www.amazon.com/dp/sample",
+   "condition": "new"
+  }
+ ],
+ "macro": [
+  {
+   "key": "nonstore_retail",
+   "label": "Online and mail-order retail sales",
+   "src": "fred:MRTSSM4541USN",
+   "unit": "USD millions",
+   "latest": {
+    "period": "2026-08",
+    "value": 123456.0
+   },
+   "yoy": 0.07,
+   "by_month": [
+    0.92,
+    0.85,
+    0.95,
+    0.94,
+    0.98,
+    0.97,
+    0.99,
+    1.0,
+    0.98,
+    1.03,
+    1.19,
+    1.2
+   ],
+   "years": "2019-2025",
+   "t": 1790252400
+  },
+  {
+   "key": "parcel_volume",
+   "label": "Courier and parcel shipping volume",
+   "src": "fred:CES4349200001",
+   "unit": "thousand jobs",
+   "latest": null,
+   "yoy": null,
+   "by_month": null,
+   "years": null,
+   "t": 1790252400
+  },
+  {
+   "key": "cass",
+   "label": "Cass freight shipments (US shipping volume)",
+   "src": "fred:CASSFREIGHT",
+   "unit": "index",
+   "latest": {
+    "period": "2026-08",
+    "value": 1.038
+   },
+   "yoy": 0.0206,
+   "by_month": [
+    0.9,
+    0.92,
+    0.95,
+    0.97,
+    1.0,
+    0.99,
+    1.0,
+    1.0,
+    0.98,
+    1.0,
+    1.02,
+    1.05
+   ],
+   "years": "2021-2025",
+   "t": 1790252400
+  },
+  {
+   "key": "sporting",
+   "label": "Sporting goods, hobby, music and book store sales",
+   "src": "fred:MRTSSM451USN",
+   "unit": "USD millions",
+   "latest": {
+    "period": "2026-07",
+    "value": 8879.0
+   },
+   "yoy": 0.1066,
+   "by_month": null,
+   "years": null,
+   "t": 1790252400
+  }
+ ]
+}

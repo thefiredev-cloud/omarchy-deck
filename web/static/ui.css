@@ -1,0 +1,878 @@
+/* Deck components v3 (2026-11-14). Token driven (tokens.css), no framework. One container level: a section is a title and ONE
+   surface; separation inside a surface is a hairline, never a second card. Status hues only for status, always with a mark shape
+   and a word. Old class names stay where they save page rewrites; MIGRATION.md maps each old class to its rule here.
+   Shell contracts kept: #pgs button[data-p] with .on (DeckPageNav), --shell-reserve-top-right, ids #kin #kpages #kbmods #kbnav #kbfav #kblist untouched. */
+
+/* ===== base ===== */
+*,*::before,*::after{box-sizing:border-box}
+html{font-size:var(--fs-body);-webkit-text-size-adjust:100%;text-size-adjust:100%;scrollbar-color:var(--c-line-strong) var(--c-ground);scrollbar-width:thin;background:var(--c-ground);scroll-padding-top:calc(var(--sticky-top) + var(--s-4))}
+/* P: the page head is static, so settle() writes --sticky-top:0px while the top bar (its height is --topbar-h plus the safe area) stays
+   fixed: a section scrolled to by Show fewer or a #hash landed about 40 px under the bar (LayoutP-3). Clear the bar itself on a phone.
+   L and up keep the base rule (the sticky head is measured there); on TV --topbar-h is auto, so the base rule stays untouched. */
+@media (max-width:599px){html{scroll-padding-top:calc(var(--topbar-h) + var(--safe-t) + var(--s-4))}}
+/* Chrome 108 (the owner's TV) ignores scrollbar-width and scrollbar-color (Chrome 121). These draw the same bars there; Chrome 121
+   and later skip ::-webkit-scrollbar wherever scrollbar-color is set, and html sets it for every element, so nothing changes there */
+html::-webkit-scrollbar,.htw.scroll::-webkit-scrollbar{width:8px;height:8px;background:var(--c-ground)}
+html::-webkit-scrollbar-thumb,.htw.scroll::-webkit-scrollbar-thumb{background:var(--c-line-strong);border-radius:4px}
+html::-webkit-scrollbar-track,.htw.scroll::-webkit-scrollbar-track{background:var(--c-ground)}
+body{margin:0;min-height:100dvh;background:var(--c-ground);color:var(--c-text-1);font:var(--fw-reg) var(--fs-body)/var(--lh-body) var(--font);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;-webkit-tap-highlight-color:transparent;touch-action:manipulation;caret-color:var(--c-signal);accent-color:var(--c-signal);
+  padding:calc(var(--topbar-h) + var(--safe-t)) 0 var(--tabbar-h) calc(var(--rail-w) + var(--safe-l));user-select:none;-webkit-user-select:none}
+/* text selection: on with a desktop pointer (controls keep it off), always inside sheets and prose */
+@media (hover:hover) and (pointer:fine){body{user-select:text;-webkit-user-select:text}button,.seg,#pgs,.chips,#top{user-select:none;-webkit-user-select:none}}
+.sheet-b,.prose,#sheetb,input,textarea{user-select:text;-webkit-user-select:text}
+h1,h2,h3,h4,p,ol,ul,figure,dl,dd{margin:0}
+/* an unstyled <small> is the meta step, never the browser's "smaller" (which fell under the class floor on Surf) */
+small{font-size:var(--fs-meta)}
+ol,ul{padding:0;list-style:none}
+h1,h2,h3,h4{font-weight:var(--fw-med);text-wrap:balance;overflow-wrap:break-word;min-width:0}
+p{text-wrap:pretty}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0;padding:0;text-align:inherit}
+a{color:inherit;text-decoration-color:var(--c-line-strong);text-underline-offset:.22em;text-decoration-thickness:1px}
+a:hover{text-decoration-color:var(--c-text-1)}
+::selection{background:var(--c-select);color:var(--c-text-1)}
+:focus{outline:none}
+:focus-visible{outline:var(--focus);outline-offset:var(--focus-off);transition:none}
+svg.i{width:1.25em;height:1.25em;flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:square;stroke-linejoin:miter}
+.num,.v,.fr b,td.n,th.n,.mono,time,.code{font-variant-numeric:tabular-nums slashed-zero}
+.mono,.code,.num{font-family:var(--mono)}
+.na{color:var(--c-text-3)}
+.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+[hidden]{display:none!important}
+.diag{display:none!important}
+
+/* ===== shell =====
+   #top holds the host switch, the page strip #pgs and the status and clock (#topr).
+   P: slim top bar plus #pgs as the bottom tab bar. L: one capsule row. T: top bar. D: 220 px rail with sub-pages nested. TV: a top row. */
+/* the right edge keeps the page margin (--s-4, as the polish check measures it) clear of the shell's reserved corner, so the clock never
+   reaches into it (L18: it sat 4 px inside at 390 and 956 wide) */
+#top{position:fixed;z-index:20;inset:0 0 auto 0;height:calc(var(--topbar-h) + var(--safe-t));display:flex;align-items:center;gap:var(--s-3);
+  padding:var(--safe-t) calc(var(--s-4) + var(--reserve) + var(--safe-r)) 0 calc(var(--s-3) + var(--safe-l));background:var(--c-bar);border-bottom:var(--hair)}
+#pgs{display:flex;align-items:stretch;gap:2px;min-width:0;flex:1 1 auto;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain}
+#pgs::-webkit-scrollbar{display:none}
+#pgs button{position:relative;display:flex;align-items:center;justify-content:center;gap:var(--s-2);flex:none;min-height:var(--hit);padding:0 var(--s-3);border-radius:var(--r-ctl);color:var(--c-text-2);font-size:var(--fs-body);font-weight:var(--fw-reg);line-height:1.15;white-space:nowrap;transition:background-color var(--t-press) var(--ease),color var(--t-press) var(--ease)}
+#pgs button svg.i{display:none;width:24px;height:24px}
+#pgs button:hover{color:var(--c-text-1);background:var(--c-panel)}
+#pgs button.on{color:var(--c-text-1);font-weight:var(--fw-med)}
+#pgs button.on::before{content:"";position:absolute;left:var(--s-3);right:var(--s-3);bottom:0;height:3px;border-radius:2px 2px 0 0;background:var(--c-signal)}
+#pgs .rsub{display:none}
+#topr{flex:none;display:flex;align-items:center;gap:var(--s-3);color:var(--c-text-2);font-size:var(--fs-meta)}
+#clock{font-family:var(--mono);font-size:var(--fs-meta);color:var(--c-text-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+/* the bar's status slot: one mark and one word, never wraps the bar or moves the clock. The full message opens in a sheet. */
+#status{flex:0 1 auto;display:inline-flex;align-items:center;gap:var(--s-2);min-width:0;max-width:9rem;min-height:var(--hit);white-space:nowrap;overflow:hidden;cursor:pointer;font-size:var(--fs-meta);color:var(--c-text-2)}
+#status>span:last-child{overflow:hidden;text-overflow:clip}
+#status:not(.bad):not(.warn)>.sd{display:none}
+#status.bad,#status.warn{color:var(--c-text-1)}
+#fs{min-width:var(--hit);min-height:var(--hit);color:var(--c-text-2);border-radius:var(--r-ctl)}
+.nofs #fs{display:none}
+#top{flex-wrap:nowrap}
+#hosts .on{box-shadow:inset 0 -3px 0 var(--c-text-1)}
+/* each computer is a whole target: 44 px tall wherever the pointer is coarse, inside the segment's 1 px border (it was 42) */
+.seg.host>button{min-width:var(--hit);min-height:var(--hit);padding:0 var(--s-3);font-size:var(--fs-meta)}
+/* the skip link: the first stop, shown only when focused; it focuses the page on screen (app.js) */
+.skiplink{position:fixed;z-index:100;top:calc(var(--safe-t) + var(--s-2));left:calc(var(--safe-l) + var(--s-3));padding:var(--s-3) var(--s-4);border-radius:var(--r-ctl);background:var(--c-panel-2);color:var(--c-text-1);transform:translateY(-200%)}
+.skiplink:focus{transform:none}
+#pager>.page:focus{outline:none}
+#pgs button:focus-visible,.subrow>button:focus-visible{outline-offset:-3px}
+
+/* P: the strip leaves the top bar and becomes one bottom bar holding all nine tabs, the icon over its label at the 13 px floor, "Real estate" on
+   two lines. Every cell is 44 px or more both ways (62 px tall). From 396 px the nine cells fill the bar (412: 45.8, 430: 47.8). Narrower, nine
+   44 px cells do not fit (390 is 6 px short, 360 is 36), so the bar scrolls sideways and snaps to a cell: from 375 up the cell is 1/8.5 of the width,
+   so a half cell of the next tab peeks through the edge fade and says "more"; at 360 the 44 px floor wins and a sliver shows. A page that is
+   opened scrolls its own tab into view (app.js revealTab). */
+@media (max-width:599px){
+  #pgs{position:fixed;inset:auto 0 0 0;height:var(--tabbar-h);padding:0 var(--safe-r) var(--safe-b) var(--safe-l);gap:0;background:var(--c-bar);border-top:var(--hair);overflow-x:auto;overflow-y:hidden;scroll-padding:0 var(--safe-r) 0 var(--safe-l)}
+  #pgs button{flex:1 0 44px;min-width:44px;flex-direction:column;justify-content:flex-start;gap:2px;min-height:62px;padding:7px 0 2px;border-radius:0;font-size:var(--fs-micro);font-weight:var(--fw-med);letter-spacing:-.01em;line-height:1.1;white-space:normal;word-break:keep-all;overflow-wrap:normal;hyphens:none;text-align:center}
+  #pgs button svg.i{display:block;flex:none;width:22px;height:22px}
+  #pgs button:hover{background:none}
+  #pgs button.on::before{left:24%;right:24%;top:0;bottom:auto;border-radius:0 0 2px 2px}
+  #top{justify-content:space-between}
+}
+@media (max-width:395px){#pgs button{flex:0 0 max(44px,calc((100vw - var(--safe-l) - var(--safe-r)) / 8.5))}}
+/* a sub-tab hidden for this viewer takes no cell: .seg>button's own display overrides the [hidden] rule, so a guest's House-only row kept a
+   wide empty segment and the owner's row counted cells it could not show (RevTodayHome, guest Home) */
+.subrow>[data-sub][hidden]{display:none!important}
+/* the page's freshness mark and its Filters button have slots in the bar (#tfresh, #tact), used on L only (critique 11); elsewhere both
+   stay in the page (app.js moves the button back) */
+#tfresh,#tact{display:none}
+/* L: one capsule row (host, nine tabs, freshness, status, clock); sub-tabs sit in the 112 px rail, so the page header spends no row.
+   Nine tabs at the body step do not fit beside a worded status at 908, so the status collapses to its mark there (the words stay in the
+   Status sheet) and the freshness mark to its mark and figure: "3", "15 days" (the words are its accessible name and open in the Data
+   sheet, as before). The tabs take 6 px a side (World made the row 14 px too long at 8 px: "Pad" was cut) and are never under 44 px wide
+   ("Pad" is 43 px at 6). Then all nine tabs fit at 908 and 932; a page with a Filters button in the bar scrolls the strip (LayoutL 1, 2). */
+@media (min-width:600px) and (max-height:499px){
+  #top{gap:var(--s-2)}
+  #pgs button{padding:0 6px;min-width:var(--hit);font-size:var(--fs-body)}
+  #status{max-width:var(--hit)}
+  #status>span:last-child{display:none}
+  #status>.sd{display:inline-block;background:var(--c-text-3)}
+  /* a failed status keeps its crossed square (a flat fill drew a plain red square no legend names, L18); warn keeps its triangle clip */
+  #status.bad>.sd{background:linear-gradient(45deg,transparent 41%,var(--c-ground) 41% 59%,transparent 59%),linear-gradient(-45deg,transparent 41%,var(--c-ground) 41% 59%,transparent 59%),var(--c-bad)}
+  #status.warn>.sd{background:var(--c-warn)}
+  #pgs{position:relative}
+  #tfresh,#tact{display:contents}
+  #tfresh>.fresh,#tact>.btn{flex:none}
+  #tfresh>.fresh>.fw{display:none}
+  #tfresh>.fresh[data-short]::after{content:attr(data-short);font-variant-numeric:tabular-nums}
+  #tfresh>.fresh.warn{min-width:var(--hit);justify-content:center;padding:0 var(--s-2)}
+  /* a Filters button in the bar shows its mark and count the way the freshness mark does (the word stays in the tree, visually hidden,
+     and the button's name says it): at "Filters" width the strip scrolled at 956 and put Today and Pad under the fades on Work > Jobs,
+     the page used most with filters (L21) */
+  #tact>.fbar-open{position:relative;min-width:var(--hit);justify-content:center;gap:var(--s-1);padding:0 var(--s-2)}
+  #tact>.fbar-open>.fbw{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  /* a mark with no figure ("Not reporting") shows "No data" beside its triangle: eight tabs and the worded mark (89 px) still fit at 908 */
+  #tfresh>.fresh[data-none]::after{content:attr(data-none)}
+  /* the filter row that held the button collapses when nothing else is in it (D already does this) */
+  .fbar>.fbar-top:not(:has(>:not(.fbar-open,.chips))){display:none}
+  /* the rail names the sub-page and the bar carries the freshness mark, so on L the header row shows no title and no actions of its
+     own (the Data sheet opens from the mark); it shrinks to nothing, or to one 44 px row for a page that still has a scope switch (Main,
+     2026-11-14: first data at or under 130 px on a 411 px screen). Page rules that repeat the rail or the bar go with it. The title
+     stays in the tree, visually hidden, so a screen reader still finds the page's one heading (SeeAccess A3) */
+  .phead{min-height:0;padding:0 calc(var(--reserve)) 0 0;margin-bottom:var(--s-1);border-bottom:0}
+  .phead>.pact,.phead .fresh{display:none}
+  #pager .phead .ptitle{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  .phead .pscope{min-height:var(--hit)}
+}
+/* P, L and T: the strip scrolls sideways when its tabs do not fit, snaps to a tab, and a side with hidden tabs fades (app.js tabEdges sets
+   .less and .more), so a clipped label never ends in a hard cut. T had no fade: at 834 it cut "day" and "Mor" (LayoutT 44). P scrolls only
+   under 396 px (nine 44 px cells), see above. */
+@media (max-width:1099px),(max-height:499px){
+  #pgs{scroll-snap-type:x proximity}
+  #pgs button{scroll-snap-align:start}
+  #pgs.more::after{content:"";position:sticky;right:0;flex:0 0 28px;margin-left:-28px;pointer-events:none;background:linear-gradient(90deg,transparent,var(--c-bar))}
+  #pgs.less::before{content:"";position:sticky;left:0;z-index:1;flex:0 0 28px;margin-right:-28px;pointer-events:none;background:linear-gradient(270deg,transparent,var(--c-bar))}
+}
+/* D: left rail with icons and labels, sub-pages nested under the active tab, host switch on top, clock at the foot */
+@media (min-width:1100px) and (min-height:500px){
+  #top{inset:0 auto 0 0;width:calc(var(--rail-w) + var(--safe-l));height:auto;flex-direction:column;align-items:stretch;gap:var(--s-4);padding:var(--s-4) var(--s-3) var(--s-3) calc(var(--s-3) + var(--safe-l));border-bottom:0;border-right:var(--hair);overflow-y:auto}
+  #pgs{flex-direction:column;flex:none;overflow:visible}
+  #pgs button{justify-content:flex-start;gap:var(--s-3);padding:0 var(--s-3)}
+  #pgs button svg.i{display:block;width:22px;height:22px}
+  #pgs button.on{background:var(--c-panel-2)}
+  #pgs button.on::before{left:calc(var(--s-3) * -1);right:auto;top:8px;bottom:8px;width:3px;height:auto;border-radius:0 2px 2px 0}
+  #pgs .rsub{display:flex;flex-direction:column;margin:2px 0 var(--s-2) calc(var(--s-3) + 22px);border-left:var(--hair)}
+  #pgs .rsub button{min-height:calc(var(--hit) - 4px);padding:0 var(--s-3);font-size:var(--fs-meta);border-radius:0 var(--r-ctl) var(--r-ctl) 0}
+  #pgs .rsub button.on{background:none;color:var(--c-text-1)}
+  #pgs .rsub button.on::before{left:-2px;top:6px;bottom:6px;width:3px}
+  #hosts{display:flex;width:100%}
+  #hosts>button{flex:1}
+  /* the foot reads as two lines: the clock and the date, then the status or weather on its own line (L18: the three wrapped into
+     "Clear · 73°F  Tue, Nov 17" over a lone clock with a row of air between them) */
+  #topr{margin-top:auto;flex-wrap:wrap;justify-content:space-between;padding:var(--s-3) var(--s-2) 0;border-top:var(--hair)}
+  #status{max-width:none}
+  html:not(.tv) #topr{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:var(--s-1) var(--s-3)}
+  html:not(.tv) #topr>#clock{grid-row:1;grid-column:1}
+  html:not(.tv) #topr>#tdate{grid-row:1;grid-column:2;justify-self:end}
+  html:not(.tv) #topr>#status{grid-row:2;grid-column:1/-1}
+  html:not(.tv) #topr>#fs{grid-row:3;grid-column:1}
+  /* the rail holds the sub-pages, so the header names the one on screen after the page ("Money · Markets"): the row of sub-tabs that
+     says it on every other class is hidden here (app.js go() writes data-sub; the TV keeps its pills). A header with its own scope
+     controls (Real estate's scope switch and search) keeps one row instead (CRITIQUE 22); the rail still names the sub-page there */
+  html:not(.tv) .phead:not(:has(.pscope>*)) .ptitle[data-sub]::after{content:" \00B7  " attr(data-sub);color:var(--c-text-2);font-weight:var(--fw-reg)}
+}
+
+/* ===== page ===== */
+.page{max-width:var(--content-max);margin:0 auto;padding:0 calc(var(--page-pad) + var(--safe-r)) var(--s-7) var(--page-pad)}
+/* header row: title (or sub-tabs), scope controls, the one freshness mark, Data */
+.phead{position:sticky;top:calc(var(--topbar-h) + var(--safe-t));z-index:10;display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-2) var(--s-4);min-height:var(--hit);margin:0 calc(var(--page-pad) * -1) var(--s-4);padding:var(--s-3) calc(var(--page-pad) + var(--reserve)) var(--s-3) var(--page-pad);background:var(--c-ground);border-bottom:1px solid transparent}
+.phead.stuck{border-bottom-color:var(--c-line)}
+.ptitle{font-size:var(--fs-page);line-height:1.1;letter-spacing:-.02em}
+.pscope{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-2);margin-right:auto;min-width:0;max-width:100%}
+.pscope>.seg,.pscope>.chips.scroll{max-width:100%;overflow-x:auto;scrollbar-width:none}
+.pscope>.seg::-webkit-scrollbar,.pscope>.chips.scroll::-webkit-scrollbar,.phead .pscope::-webkit-scrollbar{display:none}
+/* D: the header stays one row (CRITIQUE 22). Search is 14rem; below 1440 it collapses to an icon-sized field that opens on focus or "/" */
+@media (min-width:1100px) and (min-height:500px){.pscope{flex:1 1 0}.phead .search{flex:0 1 14rem;min-width:min(100%,10rem)}}
+@media (min-width:1100px) and (max-width:1439px) and (min-height:500px){
+  .phead .pscope .search:not(:focus-within){flex:0 0 var(--ctl-h);min-width:0;width:var(--ctl-h);cursor:pointer}
+  .phead .pscope .search:not(:focus-within) input{padding:0;color:transparent;cursor:pointer}
+  .phead .pscope .search:not(:focus-within) input::placeholder{color:transparent}
+  .phead .pscope .search:not(:focus-within) kbd{display:none}
+}
+.pact{display:flex;align-items:center;gap:var(--s-2);margin-left:auto}
+.btn.data-btn{display:none}
+/* sub-tabs: segmented control in the header row (P, T), a 112 px vertical rail (L), nested in the rail (D), pills (TV) */
+.subrow{display:flex;max-width:100%;overflow-x:auto;scrollbar-width:none}
+.subrow::-webkit-scrollbar{display:none}
+/* P and T: the sub-tabs name the page, so its title is visually hidden, never display:none: a screen reader still finds one heading
+   per page (SeeAccess A3: 16 pages had none on a phone) */
+@media (max-width:599px),(min-width:600px) and (max-width:1099px) and (min-height:500px){
+  .phead{padding-top:var(--s-2);padding-bottom:var(--s-2)}
+  .phead:has(.subrow) .ptitle{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+}
+@media (max-width:599px){.ptitle{font-size:var(--fs-title)}.phead{position:static;margin-bottom:var(--s-3);padding-top:max(var(--s-2),calc(var(--reserve) - var(--topbar-h) - var(--safe-t)))}.phead .subrow{order:1}.phead .ptitle{order:1}.phead .pact{order:2}.phead .pscope{order:3;flex:1 1 100%}.phead .search{max-width:none}}
+/* P: sub-tabs (or the title) and the freshness mark share one row in every state. A warning mark with a figure shows its mark and
+   figure ("12", "59 min", as the L bar does), beside sub-tabs and beside a title alike: its words squeezed the row until the active
+   sub-tab sat under the fade (Mobile Safari 402: "Clus", "ccounts") and, beside a title, cut "Today" to "T..." next to "Out of date ·
+   last read 1 min" and Try again (L18, 2026-11-17). The words stay its accessible name and open in the Data sheet. A mark with no
+   figure ("Not reporting") keeps its words beside a title, where they fit; beside sub-tabs it is the mark and "No data" (below). A
+   title that is visually hidden behind sub-tabs never draws an ellipsis */
+@media (max-width:599px){
+  .phead:has(.subrow),.phead:not(:has(.pscope>.keep)){flex-wrap:nowrap}
+  .phead .subrow{flex:0 1 auto;min-width:0}
+  .phead .ptitle{flex:0 1 auto;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .phead:has(.subrow) .ptitle{text-overflow:clip}
+  .phead .pact{flex:none}
+  .phead:has(.subrow) .pact>.fresh>.fw{display:none}
+  .phead:has(.subrow) .pact>.fresh[data-short]::after{content:attr(data-short);font-variant-numeric:tabular-nums}
+  .phead:has(.subrow) .pact>.fresh{gap:var(--s-1);padding:0 var(--s-1)}
+  .phead:has(.subrow) .pact>.fresh.warn{min-width:var(--hit);justify-content:center}
+  .phead:not(:has(.subrow)) .pact>.fresh[data-short]>.fw{display:none}
+  .phead:not(:has(.subrow)) .pact>.fresh[data-short]::after{content:attr(data-short);font-variant-numeric:tabular-nums}
+  .phead:not(:has(.subrow)) .pact>.fresh.warn[data-short]{min-width:var(--hit);justify-content:center;gap:var(--s-1);padding:0 var(--s-1)}
+}
+/* P: a mark with no figure ("Not reporting") shows "No data" beside its triangle where the row holds it (L18: a lone triangle had no
+   visible meaning): beside a row of up to four sub-tabs from 360 px, where three Real estate tabs keep 82 px each with every label
+   whole (93 at 390); a row of five or more (Home) keeps the triangle alone. The words stay its accessible name (L21) */
+@media (min-width:360px) and (max-width:599px){
+  .phead:has(.subrow):not(:has(.subrow>button:nth-child(5):not([hidden]))) .pact>.fresh[data-none]::after{content:attr(data-none)}
+}
+/* P: every sub-tab whole in the one header row beside the freshness mark (F2, M5): nothing scrolls, so no sub-page sits past the edge or
+   under the mark, and a tap on a sub-tab never lands on the mark. Rows of two keep their own width as before. A row of five or more
+   (Home's six) shares the row in equal cells, each a target of at least 44 px (47 at 390 beside a "15 days" mark), on the meta step from
+   420 px (430: about 53 px a cell) and on the 13 px floor below it, where the meta step needs 295 px of the 283 left. The mark keeps its
+   glyph and figure. */
+@media (max-width:599px){
+  .phead:has(.subrow){column-gap:var(--s-1)}
+  .phead .subrow{flex:none;overflow:hidden}
+  .phead .subrow>button{flex:0 0 auto;min-height:var(--hit)}
+  .phead .subrow:has(>button:nth-child(5):not([hidden])){flex:1 1 0;min-width:0}
+  .phead .subrow:has(>button:nth-child(5):not([hidden]))>button{flex:1 1 0;min-width:0;padding:0;font-size:var(--fs-meta)}
+  /* a row of three or four (Real estate with Markets) also shares what the mark leaves, in equal cells on the meta step with a small
+     inset, so the mark stays whole at the right edge (L16 at 390: "Residential, Commercial, Markets" pushed "26 h" past the edge) */
+  .phead .subrow:has(>button:nth-child(3):not([hidden])):not(:has(>button:nth-child(5):not([hidden]))){flex:1 1 0;min-width:0}
+  .phead .subrow:has(>button:nth-child(3):not([hidden])):not(:has(>button:nth-child(5):not([hidden])))>button{flex:1 1 0;min-width:0;padding:0 var(--s-1);font-size:var(--fs-meta)}
+}
+@media (max-width:419px){.phead .subrow:has(>button:nth-child(5):not([hidden]))>button{font-size:var(--fs-micro)}}
+/* P, L and T: one header row only (CRITIQUE 6). Scope and search fold into the Filters sheet; a control marked .keep stays out:
+   in the header (Surf) or on the filter row (the Commercial type switch) */
+@media (max-width:1099px),(max-height:499px){
+  /* P and T: the header starts below a top bar at least 44 px plus the safe area tall, so it sits clear of the shell's
+     top-right corner and does not reserve it (the reserve pushed the phone freshness mark onto a second row) */
+  .phead{padding-right:var(--page-pad)}
+}
+@media (min-width:600px) and (max-height:499px){.phead{padding-right:calc(var(--page-pad) + var(--reserve))}}
+@media (max-width:1099px),(max-height:499px){
+  .phead .pscope>:not(.keep){display:none}
+  .phead .pscope:not(:has(.keep)){display:none}
+  .fbar>.fbar-top{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .fbar>.fbar-top>*{flex:none}
+  .fbar>.fbar-top>.search{flex:1 1 12rem;min-width:min(100%,10rem)}
+  .fbar>.fbar-top::-webkit-scrollbar{display:none}
+}
+/* T: sub-tabs and the freshness mark share the one header row */
+@media (min-width:600px) and (max-width:1099px) and (min-height:500px){.phead{flex-wrap:nowrap}}
+/* P: the type switch gets its own row of equal segments under the Filters row (CRITIQUE 4); active chips scroll in the row above */
+@media (max-width:599px){
+  .fbar>.fbar-top{flex-wrap:wrap;overflow:visible}
+  .fbar>.fbar-top>.search{flex:1 1 0;min-width:0;max-width:none}
+  .fbar>.fbar-top>.keep{order:1;flex:1 1 100%;display:flex}
+  .fbar>.fbar-top>.keep>button{flex:1 1 0;min-width:0;padding:0 var(--s-1);font-size:var(--fs-meta)}
+}
+@media (min-width:600px) and (max-height:499px){.phead{flex-wrap:nowrap}.phead .pscope{flex:1 1 0;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}}
+@media (min-width:600px) and (max-height:499px){
+  .phead{padding-top:var(--s-1);padding-bottom:var(--s-1);margin-bottom:var(--s-3)}
+  .page:has(.subrow){padding-left:calc(var(--subrail-w) + var(--page-pad) + var(--s-2))}
+  .pscope .search{display:none}
+  .pscope>.seg>button{font-size:var(--fs-meta);padding:0 var(--s-3)}
+  /* a plain 112 px rail: no segmented box, one row per sub-page, the current one marked by a bone edge */
+  .phead .subrow{position:fixed;z-index:15;left:calc(var(--safe-l) + var(--s-2));top:calc(var(--topbar-h) + var(--safe-t) + var(--s-3));width:var(--subrail-w);max-width:var(--subrail-w);flex-direction:column;overflow:visible;border:0;border-radius:0;background:none}
+  .phead .subrow>button{width:100%;min-height:var(--hit);border-left:0;border-top:var(--hair);justify-content:flex-start;white-space:normal;text-align:left;line-height:1.2;padding:var(--s-2) var(--s-3)}
+  .phead .subrow>button:first-child{border-top:0}
+  .phead .subrow>button.on{background:none;box-shadow:inset 3px 0 0 var(--c-text-1)}
+  /* a head with nothing to show on L (the rail names the sub-page, the bar holds the freshness copy, Today has neither sub-tabs nor
+     a kept control) takes no row: the Pixel showed a 55 px empty band above Today's first block */
+  .phead:not(:has(.pscope .keep)){min-height:0;padding:0;margin-bottom:var(--s-2)}
+  .fbar{margin-bottom:var(--s-3)}
+}
+@media (min-width:1100px) and (min-height:500px){.phead .subrow{display:none}.btn.data-btn{display:inline-flex}.phead{top:0;padding-top:var(--s-4)}.ptitle{margin-right:var(--s-3)}}
+/* the one freshness mark per page: glyph plus a short age; it opens the Data sheet. A status only when stale or missing */
+.fresh{display:inline-flex;align-items:center;gap:var(--s-2);min-height:var(--hit);padding:0 var(--s-2);border-radius:var(--r-ctl);font-size:var(--fs-meta);color:var(--c-text-2);white-space:nowrap}
+.fresh::before{content:"";width:.55em;height:.55em;border-radius:50%;border:1.5px solid var(--c-text-3)}
+.fresh:hover{color:var(--c-text-1);background:var(--c-panel)}
+.fresh.warn,.fresh.bad{padding:0 var(--s-3);border:1px solid var(--c-warn-line);background:var(--c-warn-wash);color:var(--c-text-1)}
+.fresh.bad{border-color:var(--c-bad-line);background:var(--c-bad-wash)}
+.fresh.warn::before,.fresh.bad::before{display:none}
+
+/* ===== content layout =====
+   .flow: a stack of sections in balanced columns (P 1, L 2, T 2, D 3, XL 4, TV 2); the page scrolls as one.
+   .g12: structured rows; .c-N spans N of 12 on D and TV, half or full on L and T, full on P. */
+.flow{columns:var(--col-w) var(--col-max);column-gap:var(--gap)}
+/* the space under a section is padding, not margin: WebKit (Safari, the iOS app's web view) keeps a bottom margin across a column
+   break, so the second and third columns started 17 to 24 px below the first on L, T and D (WebKit lane, 2026-11-15). No .flow
+   child paints a box, so padding looks the same in every other engine. */
+.flow>*{break-inside:avoid;margin:0;padding-bottom:var(--gap)}
+.flow>.span-all{column-span:all}
+/* balanced columns (DeckBalance in deck.js): a box with data-balance keeps every child whole. With two or more columns the script
+   moves the children into column boxes picked by height and sets .bal; a .span-all child spans under them. A list, group or card
+   never continues in another column. Without the script, or on the TV, the box is the plain CSS columns above. */
+[data-balance].bal{columns:auto;display:grid;grid-template-columns:repeat(var(--bal-n,2),minmax(0,1fr));column-gap:var(--gap);align-items:start}
+[data-balance].bal>.span-all{grid-column:1/-1}
+[data-balance]>.bal-col{display:flex;flex-direction:column;min-width:0;margin:0;padding-bottom:0}
+[data-balance]>.bal-col.bal-first{grid-column-start:1}
+/* a block's measured height is the same in both states. A rerun turns .bal off and measures the blocks inside their column boxes in
+   plain CSS columns: there they are not direct children, so without these rules a block that crossed a column break fragmented and
+   read wrong (Fleet, 2026-11-15: Product sites, 278 px, read as 2,574) and lost its bottom padding; the plan then stacked the page in
+   one column (834: columns ended at 4,193 and 1,842 px). On the first run a direct child never fragments, whatever the container. */
+[data-balance]>*{break-inside:avoid}
+[data-balance]>.bal-col>*{break-inside:avoid;margin:0;padding-bottom:var(--gap)}
+.g12{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--gap);align-items:start;margin:0 0 var(--gap)}
+.g12>*{grid-column:span 12;min-width:0}
+/* L and T: every span pairs as halves. Halves suit blocks of similar height only: a list many screens long beside a short panel leaves
+   the panel's half empty (DESIGN.md, "Layout: what a check cannot see"); such a page caps its list or balances whole blocks instead */
+@media (min-width:600px){.g12>.c-3,.g12>.c-4,.g12>.c-5,.g12>.c-6,.g12>.c-7,.g12>.c-8{grid-column:span 6}}
+/* T: a half-width section that holds a table takes the full row */
+@media (min-width:600px) and (max-width:1099px) and (min-height:500px){.g12>[class*="c-"]:has(.htw){grid-column:span 12}}
+/* L: two columns side by side; a table keeps its half and shows P1 (CRITIQUE 11) */
+@media (min-width:600px) and (max-height:499px){.g12>.c-7{grid-column:span 6}}
+@media (min-width:1100px) and (min-height:500px){.g12>.c-3{grid-column:span 3}.g12>.c-4{grid-column:span 4}.g12>.c-5{grid-column:span 5}.g12>.c-7{grid-column:span 7}.g12>.c-8{grid-column:span 8}}
+.sect{display:flex;flex-direction:column;min-width:0}
+.secttl{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:var(--s-1) var(--s-3);margin:0 0 var(--s-3);font-size:var(--fs-title);font-weight:var(--fw-med);line-height:var(--lh-title);letter-spacing:-.01em;min-width:0}
+.secttl>span:first-child{min-width:0}
+.secttl>span+span,.secttl .cnt,.secttl .act{font-size:var(--fs-meta);font-weight:var(--fw-reg);color:var(--c-text-2);letter-spacing:0;white-space:nowrap}
+.note,.tnote{font-size:var(--fs-body);line-height:var(--lh-body);color:var(--c-text-2);max-width:var(--measure)}
+.foot-line{margin-top:var(--s-5);font-size:var(--fs-body);color:var(--c-text-2)}
+.prose{max-width:var(--measure)}
+.sub-h{font-size:var(--fs-lead);font-weight:var(--fw-med);margin:var(--s-4) 0 var(--s-2)}
+.more-row{display:flex;justify-content:center;margin-top:var(--s-3)}
+
+/* ===== surfaces ===== */
+.panel,.card,.flist,.strip,.tiles4,.rank{background:var(--c-panel);border:var(--hair);border-radius:var(--r-panel);min-width:0}
+.panel{padding:var(--s-4)}
+.card{display:flex;flex-direction:column;gap:var(--s-3);padding:var(--s-4)}
+.card h3{font-size:var(--fs-lead);font-weight:var(--fw-med);display:flex;justify-content:space-between;align-items:baseline;gap:var(--s-3)}
+.card h3 b{font-size:var(--fs-meta);font-weight:var(--fw-reg);color:var(--c-text-2)}
+button.card,a.card{color:inherit;text-decoration:none;text-align:left;width:100%;cursor:pointer;transition:background-color var(--t-press) var(--ease)}
+@media (hover:hover){button.card:hover,a.card:hover{background:var(--c-panel-2)}}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,15rem),1fr));gap:var(--s-3)}
+.card.none{flex-direction:row;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:var(--s-1) var(--s-3);padding:var(--s-3) var(--s-4)}
+.fig-row{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:var(--s-1) var(--s-3)}
+.fig{font-family:var(--mono);font-size:var(--fs-title);font-weight:var(--fw-med);letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.note.sm{font-size:var(--fs-meta)}
+
+/* ===== stat tiles and strip ===== */
+/* one panel of hairline cells, every cell the same size, rows full: the column count divides the tile count.
+   data-n counts every tile, data-nb the tiles without .dx (the extra tiles only D and XL show).
+   The strip is the size container: every figure in it takes one size from the cell width, so the whole strip steps
+   down together, from --fs-fig to --fs-lead (CRITIQUE 20). 4.8em holds an eight-character mono figure ("3,886.30"), so an
+   eight-tile TV strip at 1536 or 1920 steps down instead of painting into its neighbour. Sheet tiles (.tiles4)
+   are drawn the same way (CRITIQUE 28): two cells across below a 40rem sheet, four above. */
+.strip,.tiles4{display:grid;grid-template-columns:repeat(var(--cols,2),minmax(0,1fr));overflow:hidden;container-type:inline-size}
+/* a sheet's three-tile strip sits three across: on a phone the third sat alone beside an empty cell (LayoutP 38; On this day, Search
+   clicks). Sheets only: no page has a three-tile strip, and a page strip of long figures at 119 px a tile was never looked at */
+dialog.sheet .strip[data-nb="3"]{--cols:3}
+.strip>.tile,.tiles4>.tile{min-width:0;border:0;border-radius:0;background:none;box-shadow:-1px 0 0 var(--c-line),0 -1px 0 var(--c-line)}
+.strip>.tile.dx{display:none}
+@media (min-width:600px){.strip{--cols:3}.strip[data-nb="4"],.strip[data-nb="8"]{--cols:4}.strip[data-nb="10"]{--cols:5}}
+@media (min-width:1100px) and (min-height:500px){
+  .strip>.tile.dx{display:flex}
+  .strip[data-n="4"],.strip[data-n="8"]{--cols:4}.strip[data-n="6"]{--cols:6}.strip[data-n="10"]{--cols:5}.strip[data-n="9"]{--cols:3}
+}
+@media (min-width:1600px) and (min-height:500px){.strip[data-n="8"]{--cols:8}}
+.tile,.mt{display:flex;flex-direction:column;gap:var(--s-1);min-width:0;padding:var(--s-4);background:var(--c-panel);border:var(--hair);border-radius:var(--r-panel)}
+.tile .h,.mt span{font-size:var(--fs-meta);color:var(--c-text-2);line-height:var(--lh-row)}
+.tile .v,.mt b{display:flex;align-items:baseline;flex-wrap:wrap;gap:0 .35em;font-family:var(--mono);font-size:var(--fs-fig);font-weight:var(--fw-med);line-height:var(--lh-fig);letter-spacing:-.02em;color:var(--c-text-1)}
+.tile .v .u{font-family:var(--font);font-size:var(--fs-body);font-weight:var(--fw-reg);letter-spacing:0;color:var(--c-text-2)}
+.tile .t,.mt small{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-1) var(--s-3);font-size:var(--fs-meta);color:var(--c-text-2);line-height:var(--lh-row)}
+.tile .spark{margin-top:var(--s-1)}
+/* the change line (PlanDesign M1): one step up from the meta line, its mark .7em wide, the span word after it at meta; a spark on the same
+   line, right of the change, so the strip keeps its height. The figure above keeps its size. */
+.tile .t.chg{flex-wrap:nowrap;font-size:var(--fs-lead);color:var(--c-text-1)}
+.tile .t.chg .delta::before{width:.7em}
+.tile .t.chg .delta:not(.flat)::before{height:.6em}
+.tile .t.chg .sp{font-size:var(--fs-meta);color:var(--c-text-2)}
+.tile .t.chg .spark{flex:0 1 64px;width:64px;height:1em;margin:0 0 0 auto}
+.strip>.tile .v,.tiles4>.tile .v{font-size:clamp(var(--fs-lead),calc((100cqi / var(--cols,2) - 2 * var(--s-4)) / 4.8),var(--fs-fig))}
+.strip>.tile .v .u{font-size:var(--fs-meta)}
+.tile.sm .v,.mt b{font-size:var(--fs-title)}
+.tile.lead .v{font-size:var(--fs-display)}
+button.tile,a.tile{text-align:left;color:inherit;text-decoration:none;cursor:pointer}
+@media (hover:hover){button.tile:hover,a.tile:hover{background:var(--c-panel-2)}}
+/* changes: sign and true minus in the text, direction as a shape, never a status hue */
+.delta{display:inline-flex;align-items:center;gap:.3em;font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--c-text-1)}
+.delta::before{content:"";width:.55em;height:.48em;background:currentColor;clip-path:polygon(50% 0,100% 100%,0 100%)}
+.delta.dn::before{clip-path:polygon(0 0,100% 0,50% 100%)}
+.delta.flat::before{height:.14em;clip-path:none}
+/* confidence mark: a capsule meter after a blended number and its unit (design authority 2026-11-14; three dots read as an
+   ellipsis). Three equal segments, low 1, medium 2, high 3 filled in secondary text; no hue, no word (aria-label carries it).
+   Sized on the meta step, so it is the same small meter beside any figure: about 20x7 px on a phone, 35x12 on TV */
+.conf{display:inline-flex;flex:none;gap:1px;padding:1px;width:1.45em;height:.5em;font-size:var(--fs-meta);border:1px solid var(--c-line-strong);border-radius:999px;margin-left:.5em;vertical-align:middle}
+.conf>i{flex:1;border-radius:999px;background:transparent}
+.conf[data-c="1"]>i:nth-child(-n+1),.conf[data-c="2"]>i:nth-child(-n+2),.conf[data-c="3"]>i{background:var(--c-text-2)}
+/* in a figure row the row's own gap spaces it; centred on the figure, and it wraps under the value rather than overflow the tile */
+.tile .v>.conf,.mt b>.conf{margin-left:0;align-self:center}
+/* model-only mark (forecast, no buoy nearby): a hollow square before the value. Not on coast segments, which show it as hatch */
+.model:not(.cs)::before{content:"";display:inline-block;width:.55em;height:.55em;margin-right:.35em;border:1.5px solid var(--c-text-2);border-radius:1px;vertical-align:.05em}
+
+/* ===== list rows ===== */
+.flist{display:flex;flex-direction:column;padding:0 var(--s-4)}
+.frow{display:flex;align-items:center;gap:var(--s-3);min-height:var(--hit);padding:var(--row-pad) 0;border-top:var(--hair);min-width:0;color:inherit;text-decoration:none;text-align:left;width:100%}
+.frow:first-child{border-top:0}
+/* W4-2 (the owner's 2470 px window): a full-width list puts each value beside its name. From 1900 px wide the rows flow into columns of
+   rows (DESIGN layout rule 1), at least 28rem each, so a 1,829 px list reads as three columns and a 430 px list stays one.
+   A row never splits; Show more, an empty state and a note span the list. Laptop, phones, tablets and TV are unchanged. */
+@media (min-width:1900px) and (min-height:500px){
+  html:not(.tv) .flist{display:block;column-width:28rem;column-gap:var(--s-7)}
+  html:not(.tv) .flist>*{break-inside:avoid}
+  html:not(.tv) .flist>.more-row,html:not(.tv) .flist>.es,html:not(.tv) .flist>p,html:not(.tv) .flist>.note{column-span:all}
+}
+.frow .fl{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.frow .fl b{font-size:var(--fs-lead);font-weight:var(--fw-med);line-height:var(--lh-row);overflow-wrap:anywhere}
+.frow .fl small{font-size:var(--fs-meta);color:var(--c-text-2);line-height:var(--lh-row);overflow-wrap:anywhere}
+.frow .fr{flex:none;display:flex;flex-direction:column;align-items:flex-end;text-align:right;gap:2px;max-width:50%}
+/* the value column is capped at half the row, so its lines wrap at a space rather than paint past it ("1.1028 USD per EUR") */
+.frow .fr b{font-family:var(--mono);font-size:var(--fs-lead);font-weight:var(--fw-med);overflow-wrap:break-word}
+.frow .fr small{font-size:var(--fs-meta);color:var(--c-text-2);overflow-wrap:break-word}
+button.frow,a.frow{cursor:pointer;transition:background-color var(--t-press) var(--ease)}
+/* hover only where a pointer hovers: on a touch screen (Mobile Safari) a tapped row or button kept the tint (SeeSafari M3) */
+@media (hover:hover){.flist>button.frow:hover,.flist>a.frow:hover{background:var(--c-panel-2);margin-inline:calc(var(--s-4) * -1);padding-inline:var(--s-4);width:calc(100% + 2 * var(--s-4))}}
+.flist>.frow:focus-visible{background:var(--c-panel-2);margin-inline:calc(var(--s-4) * -1);padding-inline:var(--s-4);width:calc(100% + 2 * var(--s-4))}
+/* the chevron is a .5em square turned 45 degrees: its corners reach about .1em past the box, so a .15em right margin keeps
+   the drawn arrow inside the row (it overflowed 2-3 px on every tappable row) */
+.frow[data-open]::after,.frow.go::after{content:"";flex:none;width:.5em;height:.5em;border:solid var(--c-text-3);border-width:2px 2px 0 0;transform:rotate(45deg);margin:0 .15em 0 var(--s-1)}
+a.frow[target="_blank"]::after,a.ext::after{content:"↗";font-family:var(--mono);color:var(--c-text-3);margin-left:var(--s-1)}
+.frow.err{min-height:0;align-items:flex-start}
+.frow.err .fl b{font-size:var(--fs-body)}
+.frow .lead-mark{flex:none;align-self:flex-start;margin-top:.35em}
+
+/* ranked rows: rank, name over a line, the key figure, a score bar */
+.rank{padding:0 var(--s-4)}
+.rank>li{border-top:var(--hair)}.rank>li:first-child{border-top:0}
+.rank-row{display:grid;grid-template-columns:2.4ch minmax(0,1fr) auto;column-gap:var(--s-3);row-gap:var(--s-2);align-items:center;width:100%;min-height:var(--hit);padding:var(--row-pad) 0;text-align:left}
+.rank-n{font-family:var(--mono);font-size:var(--fs-meta);color:var(--c-text-3);align-self:start;padding-top:.2em}
+.rank-t{display:flex;flex-direction:column;gap:2px;min-width:0}
+.rank-t b{font-size:var(--fs-lead);font-weight:var(--fw-med);line-height:var(--lh-row)}
+.rank-t small,.rank-f small{font-size:var(--fs-meta);color:var(--c-text-2);line-height:var(--lh-row)}
+.rank-f{display:flex;flex-direction:column;align-items:flex-end;gap:2px;text-align:right}
+.rank-f b{font-family:var(--mono);font-size:var(--fs-lead);font-weight:var(--fw-med);font-variant-numeric:tabular-nums;white-space:nowrap}
+.rank-s{grid-column:2/-1;display:flex;align-items:center;gap:var(--s-3)}
+.rank-s .bar{flex:1}
+.rank-s span{font-family:var(--mono);font-size:var(--fs-meta);color:var(--c-text-2);min-width:3ch;text-align:right}
+@media (hover:hover){button.rank-row:hover{background:var(--c-panel-2);margin-inline:calc(var(--s-4) * -1);padding-inline:var(--s-4);width:calc(100% + 2 * var(--s-4))}}
+button.rank-row:focus-visible{background:var(--c-panel-2);margin-inline:calc(var(--s-4) * -1);padding-inline:var(--s-4);width:calc(100% + 2 * var(--s-4))}
+
+/* ===== data table =====
+   Priority columns (data-pri 2-4; unmarked cells are P1): L shows P1, T P1-P2, D P1-P3, XL all, TV P1.
+   P never shows a table: each row becomes a card with P1 and P2 (cells carry data-l labels). Sticky header, no sideways scroll.
+   .htw.scroll is the sheet variant: every column, sideways scroll, frozen first column. */
+.htw{background:var(--c-panel);border:var(--hair);border-radius:var(--r-panel);overflow:clip;min-width:0;container:tbl/inline-size}
+.htbl{border-collapse:separate;border-spacing:0;width:100%;font-size:var(--fs-body);line-height:var(--lh-row);color:var(--c-text-1)}
+.htbl th,.htbl td{padding:var(--row-pad) var(--s-2);text-align:left;white-space:nowrap;vertical-align:middle;border-top:var(--hair)}
+/* a body cell may wrap at a space when the table is too narrow, so a value never loses its unit to the clipped edge;
+   value and unit stay together because the formatter joins them with a no-break space */
+.htw:not(.scroll) .htbl td,.htw:not(.scroll) .htbl tbody th{white-space:normal}
+.htbl tr>:first-child{padding-left:var(--s-4)}.htbl tr>:last-child{padding-right:var(--s-4)}
+.htbl thead th{position:sticky;top:var(--sticky-top);z-index:2;background:var(--c-panel);border-top:0;border-bottom:var(--hair);font-size:var(--fs-meta);font-weight:var(--fw-med);color:var(--c-text-2);vertical-align:bottom;padding-top:var(--s-3);padding-bottom:var(--s-2);white-space:normal;line-height:1.2}
+.htbl tbody tr:first-child>*{border-top:0}
+.htbl .n{text-align:right;font-family:var(--mono);font-size:.94em}
+.htbl thead .n{font-family:var(--font);font-size:var(--fs-meta)}
+.htbl td small,.htbl th small{display:block;font-size:var(--fs-meta);font-weight:var(--fw-reg);color:var(--c-text-2);font-family:var(--font)}
+.htbl th[scope="row"]{font-weight:var(--fw-med)}
+.htbl tbody tr{cursor:pointer}
+@media (hover:hover){.htbl tbody tr:hover>*{background:var(--c-panel-2)}}
+.htbl tbody tr:focus-visible>*{background:var(--c-panel-2)}
+.htbl tbody tr:focus-visible{outline:none}
+.htbl tbody tr:focus-visible>:first-child{box-shadow:inset 3px 0 0 var(--c-signal)}
+.htbl tbody tr.on>*{background:var(--c-signal-wash)}
+/* a sort header keeps its tall touch box but sets its words at the box's foot, on the line of the plain headers beside it
+   (they sit at the bottom of the row); the arrow sits mid-word (layout audit D16, D17) */
+.htbl .sort{display:inline-flex;align-items:flex-end;gap:.3em;min-height:calc(var(--hit) - 8px);color:inherit;font-weight:inherit}
+.htbl th[aria-sort] .sort{color:var(--c-text-1)}
+.htbl th[aria-sort] .sort::after{content:"";width:.5em;height:.4em;margin-bottom:.4em;background:var(--c-text-1);clip-path:polygon(0 0,100% 0,50% 100%)}
+.htbl th[aria-sort="ascending"] .sort::after{clip-path:polygon(50% 0,100% 100%,0 100%)}
+.htbl .na{color:var(--c-text-3)}
+.htw.scroll{overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin}
+.htw.scroll .htbl thead th{position:static}
+.htw.scroll .htbl tr>:first-child{position:sticky;left:0;z-index:1;background:var(--c-panel);box-shadow:1px 0 0 var(--c-line)}
+@media (min-width:600px) and (max-height:499px){.htbl [data-pri]{display:none}}
+@media (min-width:600px) and (max-width:1099px) and (min-height:500px){.htbl [data-pri="3"],.htbl [data-pri="4"]{display:none}}
+@media (min-width:1100px) and (max-width:1599px) and (min-height:500px){.htbl [data-pri="4"]{display:none}}
+/* the column may be narrower than its class: drop priority columns by the table's own width too */
+@media (min-width:600px){
+  @container tbl (max-width:64rem){.htbl [data-pri="4"]{display:none}}
+  @container tbl (max-width:52rem){.htbl [data-pri="3"]{display:none}}
+  @container tbl (max-width:38rem){.htbl [data-pri="2"]{display:none}}
+}
+@media (max-width:599px){
+  .htw:not(.scroll){background:none;border:0;overflow:visible}
+  .htw:not(.scroll) .htbl,.htw:not(.scroll) .htbl tbody{display:block}
+  .htw:not(.scroll) .htbl thead{display:none}
+  .htw:not(.scroll) .htbl tr{display:grid;grid-template-columns:repeat(auto-fit,minmax(5.5rem,1fr));gap:var(--s-2) var(--s-3);padding:var(--s-3) var(--s-4);margin:0 0 var(--s-2);background:var(--c-panel);border:var(--hair);border-radius:var(--r-panel)}
+  .htw:not(.scroll) .htbl tr>*{border:0;padding:0;background:none;box-shadow:none;text-align:left;white-space:normal}
+  .htw:not(.scroll) .htbl tr>:first-child{grid-column:1/-1}
+  .htw:not(.scroll) .htbl td[data-l]::before{content:attr(data-l);display:block;font-family:var(--font);font-size:var(--fs-meta);color:var(--c-text-2);margin-bottom:1px}
+  .htw:not(.scroll) .htbl .n{font-size:var(--fs-lead)}
+  .htw:not(.scroll) .htbl [data-pri="3"],.htw:not(.scroll) .htbl [data-pri="4"],.htw:not(.scroll) .htbl .pc-hide{display:none}
+}
+.hpg{display:flex;align-items:center;justify-content:space-between;gap:var(--s-3);margin-top:var(--s-3);font-size:var(--fs-meta);color:var(--c-text-2)}
+.place{display:flex;flex-direction:column;gap:1px}
+.place b{font-family:var(--mono);font-weight:var(--fw-med)}
+.place small{font-family:var(--font)}
+.grade{display:inline-flex;align-items:center;justify-content:center;min-width:1.7em;height:1.7em;padding:0 .3em;border:1px solid var(--c-line-strong);border-radius:var(--r-ctl);font-family:var(--mono);font-size:var(--fs-meta);font-weight:var(--fw-med)}
+.grade.g-A{background:var(--c-text-1);color:var(--c-ground);border-color:var(--c-text-1)}
+
+/* ===== controls ===== */
+.btn,button.b{display:inline-flex;align-items:center;justify-content:center;gap:var(--s-2);min-height:var(--ctl-h);min-width:var(--ctl-h);padding:0 var(--s-4);border:1px solid var(--c-line-strong);border-radius:var(--r-ctl);background:transparent;color:var(--c-text-1);font-size:var(--fs-body);font-weight:var(--fw-med);line-height:1.1;text-decoration:none;white-space:nowrap;transition:background-color var(--t-press) var(--ease),border-color var(--t-press) var(--ease),transform var(--t-press) var(--ease)}
+@media (hover:hover){.btn:hover,button.b:hover{border-color:var(--c-text-1);background:var(--c-panel)}}
+.btn:active,button.b:active{transform:translateY(1px)}
+.btn-primary,button.b.armed{background:var(--c-signal);border-color:var(--c-signal);color:var(--c-on-signal)}
+/* the icon and the trailing arrow take the on-signal text colour, never the quiet grey (CRITIQUE 26) */
+.btn-primary svg.i{stroke:currentColor}
+a.btn-primary.ext::after{color:inherit}
+@media (hover:hover){.btn-primary:hover,button.b.armed:hover{background:var(--c-signal-hi);border-color:var(--c-signal-hi)}}
+.btn-quiet{border-color:transparent;color:var(--c-text-2);padding:0 var(--s-3)}
+@media (hover:hover){.btn-quiet:hover{color:var(--c-text-1);border-color:transparent;background:var(--c-panel)}}
+/* a small button is small type, never a small target: the full control height wherever the pointer is coarse (44 px on P, L, T and a
+   touch D such as an iPad in landscape); a mouse on D keeps the 28 px step, the TV its own (tv.css). LayoutL 28-51, LayoutT 21-31 */
+.btn-sm{min-height:var(--ctl-h);font-size:var(--fs-meta)}
+@media (min-width:1100px) and (min-height:500px) and (hover:hover) and (pointer:fine){.btn-sm{min-height:calc(var(--ctl-h) - 8px)}}
+.btn[disabled],button.b:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn .i{width:1.15em;height:1.15em}
+.btn .cnt{font-family:var(--mono);font-size:var(--fs-meta);color:var(--c-text-2)}
+/* segmented control: host switch, sub pages, type switch */
+.seg{display:inline-flex;flex:none;border:1px solid var(--c-line-strong);border-radius:var(--r-ctl);overflow:hidden;background:var(--c-ground)}
+.seg>button{position:relative;display:inline-flex;align-items:center;justify-content:center;min-height:calc(var(--ctl-h) - 2px);padding:0 var(--s-4);color:var(--c-text-2);font-size:var(--fs-body);font-weight:var(--fw-reg);white-space:nowrap;border-left:var(--hair)}
+.seg>button:first-child{border-left:0}
+.seg>button:hover{color:var(--c-text-1);background:var(--c-panel)}
+/* selected segment: bone on panel, the sub-page row included (CRITIQUE 14). Signal marks the current tab, not a segment */
+.seg>button.on,.seg>button[aria-selected="true"]{color:var(--c-text-1);background:var(--c-panel-2);font-weight:var(--fw-med);box-shadow:inset 0 -3px 0 var(--c-text-1)}
+.subrow>button.on,.subrow>button[aria-selected="true"]{box-shadow:inset 0 -3px 0 var(--c-text-1)}
+/* filter chips: wrap as whole words; .scroll for one sideways row; .x for a removable active filter */
+.chips{display:flex;flex-wrap:wrap;gap:var(--s-2);min-width:0}
+.chips.scroll{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.chips.scroll::-webkit-scrollbar{display:none}
+.chips button.b,.chips>button,.fchip{flex:none;min-height:var(--ctl-h);padding:0 var(--s-3);border:1px solid var(--c-line);border-radius:var(--r-ctl);background:var(--c-panel);color:var(--c-text-2);font-size:var(--fs-body);font-weight:var(--fw-reg);display:inline-flex;align-items:center;gap:var(--s-2);white-space:nowrap}
+.chips button.b.on,.chips>button.on,.fchip.on,.chips>button[aria-pressed="true"]{background:var(--c-panel-2);border-color:var(--c-text-1);color:var(--c-text-1);font-weight:var(--fw-med)}
+.chips small,.fchip small{font-family:var(--mono);font-size:var(--fs-meta);color:var(--c-text-2)}
+.fchip.x::after{content:"";width:.6em;height:.6em;background:linear-gradient(45deg,transparent 42%,currentColor 42% 58%,transparent 58%),linear-gradient(-45deg,transparent 42%,currentColor 42% 58%,transparent 58%)}
+/* state chip (Fleet hosts): a compact tile */
+.chip{display:flex;flex-direction:column;justify-content:center;gap:2px;min-height:var(--hit);min-width:0;padding:var(--s-2) var(--s-3);background:var(--c-panel);border:var(--hair);border-radius:var(--r-panel)}
+.chip b{font-size:var(--fs-body);font-weight:var(--fw-med)}
+.chip small{font-size:var(--fs-meta);color:var(--c-text-2)}
+/* fields: 16 px floor so iOS never zooms on focus */
+.field{display:flex;flex-direction:column;gap:var(--s-1);min-width:0;font-size:var(--fs-meta);color:var(--c-text-2)}
+input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea{width:100%;min-width:0;min-height:var(--ctl-h);padding:0 var(--s-3) 0 var(--in-pl,var(--s-3));border:1px solid var(--c-line-strong);border-radius:var(--r-ctl);background:var(--c-panel-2);color:var(--c-text-1);font-size:max(16px,var(--fs-body));font-variant-numeric:tabular-nums}
+/* select: the deck draws the closed control (no platform menulist look in WebKit or Chromium); the picker on tap stays native.
+   The chevron is two gradients, never an image URL (the iOS shell blocks inline images); select.btn keeps it over .btn's background. */
+select,select.btn{-webkit-appearance:none;appearance:none;padding-right:calc(var(--s-3) + 1.4em);text-align:left;cursor:pointer;
+  background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);
+  background-position:calc(100% - var(--s-3) - .4em) 52%,calc(100% - var(--s-3)) 52%;background-size:.4em .4em,.4em .4em;background-repeat:no-repeat}
+select::-ms-expand{display:none}
+select option{background:var(--c-panel-2);color:var(--c-text-1)}
+textarea{padding:var(--s-2) var(--s-3);line-height:var(--lh-body)}
+input::placeholder,textarea::placeholder{color:var(--c-text-3)}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:var(--focus);outline-offset:0;border-color:var(--c-signal)}
+.search{position:relative;display:flex;align-items:center;flex:1 1 12rem;min-width:min(100%,12rem);max-width:22rem;--in-pl:calc(var(--s-3) + 1.6em)}
+.search .i{position:absolute;left:var(--s-3);color:var(--c-text-3);pointer-events:none}
+.search kbd{position:absolute;right:var(--s-2);padding:0 .4em;border:1px solid var(--c-line-strong);border-radius:3px;font-family:var(--mono);font-size:var(--fs-micro);color:var(--c-text-3)}
+@media (hover:none),(pointer:coarse){.search kbd{display:none}}
+/* filter bar: inline on D; one Filters button with a count and a sheet on P, L and T (CRITIQUE 6); absent on TV */
+.fbar{display:flex;flex-direction:column;gap:var(--s-3);margin:0 0 var(--s-5)}
+.fbar-top{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-2) var(--s-3)}
+/* no active-chip row in any class (CRITIQUE 6, 11, 16): the count sits in the Filters button, D shows the fields inline */
+.fbar-top>.chips{display:none}
+.fbar-open{display:none}
+.fbar-fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,11rem),1fr));gap:var(--s-3)}
+@media (min-width:1100px) and (min-height:500px){
+  dialog.sheet.fbar-panel:not([open]){display:block;position:static;inset:auto;width:auto;max-width:none;height:auto;max-height:none;margin:0;padding:0;border:0;background:none;color:inherit;box-shadow:none;transform:none;animation:none;overflow:visible}
+  dialog.sheet.fbar-panel:not([open]) .sheet-h,dialog.sheet.fbar-panel:not([open]) .sheet-a,dialog.sheet.fbar-panel:not([open]) .fb-only{display:none}
+  dialog.sheet.fbar-panel:not([open]) .sheet-b{padding:0;overflow:visible}
+  /* one row: a kept control (the Commercial type switch) beside the fields; an empty top row takes no space */
+  .fbar{flex-direction:row;flex-wrap:wrap;align-items:flex-end;column-gap:var(--s-4)}
+  .fbar>.fbar-top:not(:has(>:not(.fbar-open,.chips))){display:none}
+  .fbar>.fbar-panel{flex:1 1 30rem;min-width:0}
+  .fbar-fields{grid-template-columns:repeat(auto-fill,minmax(min(100%,8rem),1fr))}
+}
+@media (max-width:1099px),(max-height:499px){.fbar-open{display:inline-flex}}
+
+/* ===== status ===== */
+.pill{display:inline-flex;align-items:center;gap:.45em;padding:.15em .7em;border:1px solid var(--c-line);border-radius:var(--r-pill);background:var(--c-panel-2);color:var(--c-text-1);font-size:var(--fs-meta);font-weight:var(--fw-med);line-height:1.35;white-space:nowrap;vertical-align:.05em;font-variant-numeric:tabular-nums}
+.pill.ok{background:var(--c-ok-wash);border-color:var(--c-ok-line)}
+.pill.warn{background:var(--c-warn-wash);border-color:var(--c-warn-line)}
+.pill.bad{background:var(--c-bad-wash);border-color:var(--c-bad-line)}
+.pill.wait{background:var(--c-signal-wash);border-color:var(--c-signal-line)}
+/* marks: shape carries the meaning without colour. ok check, warn triangle, bad crossed square, wait square, off dash, never ring */
+.sd{display:inline-block;flex:none;width:.8em;height:.8em;vertical-align:-.08em;background:var(--c-text-2)}
+.sd.ok{background:var(--c-ok);clip-path:polygon(8% 54%,24% 38%,40% 54%,78% 14%,94% 30%,40% 86%)}
+.sd.warn{background:var(--c-warn);clip-path:polygon(50% 4%,98% 94%,2% 94%)}
+.sd.bad{background:linear-gradient(45deg,transparent 41%,var(--c-ground) 41% 59%,transparent 59%),linear-gradient(-45deg,transparent 41%,var(--c-ground) 41% 59%,transparent 59%),var(--c-bad);border-radius:1px}
+.sd.wait{background:var(--c-signal);border-radius:1px;transform:scale(.85)}
+.sd.off{height:.16em;vertical-align:.25em;background:var(--c-text-2)}
+.sd.nv{background:none;border:1.5px solid var(--c-text-3);border-radius:50%}
+/* a mark before a word in running text (a tile head, a chip name, a row title or state) keeps a space from it ("▲ Car", not "▲Car");
+   in a flex row (a pill, a row, the freshness mark) the row's gap already does this */
+.tile .h>.sd,.chip b>.sd,.frow .fl>b>.sd,.frow .fr>span:not(.pill)>.sd{margin-right:.35em}
+/* rating pips (surf): five pips plus the word, no hue */
+.pips{display:inline-flex;align-items:center;gap:.5em;font-size:var(--fs-meta);font-weight:var(--fw-med);color:var(--c-text-1);white-space:nowrap}
+.pips>span{display:inline-flex;gap:2px}
+.pips i{width:.42em;height:.95em;border-radius:1px;background:var(--c-line)}
+.pips[data-q="1"] i:nth-child(-n+1),.pips[data-q="2"] i:nth-child(-n+2),.pips[data-q="3"] i:nth-child(-n+3),.pips[data-q="4"] i:nth-child(-n+4),.pips[data-q="5"] i{background:var(--c-text-1)}
+/* one status line for a section or page, only when something is stale, missing or blocked */
+.stale-bar{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-2) var(--s-3);padding:var(--s-3) var(--s-4);margin:0 0 var(--s-5);border:1px solid var(--c-warn-line-bar);border-radius:var(--r-panel);background:var(--c-warn-wash);font-size:var(--fs-body)}
+.stale-bar.bad{border-color:var(--c-bad-line-bar);background:var(--c-bad-wash)}
+
+/* ===== states: empty, stale, failed, needs setup, building, loading ===== */
+.es{display:flex;flex-direction:column;align-items:flex-start;gap:var(--s-2);min-width:0;padding:var(--s-5) var(--s-4);background:var(--c-panel);border:1px dashed var(--c-line-strong);border-radius:var(--r-panel)}
+/* the icon sits beside the title, not on a row of its own: the state reads as one line ("crossed square, Surf is not reporting") and a
+   failed section is one row shorter (L18: three stacked failures filled a phone screen on Commercial). The line, Try again and any
+   action align under the title */
+.es:has(>.es-i){display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;justify-items:start;gap:var(--s-2) var(--s-3)}
+.es:has(>.es-i)>*{grid-column:2}
+.es:has(>.es-i)>.es-i{grid-column:1;grid-row:1;margin-top:calc((var(--fs-lead) * var(--lh-row) - 1.5em) / 2)}
+.es .es-i{width:1.5em;height:1.5em;color:var(--c-text-3)}
+/* the panel the shell shows instead of a page while the deck server has not answered, or the device is signed out (app.js offNote):
+   inside the page margins like any page, one readable measure wide */
+#roleoff{max-width:var(--content-max);margin:var(--s-5) auto 0;padding:0 calc(var(--page-pad) + var(--safe-r)) 0 var(--page-pad)}
+#roleoff>.es{max-width:40rem}
+.es-t{font-size:var(--fs-lead);font-weight:var(--fw-med);line-height:var(--lh-row)}
+.es-l{font-size:var(--fs-body);color:var(--c-text-2);line-height:var(--lh-body);max-width:var(--measure)}
+.es .es-retry{margin-top:var(--s-2)}
+.es-stale{border-style:solid;border-color:var(--c-warn-line-es)}
+.es-stale .es-i{color:var(--c-warn)}
+.es-bad{border-style:solid;border-color:var(--c-bad-line-es)}
+.es-bad .es-i{color:var(--c-bad)}
+.es-setup .es-i{color:var(--c-text-2)}
+.flist>.es,.tsec>.es{border:0;background:none;padding-inline:0}
+.skel{display:block;min-height:1em;border-radius:var(--r-ctl);background:var(--c-panel-2);animation:skel 1.6s var(--ease) infinite alternate}
+.skel.l{height:var(--fs-fig);width:60%}.skel.t{height:.8em;width:40%;margin-top:var(--s-2)}
+@keyframes skel{from{opacity:.5}to{opacity:1}}
+
+/* ===== sheets: detail sheet, Data sheet, phone filter sheet. P, L, T: up to 640 px from the bottom; D: right panel; TV: full screen.
+   #sheet / #sheetp / #sheethd / #sheetb / #sheeta are the legacy detail-sheet ids and share these rules. ===== */
+dialog.sheet,#sheetp{position:fixed;margin:0;padding:0;border:0;color:var(--c-text-1);background:var(--c-bar);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 64px -16px rgba(0,0,0,.7)}
+dialog.sheet:not([open]){display:none}
+dialog.sheet{inset:auto 0 0 0;margin-inline:auto;width:var(--sheet-w);max-width:100vw;max-height:92dvh;border:var(--hair);border-bottom:0;border-radius:var(--r-sheet) var(--r-sheet) 0 0;animation:sheet-up var(--t-sheet) var(--ease)}
+dialog.sheet::backdrop{background:var(--c-scrim)}
+/* one sheet width per class (--sheet-w, CRITIQUE 13). .wide counts only when a sideways-scrolling table is inside */
+@media (min-width:1100px) and (min-height:500px){dialog.sheet.wide:has(.htw.scroll){width:min(56rem,62vw)}}
+.sheet-h,#sheethd{position:relative;display:flex;align-items:flex-start;gap:var(--s-3);padding:var(--s-5) var(--s-4) var(--s-3) var(--s-5);border-bottom:var(--hair)}
+dialog.sheet .sheet-h::before{content:"";position:absolute;left:50%;top:8px;width:40px;height:4px;margin-left:-20px;border-radius:2px;background:var(--c-line-strong)}
+.sheet-h>div{flex:1;min-width:0}
+.sheet-h h2,#sheett{font-size:var(--fs-title);font-weight:var(--fw-med);line-height:var(--lh-title)}
+/* the title takes focus on open for a screen reader; after a touch or a click it draws no ring (Mobile Safari drew one every time) */
+.sheet-h h2[data-pointer="1"]:focus,.sheet-h h2[data-pointer="1"]:focus-visible{outline:none}
+.sheet-h p,#sheets{font-size:var(--fs-meta);color:var(--c-text-2);margin-top:2px}
+.sheet-x,#sheetx{flex:none;width:var(--hit);height:var(--hit);display:inline-flex;align-items:center;justify-content:center;border-radius:var(--r-ctl);color:var(--c-text-1);border:1px solid var(--c-line)}
+.sheet-x:hover,#sheetx:hover{background:var(--c-panel)}
+.sheet-b,#sheetb{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:var(--s-4) var(--s-5) var(--s-6);display:flex;flex-direction:column;gap:var(--s-5);container:sheet/inline-size}
+/* sheet content keeps its height when the body scrolls: a strip or table never shrinks to nothing */
+.sheet-b>*,#sheetb>*,.sh-head>*{flex-shrink:0}
+/* the last group scrolls clear of a one-row action bar (CRITIQUE 19, HomeOps Filters): body padding = the bar's height plus s-6 */
+dialog.sheet:has(.sheet-a) .sheet-b{padding-bottom:calc(var(--hit) + var(--s-3) * 2 + var(--safe-b) + var(--s-6))}
+dialog.sheet:not(:has(.sheet-a)) .sheet-b{padding-bottom:var(--s-8)}
+.sheet-a,#sheeta{display:flex;flex-wrap:wrap;gap:var(--s-2);padding:var(--s-3) var(--s-5) calc(var(--s-3) + var(--safe-b));border-top:var(--hair)}
+.sheet-a>.btn{flex:1 1 auto}
+@keyframes sheet-up{from{transform:translateY(32px);opacity:0}to{transform:none;opacity:1}}
+@keyframes sheet-in{from{transform:translateX(24px);opacity:0}to{transform:none;opacity:1}}
+@media (min-width:1100px) and (min-height:500px){
+  dialog.sheet{inset:0 0 0 auto;margin:0;height:100dvh;max-height:100dvh;border:0;border-left:var(--hair);border-radius:0;animation-name:sheet-in}
+  dialog.sheet .sheet-h{padding-top:var(--s-5);padding-right:calc(var(--s-4) + var(--reserve))}
+  dialog.sheet .sheet-h::before{display:none}
+}
+/* L: the sheet is a side panel at full height, so more of its body shows above the fold */
+@media (min-width:600px) and (max-height:499px){
+  dialog.sheet{inset:0 0 0 auto;margin:0;height:100dvh;max-height:100dvh;border:0;border-left:var(--hair);border-radius:0;animation-name:sheet-in}
+  dialog.sheet .sheet-h{padding-top:var(--s-3);padding-right:calc(var(--s-4) + var(--safe-r))}
+  dialog.sheet .sheet-h::before{display:none}
+  #sheetp{inset:0 0 0 auto;height:100%;max-height:none;border-radius:0;border-left:var(--hair)}
+}
+#sheet{position:fixed;inset:0;z-index:59;display:none}
+#sheet.on{display:block}
+#sheetbg{position:absolute;inset:0;background:var(--c-scrim)}
+#sheetp{inset:auto 0 0 0;margin-inline:auto;width:var(--sheet-w);max-height:92dvh;border-radius:var(--r-sheet) var(--r-sheet) 0 0}
+@media (min-width:1100px) and (min-height:500px){#sheetp{inset:0 0 0 auto;height:100%;max-height:none;border-radius:0;border-left:var(--hair)}}
+/* sheet content */
+.sh-head{display:flex;flex-direction:column;gap:var(--s-3)}
+.sh-sec{display:flex;flex-direction:column;gap:var(--s-2)}
+.sh-sec>h3{font-size:var(--fs-lead);font-weight:var(--fw-med)}
+/* key-value rows: one unbroken hairline per row (CRITIQUE 23), label and value held within 34rem (CRITIQUE 13).
+   The label keeps at least 6rem and the value wraps, so a long value never squeezes its label to nothing */
+.kv{display:grid;grid-template-columns:minmax(6rem,max-content) minmax(0,1fr);gap:var(--s-2) 0;max-width:34rem;font-size:var(--fs-body);padding:var(--s-1) 0}
+.kv dt{color:var(--c-text-2)}
+.kv dd{padding-left:var(--s-4);font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;overflow-wrap:anywhere}
+.kv>div{display:contents}
+.kv>div+div>dt,.kv>div+div>dd{border-top:var(--hair);padding-top:var(--s-2)}
+/* prose values (the Data sheet's Method): each sentence under its label at full width, in the body face, left-aligned; figures in
+   other lists stay mono and right-aligned (LayoutP 41: right-aligned mono prose in a 190 px column broke "tide 0-" / "1") */
+.kv.prose{grid-template-columns:minmax(0,1fr);max-width:none}
+.kv.prose dd{padding:var(--s-1) 0 0;font-family:inherit;font-variant-numeric:normal;text-align:left;overflow-wrap:break-word}
+.kv.prose>div+div>dd{border-top:0;padding-top:var(--s-1)}
+/* the keyboard sheet: keys as bordered caps on the left, what they do in the body face on the right */
+.kv.keys{max-width:none;grid-template-columns:minmax(7rem,max-content) minmax(0,1fr)}
+.kv.keys dt{color:var(--c-text-2);white-space:nowrap}
+.kv.keys dd{font-family:var(--font);font-variant-numeric:normal;text-align:left;color:var(--c-text-1)}
+.kv.keys kbd{display:inline-block;min-width:1.7em;padding:0 .4em;border:1px solid var(--c-line-strong);border-radius:var(--r-ctl);background:var(--c-panel);font-family:var(--mono);font-size:var(--fs-meta);line-height:1.6;text-align:center;color:var(--c-text-1)}
+/* missing values: named once in one quiet line, never a tile or a row of dashes */
+.missing{margin-top:var(--s-2);font-size:var(--fs-meta);color:var(--c-text-2)}
+@media (min-width:600px){.tiles4{--cols:4}}
+@container sheet (width < 37rem){.tiles4{--cols:2}}
+.tiles4>.tile{padding:var(--s-3)}
+.tiles4>.tile .v{font-size:var(--fs-title)}
+.coord{font-family:var(--mono);font-size:var(--fs-meta);color:var(--c-text-2)}
+/* Data sheet: Sources, Blends, Method, Setup, Display (PageBlueprints 2.1) */
+.ds-src .frow .fl small{font-family:var(--mono)}
+.ds-blend{display:flex;flex-direction:column;gap:var(--s-2);padding:var(--s-3) 0;border-top:var(--hair)}
+.ds-blend:first-of-type{border-top:0}
+.ds-blend header{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s-3)}
+.ds-blend header b{font-weight:var(--fw-med)}
+.ds-blend header span{font-family:var(--mono)}
+.ds-part{display:grid;grid-template-columns:minmax(0,1fr) 5.5em 4em;gap:var(--s-3);align-items:center;font-size:var(--fs-meta);color:var(--c-text-2)}
+.ds-part b{font-family:var(--mono);font-weight:var(--fw-reg);color:var(--c-text-1);text-align:right}
+.ds-part span:last-child{font-family:var(--mono);text-align:right}
+/* a switch row is one 44 px label: a tap on its words toggles it (LayoutP 42); the box itself is drawn at 24 px */
+.toggle-row{display:flex;justify-content:space-between;align-items:center;gap:var(--s-3);min-height:var(--hit);cursor:pointer}
+.toggle-row>input[type="checkbox"]{flex:none;width:1.5rem;height:1.5rem;margin:0;accent-color:var(--c-signal);cursor:pointer}
+
+/* ===== charts: inline SVG, labels in HTML so type stays on the scale ===== */
+.spark{display:block;width:100%;height:var(--spark-h);overflow:visible}
+.spark .ln{fill:none;stroke:var(--c-text-2);stroke-width:1.5;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
+.spark .dot{fill:var(--c-text-1)}
+.spark .base{stroke:var(--c-line-strong);stroke-width:1;vector-effect:non-scaling-stroke}
+.bar{position:relative;height:6px;border-radius:3px;background:var(--c-line);overflow:hidden}
+.bar>i{position:absolute;inset:0 auto 0 0;width:var(--v,0%);background:var(--c-text-2);border-radius:inherit}
+.bar.hi>i{background:var(--c-text-1)}
+/* horizontal bars: sorted, value at the bar end */
+.hbars{display:flex;flex-direction:column;gap:var(--s-2)}
+.hbar{display:grid;grid-template-columns:minmax(6rem,34%) minmax(0,1fr);gap:var(--s-3);align-items:center;font-size:var(--fs-meta)}
+.hbar>span{color:var(--c-text-2);overflow-wrap:anywhere}
+.hbar>div{display:flex;align-items:center;gap:var(--s-2)}
+.hbar>div>i{display:block;height:.7em;width:var(--v);min-width:2px;background:var(--c-text-2);border-radius:1px}
+.hbar>div>b{font-family:var(--mono);font-weight:var(--fw-reg);color:var(--c-text-1);white-space:nowrap}
+.hbar.on>div>i{background:var(--c-text-1)}
+/* range bar: p25 to p75 band, median tick, current dot */
+.range{position:relative;height:1.2em;margin:var(--s-2) 0}
+.range::before{content:"";position:absolute;top:50%;left:var(--lo,0%);right:calc(100% - var(--hi,100%));height:1px;background:var(--c-line-strong)}
+.range>.band{position:absolute;top:22%;bottom:22%;left:var(--q1);right:calc(100% - var(--q3));background:var(--c-ramp-3);border-radius:2px}
+.range>.med{position:absolute;top:0;bottom:0;left:var(--md);width:2px;margin-left:-1px;background:var(--c-text-1)}
+.range>.cur{position:absolute;top:50%;left:var(--cu);width:.7em;height:.7em;margin:-.35em 0 0 -.35em;border-radius:50%;background:var(--c-signal);border:2px solid var(--c-bar)}
+.range-l{display:flex;justify-content:space-between;font-family:var(--mono);font-size:var(--fs-micro);color:var(--c-text-2)}
+/* bullet (PlanDesign M2): a bar from 0 to the value, one tick for the comparison */
+.range.bullet::before{left:0;right:0}
+.range.bullet>.fill{position:absolute;top:22%;bottom:22%;left:0;width:var(--v);min-width:2px;background:var(--c-text-2);border-radius:1px}
+/* line chart: <= 3 y ticks, 2 x labels, reference in tertiary, live series in bone, now in signal */
+.chart{position:relative;width:100%;aspect-ratio:var(--ar,3/1);min-height:8rem;margin:var(--s-2) 0 calc(var(--fs-micro) * 1.8)}
+.chart svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.chart .grid{stroke:var(--c-line);stroke-width:1;vector-effect:non-scaling-stroke}
+.chart .ln{fill:none;stroke:var(--c-text-1);stroke-width:2;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+.chart .ref{fill:none;stroke:var(--c-text-3);stroke-width:1.5;stroke-dasharray:4 4;vector-effect:non-scaling-stroke}
+/* a level line across a scatter (the loan rate): secondary text, dashed, never signal (CRITIQUE 14) */
+.chart line.ref{stroke:var(--c-text-2)}
+.chart .ar{fill:var(--c-panel-2)}
+.chart .now{stroke:var(--c-signal);stroke-width:2;vector-effect:non-scaling-stroke}
+.chart .lbl{position:absolute;transform:translate(-50%,-115%);font-family:var(--mono);font-size:var(--fs-micro);color:var(--c-text-2);white-space:nowrap;line-height:1.2;text-align:center}
+.chart .lbl b{display:block;color:var(--c-text-1);font-weight:var(--fw-med)}
+.chart .lbl.lo{transform:translate(-50%,15%)}
+.chart .lbl.end{left:auto;right:0;transform:translateY(-115%)}
+/* axis labels: secondary text, since they sit on the micro step and quiet grey is for 14 px and up (DESIGN 2).
+   y ticks: the label sits on its gridline, no box behind it (CRITIQUE 25); the top label stays inside the plot */
+.chart .yt{position:absolute;left:0;top:max(var(--y),1.3em);transform:translateY(-100%);padding:0 0 2px;font-family:var(--mono);font-size:var(--fs-micro);color:var(--c-text-2);line-height:1.1;white-space:nowrap}
+.chart .xt{position:absolute;bottom:0;transform:translate(-50%,120%);font-family:var(--mono);font-size:var(--fs-micro);color:var(--c-text-2);white-space:nowrap}
+.chart .xt.l{left:0;transform:translate(0,120%)}.chart .xt.r{right:0;transform:translate(0,120%)}
+/* line(): the tick labels sit in a gutter left of the plot, centred on their gridline, never under the line (SeeViz V15) */
+.chart.lc{--gut:calc(var(--fs-micro) * 4.6)}
+.chart.lc svg{left:var(--gut);width:auto}
+.chart.lc .yt{width:var(--gut);padding:0 .5em 0 0;text-align:right;top:clamp(.6em,var(--y),calc(100% - .6em));transform:translateY(-50%)}
+.chart.lc .xt.l{left:var(--gut)}
+.chart .nowl{position:absolute;top:0;transform:translate(-50%,-120%);font-size:var(--fs-micro);color:var(--c-signal);font-weight:var(--fw-med);white-space:nowrap}
+/* scatter and dot points: HTML dots keep their shape while the SVG stretches. Solid = measured or listed, hollow = estimated, signal = yours.
+   A dot at the edge stays whole inside the plot (its centre moves at most half a dot) */
+.chart .pt{--r:.275rem;position:absolute;left:clamp(var(--r),var(--x),calc(100% - var(--r)));top:clamp(var(--r),var(--y),calc(100% - var(--r)));width:calc(2 * var(--r));height:calc(2 * var(--r));margin:calc(var(--r) * -1) 0 0 calc(var(--r) * -1);border-radius:50%;background:var(--c-text-1)}
+.chart .pt.est{background:none;border:1.5px solid var(--c-text-2)}
+.chart .pt.sel{--r:.35rem;background:var(--c-signal)}
+.legend .lg-pt{border-radius:50%;background:var(--c-text-1)}
+.legend .lg-pt.est{background:none;border:1.5px solid var(--c-text-2)}
+.legend .lg-ln{height:0;border-top:2px dashed var(--c-text-2);background:none;vertical-align:.3em}
+/* listed versus estimated value mark (deal cap rates): solid disc listed, hollow ring estimated */
+.capm{display:inline-block;width:.6em;height:.6em;border-radius:50%;background:var(--c-text-1);margin-right:.35em;vertical-align:.05em}
+.capm.est{background:none;border:1.5px solid var(--c-text-1)}
+/* outlook bars: one column per day (--days from the helper), height is wave size, shade is rating */
+.obars{display:grid;grid-template-columns:repeat(var(--days,7),minmax(0,1fr));gap:var(--s-2);align-items:end;height:7rem}
+.obars>div{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;height:100%;font-size:var(--fs-micro);color:var(--c-text-2)}
+.obars i{display:block;width:100%;height:var(--h);border-radius:2px 2px 0 0;background:var(--c-ramp-3)}
+.obars [data-q="0"] i{background:var(--c-hatch)}.obars [data-q="1"] i{background:var(--c-ramp-1)}.obars [data-q="2"] i{background:var(--c-ramp-2)}.obars [data-q="4"] i{background:var(--c-ramp-4)}.obars [data-q="5"] i{background:var(--c-ramp-5)}
+.obars b{font-family:var(--mono);font-weight:var(--fw-reg);color:var(--c-text-1)}
+
+/* state tile map (PageBlueprints 2.7): 51 square cells on an 8 x 12 grid; bone ramp (brighter is better), hatched no data, signal selected */
+.usmap{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px;container:usmap/inline-size}
+.usmap .st{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-width:0;border-radius:2px;background:var(--c-ramp-0);color:var(--c-text-1);font-family:var(--mono);line-height:1.05;cursor:pointer;border:0;padding:0}
+/* codes on the micro step (CRITIQUE 12); a phone keeps 12 px codes, its one exception to the 13 px floor (DESIGN decision 3) */
+.usmap .st b{font-size:var(--fs-micro);font-weight:var(--fw-med)}
+.usmap .st small{font-size:var(--fs-micro);opacity:.9}
+/* The middle ramp only clears AA with full text ink; fading its figure made the wide map fail contrast. */
+.usmap .st[data-q="3"] small{opacity:1}
+@media (max-width:599px){.usmap{gap:2px}.usmap .st b{font-size:12px}.panel:has(>.usmap){padding:var(--s-3)}}
+.usmap .st[data-q="1"]{background:var(--c-ramp-1)}.usmap .st[data-q="2"]{background:var(--c-ramp-2)}.usmap .st[data-q="3"]{background:var(--c-ramp-3)}
+.usmap .st[data-q="4"]{background:var(--c-ramp-4);color:var(--c-ground)}.usmap .st[data-q="5"]{background:var(--c-ramp-5);color:var(--c-ground)}
+.usmap .st[data-q="x"]{background:var(--c-hatch);color:var(--c-text-2)}
+.usmap .st.on{outline:2px solid var(--c-signal);outline-offset:2px;position:relative;z-index:1}
+.usmap .st:hover{outline:1px solid var(--c-text-1);outline-offset:1px}
+@container usmap (max-width:40rem){.usmap .st small{display:none}}
+.legend>span{white-space:nowrap}
+.legend{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-1) var(--s-3);margin-top:var(--s-3);font-family:var(--mono);font-size:var(--fs-micro);color:var(--c-text-2)}
+.legend i{display:inline-block;width:1em;height:1em;border-radius:2px;vertical-align:-.15em;margin-right:.35em;background:var(--c-ramp-0)}
+.legend [data-q="1"] i{background:var(--c-ramp-1)}.legend [data-q="2"] i{background:var(--c-ramp-2)}.legend [data-q="3"] i{background:var(--c-ramp-3)}.legend [data-q="4"] i{background:var(--c-ramp-4)}.legend [data-q="5"] i{background:var(--c-ramp-5)}.legend [data-q="x"] i{background:var(--c-hatch)}
+/* map legend: swatches near a map cell's size (SeeViz V17); figures in axes, legends, ranks and chip counts line up (V18) */
+.usmap+.legend i{width:1.75em;height:1.25em;vertical-align:-.3em}
+.chart .yt,.chart .xt,.legend,.rank-n,.chips small,.scf small{font-variant-numeric:tabular-nums}
+/* a grouped row (PlanDesign M4): each member's name its own 44 px link or button */
+.frow.grp .grp-names{margin-top:var(--s-2)}
+.grp-names>.gname{display:inline-flex;align-items:center;min-height:var(--hit);padding:0 var(--s-3);border:1px solid var(--c-line);border-radius:var(--r-ctl);background:var(--c-panel);color:var(--c-text-1);font-size:var(--fs-body);text-decoration:none}
+.st[data-st=AK]{grid-area:1/1}.st[data-st=ME]{grid-area:1/12}
+.st[data-st=WI]{grid-area:2/6}.st[data-st=VT]{grid-area:2/11}.st[data-st=NH]{grid-area:2/12}
+.st[data-st=WA]{grid-area:3/1}.st[data-st=ID]{grid-area:3/2}.st[data-st=MT]{grid-area:3/3}.st[data-st=ND]{grid-area:3/4}.st[data-st=MN]{grid-area:3/5}.st[data-st=IL]{grid-area:3/6}.st[data-st=MI]{grid-area:3/7}.st[data-st=NY]{grid-area:3/10}.st[data-st=MA]{grid-area:3/11}
+.st[data-st=OR]{grid-area:4/1}.st[data-st=NV]{grid-area:4/2}.st[data-st=WY]{grid-area:4/3}.st[data-st=SD]{grid-area:4/4}.st[data-st=IA]{grid-area:4/5}.st[data-st=IN]{grid-area:4/6}.st[data-st=OH]{grid-area:4/7}.st[data-st=PA]{grid-area:4/8}.st[data-st=NJ]{grid-area:4/9}.st[data-st=CT]{grid-area:4/10}.st[data-st=RI]{grid-area:4/11}
+.st[data-st=CA]{grid-area:5/1}.st[data-st=UT]{grid-area:5/2}.st[data-st=CO]{grid-area:5/3}.st[data-st=NE]{grid-area:5/4}.st[data-st=MO]{grid-area:5/5}.st[data-st=KY]{grid-area:5/6}.st[data-st=WV]{grid-area:5/7}.st[data-st=VA]{grid-area:5/8}.st[data-st=MD]{grid-area:5/9}.st[data-st=DE]{grid-area:5/10}
+.st[data-st=AZ]{grid-area:6/2}.st[data-st=NM]{grid-area:6/3}.st[data-st=KS]{grid-area:6/4}.st[data-st=AR]{grid-area:6/5}.st[data-st=TN]{grid-area:6/6}.st[data-st=NC]{grid-area:6/7}.st[data-st=SC]{grid-area:6/8}.st[data-st=DC]{grid-area:6/9}
+.st[data-st=OK]{grid-area:7/4}.st[data-st=LA]{grid-area:7/5}.st[data-st=MS]{grid-area:7/6}.st[data-st=AL]{grid-area:7/7}.st[data-st=GA]{grid-area:7/8}
+.st[data-st=HI]{grid-area:8/1}.st[data-st=TX]{grid-area:8/4}.st[data-st=FL]{grid-area:8/9}
+
+/* coast strip (Surf): 14 regions, south (left) to north (right), shaded by region rating; a no-data or unrated segment is a
+   hatched cell with a hairline edge, so all 14 cells always show (CRITIQUE 8); model only adds a light hatch over the shade.
+   P labels the two ends and the chosen segment; D names every segment. */
+.coast{display:flex;flex-direction:column;gap:var(--s-2)}
+.coast ol{display:grid;grid-template-columns:repeat(var(--n,14),minmax(20px,1fr));gap:2px;container:coast/inline-size}
+/* a height label ("12-15 ft") left a few px to its neighbour in a strip under 1200 px (14 cells of about 75 px at 1366 and 1440):
+   "12-15 ft16-19 ft" read as one string (LayoutT 39). There the unit is named once, on the first label, as on a chart axis, and
+   every other figure stands alone; each segment's aria-label keeps the unit. A wider strip, a phone (no labels) and the TV board
+   (bare values since #277) are unchanged. */
+@container coast (max-width:1200px){.cs b>span{display:none}html:not(.tv) .coast ol>li:first-child .cs b>span{display:inline}}
+.coast ol>li{display:flex;min-width:0}
+/* a segment fills its cell: a button shrinks to its content, and below 1100 px its labels are hidden, so without a width it drew nothing */
+.cs{display:flex;flex-direction:column;align-items:stretch;gap:var(--s-2);width:100%;min-width:0;padding:0;text-align:center;cursor:pointer}
+.cs>i{display:block;height:2.4rem;border-radius:2px;background:var(--c-ramp-0);position:relative}
+.cs[data-q="1"]>i{background:var(--c-ramp-1)}.cs[data-q="2"]>i{background:var(--c-ramp-2)}.cs[data-q="3"]>i{background:var(--c-ramp-3)}.cs[data-q="4"]>i{background:var(--c-ramp-4)}.cs[data-q="5"]>i{background:var(--c-ramp-5)}
+.cs[data-q="0"]>i,.cs.none>i{background:var(--c-hatch);box-shadow:inset 0 0 0 1px var(--c-line)}
+.cs.model>i::after{content:"";position:absolute;inset:0;border-radius:inherit;background:repeating-linear-gradient(135deg,transparent 0 4px,var(--c-hatch-shade) 4px 5px)}
+.cs.on>i{outline:2px solid var(--c-signal);outline-offset:2px;z-index:1}
+.cs b{font-family:var(--mono);font-size:var(--fs-micro);font-weight:var(--fw-med);color:var(--c-text-1);white-space:nowrap}
+.cs small{font-size:var(--fs-micro);line-height:1.2;color:var(--c-text-2);overflow-wrap:anywhere}
+.coast-ends{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s-3);font-size:var(--fs-meta);color:var(--c-text-2)}
+.coast-ends .sel{color:var(--c-text-1);font-weight:var(--fw-med);text-align:center}
+@media (max-width:1099px),(max-height:499px){.cs b,.cs small{display:none}}
+@media (min-width:1100px) and (min-height:500px){.coast-ends .sel{display:none}}
+/* region and spot cards */
+.spot{display:flex;flex-direction:column;gap:var(--s-2);padding:var(--s-4);background:var(--c-panel);border:var(--hair);border-radius:var(--r-panel);text-align:left;width:100%;color:inherit;cursor:pointer;transition:background-color var(--t-press) var(--ease)}
+.spot:hover{background:var(--c-panel-2)}
+.spot header{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s-3)}
+.spot header b{font-size:var(--fs-lead);font-weight:var(--fw-med)}
+.spot .why{font-size:var(--fs-body);color:var(--c-text-2);line-height:var(--lh-row)}
+.spot-m{display:flex;align-items:center;gap:var(--s-4)}
+.spot-m .big{flex:none;min-width:2.6em}
+.spot{gap:var(--s-2);padding:var(--s-3) var(--s-4)}
+.spot .big,.card .big{font-family:var(--mono);font-size:var(--fs-fig);font-weight:var(--fw-med);line-height:1;letter-spacing:-.02em}
+.spot .big .u,.card .big .u{font-family:var(--font);font-size:var(--fs-body);color:var(--c-text-2);letter-spacing:0;margin-left:.25em}
+.spot dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-2) var(--s-3);font-size:var(--fs-meta)}
+.spot dt{color:var(--c-text-2)}
+.spot dd{font-size:var(--fs-body);font-variant-numeric:tabular-nums;color:var(--c-text-1)}
+.spot .one{font-size:var(--fs-meta);color:var(--c-text-2)}
+.spot.on{border-color:var(--c-signal)}
+
+/* ===== always-on phone only: burn-in dim and ambient clock ===== */
+html.always-on.dim #app{opacity:.35;transition:opacity .8s var(--ease)}
+/* a failed tap's words beside an icon or number control (app.js tapFail, lane BShell): fixed, so nothing moves; placed by ShellCore.notePlace
+   above the control (below it at the top edge), never over it, whole inside the window; one at a time, 4 s. A control whose call is out
+   waits (app.js oneCall): a second tap sends nothing until the answer */
+.tapnote{position:fixed;z-index:60;max-width:calc(100vw - 8px);padding:var(--s-2) var(--s-3);border:1px solid var(--c-bad-line);border-radius:var(--r-ctl);background:var(--c-panel-2);color:var(--c-text-1);font-size:var(--fs-meta);font-weight:var(--fw-med);line-height:1.3;white-space:nowrap;pointer-events:none}
+button[data-wait]{opacity:.6;cursor:progress}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media (forced-colors:active){.sd,.conf>i,.bar>i,.pips i,.cs>i,.usmap .st,.hbar>div>i{forced-color-adjust:none}.panel,.flist,.htw,.tile,.strip,.rank,.es,.spot,.card{border:1px solid CanvasText}#pgs button.on::before,.seg>button.on{background:Highlight}}

@@ -1,0 +1,1091 @@
+#!/usr/bin/env python3
+"""Pixel Deck schedules feed -> deck/schedules.json (every scheduled job Tanner owns, one list).
+
+Read-only. Sources, one `group` each:
+  hermes      ~/.hermes/cron/jobs.json on pc-desktop, default profile only (never Quill's profile).
+              Only name, schedule, enabled, state, last/next run, last status and failure streak are read.
+              Prompts, scripts, skills, delivery targets, workdirs and error text are never copied.
+  systemd     `systemctl --user` timers on pc-desktop, dell, spark and ascent (one remote python3 run each).
+  launchd     scheduled user and system launchd jobs on the Mac mini (StartInterval / StartCalendarInterval).
+  github      scheduled GitHub Actions workflows in thefiredev-cloud repos (default branch, unarchived).
+
+A source that fails becomes `error` on its group plus an `errors[]` entry; its jobs are left out, never zeroed.
+
+job = {id, name, host, kind, schedule, enabled, lifecycle, last, started, next, result, detail, owner_wait?}
+  last/next/started: epoch seconds or null. result: ok | failed | waiting | running | never | paused | skipped | overdue | unknown.
+  last = when the previous run ENDED (systemd: the service's last inactive-enter time). A timer fire is kept apart as `triggered`
+  (a trigger, not a completion); with no completion time the result is `unknown`, never `ok` by the absence of a failure.
+  running means a process exists right now (systemd MainPID/ControlPID, Hermes live executions.db lease). A finished oneshot,
+  RemainAfterExit unit or stale timer fire is never running. started = start of the CURRENT run, only while running; null when
+  the launch time is not exposed (age unknown, never guessed from the timer).
+  lifecycle: active | paused | done. `approx_next` is true when `next` is an estimate (launchd StartInterval jobs).
+  A batch timer (~/ops/schedule-batches.json + receipt ~/ops/state/schedule-batches.json) adds `members`: [{name, status, started,
+  finished, exit}] so a failed member shows inside its real batch.
+group = {id, label, host, kind, ok, error, n, jobs, retired?, last_known?}: a down source keeps ok=false, never zero jobs;
+  last_known = {n, active, t} from the last feed that could read it (stale knowledge, labelled as such by the page).
+owner waits: ~/ops/state/owner-waits.json lists failures only Tanner can clear (a relink, a consent, a repo secret):
+  [{job, host, reason, action, link?, mailbox?, until}]. `job` is the feed job id (or its name), `until` an ISO date or time; a date runs
+  to the end of that local day and an expired item is ignored. A `failed` job that matches a live item becomes result `waiting`,
+  detail "Waiting on you: <reason>", with the item as `owner_wait` (a mailbox relink links from its `mailbox` and `link`).
+  counts.waiting counts them; counts.failing never does.
+"""
+import calendar
+import concurrent.futures
+import datetime as dt
+import json
+import os
+import re
+import shutil
+import sqlite3
+import subprocess
+import sys
+import time
+
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+sys.path.append(os.path.expanduser("~/ops/bin"))  # repo copy in pixel-deck/scripts finds deck_feed_common here
+from deck_feed_common import OUT_DIR, Cache, FetchError, now, short_reason, write_feed  # noqa: E402
+
+NAME = "schedules"
+REFRESH = 300
+GH_DEFS_TTL = 6 * 3600
+GH_STATE_TTL = 15 * 60
+HERMES_JOBS = "~/.hermes/cron/jobs.json"
+HERMES_EXECUTIONS = "~/.hermes/cron/executions.db"  # default profile only; Quill's profile is never opened
+HERMES_MERGE = "~/ops/state/hermes-cron-merge.json"
+BATCH_MANIFEST = "~/ops/schedule-batches.json"
+BATCH_RECEIPT = "~/ops/state/schedule-batches.json"
+OWNER_WAITS = "~/ops/state/owner-waits.json"
+SSH_HOSTS = [("dell", "dell"), ("spark", "spark"), ("ascent", "ascent")]
+PROBLEM = {"failed", "overdue"}
+
+
+class NotFound(FetchError):
+    """HTTP 404 from the GitHub API."""
+
+
+# ---------------------------------------------------------------- job model
+
+def job(group, name, host, kind, schedule, enabled, last, nxt, result, detail="", approx=False, about="",
+        started=None, lifecycle=None, members=None, triggered=None):
+    out = {
+        "id": "%s:%s" % (group, name),
+        "name": (name or "unnamed")[:90],
+        "host": host,
+        "kind": kind,
+        "schedule": (schedule or "")[:90],
+        "enabled": bool(enabled),
+        "lifecycle": lifecycle or ("active" if enabled else "paused"),
+        "last": int(last) if last else None,
+        "started": int(started) if started and result == "running" else None,
+        "triggered": int(triggered) if triggered else None,  # when the timer last fired: a trigger, never a completion or a run age
+        "next": int(nxt) if nxt else None,
+        "result": result,
+        "detail": (detail or "")[:120],
+    }
+    if approx:
+        out["approx_next"] = True
+    if about:
+        out["about"] = about[:90]
+    if members:
+        out["members"] = members
+    return out
+
+
+def iso_epoch(value):
+    if not value or not isinstance(value, str):
+        return None
+    try:
+        d = dt.datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if d.tzinfo is None:
+        d = d.replace(tzinfo=dt.timezone.utc)
+    return int(d.timestamp())
+
+
+# ---------------------------------------------------------------- cron expressions (GitHub: UTC)
+
+_MONTHS = {m: i + 1 for i, m in enumerate("JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC".split())}
+_DOWS = {d: i for i, d in enumerate("SUN MON TUE WED THU FRI SAT".split())}
+
+
+def _num(text, names):
+    text = text.strip().upper()
+    if text in names:
+        return names[text]
+    return int(text)
+
+
+def _field(spec, lo, hi, names=None):
+    names = names or {}
+    out = set()
+    for part in spec.split(","):
+        step = 1
+        if "/" in part:
+            part, s = part.split("/", 1)
+            step = int(s)
+            if step < 1:
+                raise ValueError("bad step")
+        if part in ("*", "?", ""):
+            a, b = lo, hi
+        elif "-" in part:
+            x, y = part.split("-", 1)
+            a, b = _num(x, names), _num(y, names)
+        else:
+            a = _num(part, names)
+            b = hi if step != 1 else a
+        if a < lo or b > hi or a > b:
+            raise ValueError("out of range")
+        out.update(range(a, b + 1, step))
+    return out
+
+
+def parse_cron(expr):
+    f = expr.split()
+    if len(f) != 5:
+        raise ValueError("need 5 fields")
+    minutes = _field(f[0], 0, 59)
+    hours = _field(f[1], 0, 23)
+    dom = _field(f[2], 1, 31)
+    months = _field(f[3], 1, 12, _MONTHS)
+    dow = {d % 7 for d in _field(f[4], 0, 7, _DOWS)}
+    return {"min": sorted(minutes), "hour": sorted(hours), "dom": dom, "dom_any": f[2] in ("*", "?"),
+            "month": months, "dow": dow, "dow_any": f[4] in ("*", "?")}
+
+
+def cron_next(expr, after):
+    """First UTC time strictly after `after` (epoch) that matches the 5-field expression, or None."""
+    c = parse_cron(expr)
+    start = dt.datetime.fromtimestamp(after, dt.timezone.utc).replace(second=0, microsecond=0)
+    day = start.replace(hour=0, minute=0)
+    for _ in range(1500):
+        if day.month in c["month"]:
+            dom_ok = day.day in c["dom"]
+            dow_ok = (day.isoweekday() % 7) in c["dow"]
+            if c["dom_any"] and c["dow_any"]:
+                ok = True
+            elif c["dom_any"]:
+                ok = dow_ok
+            elif c["dow_any"]:
+                ok = dom_ok
+            else:
+                ok = dom_ok or dow_ok
+            if ok:
+                for h in c["hour"]:
+                    for m in c["min"]:
+                        cand = day.replace(hour=h, minute=m)
+                        if cand.timestamp() > after:
+                            return int(cand.timestamp())
+        day += dt.timedelta(days=1)
+    return None
+
+
+# ---------------------------------------------------------------- hermes (pc-desktop, default profile)
+
+def _proc_start(pid):
+    """Clock-tick start time of a live pid (field 22 of /proc/<pid>/stat), or None. Same fingerprint Hermes records."""
+    try:
+        with open("/proc/%d/stat" % pid, encoding="utf-8") as fh:
+            text = fh.read()
+    except (OSError, ValueError):
+        return None
+    try:
+        return int(text.rsplit(")", 1)[1].split()[19])
+    except (IndexError, ValueError):
+        return None
+
+
+def _lease_live(pid, fingerprint):
+    started = _proc_start(pid)
+    if started is None:
+        return False
+    if fingerprint is None:
+        return True
+    if started == fingerprint:
+        return True
+    # Hermes itself splits the whole stat line on spaces; a command name with spaces shifts that field.
+    try:
+        with open("/proc/%d/stat" % pid, encoding="utf-8") as fh:
+            return int(fh.read().split()[21]) == fingerprint
+    except (OSError, IndexError, ValueError):
+        return False
+
+
+def hermes_leases(path=None):
+    """{job_id: started_epoch|None} for default-profile executions that are claimed/running under a LIVE owner process.
+
+    executions.db is Hermes' own lease table (read only here). A row whose owner pid is gone, or was recycled, is not running.
+    Raises FetchError when the table cannot be read: the caller then reports running state as unknown, never as idle."""
+    path = os.path.expanduser(path or HERMES_EXECUTIONS)
+    if not os.path.exists(path):
+        raise FetchError("executions.db missing")
+    try:
+        conn = sqlite3.connect("file:%s?mode=ro" % path, uri=True, timeout=5)
+        try:
+            rows = conn.execute("SELECT job_id, pid, process_started_at, status, claimed_at, started_at FROM executions "
+                                "WHERE status IN ('claimed','running')").fetchall()
+        finally:
+            conn.close()
+    except sqlite3.Error as exc:
+        raise FetchError("executions.db unreadable: %s" % short_reason(exc, 80)) from exc
+    out = {}
+    for job_id, pid, fingerprint, status, claimed_at, started_at in rows:
+        try:
+            live = int(pid) > 0 and _lease_live(int(pid), fingerprint)
+        except (TypeError, ValueError):
+            live = False
+        if not live:
+            continue
+        begin = iso_epoch(started_at) or iso_epoch(claimed_at)
+        prev = out.get(str(job_id))
+        if prev is None or (begin and (prev is None or begin > prev)):
+            out[str(job_id)] = begin
+    return out
+
+
+def merge_outcome(r):
+    """One plain sentence for a consolidation row: merged into a job, moved to a timer, or retired as obsolete."""
+    new_id, new = str(r.get("new_id") or ""), str(r.get("new") or "")
+    if new_id == "obsolete" or new == "obsolete":
+        return "retired as obsolete"
+    if new_id.startswith("timer:"):
+        return ("moved to timer " + new_id[6:])[:90]
+    return ("merged into " + new)[:90] if new else "retired by consolidation"
+
+
+def hermes_jobs(path=None, leases=None, merged=None, matched=None):
+    """Default-profile Hermes jobs. `leases` is hermes_leases() output, or None when execution state is unreadable.
+
+    `merged` (rows of ~/ops/state/hermes-cron-merge.json) marks a paused job that consolidation retired: lifecycle `retired` with the
+    outcome in `about`. The row stays in the registry (history is kept). `matched`, when given, collects id() of the merge rows used."""
+    path = os.path.expanduser(path or HERMES_JOBS)
+    try:
+        with open(path, encoding="utf-8") as fh:
+            doc = json.load(fh)
+    except (OSError, ValueError) as exc:
+        raise FetchError("jobs.json unreadable: %s" % short_reason(exc, 80)) from exc
+    rows = doc.get("jobs") if isinstance(doc, dict) else doc
+    if not isinstance(rows, list):
+        raise FetchError("jobs.json has no jobs list")
+    out = []
+    for j in rows:
+        if not isinstance(j, dict):
+            continue
+        state = str(j.get("state") or "")
+        enabled = bool(j.get("enabled")) and state not in ("paused", "completed")
+        status = j.get("last_status")
+        streak = j.get("failure_streak") or 0
+        if status is None:
+            res, detail = "never", ""
+        elif status == "ok":
+            res, detail = "ok", ""
+        else:
+            res, detail = "failed", str(status)[:40]
+            if isinstance(streak, int) and streak > 1:
+                detail += ", %d in a row" % streak
+        life = "active"
+        if not enabled:
+            life = "done" if state == "completed" else "paused"
+            detail = ("done" if state == "completed" else "paused") + ((", last " + str(status)) if status else "")
+            res = "paused" if state != "completed" else res
+        started = None
+        jid = str(j.get("id") or "")
+        if leases is not None and jid in leases:
+            res, started = "running", leases[jid]
+            detail = "" if enabled else "paused, manual run"
+        row = job("hermes", str(j.get("name") or j.get("id") or "unnamed"), "pc-desktop", "hermes",
+                  j.get("schedule_display") or (j.get("schedule") or {}).get("display"), enabled,
+                  iso_epoch(j.get("last_run_at")), iso_epoch(j.get("next_run_at")) if enabled else None,
+                  res, detail, started=started, lifecycle=life)
+        if merged:
+            r = next((m for m in merged if jid and str(m.get("old_id") or "") == jid), None) or \
+                next((m for m in merged if not m.get("old_id") and str(m.get("old")) == row["name"] and not enabled), None)
+            if r is not None:
+                if matched is not None:
+                    matched.add(id(r))  # still in the registry (history kept, or re-enabled): never also listed as gone
+                if not enabled:
+                    row["lifecycle"], row["about"] = "retired", merge_outcome(r)
+        out.append(row)
+    return out
+
+
+def hermes_group():
+    """Hermes jobs with live leases. An unreadable lease table keeps the jobs and says running state is unknown (a note)."""
+    meta = {}
+    try:
+        leases = hermes_leases()
+    except FetchError as exc:
+        leases = None
+        meta["notes"] = ["running state unknown: %s" % exc]
+    merged = read_json_file(HERMES_MERGE)
+    rows = [r for r in (merged or {}).get("merged") or [] if isinstance(r, dict) and r.get("old")]
+    used = set()
+    jobs = hermes_jobs(None, leases, rows, used)
+    gone = [r for r in rows if id(r) not in used]  # merged away and no longer in the registry: kept as history rows of their own
+    if gone:
+        meta["retired"] = [{"name": str(r["old"])[:90], "merged_into": str(r.get("new") or "")[:90], "outcome": merge_outcome(r),
+                            "at": as_epoch(r.get("at")), "host": "pc-desktop"} for r in gone]
+    return jobs, meta
+
+
+# ---------------------------------------------------------------- systemd user timers (one script, any host)
+SYSTEMD_SCRIPT = r'''
+import calendar, json, os, re, subprocess, time
+
+ME = os.environ.get("INVOCATION_ID")  # set when this collector itself runs under systemd
+
+def sc(*a):
+    return subprocess.run(["systemctl", "--user", "--no-pager"] + list(a), capture_output=True, text=True, timeout=40).stdout
+
+def parse_show(text):
+    out, cur = {}, {}
+    for line in text.split("\n") + [""]:
+        if not line.strip():
+            if cur:
+                out[(cur.get("Id") or [""])[0]] = cur
+            cur = {}
+            continue
+        k, _, v = line.partition("=")
+        cur.setdefault(k, []).append(v)
+    return out
+
+def show(props, units, utc=False):
+    if not units:
+        return {}
+    args = ["--timestamp=us+utc"] if utc else []
+    out = parse_show(sc(*(args + ["show", "-p", ",".join(props)] + list(units))))
+    if utc and not out:
+        out = parse_show(sc("show", "-p", ",".join(props), *units))  # systemd older than 246: local pretty stamps
+    return out
+
+def first(d, k):
+    v = d.get(k)
+    return v[0] if v else ""
+
+STAMP = re.compile(r"(\d{4})-(\d\d)-(\d\d) (\d\d):(\d\d):(\d\d)(?:\.\d+)?\s*(\S*)")
+
+def stamp(v):
+    """systemd timestamp text -> epoch seconds, or None when unset or unreadable."""
+    m = STAMP.search(v or "")
+    if not m:
+        return None
+    y, mo, d, h, mi, s = [int(x) for x in m.groups()[:6]]
+    try:
+        if m.group(7) == "UTC":
+            return int(calendar.timegm((y, mo, d, h, mi, s, 0, 0, 0)))
+        return int(time.mktime((y, mo, d, h, mi, s, 0, 0, -1)))
+    except (OverflowError, ValueError):
+        return None
+
+def pid(v):
+    try:
+        return int(v)
+    except (TypeError, ValueError):
+        return 0
+
+timers = json.loads(sc("list-timers", "--all", "--output=json") or "[]")
+tnames = [t["unit"] for t in timers]
+snames = sorted({t.get("activates") for t in timers if t.get("activates")})
+ti = show(["Id", "Description", "ActiveState", "UnitFileState", "TimersCalendar", "TimersMonotonic"], tnames)
+si = show(["Id", "ActiveState", "SubState", "Result", "ExecMainStatus", "LoadState", "MainPID", "ControlPID",
+           "InvocationID", "InactiveExitTimestamp", "InactiveEnterTimestamp", "ExecMainExitTimestamp"], snames, utc=True)
+WORDS = {"Active": "{} after start", "Boot": "{} after boot", "Startup": "{} after manager start",
+         "UnitActive": "every {}", "UnitInactive": "every {} after it finishes"}
+
+def schedule(t):
+    parts = []
+    for c in t.get("TimersCalendar", []):
+        m = re.search(r"OnCalendar=(.*?) ;", c)
+        parts.append(m.group(1).strip() if m else "calendar")
+    mono = {}
+    for c in t.get("TimersMonotonic", []):
+        m = re.search(r"On(\w+?)USec=([^ ;]+)", c)
+        if m:
+            mono[m.group(1)] = m.group(2)
+    if "UnitActive" in mono or "UnitInactive" in mono:
+        for k in ("UnitActive", "UnitInactive"):
+            if k in mono:
+                parts.append(WORDS[k].format(mono[k]))
+    else:
+        for k, v in mono.items():
+            parts.append(WORDS.get(k, "{}").format(v))
+    return " + ".join(parts) or "no schedule"
+
+out = []
+for t in timers:
+    tu = ti.get(t["unit"], {})
+    su = si.get(t.get("activates") or "", {})
+    nxt = t.get("next")
+    fired = int(t["last"] / 1e6) if t.get("last") else None  # when the TIMER last fired: never a run age
+    state, sub = first(su, "ActiveState"), first(su, "SubState")
+    res, code = first(su, "Result"), first(su, "ExecMainStatus")
+    main, ctrl = pid(first(su, "MainPID")), pid(first(su, "ControlPID"))
+    begin, end = stamp(first(su, "InactiveExitTimestamp")), stamp(first(su, "InactiveEnterTimestamp"))
+    end = end or stamp(first(su, "ExecMainExitTimestamp"))
+    timer_on = first(tu, "ActiveState") == "active"
+    started = None
+    # running = a process exists now. A finished oneshot, a RemainAfterExit unit and an old timer fire are not running.
+    # the collector's own service is always mid-run while it publishes a snapshot; that run is not "running" in the snapshot
+    mine = bool(ME) and first(su, "InvocationID") == ME
+    live = ((state in ("activating", "reloading", "deactivating") and (main > 0 or ctrl > 0)) or (state == "active" and main > 0)) and not mine
+    if not su:
+        result, detail = "unknown", "service state unreadable"
+    elif first(su, "LoadState") == "not-found":
+        result, detail = "unknown", "service unit missing"
+    elif mine:
+        result, detail = ("ok", "") if end else ("unknown", "completion not recorded")
+    elif live:
+        result, detail = "running", "stopping" if state == "deactivating" else ""
+        started = begin
+        if end and begin and end > begin:
+            end = None
+    elif state == "activating":
+        result, detail = "unknown", "waiting to restart" if sub.startswith("auto-restart") else "starting, no process yet"
+    elif state == "failed" or (res and res != "success"):
+        result = "failed"
+        detail = (res or "failed") + (" exit " + code if code not in ("", "0") else "")
+    elif not end:
+        # systemd kept no completion time (a collected oneshot): never ok by absence of a failure
+        result, detail = ("unknown", "completion not recorded") if fired else ("never", "")
+    else:
+        result, detail = "ok", ""
+    if not timer_on and result != "running":
+        detail = ("timer stopped; last " + result if result != "never" else "timer stopped")
+        result = "paused"
+    elif not timer_on:
+        detail = "timer stopped"
+    out.append({"name": t["unit"][:-6] if t["unit"].endswith(".timer") else t["unit"],
+                "desc": first(tu, "Description")[:90], "schedule": schedule(tu), "enabled": timer_on,
+                "last": end, "started": started, "triggered": fired, "next": int(nxt / 1e6) if nxt else None,
+                "result": result, "detail": detail, "file": first(tu, "UnitFileState"),
+                "service": t.get("activates") or ""})
+print(json.dumps(out))
+'''
+
+# ---------------------------------------------------------------- launchd (Mac mini, python 3.9)
+
+LAUNCHD_SCRIPT = r'''
+import glob, json, os, plistlib, subprocess, time
+
+HOME = os.path.expanduser("~")
+UID = os.getuid()
+
+def lc_table():
+    t = {}
+    out = subprocess.run(["launchctl", "list"], capture_output=True, text=True, timeout=30).stdout
+    for line in out.splitlines()[1:]:
+        p = line.split("\t")
+        if len(p) == 3:
+            t[p[2]] = (p[0], p[1])
+    return t
+
+def human(sec):
+    for n, u in ((86400, "d"), (3600, "h"), (60, "min")):
+        if sec % n == 0 and sec >= n:
+            return "%d%s" % (sec // n, u)
+    return "%ds" % sec
+
+def running_since(pid):
+    """Epoch the process started (now minus ps etime), or None when ps cannot say."""
+    try:
+        txt = subprocess.run(["ps", "-o", "etime=", "-p", str(pid)], capture_output=True, text=True, timeout=10).stdout.strip()
+        days, _, rest = txt.rpartition("-")
+        parts = [int(x) for x in rest.split(":")]
+        sec = 0
+        for x in parts:
+            sec = sec * 60 + x
+        return int(time.time() - sec - (int(days) * 86400 if days else 0))
+    except (ValueError, OSError, subprocess.SubprocessError):
+        return None
+
+def specs(s):
+    return s if isinstance(s, list) else [s]
+
+def describe(s):
+    out = []
+    for e in specs(s):
+        bits = []
+        if "Weekday" in e:
+            bits.append("wd%s" % e["Weekday"])
+        if "Day" in e:
+            bits.append("day %s" % e["Day"])
+        if "Month" in e:
+            bits.append("month %s" % e["Month"])
+        h, m = e.get("Hour"), e.get("Minute")
+        if h is not None or m is not None:
+            bits.append("%s:%s" % ("%02d" % h if h is not None else "*", "%02d" % m if m is not None else "*"))
+        out.append(" ".join(bits) or "every minute")
+    return " + ".join(out)
+
+def next_cal(s, after):
+    best = None
+    for e in specs(s):
+        lt = time.localtime(after)
+        for d in range(0, 400):
+            day = time.mktime((lt.tm_year, lt.tm_mon, lt.tm_mday + d, 0, 0, 0, 0, 0, -1))
+            t = time.localtime(day)
+            if "Month" in e and t.tm_mon != e["Month"]:
+                continue
+            if "Day" in e and t.tm_mday != e["Day"]:
+                continue
+            if "Weekday" in e and (t.tm_wday + 1) % 7 != e["Weekday"] % 7:
+                continue
+            hours = [e["Hour"]] if "Hour" in e else range(24)
+            mins = [e["Minute"]] if "Minute" in e else range(60)
+            hit = None
+            for h in hours:
+                for m in mins:
+                    c = time.mktime((t.tm_year, t.tm_mon, t.tm_mday, h, m, 0, 0, 0, -1))
+                    if c > after:
+                        hit = c
+                        break
+                if hit:
+                    break
+            if hit:
+                best = hit if best is None else min(best, hit)
+                break
+    return best
+
+table = lc_table()
+jobs, services = [], 0
+for d, domain in ((HOME + "/Library/LaunchAgents", "user"), ("/Library/LaunchAgents", "user"), ("/Library/LaunchDaemons", "system")):
+    for f in sorted(glob.glob(d + "/*.plist")):
+        try:
+            with open(f, "rb") as fh:
+                p = plistlib.load(fh)
+        except Exception:
+            continue
+        label = p.get("Label") or os.path.basename(f)[:-6]
+        si, sci = p.get("StartInterval"), p.get("StartCalendarInterval")
+        if not si and not sci:
+            services += 1
+            continue
+        sched = ("every " + human(si)) if si else describe(sci)
+        if si and sci:
+            sched += " + " + describe(sci)
+        last = None
+        for k in ("StandardOutPath", "StandardErrorPath"):
+            try:
+                m = os.stat(p[k]).st_mtime
+                last = m if last is None else max(last, m)
+            except (KeyError, OSError):
+                pass
+        loaded = (label in table) if domain == "user" else None
+        pid, status = table.get(label, ("-", "0"))
+        runs, code = None, None
+        if domain == "user" and loaded:
+            pr = subprocess.run(["launchctl", "print", "gui/%d/%s" % (UID, label)], capture_output=True, text=True, timeout=20).stdout
+            for line in pr.splitlines():
+                line = line.strip()
+                if line.startswith("runs ="):
+                    runs = int(line.split("=")[1])
+                elif line.startswith("last exit code ="):
+                    code = line.split("=")[1].strip()
+        disabled = bool(p.get("Disabled"))
+        nxt, approx, started = None, False, None
+        now = time.time()
+        if sci:
+            nxt = next_cal(sci, now)
+        elif si and last:
+            nxt, approx = max(last + si, now), True
+        if disabled or loaded is False:
+            result, detail = "paused", "disabled" if disabled else "not loaded"
+            nxt = None
+        elif pid != "-":
+            result, detail = "running", ""
+            started = running_since(pid)
+        elif runs == 0:
+            result, detail = "never", ""
+        elif status not in ("0", "-") or (code not in (None, "0", "(never exited)")):
+            result, detail = "failed", "exit " + (status if status not in ("0", "-") else str(code))
+        elif runs is None and last is None:
+            result, detail = "unknown", "launchd keeps no last-run time"
+        else:
+            result, detail = "ok", ""
+        jobs.append({"name": label, "schedule": sched, "enabled": not (disabled or loaded is False),
+                     "last": int(last) if last else None, "next": int(nxt) if nxt else None, "approx_next": approx,
+                     "started": started, "result": result, "detail": detail, "scope": domain})
+print(json.dumps({"jobs": jobs, "services": services}))
+'''
+
+
+def run_script(script, host=None, timeout=60):
+    """Run a python3 script locally (host None) or over ssh and return its JSON stdout."""
+    if host is None:
+        cmd = [sys.executable, "-"]
+    else:
+        cmd = ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=8", host, "python3", "-"]
+    try:
+        p = subprocess.run(cmd, input=script, capture_output=True, text=True, timeout=timeout)
+    except subprocess.TimeoutExpired as exc:
+        raise FetchError("%s timed out after %ds" % (host or "local", timeout)) from exc
+    except OSError as exc:
+        raise FetchError(short_reason(exc)) from exc
+    if p.returncode != 0:
+        raise FetchError("%s: %s" % (host or "local", short_reason(p.stderr or "exit %d" % p.returncode, 120)))
+    try:
+        return json.loads(p.stdout)
+    except ValueError as exc:
+        raise FetchError("%s: bad output" % (host or "local")) from exc
+
+
+def read_json_file(path):
+    """A small JSON object from disk, or None when missing/unreadable (the overlays are optional, never an error)."""
+    try:
+        with open(os.path.expanduser(path), encoding="utf-8") as fh:
+            doc = json.load(fh)
+    except (OSError, ValueError):
+        return None
+    return doc if isinstance(doc, dict) else None
+
+
+def as_epoch(v):
+    return int(v) if isinstance(v, (int, float)) and not isinstance(v, bool) and v > 1_500_000_000 else None
+
+
+# ---------------------------------------------------------------- owner waits (failures only Tanner can clear)
+
+OWNER_LINK = re.compile(r"https://[^\s\"'<>\\]+")
+
+
+def wait_until(value):
+    """Epoch at which an owner-wait item expires, or None when `until` is missing or not ISO. A date runs to the end of that local day."""
+    if not isinstance(value, str) or not value.strip():
+        return None
+    v = value.strip()
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}", v):
+        try:
+            d = dt.date.fromisoformat(v)
+        except ValueError:
+            return None
+        return int(time.mktime((d + dt.timedelta(days=1)).timetuple()))
+    return iso_epoch(v)
+
+
+def word_clip(text, limit):
+    """`text` cut to `limit` characters at a word with an ellipsis, never mid-word ("headless CDP 9333 cann" read as a typo on Today)."""
+    text = " ".join(str(text or "").split())
+    if len(text) <= limit:
+        return text
+    cut = text[: limit - 1]
+    space = cut.rfind(" ")
+    return (cut[:space] if space > limit // 2 else cut).rstrip(" ,;:.-") + "\u2026"
+
+
+def read_owner_waits(path=None, at=None, errors=None):
+    """Live items of ~/ops/state/owner-waits.json ({"items": [...]} or a bare list). Missing file: none. An unreadable file is an
+    `errors[]` entry and no waits, so every failure stays red. Items without a job, a reason or a future `until` are dropped."""
+    path = os.path.expanduser(path or OWNER_WAITS)
+    if not os.path.exists(path):
+        return []
+    try:
+        with open(path, encoding="utf-8") as fh:
+            doc = json.load(fh)
+    except (OSError, ValueError) as exc:
+        if errors is not None:
+            errors.append({"source": "owner-waits", "reason": "owner-waits.json unreadable: " + short_reason(exc, 80)})
+        return []
+    rows = doc.get("items") if isinstance(doc, dict) else doc
+    if not isinstance(rows, list):
+        if errors is not None:
+            errors.append({"source": "owner-waits", "reason": "owner-waits.json has no items list"})
+        return []
+    at = at or now()
+    out = []
+    for r in rows:
+        if not isinstance(r, dict):
+            continue
+        key, reason, end = str(r.get("job") or "").strip(), str(r.get("reason") or "").strip(), wait_until(r.get("until"))
+        if not key or not reason or end is None or end <= at:
+            continue
+        item = {"job": key[:120], "host": str(r.get("host") or "").strip()[:40], "reason": word_clip(reason, 100),
+                "action": str(r.get("action") or "").strip()[:160], "until": str(r.get("until")).strip()[:25]}
+        link = r.get("link")
+        if isinstance(link, str) and OWNER_LINK.fullmatch(link.strip()):
+            item["link"] = link.strip()[:300]
+        mailbox = r.get("mailbox")
+        if isinstance(mailbox, str) and mailbox.strip():
+            item["mailbox"] = mailbox.strip()[:40]
+        out.append(item)
+    return out
+
+
+def apply_owner_waits(groups, waits):
+    """A failed job that a live owner wait names (by id or name, and host when the item gives one) becomes `waiting`."""
+    for g in groups:
+        for j in g["jobs"]:
+            if j["result"] != "failed":
+                continue
+            w = next((x for x in waits if x["job"] in (j["id"], j["name"]) and (not x["host"] or x["host"] == j["host"])), None)
+            if w is None:
+                continue
+            j["result"] = "waiting"
+            j["detail"] = ("Waiting on you: " + w["reason"])[:120]
+            j["owner_wait"] = dict(w)
+
+
+MEMBER_STATUS = {"ok", "failed", "skipped", "running", "unknown", "pending"}
+
+
+def apply_batches(jobs, manifest, receipt):
+    """Attach batch members to their real batch timer job and return the retired (merged-away) timers.
+
+    manifest: {batches:[{timer, members:[{name, service}], retired:[{name, merged_into, at}]}]} (static, ~/ops/schedule-batches.json).
+    receipt:  {batches:{<timer>:{members:{<name>:{status, started_at, finished_at, exit}}}}} (runtime, no commands or payloads).
+    A member the receipt has not reported is `unknown`, never ok. A failed member makes its batch a problem row unless the batch is
+    still running (then the failed member is shown and counted, the batch keeps its running result)."""
+    retired = []
+    by_name = {j["name"]: j for j in jobs}
+    batches = (manifest or {}).get("batches")
+    got = (receipt or {}).get("batches")
+    got = got if isinstance(got, dict) else {}
+    for b in batches if isinstance(batches, list) else []:
+        if not isinstance(b, dict):
+            continue
+        tname = str(b.get("timer") or "")
+        tname = tname[:-6] if tname.endswith(".timer") else tname
+        for r in b.get("retired") or []:
+            if isinstance(r, dict) and r.get("name"):
+                nm = str(r["name"])
+                nm = nm[:-6] if nm.endswith(".timer") else nm
+                outcome = ("merged into " + str(r.get("merged_into") or tname))[:90]
+                old = by_name.get(nm)
+                if old is not None and not old["enabled"]:
+                    old["lifecycle"], old["about"] = "retired", outcome  # still a loaded, stopped unit: the row itself is the history
+                elif old is None:
+                    retired.append({"name": nm[:90], "merged_into": str(r.get("merged_into") or tname)[:90], "outcome": outcome,
+                                    "at": as_epoch(r.get("at")), "host": "pc-desktop"})
+        j = by_name.get(tname)
+        if j is None:
+            continue
+        rec = got.get(tname) if isinstance(got.get(tname), dict) else {}
+        rm = rec.get("members") if isinstance(rec.get("members"), dict) else {}
+        members = []
+        for m in (b.get("members") or [])[:120]:
+            name = str((m.get("name") or m.get("service") or "") if isinstance(m, dict) else m or "")[:60]
+            if not name:
+                continue
+            r = rm.get(name) if isinstance(rm.get(name), dict) else {}
+            st = str(r.get("status") or "")
+            members.append({"name": name, "status": st if st in MEMBER_STATUS else "unknown",
+                            "started": as_epoch(r.get("started_at")), "finished": as_epoch(r.get("finished_at")),
+                            "overdue": r.get("overdue") is True, "overrun": r.get("overrun") is True,
+                            "due": as_epoch(r.get("due_at")), "deferred_since": as_epoch(r.get("deferred_since")),
+                            "exit": r.get("exit") if isinstance(r.get("exit"), int) and not isinstance(r.get("exit"), bool) else None})
+        if not members:
+            continue
+        j["members"] = members
+        fin = as_epoch(rec.get("finished_at"))  # the batch runner's own finish time, when systemd has no later one
+        if fin and j["result"] != "running" and (j["last"] is None or fin > j["last"]):
+            j["last"] = fin
+        if rec.get("status") == "ok" and fin and j["result"] in ("unknown", "never"):
+            j["result"], j["detail"] = "ok", ""  # the batch runner recorded a real completion with every member ok
+        bad = [m["name"] for m in members if m["status"] == "failed"]
+        if bad:
+            j["detail"] = ("%d of %d members failed: %s" % (len(bad), len(members), ", ".join(bad)))[:120]
+            if j["result"] in ("ok", "never", "unknown", "skipped"):
+                j["result"] = "failed"
+    for r in (manifest or {}).get("retired") or []:  # standalone retired timers (not merged into a batch)
+        if isinstance(r, dict) and r.get("name"):
+            nm = str(r["name"])
+            nm = nm[:-6] if nm.endswith(".timer") else nm
+            outcome = (("merged into " + str(r["merged_into"])) if r.get("merged_into") else str(r.get("reason") or "retired"))[:90]
+            old = by_name.get(nm)
+            if old is not None and not old["enabled"]:
+                old["lifecycle"], old["about"] = "retired", outcome
+            elif old is None:
+                retired.append({"name": nm[:90], "merged_into": str(r.get("merged_into") or "")[:90], "outcome": outcome,
+                                "at": as_epoch(r.get("at")), "host": "pc-desktop"})
+    return retired
+
+
+def systemd_jobs(label, host):
+    rows = run_script(SYSTEMD_SCRIPT, host)
+    jobs = [job(label + "-systemd", r["name"], label, "systemd", r["schedule"], r["enabled"], r["last"], r["next"],
+                r["result"], r["detail"], False, "" if r.get("desc") in (None, "", r["name"] + ".timer") else r["desc"],
+                started=r.get("started"), triggered=r.get("triggered"))
+            for r in rows]
+    meta = {}
+    if host is None:  # the batch manifest describes pc-desktop timers only
+        retired = apply_batches(jobs, read_json_file(BATCH_MANIFEST), read_json_file(BATCH_RECEIPT))
+        if retired:
+            meta["retired"] = retired
+    return jobs, meta
+
+
+def launchd_jobs(host="mac-mini"):
+    doc = run_script(LAUNCHD_SCRIPT, host)
+    jobs = [job("mac-mini-launchd", r["name"], "mac-mini", "launchd", r["schedule"], r["enabled"], r["last"], r["next"],
+                r["result"], r["detail"], r.get("approx_next", False), started=r.get("started")) for r in doc["jobs"]]
+    return jobs, {"always_on": int(doc.get("services") or 0)}
+
+
+# ---------------------------------------------------------------- GitHub Actions schedules
+
+GH_QUERY = """query($after:String){viewer{repositories(first:100,after:$after,ownerAffiliations:OWNER,isArchived:false,
+ orderBy:{field:PUSHED_AT,direction:DESC}){pageInfo{hasNextPage endCursor}
+ nodes{nameWithOwner wf:object(expression:"HEAD:.github/workflows"){... on Tree{entries{name object{... on Blob{text}}}}}}}}}"""
+CRON_LINE = re.compile(r"^\s*-\s*cron:\s*['\"]?([^'\"#\n]+?)['\"]?\s*(?:#.*)?$", re.M)
+NAME_LINE = re.compile(r"^name:\s*['\"]?(.+?)['\"]?\s*(?:#.*)?$", re.M)
+
+
+def gh_bin():
+    for c in (os.path.expanduser("~/.local/bin/gh"), shutil.which("gh")):
+        if c and os.path.exists(c):
+            return c
+    raise FetchError("gh not installed")
+
+
+def gh_api(args, timeout=90):
+    try:
+        p = subprocess.run([gh_bin(), "api"] + args, capture_output=True, text=True, timeout=timeout)
+    except subprocess.TimeoutExpired as exc:
+        raise FetchError("gh api timed out") from exc
+    if p.returncode != 0:
+        err = (p.stderr or p.stdout or "")
+        if "HTTP 404" in err or '"status":"404"' in p.stdout:
+            raise NotFound("not found")
+        if "rate limit" in err.lower():
+            raise FetchError("github rate limit")
+        raise FetchError("gh api: " + short_reason(err, 100))
+    try:
+        return json.loads(p.stdout)
+    except ValueError as exc:
+        raise FetchError("gh api returned non-JSON") from exc
+
+
+def scan_workflows():
+    """Scheduled workflow files across unarchived owner repos: [{repo, file, name, crons}]."""
+    out, after = [], None
+    for _ in range(60):
+        args = ["graphql", "-f", "query=" + GH_QUERY]
+        if after:
+            args += ["-f", "after=" + after]
+        data = gh_api(args, 120)
+        if data.get("errors") and not data.get("data"):
+            raise FetchError("graphql: " + short_reason(data["errors"][0].get("message", "error"), 100))
+        repos = data["data"]["viewer"]["repositories"]
+        for r in repos["nodes"]:
+            tree = r.get("wf") or {}
+            for e in tree.get("entries") or []:
+                text = (e.get("object") or {}).get("text") or ""
+                if not e["name"].endswith((".yml", ".yaml")):
+                    continue
+                crons = [c.strip() for c in CRON_LINE.findall(text)]
+                if crons:
+                    nm = NAME_LINE.search(text)
+                    out.append({"repo": r["nameWithOwner"], "file": e["name"],
+                                "name": (nm.group(1).strip() if nm else e["name"]), "crons": crons})
+        if not repos["pageInfo"]["hasNextPage"]:
+            return out
+        after = repos["pageInfo"]["endCursor"]
+    raise FetchError("graphql paging did not finish")
+
+
+def gha_status(repo, file):
+    """{state, run: {status, conclusion, t} | None} for one scheduled workflow."""
+    try:
+        wf = gh_api(["repos/%s/actions/workflows/%s" % (repo, file)], 40)
+    except NotFound:
+        return {"state": "unregistered", "run": None}
+    runs = gh_api(["repos/%s/actions/workflows/%s/runs?event=schedule&per_page=1" % (repo, file)], 40)
+    items = runs.get("workflow_runs") or []
+    run = None
+    if items:
+        r = items[0]
+        run = {"status": r.get("status"), "conclusion": r.get("conclusion"),
+               "t": iso_epoch(r.get("run_started_at") or r.get("created_at"))}
+    return {"state": wf.get("state") or "unknown", "run": run}
+
+
+def gha_job(w, st, at):
+    repo_short = w["repo"].split("/", 1)[1]
+    name = "%s: %s" % (repo_short, w["name"])
+    sched = " | ".join(w["crons"]) + " UTC"
+    if st is None:
+        return job("github", name, "github", "actions", sched, False, None, None, "unknown", "status lookup failed")
+    run = st["run"]
+    last = run["t"] if run else None
+    nxts = []
+    gap = None
+    for c in w["crons"]:
+        try:
+            n = cron_next(c, at)
+            if n:
+                nxts.append(n)
+                n2 = cron_next(c, n)
+                if n2:
+                    gap = (n2 - n) if gap is None else min(gap, n2 - n)
+        except ValueError:
+            pass
+    nxt = min(nxts) if nxts else None
+    if st["state"] != "active":
+        why = {"unregistered": "workflow not registered (fork or Actions off)",
+               "disabled_inactivity": "disabled after repo inactivity",
+               "disabled_manually": "disabled manually"}.get(st["state"], st["state"])
+        return job("github", name, "github", "actions", sched, False, last, None, "paused", why)
+    if run is None:
+        return job("github", name, "github", "actions", sched, True, None, nxt, "never", "")
+    if run["status"] in ("queued", "in_progress", "waiting", "pending", "requested"):
+        return job("github", name, "github", "actions", sched, True, last, nxt, "running", "", started=last)
+    concl = run["conclusion"] or ""
+    if concl in ("failure", "timed_out", "startup_failure", "action_required"):
+        return job("github", name, "github", "actions", sched, True, last, nxt, "failed", concl)
+    if concl in ("cancelled", "skipped", "neutral", "stale"):
+        res, detail = "skipped", concl
+    else:
+        res, detail = "ok", ""
+    # GitHub delays scheduled runs and drops them under load; flag a schedule that stopped firing.
+    if last and gap and at - last > max(3 * gap, 4 * 3600) + 3600:
+        days = (at - last) / 86400
+        res, detail = "overdue", "no scheduled run for %s" % ("%dd" % days if days >= 1 else "%dh" % ((at - last) // 3600))
+    return job("github", name, "github", "actions", sched, True, last, nxt, res, detail)
+
+
+def github_jobs(errors, at=None, cache_dir=None):
+    at = at or now()
+    defs_cache = Cache("crons-gha-defs", GH_DEFS_TTL, cache_dir)
+    state_cache = Cache("crons-gha-state", GH_STATE_TTL, cache_dir)
+    flows = json.loads(defs_cache.get("scan", lambda: json.dumps(scan_workflows())))
+
+    def one(w):
+        key = "%s/%s" % (w["repo"], w["file"])
+        try:
+            return json.loads(state_cache.get(key, lambda: json.dumps(gha_status(w["repo"], w["file"]))))
+        except (FetchError, ValueError) as exc:
+            return short_reason(exc, 80)
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
+        states = list(pool.map(one, flows))
+    jobs, bad = [], []
+    for w, st in zip(flows, states):
+        if isinstance(st, str):
+            bad.append(st)
+            st = None
+        jobs.append(gha_job(w, st, at))
+    if bad:
+        errors.append({"source": "github.status", "reason": "%d of %d workflows failed status lookup, e.g. %s" % (len(bad), len(flows), bad[0])})
+    return jobs
+
+
+# ---------------------------------------------------------------- assemble
+
+# Labels say what the rows are: the page lists Hermes jobs, system timers, Mac launchd jobs and GitHub schedules together.
+GROUP_ORDER = [
+    ("hermes", "Hermes jobs", "pc-desktop", "hermes"),
+    ("pc-desktop-systemd", "pc-desktop timers", "pc-desktop", "systemd"),
+    ("dell-systemd", "dell timers", "dell", "systemd"),
+    ("spark-systemd", "spark timers", "spark", "systemd"),
+    ("ascent-systemd", "ascent timers", "ascent", "systemd"),
+    ("mac-mini-launchd", "Mac mini launchd", "mac-mini", "launchd"),
+    ("github", "GitHub Actions", "github", "actions"),
+]
+META_KEYS = {"always_on", "retired", "notes"}
+
+
+def build(errors, sources=None):
+    """Run every collector in parallel; return the ordered groups. A collector returns jobs or (jobs, meta)."""
+    extra = {}
+    fetchers = {
+        "hermes": hermes_group,
+        "pc-desktop-systemd": lambda: systemd_jobs("pc-desktop", None),
+        "mac-mini-launchd": lambda: launchd_jobs("mac-mini"),
+        "github": lambda: github_jobs(errors),
+    }
+    for label, host in SSH_HOSTS:
+        fetchers[label + "-systemd"] = (lambda l=label, h=host: systemd_jobs(l, h))
+    if sources:
+        fetchers = {k: v for k, v in fetchers.items() if k in sources}
+    results = {}
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
+        futs = {pool.submit(fn): gid for gid, fn in fetchers.items()}
+        for fut in concurrent.futures.as_completed(futs):
+            gid = futs[fut]
+            try:
+                val = fut.result()
+                if isinstance(val, tuple):
+                    val, extra[gid] = val
+                results[gid] = (val, None)
+            except Exception as exc:  # a source failing must not stop the others
+                results[gid] = ([], short_reason(exc, 140))
+    groups = []
+    for gid, label, host, kind in GROUP_ORDER:
+        if gid not in results:
+            continue
+        jobs, err = results[gid]
+        if err:
+            errors.append({"source": gid, "reason": err})
+        g = {"id": gid, "label": label, "host": host, "kind": kind, "ok": err is None, "error": err,
+             "n": len(jobs), "jobs": sorted(jobs, key=lambda j: j["name"].lower())}
+        for k, v in (extra.get(gid) or {}).items():
+            if k in META_KEYS and v:
+                g[k] = v
+        groups.append(g)
+    return groups
+
+
+def carry_last_known(groups, previous):
+    """A group that could not be read keeps what the last readable feed said, labelled with its age.
+
+    The page shows it as stale knowledge ('last seen N, 2 h ago'), never as the current count and never as zero."""
+    prev = {g.get("id"): g for g in (previous or {}).get("groups", []) if isinstance(g, dict)}
+    for g in groups:
+        if g["ok"]:
+            continue
+        old = prev.get(g["id"])
+        if not isinstance(old, dict):
+            continue
+        if old.get("ok") and isinstance(old.get("jobs"), list):
+            g["last_known"] = {"n": len(old["jobs"]), "active": sum(1 for j in old["jobs"] if isinstance(j, dict) and j.get("enabled")),
+                               "t": (previous or {}).get("t")}
+        elif isinstance(old.get("last_known"), dict):
+            g["last_known"] = old["last_known"]
+
+
+def counts(groups):
+    allj = [j for g in groups for j in g["jobs"]]
+    c = {"scope": "observed", "total": len(allj), "active": sum(1 for j in allj if j["enabled"]),
+         "history": sum(1 for j in allj if not j["enabled"]),
+         "failing": sum(1 for j in allj if j["result"] in PROBLEM), "waiting": sum(1 for j in allj if j["result"] == "waiting"),
+         "running": sum(1 for j in allj if j["result"] == "running"),
+         "running_age_unknown": sum(1 for j in allj if j["result"] == "running" and j.get("started") is None),
+         "never": sum(1 for j in allj if j["result"] == "never"), "paused": sum(1 for j in allj if j["result"] == "paused"),
+         "member_failures": sum(1 for j in allj for m in j.get("members", []) if m["status"] == "failed"),
+         "retired": sum(1 for j in allj if j.get("lifecycle") == "retired") + sum(len(g.get("retired", [])) for g in groups),
+         "sources_down": sum(1 for g in groups if not g["ok"]),
+         "unknown_sources": [g["id"] for g in groups if not g["ok"]],
+         "unknown_hosts": sorted({g["host"] for g in groups if not g["ok"]}),
+         "complete": all(g["ok"] for g in groups),
+         "by_group": {g["id"]: {"n": len(g["jobs"]), "active": sum(1 for j in g["jobs"] if j["enabled"]),
+                                "running": sum(1 for j in g["jobs"] if j["result"] == "running"), "ok": g["ok"]} for g in groups}}
+    nxt = [j["next"] for j in allj if j["next"]]
+    c["next_run"] = min(nxt) if nxt else None
+    return c
+
+
+def main(argv):
+    errors = []
+    only = None
+    out_dir = None
+    print_only = "--print" in argv
+    for a in argv:
+        if a.startswith("--only="):
+            only = set(a.split("=", 1)[1].split(","))
+        if a.startswith("--out-dir="):
+            out_dir = a.split("=", 1)[1]
+    groups = build(errors, only)
+    waits = read_owner_waits(errors=errors)
+    apply_owner_waits(groups, waits)
+    carry_last_known(groups, read_json_file(os.path.join(out_dir or OUT_DIR, NAME + ".json")))
+    src = ["hermes cron jobs.json + executions.db", "systemctl --user", "launchctl", "gh api", "owner-waits.json"]
+    payload = {"counts": counts(groups), "groups": groups}
+    if print_only:
+        print(json.dumps({"errors": errors, **payload}, indent=1))
+        return 0
+    path = write_feed(NAME, REFRESH, src, errors, payload, out_dir)
+    print("%s: %d jobs in %d groups, %d errors" % (path, payload["counts"]["total"], len(groups), len(errors)))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

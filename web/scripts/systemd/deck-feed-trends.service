@@ -1,0 +1,11 @@
+[Unit]
+Description=Pixel Deck trends feed (market-wide trending products, tickers and searches from public sources; writes ~/.kodros/status/deck/trends.json)
+After=network-online.target
+
+[Service]
+Slice=deckwork.slice
+Type=oneshot
+ExecStart=/usr/bin/python3 %h/ops/bin/deck-feed-trends
+TimeoutStartSec=240
+Nice=10
+IOSchedulingClass=idle

@@ -1,0 +1,4 @@
+version: 1
+bundleID: net.meshchat.deck
+product: OmarchyDeck
+infoPath: Info.plist

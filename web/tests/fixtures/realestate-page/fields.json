@@ -1,0 +1,843 @@
+{
+"dataset": "v2",
+"generated_at": 1794711256,
+"count": 44,
+"fields": [
+{
+"name": "acs_value_median",
+"label": "Median home value (survey)",
+"unit": "usd",
+"group": "people",
+"kind": "source",
+"better": "higher",
+"rankable": false,
+"in_zips": false,
+"sources": [
+{
+"id": "acs5_housing_people",
+"as_of": "2020-2024"
+}
+]
+},
+{
+"name": "affordability",
+"label": "Payment as share of income",
+"unit": "pct",
+"group": "metric",
+"kind": "metric",
+"better": "lower",
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "derived",
+"as_of": null
+}
+]
+},
+{
+"name": "area_grade",
+"label": "Rental area grade",
+"unit": "text",
+"group": "score",
+"kind": "legacy",
+"better": null,
+"rankable": false,
+"in_zips": true,
+"sources": [
+{
+"id": "derived",
+"as_of": null
+}
+]
+},
+{
+"name": "area_score",
+"label": "Rental area score",
+"unit": "score",
+"group": "score",
+"kind": "legacy",
+"better": null,
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "derived",
+"as_of": null
+}
+]
+},
+{
+"name": "city",
+"label": "City",
+"unit": "text",
+"group": "geo",
+"kind": "legacy",
+"better": null,
+"rankable": false,
+"in_zips": true,
+"sources": [
+{
+"id": "geonames_postal",
+"as_of": "2026-11-14"
+}
+]
+},
+{
+"name": "climate_risk",
+"label": "Natural hazard risk",
+"unit": "score",
+"group": "metric",
+"kind": "metric",
+"better": "lower",
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "fema_nri_tract",
+"as_of": "v1.20 (December 2025)"
+},
+{
+"id": "noaa_storm_events",
+"as_of": "2016-2025"
+},
+{
+"id": "openfema_disasters",
+"as_of": "2026-10-27"
+},
+{
+"id": "usfs_wildfire_county",
+"as_of": "2026-04-15"
+}
+]
+},
+{
+"name": "college_enroll_5mi",
+"label": "College students within 5 miles",
+"unit": "count",
+"group": "people",
+"kind": "legacy",
+"better": null,
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "ipeds_enroll",
+"as_of": "fall 2023"
+}
+]
+},
+{
+"name": "days_on_market",
+"label": "Days to sell",
+"unit": "days",
+"group": "metric",
+"kind": "metric",
+"better": "lower",
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "realtor_zip",
+"as_of": "2026-10"
+},
+{
+"id": "redfin_zip_market",
+"as_of": "2026-10"
+},
+{
+"id": "zillow_listing_metrics_zip",
+"as_of": "2026-09"
+}
+]
+},
+{
+"name": "days_on_market_conf",
+"label": "Days to sell, confidence",
+"unit": "ratio",
+"group": "metric",
+"kind": "metric_conf",
+"better": "higher",
+"rankable": false,
+"in_zips": false,
+"sources": [
+{
+"id": "derived",
+"as_of": null
+}
+]
+},
+{
+"name": "eviction_filing_rate",
+"label": "Eviction filings per 100 renter homes (2018, county)",
+"unit": "pct",
+"group": "people",
+"kind": "source",
+"better": null,
+"rankable": false,
+"in_zips": false,
+"sources": [
+{
+"id": "eviction_lab_county",
+"as_of": "2018"
+}
+]
+},
+{
+"name": "fhfa_zip3_hpi_1y",
+"label": "Price index change, 1 year (3-digit ZIP)",
+"unit": "pct",
+"group": "market",
+"kind": "source",
+"better": null,
+"rankable": false,
+"in_zips": false,
+"sources": [
+{
+"id": "fhfa_hpi_zip3",
+"as_of": "2026Q2"
+}
+]
+},
+{
+"name": "gross_yield",
+"label": "Gross rent yield",
+"unit": "pct",
+"group": "metric",
+"kind": "metric",
+"better": "higher",
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "derived",
+"as_of": null
+}
+]
+},
+{
+"name": "gross_yield_conf",
+"label": "Gross rent yield, confidence",
+"unit": "ratio",
+"group": "metric",
+"kind": "metric_conf",
+"better": "higher",
+"rankable": false,
+"in_zips": false,
+"sources": [
+{
+"id": "derived",
+"as_of": null
+}
+]
+},
+{
+"name": "h_conf",
+"label": "Home investment score, confidence",
+"unit": "ratio",
+"group": "score",
+"kind": "score_conf",
+"better": "higher",
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "derived",
+"as_of": null
+}
+]
+},
+{
+"name": "h_score",
+"label": "Home investment score",
+"unit": "score",
+"group": "score",
+"kind": "legacy",
+"better": null,
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "derived",
+"as_of": null
+}
+]
+},
+{
+"name": "home_value",
+"label": "Typical home value",
+"unit": "usd",
+"group": "metric",
+"kind": "metric",
+"better": null,
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "acs5_housing_people",
+"as_of": "2020-2024"
+},
+{
+"id": "fhfa_uad_tract",
+"as_of": "2023"
+},
+{
+"id": "realtor_zip",
+"as_of": "2026-10"
+},
+{
+"id": "redfin_zip_market",
+"as_of": "2026-10"
+},
+{
+"id": "zillow_listing_metrics_zip",
+"as_of": "2026-09"
+},
+{
+"id": "zillow_zhvi",
+"as_of": "2026-09"
+}
+]
+},
+{
+"name": "home_value_conf",
+"label": "Typical home value, confidence",
+"unit": "ratio",
+"group": "metric",
+"kind": "metric_conf",
+"better": "higher",
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "derived",
+"as_of": null
+}
+]
+},
+{
+"name": "income",
+"label": "Household income",
+"unit": "usd",
+"group": "metric",
+"kind": "metric",
+"better": "higher",
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "census_acs5",
+"as_of": "2020-2024"
+},
+{
+"id": "census_saipe_county",
+"as_of": "2024"
+},
+{
+"id": "hud_income_limits",
+"as_of": "FY2026"
+},
+{
+"id": "irs_soi_zip",
+"as_of": "2023"
+}
+]
+},
+{
+"name": "jobs_trend",
+"label": "Job change, 1 year (county)",
+"unit": "pct",
+"group": "metric",
+"kind": "metric",
+"better": "higher",
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "bls_qcew_county",
+"as_of": "2026-Q1"
+}
+]
+},
+{
+"name": "migration",
+"label": "People moving in",
+"unit": "score",
+"group": "metric",
+"kind": "metric",
+"better": "higher",
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "census_acs5",
+"as_of": "2020-2024"
+},
+{
+"id": "census_popest_county",
+"as_of": "2025-07-01"
+},
+{
+"id": "irs_soi_county_migration",
+"as_of": "2022-2023"
+},
+{
+"id": "usps_coa_zip",
+"as_of": "2023-06"
+}
+]
+},
+{
+"name": "mortgage_rate",
+"label": "30-year mortgage rate",
+"unit": "pct",
+"group": "metric",
+"kind": "metric",
+"better": null,
+"rankable": false,
+"in_zips": false,
+"sources": [
+{
+"id": "fred_mortgage_rates",
+"as_of": "2026-11-12"
+}
+]
+},
+{
+"name": "population",
+"label": "Population",
+"unit": "count",
+"group": "metric",
+"kind": "metric",
+"better": "higher",
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "census_acs5",
+"as_of": "2020-2024"
+}
+]
+},
+{
+"name": "price_cuts",
+"label": "Listings with a price cut",
+"unit": "pct",
+"group": "metric",
+"kind": "metric",
+"better": "lower",
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "realtor_zip",
+"as_of": "2026-10"
+},
+{
+"id": "redfin_zip_supply_signals",
+"as_of": "2026-10"
+},
+{
+"id": "zillow_listing_metrics_zip",
+"as_of": "2026-09"
+}
+]
+},
+{
+"name": "redfin_inventory_yoy",
+"label": "Homes for sale, change from a year ago",
+"unit": "pct",
+"group": "market",
+"kind": "source",
+"better": null,
+"rankable": false,
+"in_zips": false,
+"sources": [
+{
+"id": "redfin_zip_market",
+"as_of": "2026-10"
+}
+]
+},
+{
+"name": "redfin_median_sale",
+"label": "Median sale price, 3 months",
+"unit": "usd",
+"group": "market",
+"kind": "source",
+"better": null,
+"rankable": false,
+"in_zips": false,
+"sources": [
+{
+"id": "redfin_zip_market",
+"as_of": "2026-10"
+}
+]
+},
+{
+"name": "redfin_median_sale_yoy",
+"label": "Median sale price, change from a year ago",
+"unit": "pct",
+"group": "market",
+"kind": "source",
+"better": null,
+"rankable": false,
+"in_zips": false,
+"sources": [
+{
+"id": "redfin_zip_market",
+"as_of": "2026-10"
+}
+]
+},
+{
+"name": "rent_to_income",
+"label": "Annual rent as share of household income",
+"unit": "pct",
+"group": "market",
+"kind": "legacy",
+"better": null,
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "zillow_zori",
+"as_of": "2026-09"
+},
+{
+"id": "hud_safmr",
+"as_of": "FY2027"
+},
+{
+"id": "census_acs5",
+"as_of": "2020-2024"
+}
+]
+},
+{
+"name": "rent_trend_1y",
+"label": "Rent change, 1 year",
+"unit": "pct",
+"group": "metric",
+"kind": "metric",
+"better": "higher",
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "hud_fmr_county",
+"as_of": "FY2027"
+},
+{
+"id": "zillow_zori",
+"as_of": "2026-09"
+}
+]
+},
+{
+"name": "rent_yoy",
+"label": "Zillow rent change, 1 year",
+"unit": "pct",
+"group": "market",
+"kind": "legacy",
+"better": null,
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "zillow_zori",
+"as_of": "2026-09"
+}
+]
+},
+{
+"name": "rent_zori",
+"label": "Zillow observed rent",
+"unit": "usd_month",
+"group": "market",
+"kind": "legacy",
+"better": null,
+"rankable": false,
+"in_zips": false,
+"sources": [
+{
+"id": "zillow_zori",
+"as_of": "2026-09"
+}
+]
+},
+{
+"name": "renter_share",
+"label": "Renter-occupied homes",
+"unit": "pct",
+"group": "market",
+"kind": "legacy",
+"better": null,
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "census_acs5",
+"as_of": "2020-2024"
+}
+]
+},
+{
+"name": "safety",
+"label": "Safety",
+"unit": "score",
+"group": "metric",
+"kind": "metric",
+"better": "higher",
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "chr_homicides",
+"as_of": "2016-2022"
+},
+{
+"id": "fbi_cde_agency",
+"as_of": null
+}
+]
+},
+{
+"name": "schools",
+"label": "School test results",
+"unit": "score",
+"group": "metric",
+"kind": "metric",
+"better": "higher",
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "opportunity_atlas_tract",
+"as_of": "2018 release (children born 1978-1983)"
+},
+{
+"id": "urban_schools",
+"as_of": "2020-21 school year (EdFacts, finance, poverty); directory 2022-23"
+}
+]
+},
+{
+"name": "state",
+"label": "State",
+"unit": "text",
+"group": "geo",
+"kind": "legacy",
+"better": null,
+"rankable": false,
+"in_zips": true,
+"sources": [
+{
+"id": "census_zcta_county",
+"as_of": "2020"
+}
+]
+},
+{
+"name": "typical_rent",
+"label": "Typical rent",
+"unit": "usd_month",
+"group": "metric",
+"kind": "metric",
+"better": null,
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "census_acs5",
+"as_of": "2020-2024"
+},
+{
+"id": "hud_fmr_county",
+"as_of": "FY2027"
+},
+{
+"id": "hud_safmr",
+"as_of": "FY2027"
+},
+{
+"id": "zillow_zori",
+"as_of": "2026-09"
+}
+]
+},
+{
+"name": "typical_rent_conf",
+"label": "Typical rent, confidence",
+"unit": "ratio",
+"group": "metric",
+"kind": "metric_conf",
+"better": "higher",
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "derived",
+"as_of": null
+}
+]
+},
+{
+"name": "vacancy_rate",
+"label": "Vacant homes, not counting seasonal",
+"unit": "pct",
+"group": "metric",
+"kind": "metric",
+"better": "lower",
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "acs5_housing_people",
+"as_of": "2020-2024"
+},
+{
+"id": "census_acs5",
+"as_of": "2020-2024"
+}
+]
+},
+{
+"name": "value_forecast_1y",
+"label": "Home value forecast, 12 months",
+"unit": "pct",
+"group": "metric",
+"kind": "metric",
+"better": "higher",
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "zillow_zhvf",
+"as_of": "2026-09"
+}
+]
+},
+{
+"name": "value_trend_1y",
+"label": "Home value change, 1 year",
+"unit": "pct",
+"group": "metric",
+"kind": "metric",
+"better": "higher",
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "fhfa_hpi_tract",
+"as_of": "2025"
+},
+{
+"id": "fhfa_hpi_zip3",
+"as_of": "2026Q2"
+},
+{
+"id": "redfin_zip_market",
+"as_of": "2026-10"
+},
+{
+"id": "zillow_zhvi",
+"as_of": "2026-09"
+}
+]
+},
+{
+"name": "value_trend_1y_conf",
+"label": "Home value change, 1 year, confidence",
+"unit": "ratio",
+"group": "metric",
+"kind": "metric_conf",
+"better": "higher",
+"rankable": false,
+"in_zips": false,
+"sources": [
+{
+"id": "derived",
+"as_of": null
+}
+]
+},
+{
+"name": "value_trend_5y",
+"label": "Home value change, 5 years",
+"unit": "pct",
+"group": "metric",
+"kind": "metric",
+"better": "higher",
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "fhfa_hpi_tract",
+"as_of": "2025"
+},
+{
+"id": "fhfa_hpi_zip3",
+"as_of": "2026Q2"
+},
+{
+"id": "fhfa_zip5",
+"as_of": "2025"
+},
+{
+"id": "zillow_zhvi",
+"as_of": "2026-09"
+}
+]
+},
+{
+"name": "zhvi",
+"label": "Zillow home value index",
+"unit": "usd",
+"group": "market",
+"kind": "legacy",
+"better": null,
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "zillow_zhvi",
+"as_of": "2026-09"
+}
+]
+},
+{
+"name": "zhvi_yoy",
+"label": "Zillow home value change, 1 year",
+"unit": "pct",
+"group": "market",
+"kind": "legacy",
+"better": null,
+"rankable": true,
+"in_zips": true,
+"sources": [
+{
+"id": "zillow_zhvi",
+"as_of": "2026-09"
+}
+]
+},
+{
+"name": "zillow_median_sale",
+"label": "Median sale price",
+"unit": "usd",
+"group": "market",
+"kind": "source",
+"better": null,
+"rankable": false,
+"in_zips": false,
+"sources": [
+{
+"id": "zillow_listing_metrics_zip",
+"as_of": "2026-09"
+}
+]
+}
+]
+}

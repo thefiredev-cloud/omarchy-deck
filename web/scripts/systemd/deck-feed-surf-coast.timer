@@ -1,0 +1,10 @@
+[Unit]
+Description=Refresh the coast surf feed every 30 minutes (observations each run, forecasts every 3 h, tides daily; the deck marks it out of date after 1 hour)
+
+[Timer]
+OnBootSec=4min
+OnUnitActiveSec=30min
+AccuracySec=1min
+
+[Install]
+WantedBy=timers.target

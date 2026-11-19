@@ -1,0 +1,500 @@
+#!/usr/bin/env python3
+"""Find stalled agent runs for the Omarchy Deck Fleet tab: ~/.kodros/status/deck/stalls.json.
+
+Read-only. Watches:
+  omp    OMP session transcripts (~/.omp/agent/sessions/*/*.jsonl) of live `omp` processes: no new transcript
+         line for DECK_STALL_QUIET_MIN (15) while a turn is open, repeated 429/rate-limit errors, or the same error 3+ times.
+  lane   swarm lanes (~/work/swarm-*/<lane>/ with STATUS.md and run.log, run by lane-run.sh): no progress for
+         DECK_STALL_LANE_QUIET_MIN (30) while lane-run.sh is alive, or lane-run exited without DONE.
+  cron   Hermes cron jobs (~/.hermes/cron/jobs.json): failure streak of 3+, or a run claimed for 30+ min.
+  unit   systemd user units: failed, or a oneshot still activating after 30 min.
+Only labels, times and one-line reasons leave this script: no prompts, message text, error bodies or secrets.
+
+A new problem raises one desktop toast through notify-send, the path finance-alerts and fleet-temps already use.
+An optional phone push goes to the owner's own ntfy topic only when DECK_STALL_NTFY_URL is set in this unit's environment
+(a systemd drop-in, off by default). No secrets file is read.
+The kill switch ~/.kodros/state/deck-stalls-alerts-off stops all alerts.
+"""
+import argparse
+import glob
+import hashlib
+import json
+import os
+import re
+import subprocess
+import sys
+import time
+import urllib.request
+
+REFRESH = 120
+HOME = os.path.expanduser("~")
+OUT = os.path.join(HOME, ".kodros/status/deck/stalls.json")
+STATE = os.path.join(HOME, ".kodros/state/deck-stalls-alerts.json")
+KILL = os.path.join(HOME, ".kodros/state/deck-stalls-alerts-off")
+SESSIONS = os.path.join(HOME, ".omp/agent/sessions")
+SWARMS = os.path.join(HOME, "work")
+JOBS = os.path.join(HOME, ".hermes/cron/jobs.json")
+WINDOW = 12 * 3600            # transcripts older than this are not watched
+TAIL = 64 * 1024              # bytes read from the end of a transcript or log
+REPEAT_AFTER = 3600           # an alerted problem alerts again after this long
+MAX_TOASTS = 5
+MAX_ITEMS = 80
+PROBLEMS = ("stalled", "rate_limited", "erroring", "failed", "ended_without_done")
+RATE = re.compile(r"\b429\b|rate.?limit|usage_limit_reached|overloaded|quota", re.I)
+BUSY_TAIL = ("tool_execution_start",)
+
+
+def env_int(name, default):
+    try:
+        v = int(os.environ.get(name, ""))
+        return v if 1 <= v <= 24 * 60 else default
+    except ValueError:
+        return default
+
+
+def env_value(name):
+    """Non-empty value of `name` from the process environment (set by a systemd drop-in), else None. Never logged."""
+    v = (os.environ.get(name) or "").strip()
+    return v or None
+
+
+def run(cmd, timeout=10):
+    try:
+        p = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+        return p.returncode, p.stdout
+    except (OSError, subprocess.TimeoutExpired):
+        return 1, ""
+
+
+def sid(*parts):
+    return hashlib.sha1("\0".join(parts).encode()).hexdigest()[:10]
+
+
+def mins(s):
+    m = int(s // 60)
+    return "%d min" % m if m < 120 else "%d h" % (m // 60)
+
+
+def tail_lines(path, n=TAIL):
+    try:
+        with open(path, "rb") as f:
+            f.seek(0, 2)
+            size = f.tell()
+            f.seek(max(0, size - n))
+            data = f.read().decode("utf-8", "replace")
+    except OSError:
+        return []
+    lines = data.splitlines()
+    return lines[1:] if size > n else lines
+
+
+def item(kind, ident, name, state, since, last, reason, hint, where):
+    return {"id": kind + ":" + sid(ident), "kind": kind, "name": name[:60], "host": "pc-desktop", "state": state,
+            "since": int(since) if since else None, "last_output_at": int(last) if last else None,
+            "reason": reason[:160], "hint": hint[:120], "where": where[:120]}
+
+
+# ---------------------------------------------------------------- omp
+
+def session_dir_for(cwd):
+    """OMP names a session folder after the cwd: HOME stripped, slashes to dashes."""
+    rel = cwd[len(HOME):] if cwd == HOME or cwd.startswith(HOME + "/") else cwd
+    return os.path.join(SESSIONS, rel.replace("/", "-") or "-")
+
+
+def live_omp():
+    """{session folder: count} for running omp processes."""
+    out = {}
+    for d in glob.glob("/proc/[0-9]*"):
+        try:
+            with open(d + "/cmdline", "rb") as f:
+                argv = f.read().split(b"\0")
+            if not argv or not os.path.basename(argv[0].decode("utf-8", "replace")) == "omp":
+                continue
+            args = [a.decode("utf-8", "replace") for a in argv]
+            if "--no-session" in args:
+                continue
+            cwd = os.readlink(d + "/cwd")
+            folder = None
+            for a in args:
+                if a.startswith("--resume="):
+                    folder = os.path.dirname(a.split("=", 1)[1])
+            out.setdefault(folder or session_dir_for(cwd), []).append(cwd)
+        except OSError:
+            continue
+    return out
+
+
+def place(cwd):
+    """Short label for a working directory: the last two parts below HOME, or ~."""
+    rel = os.path.relpath(cwd, HOME) if cwd.startswith(HOME) else cwd
+    return "~" if rel in (".", "") else "/".join(rel.split("/")[-2:])
+
+
+def progress(path):
+    """Newest write of a transcript or of its subagent transcripts (a sibling folder named after it)."""
+    t = os.path.getmtime(path)
+    for p in glob.glob(os.path.join(path[:-len(".jsonl")], "**", "*.jsonl"), recursive=True)[:200]:
+        try:
+            t = max(t, os.path.getmtime(p))
+        except OSError:
+            pass
+    return t
+
+
+def transcript_state(lines):
+    """(last kind, rate-limit errors, top repeated error count) from the tail of one transcript."""
+    last, errors = None, []
+    for line in lines:
+        try:
+            d = json.loads(line)
+        except ValueError:
+            continue
+        m = d.get("message") if isinstance(d.get("message"), dict) else {}
+        if d.get("type") in ("custom", "custom_message") and d.get("customType") in BUSY_TAIL + ("session_exit",):
+            last = d.get("customType")
+        elif m.get("role") == "assistant":
+            stop = m.get("stopReason")
+            last = "assistant_" + str(stop)
+            if stop == "error":
+                errors.append(str(m.get("errorMessage") or ""))
+            elif stop in ("toolUse", "stop"):
+                errors.append(None)
+        elif m.get("role") in ("toolResult", "user"):
+            last = m.get("role")
+    recent = [e for e in errors[-10:] if e is not None]
+    rate = sum(1 for e in recent if RATE.search(e))
+    same = 0
+    for e in set(recent):
+        same = max(same, recent.count(e))
+    trailing = 0
+    for e in reversed(errors):
+        if e is None:
+            break
+        trailing += 1
+    return last, rate, same, trailing
+
+
+def watch_omp(now, quiet):
+    live = live_omp()
+    items = []
+    for folder, cwds in live.items():
+        files = sorted(glob.glob(os.path.join(folder, "*.jsonl")), key=lambda p: os.path.getmtime(p), reverse=True)[:len(cwds)]
+        for path in files:
+            mtime = progress(path)
+            if now - mtime > WINDOW:
+                continue
+            name = "OMP " + place(cwds[0])
+            last, rate, same, trailing = transcript_state(tail_lines(path))
+            age = now - mtime
+            where = "~/.omp/agent/sessions/" + os.path.basename(folder)
+            if trailing and rate >= 2:
+                items.append(item("omp", path, name, "rate_limited", mtime, mtime, "Hit the rate limit %d times in a row" % rate,
+                                  "Wait for the limit to reset or switch the model", where))
+            elif trailing >= 3 and same >= 3:
+                items.append(item("omp", path, name, "erroring", mtime, mtime, "Same error %d times in a row" % same,
+                                  "Open the session and read the last error", where))
+            elif last in ("assistant_stop", "session_exit", "assistant_aborted"):
+                items.append(item("omp", path, name, "ok", None, mtime, "Waiting for you" if last == "assistant_stop" else "Ended",
+                                  "", where))
+            elif age >= quiet:
+                what = "a tool" if last in BUSY_TAIL + ("assistant_toolUse",) else "the model"
+                items.append(item("omp", path, name, "stalled", mtime, mtime, "No output for %s while waiting on %s" % (mins(age), what),
+                                  "Open the session; stop and resume it if the step hangs", where))
+            else:
+                items.append(item("omp", path, name, "ok", None, mtime, "Working", "", where))
+    return items
+
+
+# ---------------------------------------------------------------- swarm lanes
+
+def lane_runners():
+    out = set()
+    for d in glob.glob("/proc/[0-9]*"):
+        try:
+            with open(d + "/cmdline", "rb") as f:
+                argv = [a.decode("utf-8", "replace") for a in f.read().split(b"\0") if a]
+        except OSError:
+            continue
+        for i, a in enumerate(argv):
+            if os.path.basename(a) == "lane-run.sh" and i + 1 < len(argv):
+                out.add((os.path.dirname(os.path.abspath(a)) if os.path.isabs(a) else None, argv[i + 1]))
+    return out
+
+
+def last_line(path):
+    for line in reversed(tail_lines(path, 4096)):
+        if line.strip():
+            return line.strip()
+    return ""
+
+
+def watch_lanes(now, lane_quiet, runners=None):
+    runners = lane_runners() if runners is None else runners
+    names = {lane for _, lane in runners}
+    items = []
+    for status in glob.glob(os.path.join(SWARMS, "swarm-*", "*", "STATUS.md")):
+        d = os.path.dirname(status)
+        lane, swarm = os.path.basename(d), os.path.basename(os.path.dirname(d))
+        log = os.path.join(d, "run.log")
+        stamps = [os.path.getmtime(p) for p in (status, log) if os.path.exists(p)]
+        repo = os.path.join(d, "repo")
+        folder = session_dir_for(repo if os.path.isdir(repo) else d)
+        stamps += [os.path.getmtime(p) for p in glob.glob(os.path.join(folder, "*.jsonl"))]
+        newest = max(stamps) if stamps else 0
+        if now - newest > 2 * WINDOW:
+            continue
+        done = last_line(status) == "DONE"
+        alive = lane in names
+        name = swarm.replace("swarm-", "") + " " + lane
+        where = os.path.join("~", os.path.relpath(d, HOME))
+        log_tail = "\n".join(tail_lines(log, 8192)[-40:]) if os.path.exists(log) else ""
+        # only lines from the newest runner pass count; an earlier pass's 429 is history
+        current = log_tail.rsplit("== lane-run", 1)[-1]
+        if done:
+            items.append(item("lane", d, name, "ok", None, newest, "Done", "", where))
+        elif alive and len(RATE.findall(current)) >= 3:
+            items.append(item("lane", d, name, "rate_limited", newest, newest, "Run log shows repeated rate limits",
+                              "Wait for the limit to reset; the runner retries every 5 min", where))
+        elif alive and now - newest >= lane_quiet:
+            items.append(item("lane", d, name, "stalled", newest, newest, "No progress for %s" % mins(now - newest),
+                              "Read run.log and the lane session; resume the lane if it hangs", where))
+        elif alive:
+            items.append(item("lane", d, name, "ok", None, newest, "Working", "", where))
+        elif "== lane-run exit" in log_tail:
+            items.append(item("lane", d, name, "ended_without_done", newest, newest, "Runner exited before the lane wrote DONE",
+                              "Read STATUS.md for blockers, then rerun lane-run.sh", where))
+    return items
+
+
+# ---------------------------------------------------------------- hermes cron
+
+def epoch_iso(s):
+    if not isinstance(s, str):
+        return None
+    try:
+        from datetime import datetime
+        return datetime.fromisoformat(s.replace("Z", "+00:00")).timestamp()
+    except ValueError:
+        return None
+
+
+def watch_cron(now, jobs_doc):
+    items = []
+    for j in (jobs_doc or {}).get("jobs", [])[:300]:
+        if not isinstance(j, dict) or j.get("enabled") is not True or j.get("state") == "paused":
+            continue
+        name = str(j.get("name") or "Hermes job")
+        ident = str(j.get("id") or name)
+        where = "Hermes cron " + ident[:8]
+        streak = j.get("failure_streak") if isinstance(j.get("failure_streak"), int) else 0
+        claim = j.get("fire_claim") if isinstance(j.get("fire_claim"), dict) else None
+        claimed = epoch_iso(claim.get("at")) if claim else None
+        last_run = epoch_iso(j.get("last_run_at"))
+        err = str(j.get("last_error") or "")
+        if claimed and now - claimed >= 1800:
+            items.append(item("cron", ident, name, "stalled", claimed, last_run, "Run started %s ago and has not finished" % mins(now - claimed),
+                              "Check the Hermes cron log for this job", where))
+        elif streak >= 3:
+            state = "rate_limited" if RATE.search(err) else "erroring"
+            reason = "Failed %d runs in a row" % streak + (" on rate limits" if state == "rate_limited" else "")
+            items.append(item("cron", ident, name, state, last_run, last_run, reason, "Open Crons and read the last error", where))
+        else:
+            items.append(item("cron", ident, name, "ok", None, last_run, "Last run %s" % (j.get("last_status") or "unknown"), "", where))
+    return items
+
+
+# ---------------------------------------------------------------- systemd user units
+
+def units(states):
+    rc, out = run(["systemctl", "--user", "list-units", "--all", "--plain", "--no-legend", "--state=" + states], 10)
+    if rc not in (0, 1):
+        raise RuntimeError("systemctl --user list-units failed")
+    return [l.split()[0] for l in out.splitlines() if l.strip()]
+
+
+def unit_times(names):
+    if not names:
+        return {}
+    rc, out = run(["systemctl", "--user", "show", "--timestamp=unix", "-p",
+                   "Id,ActiveState,InactiveExitTimestamp,StateChangeTimestamp,TimeoutStartUSec"] + names, 10)
+    res, cur = {}, {}
+    for line in out.splitlines() + [""]:
+        if not line.strip():
+            if cur.get("Id"):
+                res[cur["Id"]] = cur
+            cur = {}
+            continue
+        k, _, v = line.partition("=")
+        cur[k] = v
+    return res
+
+
+def unix(v):
+    m = re.match(r"@(\d+)", v or "")
+    return int(m.group(1)) if m else None
+
+
+SPAN = {"us": 1e-6, "ms": 1e-3, "s": 1, "min": 60, "h": 3600, "d": 86400, "w": 604800}
+
+
+def span_secs(v):
+    """systemd time span ("6h", "1min 30s", "infinity") in seconds; None for infinity or unknown."""
+    parts = re.findall(r"(\d+(?:\.\d+)?)\s*(us|ms|min|s|h|d|w)\b", v or "")
+    return sum(float(n) * SPAN[u] for n, u in parts) if parts else None
+
+
+def unit_stall_after(timeout):
+    """A oneshot is stalled at 80% of its own start timeout (min 30 min) or after 4 h when it has none."""
+    t = span_secs(timeout)
+    return max(1800, 0.8 * t) if t else 4 * 3600
+
+
+def watch_units(now):
+    items = []
+    # transient `systemd-run` units (run-p123-i456) are one-off agent jobs, not owned services
+    failed = [u for u in units("failed") if not re.match(r"run-[pru]\d", u)]
+    active = units("activating")
+    times = unit_times(failed + active)
+    for u in failed:
+        t = unix(times.get(u, {}).get("StateChangeTimestamp"))
+        items.append(item("unit", u, u, "failed", t, t, "Unit failed", "systemctl --user status " + u, u))
+    for u in active:
+        info = times.get(u, {})
+        t = unix(info.get("InactiveExitTimestamp"))
+        if t and now - t >= unit_stall_after(info.get("TimeoutStartUSec")):
+            items.append(item("unit", u, u, "stalled", t, t, "Still starting after %s" % mins(now - t),
+                              "journalctl --user -u " + u + " -n 50", u))
+    return items
+
+
+# ---------------------------------------------------------------- alerts
+
+def load_state():
+    try:
+        with open(STATE) as f:
+            d = json.load(f)
+        return d if isinstance(d, dict) and isinstance(d.get("sent"), dict) else None
+    except (OSError, ValueError):
+        return None
+
+
+def write_atomic(path, doc):
+    os.makedirs(os.path.dirname(path), mode=0o700, exist_ok=True)
+    tmp = path + ".tmp"
+    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, "w") as f:
+        json.dump(doc, f, separators=(",", ":"))
+    os.replace(tmp, path)
+
+
+def toast(title, body):
+    rc, _ = run(["notify-send", "-a", "Deck", "-u", "critical", title, body], 10)
+    return rc == 0
+
+
+def phone(url, title, body):
+    req = urllib.request.Request(url, data=body.encode()[:400], method="POST", headers={"Title": title[:80], "Tags": "warning"})
+    try:
+        with urllib.request.urlopen(req, timeout=8) as r:
+            return 200 <= r.status < 300
+    except OSError:
+        return False
+
+
+def plan_alerts(items, state, now):
+    """(ids to alert now, new state). First run records every current problem as seen and alerts none."""
+    problems = {i["id"]: i for i in items if i["state"] in PROBLEMS}
+    if state is None:
+        return [], {"sent": {k: now for k in problems}, "baseline": now, "last_sent": None}
+    sent = {k: v for k, v in state["sent"].items() if k in problems}
+    due = [k for k in sorted(problems, key=lambda k: problems[k]["since"] or now) if now - sent.get(k, 0) >= REPEAT_AFTER][:MAX_TOASTS]
+    for k in due:
+        sent[k] = now
+    return due, {"sent": sent, "baseline": state.get("baseline", now), "last_sent": state.get("last_sent")}
+
+
+def send_alerts(items, now, dry, send_toast=toast, send_phone=phone):
+    off = os.path.exists(KILL)
+    url = env_value("DECK_STALL_NTFY_URL")
+    url = url if url and url.startswith("https://") else None
+    state = load_state()
+    due, new_state = plan_alerts(items, state, now)
+    sent = 0
+    if not dry:
+        by = {i["id"]: i for i in items}
+        # with the kill switch on, due problems still count as seen, so removing it later does not replay them
+        for k in due if not off else []:
+            i = by[k]
+            title, body = "Stalled: " + i["name"], i["reason"] + ". " + i["hint"]
+            ok = send_toast(title, body)
+            if url:
+                ok = send_phone(url, title, body) or ok
+            sent += 1 if ok else 0
+        if sent:
+            new_state["last_sent"] = int(now)
+        write_atomic(STATE, new_state)
+    last = new_state.get("last_sent")
+    return {"desktop": not off, "phone": bool(url) and not off,
+            "phone_setup": None if url else "Add Environment=DECK_STALL_NTFY_URL=<your ntfy topic URL> in a drop-in for deck-feed-stalls.service",
+            "last_sent_at": int(last) if last else None, "sent_this_run": sent, "off_switch": "~/.kodros/state/deck-stalls-alerts-off"}
+
+
+# ---------------------------------------------------------------- build
+
+ORDER = {s: n for n, s in enumerate(PROBLEMS)}
+
+
+def build(now=None, dry=False):
+    now = now or time.time()
+    quiet = env_int("DECK_STALL_QUIET_MIN", 15) * 60
+    lane_quiet = env_int("DECK_STALL_LANE_QUIET_MIN", 30) * 60
+    errors, src, items = [], [], []
+
+    def part(label, fn):
+        try:
+            items.extend(fn())
+            src.append(label)
+        except Exception as e:  # one failing source never blanks the others
+            errors.append({"source": label, "reason": str(e)[:160] or type(e).__name__})
+
+    def jobs():
+        with open(JOBS) as f:
+            return watch_cron(now, json.load(f))
+
+    part("omp sessions", lambda: watch_omp(now, quiet))
+    part("swarm lanes", lambda: watch_lanes(now, lane_quiet))
+    part("hermes cron", jobs)
+    part("systemd user", lambda: watch_units(now))
+    items.sort(key=lambda i: (ORDER.get(i["state"], 99), i["since"] or now, i["name"]))
+    counts = {"watched": len(items)}
+    for s in ("ok",) + PROBLEMS:
+        counts[s] = sum(1 for i in items if i["state"] == s)
+    alerts = send_alerts(items, now, dry)
+    return {"v": 1, "t": int(now), "refresh": REFRESH, "src": src, "errors": errors,
+            "thresholds": {"quiet_min": quiet // 60, "lane_quiet_min": lane_quiet // 60},
+            "counts": counts, "items": items[:MAX_ITEMS], "alerts": alerts}
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    ap.add_argument("--out", default=OUT)
+    ap.add_argument("--dry-run", action="store_true", help="print the feed, write nothing, send no alert")
+    a = ap.parse_args(argv)
+    doc = build(dry=a.dry_run)
+    if a.dry_run:
+        print(json.dumps(doc, indent=1))
+        return 0
+    try:
+        write_atomic(a.out, doc)
+    except OSError as e:
+        print("stalls.json not written: %s" % e, file=sys.stderr)
+        return 1
+    c = doc["counts"]
+    print("stalls.json written: %d watched, %d stalled, %d rate limited, %d erroring, %d failed, %d alerts" % (
+        c["watched"], c["stalled"], c["rate_limited"], c["erroring"], c["failed"], doc["alerts"]["sent_this_run"]))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,0 +1,89 @@
+
+000
+FZUS56 KMFR 142240
+SRFMFR
+
+Southwest Oregon Surf Zone Forecast
+National Weather Service Medford
+240 PM PST Sat Nov 14 2026
+
+ORZ021-151200-
+Southwest Oregon coastal areas from Reedsport to Port Orford-
+240 PM PST Sat Nov 14 2026
+
+...HIGH SURF WARNING THROUGH 10 PM MONDAY...
+
+.REST OF TODAY...
+Surf Height...................24 FT.
+Thunderstorm Potential........None expected.
+Water Temperature.............56 to 57 degrees.
+Weather.......................Mostly cloudy.
+High Temperature..............55-63.
+Wind..........................S at 28 MPH becoming S at 33 MPH.
+Tides.........................
+          Charleston..........High 5.9 feet (MLLW) 03:45 AM PST.
+                              Low 4.2 feet (MLLW) 08:28 AM PST.
+                              High 7.0 feet (MLLW) 02:12 PM PST.
+                              Low 0.5 feet (MLLW) 09:26 PM PST.
+
+          Port Orford.........High 5.6 feet (MLLW) 03:40 AM PST.
+                              Low 4.3 feet (MLLW) 08:09 AM PST.
+                              High 6.7 feet (MLLW) 01:44 PM PST.
+                              Low 0.4 feet (MLLW) 09:15 PM PST.
+
+.SUNDAY...
+Surf Height...................23 FT.
+Thunderstorm Potential........None expected.
+Weather.......................Mostly cloudy with a chance of rain.
+High Temperature..............53-59.
+Wind..........................SW at 20 MPH.
+Tides.........................
+          Charleston..........High 5.8 feet (MLLW) 04:36 AM PST.
+                              Low 4.3 feet (MLLW) 09:24 AM PST.
+                              High 6.6 feet (MLLW) 03:00 PM PST.
+                              Low 0.9 feet (MLLW) 10:15 PM PST.
+
+          Port Orford.........High 5.6 feet (MLLW) 04:34 AM PST.
+                              Low 4.4 feet (MLLW) 09:07 AM PST.
+                              High 6.3 feet (MLLW) 02:32 PM PST.
+                              Low 0.7 feet (MLLW) 10:03 PM PST.
+
+
+$$
+
+
+ORZ022-151200-
+Southwest Oregon coastal areas from Port Orford to Brookings-
+240 PM PST Sat Nov 14 2026
+
+...HIGH SURF WARNING THROUGH 10 PM MONDAY...
+
+.REST OF TODAY...
+Surf Height...................25 FT.
+Thunderstorm Potential........None expected.
+Water Temperature.............Missing.
+Weather.......................Mostly cloudy.
+High Temperature..............54-63.
+Wind..........................S at 26 MPH becoming S at 32 MPH.
+Tides.........................
+          Port Orford.........High 5.6 feet (MLLW) 03:40 AM PST.
+                              Low 4.3 feet (MLLW) 08:09 AM PST.
+                              High 6.7 feet (MLLW) 01:44 PM PST.
+                              Low 0.4 feet (MLLW) 09:15 PM PST.
+
+.SUNDAY...
+Surf Height...................24 FT.
+Thunderstorm Potential........None expected.
+Weather.......................Mostly cloudy with a chance of rain.
+High Temperature..............51-59.
+Wind..........................SW at 12 MPH becoming SW at 16 MPH.
+Tides.........................
+          Port Orford.........High 5.6 feet (MLLW) 04:34 AM PST.
+                              Low 4.4 feet (MLLW) 09:07 AM PST.
+                              High 6.3 feet (MLLW) 02:32 PM PST.
+                              Low 0.7 feet (MLLW) 10:03 PM PST.
+
+
+$$
+
+

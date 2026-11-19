@@ -1,0 +1,10 @@
+[Unit]
+Description=Check for stalled agent runs every 2 minutes (the deck marks the strip out of date after 4)
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=120s
+AccuracySec=15s
+
+[Install]
+WantedBy=timers.target

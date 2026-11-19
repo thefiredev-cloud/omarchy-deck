@@ -1,0 +1,11 @@
+[Unit]
+Description=Refresh the Deck e-commerce market feed hourly (the deck marks it out of date after 2 hours)
+
+[Timer]
+OnBootSec=6min
+OnUnitActiveSec=1h
+AccuracySec=2min
+RandomizedDelaySec=3min
+
+[Install]
+WantedBy=timers.target

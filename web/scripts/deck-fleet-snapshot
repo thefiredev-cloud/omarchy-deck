@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+"""deck-fleet-snapshot: write ~/.kodros/status/deck/fleet.json for the Pixel Deck Fleet tab.
+
+Read-only. It runs `systemctl --user --failed` (list only, no unit is started, stopped or reset) and
+writes the names of failed units plus a timestamp, atomically, mode 600. The deck never gets a shell:
+it only reads this file.
+
+Output keys: t (epoch), refresh (300), src, ok (bool: systemctl answered), errors, failed_units (names).
+If systemctl fails, the old file is replaced by one with ok=false and failed_units=[] so the deck says
+"unavailable" instead of showing a stale all-clear. Exit 0 written, 1 systemctl failed (file still written).
+
+Timer: NOT installed. See docs/release-v8.md for the unit text. Install: install -m 700 scripts/deck-fleet-snapshot ~/ops/bin/deck-fleet-snapshot
+Test overrides: DECK_FLEET_OUT (output path), DECK_FLEET_SYSTEMCTL (command to run instead of systemctl).
+"""
+from __future__ import annotations
+
+import json
+import os
+import re
+import subprocess
+import sys
+import tempfile
+import time
+from pathlib import Path
+
+OUT = Path(os.environ.get("DECK_FLEET_OUT") or Path.home() / ".kodros/status/deck/fleet.json")
+SYSTEMCTL = os.environ.get("DECK_FLEET_SYSTEMCTL") or "systemctl"
+UNIT_RE = re.compile(r"^[A-Za-z0-9@._:\\-]{1,80}$")
+REFRESH = 300
+MAX_UNITS = 30
+
+
+def parse_failed(text: str) -> list[str]:
+    """Unit names from `systemctl --user --failed --no-legend --plain`: first column, plain names only."""
+    names: list[str] = []
+    for line in text.splitlines():
+        cols = line.strip().lstrip("\u25cf* ").split()
+        if cols and UNIT_RE.match(cols[0]) and cols[0] not in names:
+            names.append(cols[0])
+    return sorted(names)[:MAX_UNITS]
+
+
+def snapshot(now: float | None = None) -> dict:
+    t = int(now or time.time())
+    out: dict = {"t": t, "refresh": REFRESH, "src": ["systemctl --user --failed"], "ok": False,
+                 "errors": [], "failed_units": []}
+    try:
+        p = subprocess.run([SYSTEMCTL, "--user", "--failed", "--no-legend", "--plain", "--no-pager"],
+                           capture_output=True, text=True, timeout=15, check=False)
+        if p.returncode != 0:
+            out["errors"].append({"source": "systemctl", "reason": f"exit {p.returncode}"})
+        else:
+            out["ok"] = True
+            out["failed_units"] = parse_failed(p.stdout)
+    except (OSError, subprocess.TimeoutExpired) as e:
+        out["errors"].append({"source": "systemctl", "reason": type(e).__name__})
+    return out
+
+
+def write_atomic(path: Path, data: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp = tempfile.mkstemp(dir=path.parent, prefix=".fleet-", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            json.dump(data, f, sort_keys=True)
+            f.write("\n")
+        os.chmod(tmp, 0o600)
+        os.replace(tmp, path)
+    except BaseException:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
+
+
+def main() -> int:
+    data = snapshot()
+    write_atomic(OUT, data)
+    print(json.dumps({"ok": data["ok"], "failed": len(data["failed_units"]), "out": str(OUT)}))
+    return 0 if data["ok"] else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

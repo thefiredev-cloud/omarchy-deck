@@ -1,0 +1,1099 @@
+{
+"meta":{
+"source":"NDBC activestations.xml + latest_obs.txt, filtered by ResearchSurf",
+"probe_utc":"2026-11-15T00:39Z",
+"filter":"22N..47N, within 250 km of coast polyline (Cabo to Columbia River), seaward of coast or within 15 km of it"
+},
+"stations":[
+{
+"id":"46116",
+"name":"SATURN Estuary Station #07, Baker Bay, WA",
+"lat":46.287,
+"lon":-124.016,
+"type":"buoy",
+"owner":"Columbia River Inter-Tribal Fish Commission",
+"coast_km":5,
+"spec":false
+},
+{
+"id":"46243",
+"name":"Clatsop Spit, OR (162)",
+"lat":46.215,
+"lon":-124.129,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":6,
+"spec":true
+},
+{
+"id":"SETO3",
+"name":"SATURN Estuary Station #03",
+"lat":46.2,
+"lon":-123.941,
+"type":"fixed",
+"owner":"Columbia River Inter-Tribal Fish Commission",
+"coast_km":8,
+"spec":false
+},
+{
+"id":"46117",
+"name":"SATURN Estuary Station #09, Youngs Bay, OR",
+"lat":46.176,
+"lon":-123.869,
+"type":"buoy",
+"owner":"Columbia River Inter-Tribal Fish Commission",
+"coast_km":13,
+"spec":false
+},
+{
+"id":"46096",
+"name":"Columbia River Entrance - SATURN Station #02 Offshore",
+"lat":46.173,
+"lon":-124.127,
+"type":"buoy",
+"owner":"Columbia River Inter-Tribal Fish Commission",
+"coast_km":7,
+"spec":false
+},
+{
+"id":"46029",
+"name":"COLUMBIA RIVER BAR - 20NM West of Columbia River Mouth",
+"lat":46.148,
+"lon":-124.508,
+"type":"buoy",
+"owner":"NDBC",
+"coast_km":36,
+"spec":true
+},
+{
+"id":"46248",
+"name":"Astoria Canyon, OR  (179)",
+"lat":46.133,
+"lon":-124.64,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":46,
+"spec":true
+},
+{
+"id":"46089",
+"name":"TILLAMOOK, OR - 85 NM WNW of Tillamook, OR",
+"lat":45.928,
+"lon":-125.815,
+"type":"buoy",
+"owner":"NDBC",
+"coast_km":139,
+"spec":true
+},
+{
+"id":"46278",
+"name":"Tillamook Bay South Jetty, OR (270)",
+"lat":45.559,
+"lon":-123.991,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":1,
+"spec":true
+},
+{
+"id":"TLBO3",
+"name":"9437540 - Garibaldi, Tillamook Bay, OR",
+"lat":45.555,
+"lon":-123.919,
+"type":"fixed",
+"owner":"NOS",
+"coast_km":4,
+"spec":false
+},
+{
+"id":"46050",
+"name":"STONEWALL BANK - 20NM West of Newport, OR",
+"lat":44.679,
+"lon":-124.535,
+"type":"buoy",
+"owner":"NDBC",
+"coast_km":37,
+"spec":true
+},
+{
+"id":"46097",
+"name":"OOI Newport Shelf",
+"lat":44.639,
+"lon":-124.304,
+"type":"buoy",
+"owner":"NSF Ocean Observatories Initiative",
+"coast_km":19,
+"spec":true
+},
+{
+"id":"SBEO3",
+"name":"9435380 - South Beach, OR",
+"lat":44.625,
+"lon":-124.045,
+"type":"fixed",
+"owner":"NOS",
+"coast_km":2,
+"spec":false
+},
+{
+"id":"NWPO3",
+"name":"Newport, OR",
+"lat":44.613,
+"lon":-124.068,
+"type":"fixed",
+"owner":"NDBC",
+"coast_km":0,
+"spec":false
+},
+{
+"id":"46280",
+"name":"Newport PWS North (277)",
+"lat":44.575,
+"lon":-124.234,
+"type":"buoy",
+"owner":"National Laboratory of the Rockies (NLR)",
+"coast_km":13,
+"spec":false
+},
+{
+"id":"46283",
+"name":"Yaquina Channel SW, OR (280)",
+"lat":44.567,
+"lon":-124.237,
+"type":"buoy",
+"owner":"National Laboratory of the Rockies (NLR)",
+"coast_km":13,
+"spec":false
+},
+{
+"id":"46281",
+"name":"Newport PWS South, OR (278)",
+"lat":44.559,
+"lon":-124.233,
+"type":"buoy",
+"owner":"National Laboratory of the Rockies (NLR)",
+"coast_km":12,
+"spec":false
+},
+{
+"id":"46098",
+"name":"OOI Waldport Offshore",
+"lat":44.378,
+"lon":-124.947,
+"type":"buoy",
+"owner":"NSF Ocean Observatories Initiative",
+"coast_km":67,
+"spec":false
+},
+{
+"id":"46229",
+"name":"UMPQUA OFFSHORE, OR (139)",
+"lat":43.772,
+"lon":-124.549,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":27,
+"spec":true
+},
+{
+"id":"CHAO3",
+"name":"9432780 - Charleston, OR",
+"lat":43.351,
+"lon":-124.337,
+"type":"fixed",
+"owner":"NOS",
+"coast_km":1,
+"spec":false
+},
+{
+"id":"CWQO3",
+"name":"Charleston Bridge, South Slough Reserve, OR",
+"lat":43.338,
+"lon":-124.321,
+"type":"fixed",
+"owner":"National Estuarine Research Reserve System",
+"coast_km":1,
+"spec":false
+},
+{
+"id":"SOQO3",
+"name":"Valino Island, South Slough Reserve, OR",
+"lat":43.317,
+"lon":-124.322,
+"type":"fixed",
+"owner":"National Estuarine Research Reserve System",
+"coast_km":1,
+"spec":false
+},
+{
+"id":"SLOO3",
+"name":"Elliot Creek - South Slough Reserve, OR",
+"lat":43.296,
+"lon":-124.311,
+"type":"fixed",
+"owner":"National Estuarine Research Reserve System",
+"coast_km":3,
+"spec":false
+},
+{
+"id":"46128",
+"name":"Buoy CB-06 - West of Coos Bay, OR",
+"lat":43.292,
+"lon":-124.538,
+"type":"buoy",
+"owner":"Northwest Association of Networked Ocean Observing Systems",
+"coast_km":14,
+"spec":false
+},
+{
+"id":"CHQO3",
+"name":"Winchester Arm, South Slough Reserve, OR",
+"lat":43.282,
+"lon":-124.32,
+"type":"fixed",
+"owner":"National Estuarine Research Reserve System",
+"coast_km":3,
+"spec":false
+},
+{
+"id":"SNTO3",
+"name":"Tom's Creek, South Slough Reserve, OR",
+"lat":43.279,
+"lon":-124.318,
+"type":"fixed",
+"owner":"National Estuarine Research Reserve System",
+"coast_km":3,
+"spec":false
+},
+{
+"id":"46015",
+"name":"PORT ORFORD - 15 NM West of Port Orford, OR",
+"lat":42.754,
+"lon":-124.839,
+"type":"buoy",
+"owner":"NDBC",
+"coast_km":24,
+"spec":true
+},
+{
+"id":"PORO3",
+"name":"9431647 - Port Orford, OR",
+"lat":42.739,
+"lon":-124.498,
+"type":"fixed",
+"owner":"NOS",
+"coast_km":2,
+"spec":false
+},
+{
+"id":"46027",
+"name":"ST GEORGES - 8 NM NW of Crescent City, CA",
+"lat":41.84,
+"lon":-124.382,
+"type":"buoy",
+"owner":"NDBC",
+"coast_km":12,
+"spec":true
+},
+{
+"id":"CECC1",
+"name":"9419750 - Crescent City, CA",
+"lat":41.746,
+"lon":-124.184,
+"type":"fixed",
+"owner":"NOS",
+"coast_km":1,
+"spec":false
+},
+{
+"id":"TDPC1",
+"name":"Trinidad Pier Trinidad, CA",
+"lat":41.055,
+"lon":-124.147,
+"type":"fixed",
+"owner":"Central and Northern California Ocean Observing System",
+"coast_km":4,
+"spec":false
+},
+{
+"id":"46244",
+"name":"Humboldt Bay, North Spit, CA (168)",
+"lat":40.896,
+"lon":-124.358,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":13,
+"spec":true
+},
+{
+"id":"HBXC1",
+"name":"Humboldt, CA",
+"lat":40.777,
+"lon":-124.197,
+"type":"fixed",
+"owner":"Central and Northern California Ocean Observing System",
+"coast_km":1,
+"spec":false
+},
+{
+"id":"NJLC1",
+"name":"9418768 - North Jetty Landing, CA",
+"lat":40.769,
+"lon":-124.239,
+"type":"fixed",
+"owner":"NOS",
+"coast_km":2,
+"spec":false
+},
+{
+"id":"HBYC1",
+"name":"9418767 - North Spit, CA",
+"lat":40.767,
+"lon":-124.217,
+"type":"fixed",
+"owner":"NOS",
+"coast_km":0,
+"spec":false
+},
+{
+"id":"46022",
+"name":"EEL RIVER - 17NM WSW of Eureka, CA",
+"lat":40.716,
+"lon":-124.54,
+"type":"buoy",
+"owner":"NDBC",
+"coast_km":23,
+"spec":true
+},
+{
+"id":"46213",
+"name":"Cape Mendocino, CA (094)",
+"lat":40.291,
+"lon":-124.748,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":34,
+"spec":true
+},
+{
+"id":"46014",
+"name":"PT ARENA - 19NM North of Point Arena, CA",
+"lat":39.225,
+"lon":-123.98,
+"type":"buoy",
+"owner":"NDBC",
+"coast_km":20,
+"spec":true
+},
+{
+"id":"ANVC1",
+"name":"9416841 - Arena Cove, CA",
+"lat":38.915,
+"lon":-123.711,
+"type":"fixed",
+"owner":"NOS",
+"coast_km":3,
+"spec":false
+},
+{
+"id":"BDXC1",
+"name":"Bodega, CA",
+"lat":38.317,
+"lon":-123.071,
+"type":"fixed",
+"owner":"University of California Davis, Bodega Marine Laboratory",
+"coast_km":0,
+"spec":false
+},
+{
+"id":"46013",
+"name":"BODEGA BAY - 48NM NW of San Francisco, CA",
+"lat":38.235,
+"lon":-123.317,
+"type":"buoy",
+"owner":"NDBC",
+"coast_km":23,
+"spec":true
+},
+{
+"id":"PRYC1",
+"name":"9415020 - Point Reyes, CA",
+"lat":37.996,
+"lon":-122.977,
+"type":"fixed",
+"owner":"NOS",
+"coast_km":1,
+"spec":false
+},
+{
+"id":"46214",
+"name":"Point Reyes, CA (029)",
+"lat":37.944,
+"lon":-123.466,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":41,
+"spec":true
+},
+{
+"id":"TIBC1",
+"name":"Tiburon Pier, San Francisco Bay, CA",
+"lat":37.892,
+"lon":-122.447,
+"type":"fixed",
+"owner":"Central and Northern California Ocean Observing System",
+"coast_km":14,
+"spec":false
+},
+{
+"id":"FPXC1",
+"name":"Fort Point, CA",
+"lat":37.807,
+"lon":-122.466,
+"type":"fixed",
+"owner":"University of California Davis, Bodega Marine Laboratory",
+"coast_km":5,
+"spec":false
+},
+{
+"id":"FTPC1",
+"name":"9414290 - San Francisco, CA",
+"lat":37.806,
+"lon":-122.466,
+"type":"fixed",
+"owner":"NOS",
+"coast_km":5,
+"spec":false
+},
+{
+"id":"PXSC1",
+"name":"9414296 - Pier 17, San Francisco Bay, CA",
+"lat":37.803,
+"lon":-122.397,
+"type":"fixed",
+"owner":"NOAA NOS PORTS",
+"coast_km":10,
+"spec":false
+},
+{
+"id":"PXOC1",
+"name":"9414311 - San Francisco Pier 1, CA",
+"lat":37.798,
+"lon":-122.393,
+"type":"fixed",
+"owner":"NOAA NOS PORTS",
+"coast_km":10,
+"spec":false
+},
+{
+"id":"46237",
+"name":"San Francisco Bar, CA  (142)",
+"lat":37.788,
+"lon":-122.634,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":5,
+"spec":true
+},
+{
+"id":"46026",
+"name":"SAN FRANCISCO - 18NM West of San Francisco, CA",
+"lat":37.75,
+"lon":-122.838,
+"type":"buoy",
+"owner":"NDBC",
+"coast_km":17,
+"spec":true
+},
+{
+"id":"1801589",
+"name":"SD 1073 - 24 NM SSW of San Francisco, CA (Site of 46012)",
+"lat":37.356,
+"lon":-122.881,
+"type":"usv",
+"owner":"NDBC",
+"coast_km":39,
+"spec":false
+},
+{
+"id":"46012",
+"name":"HALF MOON BAY - 24NM SSW of San Francisco, CA",
+"lat":37.356,
+"lon":-122.881,
+"type":"usv",
+"owner":"NDBC",
+"coast_km":39,
+"spec":true
+},
+{
+"id":"46042",
+"name":"MONTEREY - 27NM WNW of Monterey, CA",
+"lat":36.787,
+"lon":-122.408,
+"type":"buoy",
+"owner":"NDBC",
+"coast_km":35,
+"spec":true
+},
+{
+"id":"46236",
+"name":"Monterey Canyon Outer, CA  (156)",
+"lat":36.759,
+"lon":-121.95,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":1,
+"spec":true
+},
+{
+"id":"46092",
+"name":"MBM1",
+"lat":36.751,
+"lon":-122.029,
+"type":"buoy",
+"owner":"MBARI",
+"coast_km":6,
+"spec":false
+},
+{
+"id":"MEYC1",
+"name":"9413450 - Monterey, CA",
+"lat":36.605,
+"lon":-121.889,
+"type":"fixed",
+"owner":"NOS",
+"coast_km":1,
+"spec":false
+},
+{
+"id":"MYXC1",
+"name":"Monterrey, CA",
+"lat":36.605,
+"lon":-121.889,
+"type":"fixed",
+"owner":"Central and Northern California Ocean Observing System",
+"coast_km":1,
+"spec":false
+},
+{
+"id":"46239",
+"name":"Point Sur, CA (157)",
+"lat":36.342,
+"lon":-122.11,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":25,
+"spec":true
+},
+{
+"id":"46028",
+"name":"CAPE SAN MARTIN - 55NM West NW of Morro Bay, CA",
+"lat":35.763,
+"lon":-121.9,
+"type":"buoy",
+"owner":"NDBC",
+"coast_km":40,
+"spec":true
+},
+{
+"id":"MBXC1",
+"name":"Morro Bay - BM1 T-Pier, CA",
+"lat":35.371,
+"lon":-120.859,
+"type":"fixed",
+"owner":"California Polytechnic State University",
+"coast_km":1,
+"spec":false
+},
+{
+"id":"46215",
+"name":"Diablo Canyon, CA (076)",
+"lat":35.204,
+"lon":-120.859,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":7,
+"spec":true
+},
+{
+"id":"CPXC1",
+"name":"Cal Poly Pier, CA",
+"lat":35.17,
+"lon":-120.741,
+"type":"fixed",
+"owner":"California Polytechnic State University",
+"coast_km":1,
+"spec":false
+},
+{
+"id":"PSLC1",
+"name":"9412110 - Port San Luis, CA",
+"lat":35.169,
+"lon":-120.754,
+"type":"fixed",
+"owner":"NOS",
+"coast_km":0,
+"spec":false
+},
+{
+"id":"46286",
+"name":"Avila Beach Nearshore, CA (285)",
+"lat":35.164,
+"lon":-120.737,
+"type":"buoy",
+"owner":"National Laboratory of the Rockies (NLR)",
+"coast_km":1,
+"spec":true
+},
+{
+"id":"46011",
+"name":"SANTA MARIA - 21NM NW of Point Arguello, CA",
+"lat":34.937,
+"lon":-120.999,
+"type":"buoy",
+"owner":"NDBC",
+"coast_km":32,
+"spec":true
+},
+{
+"id":"46259",
+"name":"Santa Lucia Escarpment, CA (222)",
+"lat":34.774,
+"lon":-121.491,
+"type":"buoy",
+"owner":"U.S. Army Corps of Engineers",
+"coast_km":77,
+"spec":true
+},
+{
+"id":"PTGC1",
+"name":"Point Arguello, CA",
+"lat":34.577,
+"lon":-120.647,
+"type":"fixed",
+"owner":"NDBC",
+"coast_km":0,
+"spec":false
+},
+{
+"id":"46218",
+"name":"Harvest, CA (071)",
+"lat":34.452,
+"lon":-120.78,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":19,
+"spec":true
+},
+{
+"id":"NTBC1",
+"name":"9411340 - Santa Barbara, CA ",
+"lat":34.405,
+"lon":-119.692,
+"type":"fixed",
+"owner":"NOS",
+"coast_km":1,
+"spec":false
+},
+{
+"id":"46054",
+"name":"WEST SANTA BARBARA  38 NM West of Santa Barbara, CA",
+"lat":34.274,
+"lon":-120.468,
+"type":"buoy",
+"owner":"NDBC",
+"coast_km":19,
+"spec":true
+},
+{
+"id":"46053",
+"name":"EAST SANTA BARBARA  - 12NM Southwest of Santa Barbara, CA",
+"lat":34.246,
+"lon":-119.842,
+"type":"buoy",
+"owner":"NDBC",
+"coast_km":18,
+"spec":true
+},
+{
+"id":"46268",
+"name":"Topanga Nearshore, CA (103)",
+"lat":34.022,
+"lon":-118.578,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":1,
+"spec":true
+},
+{
+"id":"ICAC1",
+"name":"9410840 - Santa Monica Pier",
+"lat":34.008,
+"lon":-118.5,
+"type":"fixed",
+"owner":"NOS",
+"coast_km":1,
+"spec":false
+},
+{
+"id":"46221",
+"name":"Santa Monica Bay, CA (028)",
+"lat":33.86,
+"lon":-118.641,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":16,
+"spec":true
+},
+{
+"id":"46251",
+"name":"Santa Cruz Basin, CA (203)",
+"lat":33.769,
+"lon":-119.565,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":53,
+"spec":true
+},
+{
+"id":"PSXC1",
+"name":"9410692 - Los Angeles Pier S",
+"lat":33.768,
+"lon":-118.226,
+"type":"fixed",
+"owner":"NOAA NOS PORTS",
+"coast_km":9,
+"spec":false
+},
+{
+"id":"BAXC1",
+"name":"9410691 - Los Angeles Badger Avenue Bridge",
+"lat":33.766,
+"lon":-118.24,
+"type":"fixed",
+"owner":"NOAA NOS PORTS",
+"coast_km":8,
+"spec":false
+},
+{
+"id":"46025",
+"name":"Santa Monica Basin - 33NM WSW of Santa Monica, CA",
+"lat":33.765,
+"lon":-119.077,
+"type":"buoy",
+"owner":"NDBC",
+"coast_km":36,
+"spec":true
+},
+{
+"id":"PXAC1",
+"name":"9410690 - Los Angeles Berth 161, CA",
+"lat":33.764,
+"lon":-118.265,
+"type":"fixed",
+"owner":"NOAA NOS PORTS",
+"coast_km":7,
+"spec":false
+},
+{
+"id":"PFXC1",
+"name":"9410670 - Los Angeles Pier F, CA",
+"lat":33.747,
+"lon":-118.215,
+"type":"fixed",
+"owner":"NOAA NOS PORTS",
+"coast_km":7,
+"spec":false
+},
+{
+"id":"PFDC1",
+"name":"9410666 - Los Angeles Pier 400, CA",
+"lat":33.735,
+"lon":-118.241,
+"type":"fixed",
+"owner":"NOAA NOS PORTS",
+"coast_km":5,
+"spec":false
+},
+{
+"id":"PRJC1",
+"name":"9410665 - Los Angeles Pier J, CA",
+"lat":33.733,
+"lon":-118.186,
+"type":"fixed",
+"owner":"NOAA NOS PORTS",
+"coast_km":6,
+"spec":false
+},
+{
+"id":"OHBC1",
+"name":"9410660 - Los Angeles, CA",
+"lat":33.72,
+"lon":-118.273,
+"type":"fixed",
+"owner":"NOS",
+"coast_km":2,
+"spec":false
+},
+{
+"id":"AGXC1",
+"name":"9410647 - Angels Gate, CA",
+"lat":33.716,
+"lon":-118.246,
+"type":"fixed",
+"owner":"NOAA NOS PORTS",
+"coast_km":3,
+"spec":false
+},
+{
+"id":"46256",
+"name":"Long Beach Channel, CA (215)",
+"lat":33.7,
+"lon":-118.201,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":2,
+"spec":true
+},
+{
+"id":"46069",
+"name":"SOUTH SANTA ROSA - 14 NM SW of Santa Rosa Island, CA",
+"lat":33.657,
+"lon":-120.227,
+"type":"buoy",
+"owner":"NDBC",
+"coast_km":86,
+"spec":true
+},
+{
+"id":"46222",
+"name":"San Pedro, CA (092)",
+"lat":33.614,
+"lon":-118.314,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":10,
+"spec":true
+},
+{
+"id":"46253",
+"name":"San Pedro South, CA (213)",
+"lat":33.576,
+"lon":-118.182,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":10,
+"spec":true
+},
+{
+"id":"46285",
+"name":"Capistrano Beach Nearshore, CA (284)",
+"lat":33.445,
+"lon":-117.68,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":0,
+"spec":true
+},
+{
+"id":"46277",
+"name":"Green Beach Offshore, CA (271)",
+"lat":33.336,
+"lon":-117.659,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":7,
+"spec":true
+},
+{
+"id":"46275",
+"name":"Red Beach Nearshore, CA (264)",
+"lat":33.291,
+"lon":-117.501,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":0,
+"spec":true
+},
+{
+"id":"46219",
+"name":"San Nicolas Island, CA (067)",
+"lat":33.226,
+"lon":-119.891,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":121,
+"spec":true
+},
+{
+"id":"46224",
+"name":"Oceanside Offshore, CA (045)",
+"lat":33.178,
+"lon":-117.472,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":7,
+"spec":true
+},
+{
+"id":"46274",
+"name":"Leucadia Nearshore, CA (262)",
+"lat":33.062,
+"lon":-117.314,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":3,
+"spec":true
+},
+{
+"id":"46266",
+"name":"Del Mar Nearshore, CA (153)",
+"lat":32.957,
+"lon":-117.279,
+"type":"buoy",
+"owner":"U.S. Army Corps of Engineers",
+"coast_km":3,
+"spec":true
+},
+{
+"id":"46225",
+"name":"Torrey Pines Outer, CA (100)",
+"lat":32.933,
+"lon":-117.391,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":7,
+"spec":true
+},
+{
+"id":"46273",
+"name":"Torrey Pines Inner, CA (101)",
+"lat":32.93,
+"lon":-117.274,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":3,
+"spec":false
+},
+{
+"id":"46254",
+"name":"SCRIPPS Nearshore, CA (201)",
+"lat":32.868,
+"lon":-117.267,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":2,
+"spec":true
+},
+{
+"id":"LJAC1",
+"name":"9410230 - La Jolla, CA",
+"lat":32.867,
+"lon":-117.257,
+"type":"fixed",
+"owner":"NOS",
+"coast_km":3,
+"spec":false
+},
+{
+"id":"LJPC1",
+"name":"La Jolla, CA (073)",
+"lat":32.867,
+"lon":-117.257,
+"type":"fixed",
+"owner":"SCRIPPS",
+"coast_km":3,
+"spec":true
+},
+{
+"id":"46258",
+"name":"Mission Bay West, CA (220)",
+"lat":32.749,
+"lon":-117.502,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":22,
+"spec":true
+},
+{
+"id":"SDBC1",
+"name":"9410170 - San Diego, CA",
+"lat":32.714,
+"lon":-117.174,
+"type":"fixed",
+"owner":"NOS",
+"coast_km":8,
+"spec":false
+},
+{
+"id":"NPQC1",
+"name":"South Bay, Tijuana River Reserve, CA",
+"lat":32.601,
+"lon":-117.116,
+"type":"fixed",
+"owner":"National Estuarine Research Reserve System",
+"coast_km":5,
+"spec":false
+},
+{
+"id":"TIXC1",
+"name":"Tidal Linkage, Tijuana River Reserve, CA",
+"lat":32.575,
+"lon":-117.127,
+"type":"fixed",
+"owner":"National Estuarine Research Reserve System",
+"coast_km":3,
+"spec":false
+},
+{
+"id":"46235",
+"name":"Imperial Beach Nearshore, CA (155)",
+"lat":32.57,
+"lon":-117.169,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":1,
+"spec":false
+},
+{
+"id":"TIQC1",
+"name":"Oneonta Slough, Tijuana River Reserve, CA",
+"lat":32.568,
+"lon":-117.131,
+"type":"fixed",
+"owner":"National Estuarine Research Reserve System",
+"coast_km":2,
+"spec":false
+},
+{
+"id":"46232",
+"name":"Point Loma South, CA  (191)",
+"lat":32.517,
+"lon":-117.425,
+"type":"buoy",
+"owner":"SCRIPPS",
+"coast_km":23,
+"spec":true
+},
+{
+"id":"46086",
+"name":"SAN CLEMENTE BASIN - 27NM SE Of San Clemente Is, CA",
+"lat":32.504,
+"lon":-118.029,
+"type":"buoy",
+"owner":"NDBC",
+"coast_km":75,
+"spec":true
+},
+{
+"id":"46047",
+"name":"TANNER BANK - 121 NM West of San Diego, CA",
+"lat":32.418,
+"lon":-119.535,
+"type":"buoy",
+"owner":"NDBC",
+"coast_km":180,
+"spec":true
+}
+]
+}

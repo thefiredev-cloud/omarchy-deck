@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Install the website traffic producer and its hourly timer (owner feedback 2026-10-10, Deck build 15:
+# "Google search console needs to be live with all domains"). Before this the producer was manual and the
+# deck showed data 10 days old.
+#   scripts/install-traffic-feed                      installs into ~/ops/bin and ~/.config/systemd/user
+#   DECK_BIN_DIR=DIR DECK_UNIT_DIR=DIR scripts/install-traffic-feed   installs into those directories instead
+#   scripts/install-traffic-feed --force               installs even when the audit finds the live copy ahead of the repo
+#
+# Runs scripts/install-guard first: a live copy with lines no repo version ever had stops the install unless --force.
+# Backs up a live script it replaces to <name>.bak-<stamp>. Enables and starts only deck-feed-traffic.timer (and only
+# when systemctl --user is available and DECK_NO_ENABLE is unset). Nothing else is restarted.
+# Roll back: systemctl --user disable --now deck-feed-traffic.timer; remove the two unit files.
+set -euo pipefail
+
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+bin="${DECK_BIN_DIR:-$HOME/ops/bin}"
+units="${DECK_UNIT_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user}"
+stamp="$(date +%Y%m%d-%H%M%S)"
+
+force=()
+for a in "$@"; do
+  case "$a" in --force) force=(--force) ;; *) echo "unknown argument $a" >&2; exit 2 ;; esac
+done
+
+for f in deck_traffic.py systemd/deck-feed-traffic.service systemd/deck-feed-traffic.timer; do
+  [ -f "$here/$f" ] || { echo "missing $here/$f: nothing was installed" >&2; exit 1; }
+done
+"$here/install-guard" ${force[@]+"${force[@]}"} --bin "$bin" --units "$units" -- \
+  scripts/deck_traffic.py scripts/systemd/deck-feed-traffic.service scripts/systemd/deck-feed-traffic.timer || exit 1
+mkdir -p "$bin" "$units"
+if [ -e "$bin/deck_traffic.py" ]; then
+  cp -p "$bin/deck_traffic.py" "$bin/deck_traffic.py.bak-$stamp"
+  echo "backed up $bin/deck_traffic.py -> deck_traffic.py.bak-$stamp"
+fi
+install -m 755 "$here/deck_traffic.py" "$bin/deck_traffic.py"
+echo "installed $bin/deck_traffic.py"
+install -m 644 "$here/systemd/deck-feed-traffic.service" "$units/deck-feed-traffic.service"
+install -m 644 "$here/systemd/deck-feed-traffic.timer" "$units/deck-feed-traffic.timer"
+echo "installed the two units in $units"
+
+if [ -z "${DECK_NO_ENABLE:-}" ] && command -v systemctl >/dev/null 2>&1; then
+  systemctl --user daemon-reload
+  systemctl --user enable --now deck-feed-traffic.timer
+  systemctl --user list-timers deck-feed-traffic.timer --no-pager || true
+else
+  echo "timer not enabled (DECK_NO_ENABLE set or no systemctl). Enable: systemctl --user enable --now deck-feed-traffic.timer"
+fi

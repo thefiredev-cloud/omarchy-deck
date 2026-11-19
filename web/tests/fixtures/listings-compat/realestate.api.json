@@ -1,0 +1,688 @@
+{
+  "age": "<clock>",
+  "commercial": [
+    {
+      "addr": "0 Sample Plaza, Example Bay, CA",
+      "cap_rate": null,
+      "city": "Example Bay",
+      "id": "X0",
+      "price": 600000,
+      "source": "century21",
+      "sqft": null,
+      "title": "Sample retail space 0",
+      "type": "Retail",
+      "url": "https://example.com/cre/0"
+    },
+    {
+      "addr": "1 Sample Plaza, Example Bay, CA",
+      "cap_rate": null,
+      "city": "Example Bay",
+      "id": "X1",
+      "price": 650000,
+      "source": "century21",
+      "sqft": null,
+      "title": "Sample retail space 1",
+      "type": "Retail",
+      "url": "https://example.com/cre/1"
+    },
+    {
+      "addr": "2 Sample Plaza, Example Bay, CA",
+      "cap_rate": null,
+      "city": "Example Bay",
+      "id": "X2",
+      "price": 700000,
+      "source": "century21",
+      "sqft": null,
+      "title": "Sample retail space 2",
+      "type": "Retail",
+      "url": "https://example.com/cre/2"
+    },
+    {
+      "addr": "3 Sample Plaza, Example Bay, CA",
+      "cap_rate": null,
+      "city": "Example Bay",
+      "id": "X3",
+      "price": 750000,
+      "source": "century21",
+      "sqft": null,
+      "title": "Sample retail space 3",
+      "type": "Retail",
+      "url": "https://example.com/cre/3"
+    },
+    {
+      "addr": "4 Sample Plaza, Example Bay, CA",
+      "cap_rate": null,
+      "city": "Example Bay",
+      "id": "X4",
+      "price": 800000,
+      "source": "century21",
+      "sqft": null,
+      "title": "Sample retail space 4",
+      "type": "Retail",
+      "url": "https://example.com/cre/4"
+    },
+    {
+      "addr": "5 Sample Plaza, Example Bay, CA",
+      "cap_rate": null,
+      "city": "Example Bay",
+      "id": "X5",
+      "price": 850000,
+      "source": "century21",
+      "sqft": null,
+      "title": "Sample retail space 5",
+      "type": "Retail",
+      "url": "https://example.com/cre/5"
+    }
+  ],
+  "errors": [],
+  "homes": [
+    {
+      "addr": "100 Fixture Way, Sample Cove, CA 90000",
+      "baths": 1.0,
+      "beds": 1,
+      "city": "Sample Cove",
+      "listed_at": null,
+      "price": 515000,
+      "source": "redfin",
+      "sqft": 700,
+      "type": "Condo",
+      "url": "https://example.com/home/0",
+      "zip": "90000"
+    },
+    {
+      "addr": "101 Fixture Way, Example Bay, CA 90001",
+      "baths": 1.5,
+      "beds": 2,
+      "city": "Example Bay",
+      "listed_at": 1793992800,
+      "price": 380000,
+      "source": "zillow",
+      "sqft": 740,
+      "type": "House",
+      "url": "https://example.com/home/1",
+      "zip": "90001"
+    },
+    {
+      "addr": "102 Fixture Way, Fixture Hills, CA 90002",
+      "baths": 2.0,
+      "beds": 3,
+      "city": "Fixture Hills",
+      "listed_at": 1793985600,
+      "price": 455000,
+      "source": "realtor.com",
+      "sqft": 780,
+      "type": "Townhouse",
+      "url": "https://example.com/home/2",
+      "zip": "90002"
+    },
+    {
+      "addr": "103 Fixture Way, Sample Cove, CA 90000",
+      "baths": 1.0,
+      "beds": 4,
+      "city": "Sample Cove",
+      "listed_at": 1793978400,
+      "price": 640000,
+      "source": "redfin",
+      "sqft": 820,
+      "type": "Condo",
+      "url": "https://example.com/home/3",
+      "zip": "90000"
+    },
+    {
+      "addr": "104 Fixture Way, Example Bay, CA 90001",
+      "baths": 1.5,
+      "beds": 1,
+      "city": "Example Bay",
+      "listed_at": 1793971200,
+      "price": 925000,
+      "source": "zillow",
+      "sqft": 860,
+      "type": "House",
+      "url": "https://example.com/home/4",
+      "zip": "90001"
+    },
+    {
+      "addr": "105 Fixture Way, Fixture Hills, CA 90002",
+      "baths": 2.0,
+      "beds": 2,
+      "city": "Fixture Hills",
+      "listed_at": null,
+      "price": 1250000,
+      "source": "realtor.com",
+      "sqft": 900,
+      "type": "Townhouse",
+      "url": "https://example.com/home/5",
+      "zip": "90002"
+    },
+    {
+      "addr": "106 Fixture Way, Sample Cove, CA 90000",
+      "baths": 1.0,
+      "beds": 3,
+      "city": "Sample Cove",
+      "listed_at": 1793956800,
+      "price": 1890000,
+      "source": "redfin",
+      "sqft": 940,
+      "type": "Condo",
+      "url": "https://example.com/home/6",
+      "zip": "90000"
+    },
+    {
+      "addr": "107 Fixture Way, Example Bay, CA 90001",
+      "baths": 1.5,
+      "beds": 4,
+      "city": "Example Bay",
+      "listed_at": 1793949600,
+      "price": 515000,
+      "source": "zillow",
+      "sqft": 980,
+      "type": "House",
+      "url": "https://example.com/home/7",
+      "zip": "90001"
+    },
+    {
+      "addr": "108 Fixture Way, Fixture Hills, CA 90002",
+      "baths": 2.0,
+      "beds": 1,
+      "city": "Fixture Hills",
+      "listed_at": 1793942400,
+      "price": 380000,
+      "source": "realtor.com",
+      "sqft": 1020,
+      "type": "Townhouse",
+      "url": "https://example.com/home/8",
+      "zip": "90002"
+    },
+    {
+      "addr": "109 Fixture Way, Sample Cove, CA 90000",
+      "baths": 1.0,
+      "beds": 2,
+      "city": "Sample Cove",
+      "listed_at": 1793935200,
+      "price": 455000,
+      "source": "redfin",
+      "sqft": 1060,
+      "type": "Condo",
+      "url": "https://example.com/home/9",
+      "zip": "90000"
+    },
+    {
+      "addr": "110 Fixture Way, Example Bay, CA 90001",
+      "baths": 1.5,
+      "beds": 3,
+      "city": "Example Bay",
+      "listed_at": null,
+      "price": 640000,
+      "source": "zillow",
+      "sqft": 1100,
+      "type": "House",
+      "url": "https://example.com/home/10",
+      "zip": "90001"
+    },
+    {
+      "addr": "111 Fixture Way, Fixture Hills, CA 90002",
+      "baths": 2.0,
+      "beds": 4,
+      "city": "Fixture Hills",
+      "listed_at": 1793920800,
+      "price": 925000,
+      "source": "realtor.com",
+      "sqft": 1140,
+      "type": "Townhouse",
+      "url": "https://example.com/home/11",
+      "zip": "90002"
+    },
+    {
+      "addr": "112 Fixture Way, Sample Cove, CA 90000",
+      "baths": 1.0,
+      "beds": 1,
+      "city": "Sample Cove",
+      "listed_at": 1793913600,
+      "price": 1250000,
+      "source": "redfin",
+      "sqft": 1180,
+      "type": "Condo",
+      "url": "https://example.com/home/12",
+      "zip": "90000"
+    },
+    {
+      "addr": "113 Fixture Way, Example Bay, CA 90001",
+      "baths": 1.5,
+      "beds": 2,
+      "city": "Example Bay",
+      "listed_at": 1793906400,
+      "price": 1890000,
+      "source": "zillow",
+      "sqft": 1220,
+      "type": "House",
+      "url": "https://example.com/home/13",
+      "zip": "90001"
+    },
+    {
+      "addr": "114 Fixture Way, Fixture Hills, CA 90002",
+      "baths": 2.0,
+      "beds": 3,
+      "city": "Fixture Hills",
+      "listed_at": 1793899200,
+      "price": 515000,
+      "source": "realtor.com",
+      "sqft": 1260,
+      "type": "Townhouse",
+      "url": "https://example.com/home/14",
+      "zip": "90002"
+    },
+    {
+      "addr": "115 Fixture Way, Sample Cove, CA 90000",
+      "baths": 1.0,
+      "beds": 4,
+      "city": "Sample Cove",
+      "listed_at": null,
+      "price": 380000,
+      "source": "redfin",
+      "sqft": 1300,
+      "type": "Condo",
+      "url": "https://example.com/home/15",
+      "zip": "90000"
+    },
+    {
+      "addr": "116 Fixture Way, Example Bay, CA 90001",
+      "baths": 1.5,
+      "beds": 1,
+      "city": "Example Bay",
+      "listed_at": 1793884800,
+      "price": 455000,
+      "source": "zillow",
+      "sqft": 1340,
+      "type": "House",
+      "url": "https://example.com/home/16",
+      "zip": "90001"
+    },
+    {
+      "addr": "117 Fixture Way, Fixture Hills, CA 90002",
+      "baths": 2.0,
+      "beds": 2,
+      "city": "Fixture Hills",
+      "listed_at": 1793877600,
+      "price": 640000,
+      "source": "realtor.com",
+      "sqft": 1380,
+      "type": "Townhouse",
+      "url": "https://example.com/home/17",
+      "zip": "90002"
+    },
+    {
+      "addr": "118 Fixture Way, Sample Cove, CA 90000",
+      "baths": 1.0,
+      "beds": 3,
+      "city": "Sample Cove",
+      "listed_at": 1793870400,
+      "price": 925000,
+      "source": "redfin",
+      "sqft": 1420,
+      "type": "Condo",
+      "url": "https://example.com/home/18",
+      "zip": "90000"
+    },
+    {
+      "addr": "119 Fixture Way, Example Bay, CA 90001",
+      "baths": 1.5,
+      "beds": 4,
+      "city": "Example Bay",
+      "listed_at": 1793863200,
+      "price": 1250000,
+      "source": "zillow",
+      "sqft": 1460,
+      "type": "House",
+      "url": "https://example.com/home/19",
+      "zip": "90001"
+    },
+    {
+      "addr": "120 Fixture Way, Fixture Hills, CA 90002",
+      "baths": 2.0,
+      "beds": 1,
+      "city": "Fixture Hills",
+      "listed_at": null,
+      "price": 1890000,
+      "source": "realtor.com",
+      "sqft": 1500,
+      "type": "Townhouse",
+      "url": "https://example.com/home/20",
+      "zip": "90002"
+    },
+    {
+      "addr": "121 Fixture Way, Sample Cove, CA 90000",
+      "baths": 1.0,
+      "beds": 2,
+      "city": "Sample Cove",
+      "listed_at": 1793848800,
+      "price": 515000,
+      "source": "redfin",
+      "sqft": 1540,
+      "type": "Condo",
+      "url": "https://example.com/home/21",
+      "zip": "90000"
+    },
+    {
+      "addr": "122 Fixture Way, Example Bay, CA 90001",
+      "baths": 1.5,
+      "beds": 3,
+      "city": "Example Bay",
+      "listed_at": 1793841600,
+      "price": 380000,
+      "source": "zillow",
+      "sqft": 1580,
+      "type": "House",
+      "url": "https://example.com/home/22",
+      "zip": "90001"
+    },
+    {
+      "addr": "123 Fixture Way, Fixture Hills, CA 90002",
+      "baths": 2.0,
+      "beds": 4,
+      "city": "Fixture Hills",
+      "listed_at": 1793834400,
+      "price": 455000,
+      "source": "realtor.com",
+      "sqft": 1620,
+      "type": "Townhouse",
+      "url": "https://example.com/home/23",
+      "zip": "90002"
+    },
+    {
+      "addr": "124 Fixture Way, Sample Cove, CA 90000",
+      "baths": 1.0,
+      "beds": 1,
+      "city": "Sample Cove",
+      "listed_at": 1793827200,
+      "price": 640000,
+      "source": "redfin",
+      "sqft": 1660,
+      "type": "Condo",
+      "url": "https://example.com/home/24",
+      "zip": "90000"
+    },
+    {
+      "addr": "125 Fixture Way, Example Bay, CA 90001",
+      "baths": 1.5,
+      "beds": 2,
+      "city": "Example Bay",
+      "listed_at": null,
+      "price": 925000,
+      "source": "zillow",
+      "sqft": 1700,
+      "type": "House",
+      "url": "https://example.com/home/25",
+      "zip": "90001"
+    },
+    {
+      "addr": "126 Fixture Way, Fixture Hills, CA 90002",
+      "baths": 2.0,
+      "beds": 3,
+      "city": "Fixture Hills",
+      "listed_at": 1793812800,
+      "price": 1250000,
+      "source": "realtor.com",
+      "sqft": 1740,
+      "type": "Townhouse",
+      "url": "https://example.com/home/26",
+      "zip": "90002"
+    },
+    {
+      "addr": "127 Fixture Way, Sample Cove, CA 90000",
+      "baths": 1.0,
+      "beds": 4,
+      "city": "Sample Cove",
+      "listed_at": 1793805600,
+      "price": 1890000,
+      "source": "redfin",
+      "sqft": 1780,
+      "type": "Condo",
+      "url": "https://example.com/home/27",
+      "zip": "90000"
+    },
+    {
+      "addr": "128 Fixture Way, Example Bay, CA 90001",
+      "baths": 1.5,
+      "beds": 1,
+      "city": "Example Bay",
+      "listed_at": 1793798400,
+      "price": 515000,
+      "source": "zillow",
+      "sqft": 1820,
+      "type": "House",
+      "url": "https://example.com/home/28",
+      "zip": "90001"
+    },
+    {
+      "addr": "129 Fixture Way, Fixture Hills, CA 90002",
+      "baths": 2.0,
+      "beds": 2,
+      "city": "Fixture Hills",
+      "listed_at": 1793791200,
+      "price": 380000,
+      "source": "realtor.com",
+      "sqft": 1860,
+      "type": "Townhouse",
+      "url": "https://example.com/home/29",
+      "zip": "90002"
+    },
+    {
+      "addr": "100 Fixture Way, Sample Cove, CA 90000",
+      "baths": 1.0,
+      "beds": 1,
+      "city": "Sample Cove",
+      "listed_at": null,
+      "price": 515000,
+      "source": "redfin",
+      "sqft": 700,
+      "type": "Condo",
+      "url": "https://example.com/home/0",
+      "zip": "90000"
+    }
+  ],
+  "market": {
+    "age_restricted": {
+      "as_of": "2026-11-13",
+      "by_reason": {
+        "list": 3,
+        "text": 1
+      },
+      "hidden": 4,
+      "kept": 31,
+      "list": {
+        "communities": 81,
+        "learned": 5
+      },
+      "rows": [
+        {
+          "addr": "900 Retirement Ln, Sample Cove, CA",
+          "city": "Sample Cove",
+          "detail": "Sample Villas (55+ community)",
+          "price": 300000,
+          "reason": "list",
+          "source": "redfin",
+          "type": "Condo"
+        },
+        {
+          "addr": "901 Retirement Ln, Sample Cove, CA",
+          "city": "Sample Cove",
+          "detail": "Sample Villas (55+ community)",
+          "price": 301000,
+          "reason": "list",
+          "source": "redfin",
+          "type": "Condo"
+        },
+        {
+          "addr": "902 Retirement Ln, Sample Cove, CA",
+          "city": "Sample Cove",
+          "detail": "Sample Villas (55+ community)",
+          "price": 302000,
+          "reason": "list",
+          "source": "redfin",
+          "type": "Condo"
+        },
+        {
+          "addr": "903 Retirement Ln, Sample Cove, CA",
+          "city": "Sample Cove",
+          "detail": "Sample Villas (55+ community)",
+          "price": 303000,
+          "reason": "list",
+          "source": "redfin",
+          "type": "Condo"
+        }
+      ]
+    },
+    "area": "Sample County",
+    "at": 1794600000,
+    "commercial_indicators": {
+      "cap_rate": {
+        "reason": "No free public cap rate series.",
+        "status": "unavailable"
+      },
+      "chargeoff": {
+        "as_of": "2026-04-01",
+        "value": 0.14
+      },
+      "delinquency": {
+        "as_of": "2026-04-01",
+        "value": 1.53
+      },
+      "homeowner_vacancy": {
+        "as_of": "2026-07-01",
+        "value": 1.2
+      },
+      "loan_balance_bn": {
+        "as_of": "2026-09-01",
+        "value": 3140.24
+      },
+      "multifamily_starts": {
+        "as_of": "2026-09-01",
+        "value": 349.0
+      },
+      "price_growth": {
+        "as_of": "2026-01-01",
+        "series": "X",
+        "value": 6.58
+      },
+      "rental_vacancy": {
+        "as_of": "2026-07-01",
+        "value": 7.6
+      },
+      "treasury_10y": {
+        "as_of": "2026-11-10",
+        "value": 4.98
+      },
+      "vacancy": {
+        "reason": "No free public metro office, industrial or retail vacancy series. Check back later.",
+        "status": "unavailable"
+      }
+    },
+    "listings_checked_at": 1794600100,
+    "mortgage": {
+      "rate_15y": {
+        "as_of": "2026-11-12",
+        "series": "MORTGAGE15US",
+        "value": 6.45
+      },
+      "rate_30y": {
+        "as_of": "2026-11-12",
+        "series": "MORTGAGE30US",
+        "value": 7.11
+      }
+    },
+    "residential": {
+      "areas": [
+        {
+          "active_listings": 77.0,
+          "days_on_market": 68.0,
+          "level": "zip",
+          "list_price": {
+            "as_of": "2026-09-30",
+            "value": 2230000.0,
+            "yoy_pct": 2.7
+          },
+          "name": "Sample Cove",
+          "sale_price": {
+            "as_of": "2026-08-31",
+            "value": 1856000.0
+          },
+          "slug": "zip-90001",
+          "tier": "home",
+          "zhvi": {
+            "as_of": "2026-09-30",
+            "value": 1790000.0,
+            "yoy_pct": 7.06
+          },
+          "zhvi_source": "zillow",
+          "zip": "90001"
+        },
+        {
+          "days_to_pending": {
+            "as_of": "2026-09-30",
+            "value": 25.0
+          },
+          "inventory": {
+            "as_of": "2026-09-30",
+            "value": 6728.0
+          },
+          "level": "county",
+          "list_price": {
+            "as_of": "2026-09-30",
+            "value": 1220000.0
+          },
+          "name": "Sample County",
+          "sale_price": {
+            "as_of": "2026-08-31",
+            "value": 1150000.0
+          },
+          "slug": "county-oc",
+          "tier": "oc",
+          "zhvi": {
+            "as_of": "2026-09-30",
+            "value": 1170000.0,
+            "yoy_pct": 3.2
+          }
+        },
+        {
+          "days_to_pending": {
+            "as_of": "2026-09-30",
+            "value": 27.0
+          },
+          "inventory": {
+            "as_of": "2026-09-30",
+            "value": 1406624.0
+          },
+          "level": "us",
+          "list_price": {
+            "as_of": "2026-09-30",
+            "value": 403000.0
+          },
+          "name": "United States",
+          "sale_price": {
+            "as_of": "2026-08-31",
+            "value": 375000.0
+          },
+          "slug": "united-states",
+          "tier": "us",
+          "zhvi": {
+            "as_of": "2026-09-30",
+            "value": 366000.0,
+            "yoy_pct": -0.4
+          }
+        }
+      ],
+      "areas_with_zhvi": 3,
+      "scope": {
+        "home": "Sample Cove, CA"
+      }
+    }
+  },
+  "refresh": 3600,
+  "sources": [
+    "Fixture Source A",
+    "Fixture Source B"
+  ],
+  "src": "~/.meshvault/status/house-feeds/realestate.json",
+  "stale": "<clock>",
+  "t": 1794600000
+}

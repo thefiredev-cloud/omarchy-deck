@@ -1,0 +1,151 @@
+/* Deck design tokens v3 (2026-11-14). Carbon ground, bone text, one signal accent, status hues only for status.
+   Geist for text, Geist Mono for figures, codes and table numerals. Both self-hosted, same origin.
+   Device classes (PageBlueprints 1.2): P phone portrait (width < 600), L phone landscape (height < 500, width >= 600),
+   T tablet (600-1099, height >= 500), D desktop (>= 1100, height >= 500), XL step (>= 1600), TV (opt-in: html.tv).
+   Contrast numbers for every pair: DESIGN-v3.md, recomputed by build/contrast.py. */
+
+@font-face{font-family:"Geist";src:url("/fonts/Geist-Variable.woff2") format("woff2-variations"),url("/fonts/Geist-Variable.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:"Geist Mono";src:url("/fonts/GeistMono-Variable.woff2") format("woff2-variations"),url("/fonts/GeistMono-Variable.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+/* Metric-matched fallbacks so the swap moves nothing: Geist advance 0.473 em vs Arial 0.447 em, ascent 1.005, descent 0.295,
+   no line gap. Geist Mono advance 0.600 em, like every common mono. */
+@font-face{font-family:"Geist Fallback";src:local("Arial"),local("ArialMT"),local("Liberation Sans"),local("Helvetica Neue"),local("Helvetica"),local("Roboto");size-adjust:105.9%;ascent-override:94.9%;descent-override:27.9%;line-gap-override:0%}
+@font-face{font-family:"Geist Mono Fallback";src:local("Menlo"),local("SFMono-Regular"),local("DejaVu Sans Mono"),local("Roboto Mono"),local("Courier New");size-adjust:100%;ascent-override:100.5%;descent-override:29.5%;line-gap-override:0%}
+
+:root{
+  color-scheme:dark;
+
+  /* colour: carbon ramp (ground < bar < panel < panel-2), hairlines, bone text */
+  --c-ground:#0A0B0D;--c-bar:#111317;--c-panel:#171A1F;--c-panel-2:#1F232A;
+  --c-line:#2A2F37;--c-line-strong:#6E7784;
+  --c-text-1:#F1EFEA;--c-text-2:#B5B2AA;--c-text-3:#8F8C85;
+  /* the one accent: where you are, the primary action, focus, the now marker, the selected tile */
+  --c-signal:#FF6B1A;--c-signal-hi:#FF8340;--c-on-signal:#0A0B0D;
+  /* status only, always with a mark shape and a word */
+  --c-ok:#3DD68C;--c-warn:#F2C230;--c-bad:#FF5C77;
+  --c-ok-wash:#1C342E;--c-warn-wash:#363221;--c-bad-wash:#37232B;--c-signal-wash:#37251E;
+  /* edges for status pills, the freshness mark, the stale bar and empty states, and the text selection fill: each is the
+     hue at a fixed alpha, precomputed as 8-digit hex (color-mix() is missing on the owner's Tizen 6.5 TV, Chrome 108).
+     Pill and freshness edges 55% (signal 60%), stale bar 50%, empty-state edge 45%, selection 38% */
+  --c-ok-line:#3DD68C8C;--c-warn-line:#F2C2308C;--c-bad-line:#FF5C778C;--c-signal-line:#FF6B1A99;
+  --c-warn-line-bar:#F2C23080;--c-bad-line-bar:#FF5C7780;--c-warn-line-es:#F2C23073;--c-bad-line-es:#FF5C7773;
+  --c-select:#FF6B1A61;
+  /* the same kind of precomputed mix for app.css: signal edge at 55%, bone washes at 12, 14, 16 and 22%, and two solid
+     fills (bad 18% over the bar, signal 18% over the panel) */
+  --c-signal-line-55:rgba(255,107,26,.55);
+  --c-text-1-12:rgba(241,239,234,.12);--c-text-1-14:rgba(241,239,234,.14);--c-text-1-16:rgba(241,239,234,.16);--c-text-1-22:rgba(241,239,234,.22);
+  --c-bad-on-bar:#3C2028;--c-signal-on-panel:#41291E;
+  /* one data ramp for maps, strips and heat cells: bone into panel, brighter is better. Text t1 on 1-3, ground on 4-5 */
+  --c-ramp-0:var(--c-panel);--c-ramp-1:#2D2F33;--c-ramp-2:#47494C;--c-ramp-3:#6A6B6C;--c-ramp-4:#959695;--c-ramp-5:#CAC9C5;
+  --c-hatch:repeating-linear-gradient(135deg,var(--c-panel) 0 4px,var(--c-line) 4px 5px);
+  /* model-only coast segment: ground at 55% striped over the rating shade */
+  --c-hatch-shade:#0A0B0D8C;
+  --c-scrim:rgba(5,6,8,.72);
+
+  /* type */
+  --font:"Geist","Geist Fallback",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"Geist Mono","Geist Mono Fallback",ui-monospace,Menlo,Consolas,monospace;
+  --fw-reg:400;--fw-med:500;--fw-semi:600;
+  --lh-body:1.5;--lh-row:1.35;--lh-title:1.2;--lh-fig:1.05;
+  /* fluid steps 390 to 1100 px; constant on D; XL is one step up. Every step beats the old deck (12 / 13 / 15 / 20 / 28). */
+  --fs-micro:clamp(13px, 12.451px + 0.1408vw, 14px);
+  --fs-meta:clamp(14px, 13.451px + 0.1408vw, 15px);
+  --fs-body:clamp(16px, 14.901px + 0.2817vw, 18px);
+  --fs-lead:clamp(17px, 15.901px + 0.2817vw, 19px);
+  --fs-title:clamp(21px, 19.352px + 0.4225vw, 24px);
+  --fs-page:clamp(26px, 22.704px + 0.8451vw, 32px);
+  --fs-fig:clamp(30px, 26.704px + 0.8451vw, 36px);
+  --fs-display:clamp(40px, 33.408px + 1.6901vw, 52px);
+
+  /* space: rem follows the body step, so spacing grows with the type (and with TV) */
+  --s-1:.25rem;--s-2:.5rem;--s-3:.75rem;--s-4:1rem;--s-5:1.5rem;--s-6:2rem;--s-7:3rem;--s-8:4rem;
+  /* shape: square controls, round status. One elevation method: a 1 px hairline. No shadows on content. */
+  --r-ctl:4px;--r-panel:6px;--r-sheet:12px;--r-pill:999px;
+  --hair:1px solid var(--c-line);
+  /* density: touch by default (44 px), pointer on D (36 px rows) */
+  --hit:44px;--ctl-h:44px;--row-pad:.75rem;
+  /* layout */
+  --reserve:var(--shell-reserve-top-right,0px);
+  --rail-w:0px;--topbar-h:44px;--tabbar-h:0px;--subrail-w:0px;
+  --col-w:20rem;--col-max:2;--gap:var(--s-5);
+  --measure:68ch;--content-max:100%;
+  --safe-t:env(safe-area-inset-top,0px);--safe-r:env(safe-area-inset-right,0px);--safe-b:env(safe-area-inset-bottom,0px);--safe-l:env(safe-area-inset-left,0px);
+  --page-pad:var(--s-4);--sticky-top:0px;
+  --sheet-w:min(100%,640px);
+  /* charts */
+  --spark-h:24px;
+  /* motion: one curve; 0 ms focus, 120 ms press, 200 ms sheets; data never animates */
+  --ease:cubic-bezier(.2,0,0,1);--t-press:120ms;--t-sheet:200ms;
+  --focus:2px solid var(--c-signal);--focus-off:2px;
+}
+
+/* P phone portrait: slim top bar, header row, one bottom tab bar with all eight tabs. The bar is 52 px so the host switch's 44 px
+   buttons and their segment border sit inside it (L18, 2026-11-17: the buttons were 42 px in a 44 px bar) */
+@media (max-width:599px){:root{--topbar-h:52px;--tabbar-h:calc(62px + var(--safe-b));--col-max:1;--page-pad:var(--s-4)}}
+/* L phone landscape (Pixel 908x411 always on, iPhone 932x430): one capsule row, sub-tabs in a 112 px rail, two columns */
+@media (min-width:600px) and (max-height:499px){
+  :root{--fs-micro:13px;--fs-meta:14px;--fs-body:17px;--fs-lead:18px;--fs-title:21px;--fs-page:24px;--fs-fig:30px;--fs-display:36px;
+    --topbar-h:48px;--subrail-w:112px;--col-max:2;--page-pad:var(--s-3);--gap:var(--s-4);--sheet-w:min(60vw,36rem)}
+}
+/* T tablet: top bar with all tabs, segmented sub-tab row, two columns */
+@media (min-width:600px) and (max-width:1099px) and (min-height:500px){:root{--topbar-h:56px;--col-max:2;--page-pad:var(--s-5)}}
+/* D desktop: 220 px rail, content capped at 1600 px */
+@media (min-width:1100px) and (min-height:500px){:root{--rail-w:220px;--topbar-h:0px;--col-max:3;--page-pad:var(--s-6);--content-max:1600px;--sheet-w:min(40rem,42vw)}}
+@media (min-width:1100px) and (min-height:500px) and (hover:hover) and (pointer:fine){:root{--hit:36px;--ctl-h:36px;--row-pad:.5rem}}
+/* XL: one type step up, wider measure for the 12-column grid */
+@media (min-width:1600px) and (min-height:500px){
+  :root{
+    --fs-micro:15px;
+    --fs-meta:clamp(16px, 14.333px + 0.1042vw, 17px);
+    --fs-body:clamp(19px, 17.333px + 0.1042vw, 20px);
+    --fs-lead:clamp(20px, 18.333px + 0.1042vw, 21px);
+    --fs-title:clamp(26px, 22.667px + 0.2083vw, 28px);
+    --fs-page:clamp(34px, 27.333px + 0.4167vw, 38px);
+    --fs-fig:clamp(40px, 33.333px + 0.4167vw, 44px);
+    --fs-display:clamp(56px, 42.667px + 0.8333vw, 64px);
+    --rail-w:240px;--col-max:4;--content-max:96rem;
+  }
+}
+/* WIDE (W4-1, the owner's workspace 4: a 2470 px window, 3440 full screen): above 2200 px the 96rem cap left 414 to 1,376 px empty
+   while four 430 px columns wrapped titles to three lines. --wide-cols picks the form: 4 keeps four columns and lets the content run
+   to the window less the page margins; 5 adds a fifth column and caps the content at 120rem, so a column stays near today's width.
+   Nothing below 2200 px changes; html.tv sets its own --col-max and --content-max and wins over :root. */
+@media (min-width:2200px) and (min-height:500px){
+  :root{--wide-cols:4;--col-max:var(--wide-cols);--content-max:calc(100% * (5 - var(--wide-cols)) + 120rem * (var(--wide-cols) - 4))}
+}
+
+/* TV (opt-in view): sizes in vw so a 1920 or a 960 CSS-pixel TV reads the same. Body 28 px at 1080p, nothing under 22 px,
+   headline numbers 56 to 72 px. Overscan: 5% sides, 4% top and bottom. */
+html.tv{
+  --fs-micro:max(22px,1.1458vw);--fs-meta:max(22px,1.25vw);--fs-body:1.4583vw;--fs-lead:1.5625vw;--fs-title:1.875vw;--fs-page:2.5vw;--fs-fig:2.9167vw;--fs-display:3.75vw;
+  --hit:3.3333vw;--ctl-h:3.3333vw;--row-pad:.55rem;--rail-w:0px;--tabbar-h:0px;--subrail-w:0px;--topbar-h:auto;
+  --page-pad:5vw;--col-max:2;--content-max:100%;--gap:var(--s-5);--sheet-w:100%;--spark-h:40px;
+  --focus:4px solid var(--c-signal);--focus-off:3px;
+}
+
+@media (prefers-contrast:more){:root{--c-text-2:#D6D3CC;--c-text-3:#BDB9B1;--c-line:#4A515C;--c-line-strong:#9AA3AF}}
+@media (prefers-reduced-motion:reduce){:root{--t-press:0ms;--t-sheet:0ms}}
+
+/* ==== legacy aliases (2026-11-14): old token names still read by the moved page CSS (static/css/*.css) and app.css,
+   pointed at v3 values. Cleanup deletes this block when
+   rg -n -- '--(fg|dim|lighter-bg|dark-bg|pa|tint|raised|text-[123]|sp-[1-6]|fs-(2xs|xs|sm|md|base|lg|xl|tile|age)|bg|line|edge|touch|bar-h|glass-[a-z]+|a-[a-z0-9-]+)\b' static
+   is empty. ==== */
+:root{
+  --bg:var(--c-ground);--raised:var(--c-panel);--line:var(--c-line);--surf:var(--c-panel);
+  --text-1:var(--c-text-1);--text-2:var(--c-text-2);--text-3:var(--c-text-3);
+  --tint:var(--c-signal);--ok:var(--c-ok);--warn:var(--c-warn);--bad:var(--c-bad);
+  --fg:var(--c-text-1);--dim:var(--c-text-2);--muted:var(--c-text-3);--lighter-bg:var(--c-panel-2);--dark-bg:var(--c-ground);
+  --accent:var(--c-signal);--green:var(--c-ok);--red:var(--c-bad);--cyan:var(--c-text-2);--pa:var(--c-signal);--on-pa:var(--c-on-signal);
+  --ok-wash:var(--c-ok-wash);--warn-wash:var(--c-warn-wash);--bad-wash:var(--c-bad-wash);--wait:var(--c-signal);--wait-wash:var(--c-signal-wash);
+  --fs-2xs:var(--fs-micro);--fs-xs:var(--fs-micro);--fs-sm:var(--fs-meta);--fs-md:var(--fs-body);--fs-base:var(--fs-body);
+  --fs-lg:var(--fs-title);--fs-xl:var(--fs-display);--fs-tile:var(--fs-micro);--fs-age:var(--fs-micro);--fw-bold:var(--fw-semi);
+  --sp-1:var(--s-1);--sp-2:var(--s-1);--sp-3:var(--s-2);--sp-4:var(--s-3);--sp-5:var(--s-4);--sp-6:var(--s-5);
+  --r-xs:var(--r-ctl);--r-sm:var(--r-ctl);--r-md:var(--r-panel);--r-lg:var(--r-panel);--r-card:var(--r-panel);--r-control:var(--r-ctl);
+  --edge:inset 0 0 0 1px var(--c-line);--lift:inset 0 0 0 1px var(--c-line);
+  --touch:var(--hit);--bar-h:var(--hit);
+  --pad:max(16px,var(--safe-t)) max(16px,var(--safe-r)) max(16px,var(--safe-b)) max(16px,var(--safe-l));
+  --a-raised:var(--c-panel);--a-line:var(--c-line);--a-t1:var(--c-text-1);--a-t2:var(--c-text-2);--a-t3:var(--c-text-3);--a-tint:var(--c-signal);--a-on-tint:var(--c-on-signal);
+  /* the glass layer is gone: run window and viewer bars read these as solid bar surfaces */
+  --glass-fill:var(--c-bar);--glass-solid:var(--c-bar);--glass-blur:none;--glass-hair:inset 0 0 0 1px var(--c-line);
+  --glass-lit:0 0 0 0 transparent;--glass-drop:0 8px 24px -8px rgba(0,0,0,.55);--glass-r:var(--r-panel);
+  --pt:max(16px,var(--safe-t));--ft:0px;--fb:0px;
+}

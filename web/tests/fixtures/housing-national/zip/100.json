@@ -1,0 +1,52 @@
+{
+ "schema": 1,
+ "zips": {
+  "10001": {
+   "zip": "10001",
+   "city": "New York",
+   "state": "NY",
+   "county": "New York County",
+   "metro": "New York-Newark-Jersey City, NY-NJ",
+   "lat": null,
+   "lon": null,
+   "pop": 25000,
+   "hh_income": 100000,
+   "zhvi": 1000000,
+   "zhvi_yoy": 0.5,
+   "zhvi_5y": 5.0,
+   "rent": 4500,
+   "rent_src": "zori",
+   "rent_yoy": null,
+   "list_price": 1300000,
+   "active": 500,
+   "dom": 80,
+   "price_cut_share": null,
+   "yield_gross": 5.4,
+   "price_to_income": null,
+   "vacancy": null,
+   "owner_share": null,
+   "biz_estabs": 9000,
+   "biz_estabs_5y": 1.0,
+   "biz_emp": 200000,
+   "biz_pay_per_emp": 120000,
+   "estabs_per_1k": 360.0,
+   "retail_estabs": null,
+   "office_estabs": null,
+   "industrial_estabs": null,
+   "com_listings": 150,
+   "com_median_price": 2500000,
+   "com_median_cap": 4.8,
+   "h_score": 30,
+   "c_score": 95,
+   "sectors": [
+    {
+     "naics": "52",
+     "label": "Finance and insurance",
+     "estabs": 1200,
+     "emp": 60000
+    }
+   ],
+   "hist": {}
+  }
+ }
+}

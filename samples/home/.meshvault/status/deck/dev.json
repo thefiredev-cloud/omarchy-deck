@@ -1,0 +1,38 @@
+{
+ "t": 1795051391,
+ "refresh": 300,
+ "stale": false,
+ "src": "fixture (synthetic)",
+ "errors": [],
+ "github": {
+  "open_prs": [
+   {
+    "repo": "fixture/repo",
+    "num": 12,
+    "title": "Fixture PR with a link",
+    "ci": "pass",
+    "url": "https://github.com/fixture/repo/pull/12"
+   }
+  ],
+  "failing_main": [],
+  "at": 1795050791
+ },
+ "vercel": {
+  "projects": []
+ },
+ "supabase": {
+  "projects": []
+ },
+ "herdr": {
+  "tabs": [],
+  "agents_busy": 0
+ },
+ "chromium": {
+  "cdp_up": true,
+  "tabs": 3
+ },
+ "grok": {
+  "build_cli": "1.0",
+  "logged_in": true
+ }
+}

@@ -1,0 +1,22 @@
+{
+ "zip": "62927",
+ "city": "Dowell",
+ "state": "IL",
+ "county": "Jackson County",
+ "pop": 410,
+ "zhvi": 1,
+ "rent": 629,
+ "yield_gross": 754800.0,
+ "zhvi_yoy": 0.0,
+ "h_score": 31.2,
+ "h_conf": 0.4,
+ "m": {
+  "home_value": {"v": null, "reason": "placeholder", "from": null},
+  "typical_rent": {"v": 629, "c": 0.5, "p": [["rent", 1.0, 1]]},
+  "gross_yield": {"v": null, "reason": "placeholder", "from": "home_value"},
+  "price_cuts": {"v": null, "reason": "too few listings", "from": null},
+  "days_on_market": {"v": 41, "c": 0.4, "p": [["dom", 1.0, 1]]}
+ },
+ "hist": {"zhvi": [["2026-08", 1], ["2026-09", 1], ["2026-10", 1]]},
+ "note": "Synthetic test row in the national v2 shape (pixel-deck #351): a placeholder home value the validity table rejected, so gross yield follows it to null; the raw v1 columns still hold $1 and 754,800%."
+}

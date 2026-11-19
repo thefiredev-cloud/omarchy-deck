@@ -1,0 +1,33 @@
+{
+  "generated_at": "2026-11-17T15:00:00Z",
+  "t": 1794927600,
+  "refresh": 1800,
+  "src": ["amazon-bestsellers", "ebay-trending", "google-trends", "yahoo-most-active"],
+  "errors": [{"source": "ebay-trending", "reason": "HTTP 429"}],
+  "sources": [
+    {"id": "amazon-bestsellers", "ok": true, "age_s": 1200, "error": null},
+    {"id": "ebay-trending", "ok": false, "age_s": 7300, "error": "HTTP 429"},
+    {"id": "google-trends", "ok": true, "age_s": 900, "error": null},
+    {"id": "yahoo-most-active", "ok": true, "age_s": 600, "error": null},
+    {"id": "reddit-buyitforlife", "ok": false, "age_s": null, "error": "timeout"}
+  ],
+  "products": [
+    {"title": "Portable Power Station 1000Wh LiFePO4 Solar Generator for Camping RV Home Backup", "category": "electronics", "source": "amazon-bestsellers", "rank": 3, "rank_change": 41, "signal": "Up 41 places in Electronics in 24 h", "price_median": 449.0, "url": "https://www.amazon.com/gp/bestsellers/electronics"},
+    {"title": "Insulated Wetsuit Hood 3mm", "category": "outdoors", "source": "amazon-bestsellers", "rank": 12, "rank_change": -4, "signal": "Steady in Sports & Outdoors", "price_median": 34.99, "url": "https://www.amazon.com/gp/bestsellers/sporting-goods"},
+    {"title": "Mini PC Ryzen 7 32GB 1TB", "category": "computers", "source": "amazon-bestsellers", "rank": 1, "rank_change": 0, "signal": "Held #1 in Computers for 3 days", "price_median": 389.0, "url": "https://www.amazon.com/gp/bestsellers/pc"},
+    {"title": "Air Fryer 6 qt", "category": "home", "source": "amazon-bestsellers", "rank": 7, "rank_change": null, "signal": "New on the list", "price_median": null, "url": "javascript:alert(1)", "qty": 3, "balance": 1200},
+    {"category": "home", "source": "amazon-bestsellers", "rank": 9, "signal": "no title, dropped"}
+  ],
+  "tickers": [
+    {"symbol": "SMCI", "name": "Super Micro Computer", "price": 41.22, "pct": 9.8, "t": 1794927000, "volume_ratio": 3.4, "reason": "Volume 3.4x its 30-day average", "source": "yahoo-most-active"},
+    {"symbol": "RIVN", "name": "Rivian Automotive", "price": 13.05, "pct": -6.1, "t": 1794927000, "volume_ratio": 2.2, "reason": "Most active, down on guidance", "source": "yahoo-most-active"},
+    {"symbol": "BTC-USD", "name": "Bitcoin", "price": null, "pct": null, "t": null, "volume_ratio": null, "reason": "Search interest up 60% week over week", "source": "google-trends"},
+    {"symbol": "bad symbol!", "name": "dropped", "pct": 1}
+  ],
+  "searches": [
+    {"term": "home battery backup", "region": "US-CA", "growth_pct": 180, "source": "google-trends"},
+    {"term": "surf lessons dana point", "region": "US-CA", "growth_pct": 65, "source": "google-trends"},
+    {"term": "local ai assistant for small business", "region": "US", "growth_pct": 240, "source": "google-trends"},
+    {"term": "duplex for sale orange county", "region": "US-CA", "growth_pct": null, "source": "google-trends"}
+  ]
+}

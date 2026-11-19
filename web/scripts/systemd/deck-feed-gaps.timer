@@ -1,0 +1,11 @@
+[Unit]
+Description=Refresh the Pixel Deck market gaps feed hourly, ten minutes after the trends feed
+
+[Timer]
+OnCalendar=*:15
+RandomizedDelaySec=60s
+Persistent=true
+Unit=deck-feed-gaps.service
+
+[Install]
+WantedBy=timers.target

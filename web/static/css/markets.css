@@ -1,0 +1,40 @@
+/* Real estate > Markets (owner order 2026-11-17): states and metros by segment. Only what is particular to this page; the table,
+   controls, chips and sheets are ui.css. */
+
+/* the control row: level switch and the name search; the segment chips take their own sideways row under it */
+.mkt-ctl{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-2) var(--s-3);margin:0 0 var(--s-3)}
+.mkt-ctl .mkt-search{flex:1 1 14rem;max-width:22rem}
+.mkt-ctl .mkt-search input{width:100%}
+.mkt-segw{margin:0 0 var(--gap);min-width:0}
+.mkt-main{margin:0 0 var(--gap)}
+/* the "Ranked by ..." line wraps: a long field name on one line pushed a phone page sideways (ui.css keeps .act on one line) */
+.mkt-main>.secttl .act{font-size:var(--fs-meta);color:var(--c-text-2);font-weight:var(--fw-reg);white-space:normal;min-width:0;overflow-wrap:anywhere}
+
+/* the table always scrolls sideways with the place column frozen (every field of a segment stays reachable on a phone); headers
+   wrap inside a column width so a long field name does not make one very wide column */
+.mkt-tw .htbl thead th{min-width:6.5rem;max-width:10rem;white-space:normal;vertical-align:bottom}
+.mkt-tw .htbl thead th:first-child{min-width:0}
+.mkt-tw .htbl tbody th[scope="row"]{min-width:10rem;max-width:15rem;white-space:normal}
+.mkt-tw .htbl .sort{text-align:right;justify-content:flex-end}
+.mkt-pl b{display:flex;align-items:baseline;gap:var(--s-2);font-family:var(--font)}
+.mkt-rk{flex:none;min-width:1.8em;font-family:var(--mono);font-size:var(--fs-meta);font-weight:var(--fw-reg);color:var(--c-text-2);text-align:right}
+.mkt-pl small{padding-left:calc(1.8em + var(--s-2))}
+.mkt-miss .missing{margin-top:var(--s-3)}
+.mkt-more .more-row{margin-top:var(--s-3)}
+
+/* the row sheet: one section per segment */
+.mkt-go{margin:0 0 var(--s-2)}
+/* long field names (the CMBS lines) wrap inside the label column instead of pushing the sheet sideways */
+.mkt-sh .kv{grid-template-columns:minmax(0,1fr) max-content;max-width:none}
+.mkt-sh .kv dt{overflow-wrap:anywhere}
+.sheet-b .mkt-sh{margin:0 0 var(--s-4)}
+
+@media (max-width:599px){
+  .mkt-ctl .mkt-lvw{order:1}
+  .mkt-tw .htbl tbody th[scope="row"]{min-width:8.5rem;max-width:10rem}
+  .mkt-tw .htbl thead th{min-width:5.5rem}
+}
+
+/* TV board: the first twelve rows, no search or paging */
+html.tv .mkt-search,html.tv .mkt .more-row{display:none}
+html.tv .mkt-tw .htbl tbody tr:nth-child(n+13){display:none}

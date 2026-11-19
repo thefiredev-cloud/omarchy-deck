@@ -1,0 +1,136 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.c1f1dd5f44a1e8f0d9539b77a514eb16f3288182.001.2",
+   "type": "Feature",
+   "properties": {
+    "id": "urn:oid:2.49.0.1.840.0.c1f1dd5f44a1e8f0d9539b77a514eb16f3288182.001.2",
+    "areaDesc": "San Diego County Coastal Areas; Orange County Coastal",
+    "geocode": {
+     "SAME": [
+      "006073",
+      "006059"
+     ],
+     "UGC": [
+      "CAZ043",
+      "CAZ552"
+     ]
+    },
+    "sent": "2026-11-14T14:41:00-08:00",
+    "effective": "2026-11-14T14:41:00-08:00",
+    "onset": "2026-11-14T14:41:00-08:00",
+    "expires": "2026-11-14T22:45:00-08:00",
+    "ends": "2026-11-15T10:00:00-08:00",
+    "status": "Actual",
+    "messageType": "Alert",
+    "category": "Met",
+    "severity": "Minor",
+    "certainty": "Likely",
+    "urgency": "Expected",
+    "event": "High Surf Advisory",
+    "headline": "High Surf Advisory issued November 14 at 2:41PM PST until November 15 at 10:00AM PST by NWS San Diego CA",
+    "description": "* WHAT...For the High Surf Advisory, large breaking waves of 5 to\n7 feet with sets 8 to 10 feet along west-facing beaches.\n\n* WHERE...San Diego County Coastal Areas and Orange County\nCoastal Areas.\n\n* WHEN...Until 10 AM PST Sunday.\n\n* IMPACTS...Dangerous swimming and surfing conditions and\nlocalized beach erosion.\n\n* ADDITIONAL DETAILS...Highest surf is expected to occur now\nthrough early Sunday. Surf begins to subside Sunday afternoon\nbut will remain elevated into Monday."
+   }
+  },
+  {
+   "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.e6620de6694b5004eed722408cecc91a7787fe04.002.1",
+   "type": "Feature",
+   "properties": {
+    "id": "urn:oid:2.49.0.1.840.0.e6620de6694b5004eed722408cecc91a7787fe04.002.1",
+    "areaDesc": "Coastal Del Norte",
+    "geocode": {
+     "SAME": [
+      "006015"
+     ],
+     "UGC": [
+      "CAZ101"
+     ]
+    },
+    "sent": "2026-11-14T12:51:00-08:00",
+    "effective": "2026-11-14T12:51:00-08:00",
+    "onset": "2026-11-14T16:00:00-08:00",
+    "expires": "2026-11-14T21:00:00-08:00",
+    "ends": "2026-11-15T01:00:00-08:00",
+    "status": "Actual",
+    "messageType": "Update",
+    "category": "Met",
+    "severity": "Moderate",
+    "certainty": "Likely",
+    "urgency": "Expected",
+    "event": "Wind Advisory",
+    "headline": "Wind Advisory issued November 14 at 12:51PM PST until November 15 at 1:00AM PST by NWS Eureka CA",
+    "description": "* WHAT...South winds 20 to 30 mph with gusts up to 50 mph expected.\n\n* WHERE...Del Norte Coast.\n\n* WHEN...From 4 PM this afternoon to 1 AM PST Sunday.\n\n* IMPACTS...Wind gusts will be particularly strong along windward\nridges and exposed coastal headlands. Gusty winds will blow around\nunsecured objects. Tree limbs could be blown down and a few power\noutages may result."
+   }
+  },
+  {
+   "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.6ebf24d167c2570ae30a2917970d82b92742e6b2.001.2",
+   "type": "Feature",
+   "properties": {
+    "id": "urn:oid:2.49.0.1.840.0.6ebf24d167c2570ae30a2917970d82b92742e6b2.001.2",
+    "areaDesc": "San Francisco; Coastal North Bay Including Point Reyes National Seashore; San Francisco Peninsula Coast; Northern Monterey Bay; Southern Monterey Bay and Big Sur Coast",
+    "geocode": {
+     "SAME": [
+      "006075",
+      "006041",
+      "006097",
+      "006081",
+      "006087",
+      "006053"
+     ],
+     "UGC": [
+      "CAZ006",
+      "CAZ505",
+      "CAZ509",
+      "CAZ529",
+      "CAZ530"
+     ]
+    },
+    "sent": "2026-11-14T01:05:00-08:00",
+    "effective": "2026-11-14T01:05:00-08:00",
+    "onset": "2026-11-14T01:05:00-08:00",
+    "expires": "2026-11-14T18:00:00-08:00",
+    "ends": "2026-11-14T18:00:00-08:00",
+    "status": "Actual",
+    "messageType": "Update",
+    "category": "Met",
+    "severity": "Minor",
+    "certainty": "Likely",
+    "urgency": "Expected",
+    "event": "Coastal Flood Advisory",
+    "headline": "Coastal Flood Advisory issued November 14 at 1:05AM PST until November 14 at 6:00PM PST by NWS San Francisco CA",
+    "description": "* WHAT...For the High Surf Warning, dangerously large breaking\nwaves of 25 to 35 ft, with occasional sets of 40 to 50 ft at\nfavored breakpoints. For the Coastal Flood Advisory, large\nbreaking waves will run up beaches and crash over seawalls,\ninundating adjacent, low-lying infrastructure.\n\n* WHERE...All Pacific Coast Beaches.\n\n* WHEN...For the High Surf Warning, until 4 AM PST Sunday. For the\nCoastal Flood Advisory, now through 6 PM PST today.\n\n* IMPACTS...High tides will result in flooding of low-lying\ninfrastructure, isolated road closures, and coastal erosion.\nRising tides will bring water and waves farther up the beach\nthan normal, restricting escape from beaches and coastal\nareas. Dangerously large breaking waves can overpower\nswimmers, pulling people into the sea from beaches, jetties,\nand rocks resulting in significant physical injury and\nincreasing the risk of drowning. Waves can sweep across the\nshoreline without warning, pulling people into the sea from\nbeaches, jetties, and rocks.\n\n* ADDITIONAL DETAILS...The Coastal Flood Advisory today is\nspecifically for the Pacific Coast, where large breaking waves\nwill spill over sea walls and run up beaches onto adjacent\ninfrastructure."
+   }
+  },
+  {
+   "id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.0435042d535a62d91e26e9df2c84028af60c362c.001.1",
+   "type": "Feature",
+   "properties": {
+    "id": "urn:oid:2.49.0.1.840.0.0435042d535a62d91e26e9df2c84028af60c362c.001.1",
+    "areaDesc": "Point Piedras Blancas to Point Sal westward out to 10 NM",
+    "geocode": {
+     "SAME": [
+      "057645"
+     ],
+     "UGC": [
+      "PZZ645"
+     ]
+    },
+    "sent": "2026-11-14T14:32:00-08:00",
+    "effective": "2026-11-14T14:32:00-08:00",
+    "onset": "2026-11-14T14:32:00-08:00",
+    "expires": "2026-11-15T03:00:00-08:00",
+    "ends": "2026-11-18T03:00:00-08:00",
+    "status": "Actual",
+    "messageType": "Update",
+    "category": "Met",
+    "severity": "Minor",
+    "certainty": "Likely",
+    "urgency": "Expected",
+    "event": "Small Craft Advisory",
+    "headline": "Small Craft Advisory issued November 14 at 2:32PM PST until November 18 at 3:00AM PST by NWS Los Angeles/Oxnard CA",
+    "description": "* WHAT...Hazardous sea conditions.\n\n* WHERE...Point Piedras Blancas to Point Sal westward out to 10\nNM.\n\n* WHEN...Until 3 AM PST Wednesday.\n\n* IMPACTS...Conditions will be hazardous to small craft.\n\n* ADDITIONAL DETAILS...See the Coastal Waters Forecast (CWFLOX)\nfor more."
+   }
+  }
+ ]
+}

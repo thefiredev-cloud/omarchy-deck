@@ -1,0 +1,12 @@
+[Unit]
+Description=Pixel Deck coast surf feed (Cabo to the Columbia River; keyless public sources; writes ~/.meshvault/status/house-feeds/surf-coast.json and surf-coast/<region>.json)
+After=network-online.target
+
+[Service]
+Slice=deckwork.slice
+Type=oneshot
+ExecStart=/usr/bin/python3 %h/ops/bin/deck-feed-surf-coast
+TimeoutStartSec=300
+Nice=10
+IOSchedulingClass=idle
+MemoryMax=1G

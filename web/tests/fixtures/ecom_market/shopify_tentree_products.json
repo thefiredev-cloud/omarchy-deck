@@ -1,0 +1,168 @@
+{
+ "products": [
+  {
+   "id": 8143575646394,
+   "title": "Kessler Sweater",
+   "handle": "kessler-sweater-warm-oak-heather-fade",
+   "vendor": "tentree",
+   "product_type": "Womens",
+   "variants": [
+    {
+     "id": 44905224372410,
+     "title": "WARM OAK HEATHER FADE / XS",
+     "price": "58.80",
+     "compare_at_price": "98.00",
+     "available": true,
+     "sku": "TCW6319-5805-XS"
+    },
+    {
+     "id": 44905224405178,
+     "title": "WARM OAK HEATHER FADE / S",
+     "price": "58.80",
+     "compare_at_price": "98.00",
+     "available": false,
+     "sku": "TCW6319-5805-S"
+    },
+    {
+     "id": 44905224437946,
+     "title": "WARM OAK HEATHER FADE / M",
+     "price": "58.80",
+     "compare_at_price": "98.00",
+     "available": false,
+     "sku": "TCW6319-5805-M"
+    },
+    {
+     "id": 44905224470714,
+     "title": "WARM OAK HEATHER FADE / L",
+     "price": "58.80",
+     "compare_at_price": "98.00",
+     "available": false,
+     "sku": "TCW6319-5805-L"
+    }
+   ]
+  },
+  {
+   "id": 8143563292858,
+   "title": "TreeBlend Winslow T-Shirt",
+   "handle": "winslow-t-shirt-deep-burgundy-heather",
+   "vendor": "tentree",
+   "product_type": "Womens",
+   "variants": [
+    {
+     "id": 44905162735802,
+     "title": "DEEP BURGUNDY HEATHER / XS",
+     "price": "36.00",
+     "compare_at_price": "45.00",
+     "available": false,
+     "sku": "TCW2455-5597-XS"
+    },
+    {
+     "id": 44905162768570,
+     "title": "DEEP BURGUNDY HEATHER / S",
+     "price": "36.00",
+     "compare_at_price": "45.00",
+     "available": false,
+     "sku": "TCW2455-5597-S"
+    },
+    {
+     "id": 44905162801338,
+     "title": "DEEP BURGUNDY HEATHER / M",
+     "price": "36.00",
+     "compare_at_price": "45.00",
+     "available": true,
+     "sku": "TCW2455-5597-M"
+    },
+    {
+     "id": 44905162834106,
+     "title": "DEEP BURGUNDY HEATHER / L",
+     "price": "36.00",
+     "compare_at_price": "45.00",
+     "available": false,
+     "sku": "TCW2455-5597-L"
+    }
+   ]
+  },
+  {
+   "id": 8217247973562,
+   "title": "Sasquatch T-Shirt",
+   "handle": "sasquatch-t-shirt-rustic-yellow-heather-dog-walk-midnight-blue",
+   "vendor": "tentree",
+   "product_type": "Mens",
+   "variants": [
+    {
+     "id": 45188265246906,
+     "title": "RUSTIC YELLOW HEATHER DOG WALK MIDNIGHT BLUE / S",
+     "price": "36.00",
+     "compare_at_price": "45.00",
+     "available": false,
+     "sku": "TCM5755-5885-S"
+    },
+    {
+     "id": 45188265279674,
+     "title": "RUSTIC YELLOW HEATHER DOG WALK MIDNIGHT BLUE / M",
+     "price": "36.00",
+     "compare_at_price": "45.00",
+     "available": false,
+     "sku": "TCM5755-5885-M"
+    },
+    {
+     "id": 45188265312442,
+     "title": "RUSTIC YELLOW HEATHER DOG WALK MIDNIGHT BLUE / L",
+     "price": "36.00",
+     "compare_at_price": "45.00",
+     "available": false,
+     "sku": "TCM5755-5885-L"
+    },
+    {
+     "id": 45188265345210,
+     "title": "RUSTIC YELLOW HEATHER DOG WALK MIDNIGHT BLUE / XL",
+     "price": "36.00",
+     "compare_at_price": "45.00",
+     "available": true,
+     "sku": "TCM5755-5885-XL"
+    }
+   ]
+  },
+  {
+   "id": 8106124116154,
+   "title": "Seaforestation Logo T-Shirt",
+   "handle": "seaforestation-logo-t-shirt-deep-coral-sea-blue",
+   "vendor": "tentree",
+   "product_type": "Mens",
+   "variants": [
+    {
+     "id": 44740192764090,
+     "title": "DEEP CORAL SEA BLUE / S",
+     "price": "27.00",
+     "compare_at_price": "45.00",
+     "available": false,
+     "sku": "TCM6150-5426-S"
+    },
+    {
+     "id": 44740192796858,
+     "title": "DEEP CORAL SEA BLUE / M",
+     "price": "27.00",
+     "compare_at_price": "45.00",
+     "available": false,
+     "sku": "TCM6150-5426-M"
+    },
+    {
+     "id": 44740192829626,
+     "title": "DEEP CORAL SEA BLUE / L",
+     "price": "27.00",
+     "compare_at_price": "45.00",
+     "available": false,
+     "sku": "TCM6150-5426-L"
+    },
+    {
+     "id": 44740192862394,
+     "title": "DEEP CORAL SEA BLUE / XL",
+     "price": "27.00",
+     "compare_at_price": "45.00",
+     "available": false,
+     "sku": "TCM6150-5426-XL"
+    }
+   ]
+  }
+ ]
+}

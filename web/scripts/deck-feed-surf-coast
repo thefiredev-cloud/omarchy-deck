@@ -1,0 +1,18 @@
+#!/usr/bin/env python3
+"""Coast surf feed -> house-feeds/surf-coast.json and house-feeds/surf-coast/<region>.json.
+
+Cabo San Lucas to the Columbia River: 246 spots in 14 regions, every reporting buoy, water temperature by
+latitude, tides and NWS surf alerts. Keyless public sources only. Rules: docs/surf-coast.md.
+
+  deck-feed-surf-coast              # the 30-minute run (observations; forecasts every 3 h; tides daily)
+  deck-feed-surf-coast --tier sat   # the daily satellite water temperature refresh (cache only)
+  DECK_FEED_DIR=/tmp/x deck-feed-surf-coast   # stage the output somewhere else
+"""
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+from surf_coast.collect import main  # noqa: E402
+
+if __name__ == "__main__":
+    sys.exit(main())

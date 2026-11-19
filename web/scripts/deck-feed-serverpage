@@ -1,0 +1,217 @@
+#!/usr/bin/env python3
+"""Server page: gateway health and local schedule metadata, never mailbox contents.
+
+Writes a private snapshot every two minutes. Install only through install-ops-feeds.
+No mail is sent. Failed reads retain the last rows with their original read time.
+"""
+import json
+import os
+from pathlib import Path
+import re
+import subprocess
+import tempfile
+import time
+from datetime import datetime
+import urllib.error
+import urllib.request
+
+HOME = Path.home()
+REFRESH = 120
+GATEWAY = 'http://127.0.0.1:8642/health'
+MAIL_TIMERS = {'reply-block': ('Reply drafts for the 09:00 send block', 'drafts'),
+               'leadgen-send': ('Lead outreach sender', 'send')}
+MAIL_WORD = re.compile(r'\b(e-?mail|mail|inbox|outreach)\b', re.I)
+
+
+def short(value, limit=160):
+    return re.sub(r'\s+', ' ', str(value or '')).strip()[:limit]
+
+
+def read_json(path):
+    with path.open(encoding='utf-8') as fh:
+        return json.load(fh)
+
+
+def schedule_fields(path, rows=False):
+    """Project fixed JSON paths in jq's streaming reader before Python decodes any value.
+
+    Reply threads and cron prompts are never returned to this process. No deck API,
+    authentication token or credential file is needed.
+    """
+    if rows:
+        select = '''select(length == 2) | select(
+          (. == [[], []]) or (. == [["jobs"], []]) or
+          (((.[0] | length) == 3 and .[0][0] == "jobs" and (.[0][1] | type) == "number" or
+            (.[0] | length) == 2 and (.[0][0] | type) == "number") and
+           (.[0][-1] == "name" or .[0][-1] == "schedule" or
+            .[0][-1] == "next_run_at" or .[0][-1] == "last_status")))'''
+    else:
+        select = '''select(length == 2 and (.[0] | length) == 1 and
+                    (.[0][0] == "date" or .[0][0] == "card_for"))'''
+    p = subprocess.run(['jq', '--stream', '-c', select, str(path)], capture_output=True,
+                       text=True, timeout=10, stdin=subprocess.DEVNULL)
+    if p.returncode:
+        raise ValueError('Schedule fields could not be read')
+    values = [json.loads(line) for line in p.stdout.splitlines()]
+    if not rows:
+        return {key[0]: value for key, value in values}
+    if not values:
+        raise ValueError('Cron schedule list not reported')
+    jobs = {}
+    for key, value in values:
+        if len(key) >= 2 and isinstance(key[-1], str) and isinstance(key[-2], int):
+            jobs.setdefault(key[-2], {})[key[-1]] = value
+    return list(jobs.values())
+
+
+def unit_props(unit, props):
+    p = subprocess.run(['systemctl', '--user', 'show', unit, '-p', ','.join(props), '--timestamp=unix'],
+                       capture_output=True, text=True, timeout=10, stdin=subprocess.DEVNULL)
+    if p.returncode:
+        raise OSError('systemd unit could not be read')
+    return dict(line.split('=', 1) for line in p.stdout.splitlines() if '=' in line)
+
+
+def epoch(value):
+    if not value:
+        return None
+    try:
+        return int(datetime.fromisoformat(str(value).replace('Z', '+00:00')).timestamp())
+    except (ValueError, TypeError, OverflowError):
+        return None
+
+
+def unix_prop(value):
+    m = re.fullmatch(r'@(\d+)(?:\.\d+)?', value or '')
+    return int(m[1]) if m else None
+
+
+def unknown(reason):
+    return {'ok': None, 'state': 'unknown', 'reason': reason, 'platforms_up': None,
+            'platforms_on': None, 'reply_ms': None, 'restarts': None, 'since': None,
+            'up': [], 'off': [], 'down': [], 'checks_failed': []}
+
+
+def gateway():
+    req = urllib.request.Request(GATEWAY)
+    start = time.monotonic()
+    try:
+        with urllib.request.urlopen(req, timeout=5) as response:
+            d = json.load(response)
+        if not isinstance(d, dict) or d.get('status') not in ('ok', 'error', 'degraded', 'unhealthy'):
+            raise ValueError('health status not reported')
+    except (urllib.error.URLError, OSError, ValueError, TypeError, AttributeError):
+        return unknown('Gateway health could not be read')
+    ms = round((time.monotonic() - start) * 1000)
+    # /health is the deck's existing public contract: status only. Detailed platforms
+    # and readiness need owner approval and are not collected or retained.
+    g = unknown('')
+    g.pop('reason')
+    g.update(ok=d['status'] == 'ok', state='running' if d['status'] == 'ok' else 'degraded', reply_ms=ms)
+    try:
+        unit = unit_props('hermes-gateway.service', ['NRestarts', 'ActiveEnterTimestamp'])
+        rs = unit.get('NRestarts', '')
+        g['restarts'] = int(rs) if rs.isdigit() else None
+        g['since'] = unix_prop(unit.get('ActiveEnterTimestamp'))
+    except (OSError, subprocess.TimeoutExpired):
+        pass
+    if g['restarts'] is None:
+        g['restarts_reason'] = 'Gateway service restart count not reported'
+    return g
+
+
+def mail(previous):
+    items, failures = [], []
+    now = int(time.time())
+    for unit, (label, kind) in MAIL_TIMERS.items():
+        try:
+            p = unit_props(unit + '.timer', ['LoadState', 'ActiveState', 'NextElapseUSecRealtime'])
+            if p.get('LoadState') == 'not-found':
+                continue
+            if p.get('LoadState') != 'loaded':
+                raise ValueError('timer state missing')
+            if p.get('ActiveState') == 'active':
+                at = unix_prop(p.get('NextElapseUSecRealtime'))
+                if at is None:
+                    raise ValueError('next run missing')
+                if at >= now:
+                    items.append({'name': label, 'at': at, 'kind': kind})
+        except (OSError, subprocess.TimeoutExpired, ValueError):
+            failures.append('A local mail timer could not be read')
+    try:
+        rb = schedule_fields(HOME / '.meshvault/status/deck/replyblock.json')
+        # A dated card is not a recurring send: never invent a tomorrow run from yesterday's card.
+        day, clock = rb.get('date'), rb.get('card_for')
+        if day and clock:
+            at = epoch(str(day) + 'T' + str(clock))
+            if at is None:
+                raise ValueError('invalid reply block date')
+            if at >= now:
+                items.append({'name': 'Your reply send block', 'at': at, 'kind': 'send'})
+    except (OSError, ValueError, AttributeError, subprocess.TimeoutExpired):
+        failures.append('Reply block schedule could not be read')
+    try:
+        jobs = schedule_fields(HOME / '.hermes/cron/jobs.json', rows=True)
+        for job in jobs:
+            if not MAIL_WORD.search(str(job.get('name') or '')):
+                continue
+            # Only the projected scheduler facts are consumed. Without enabled/state,
+            # do not claim to know how many jobs are paused.
+            if job.get('last_status') == 'paused':
+                continue
+            at = epoch(job.get('next_run_at'))
+            if at is None:
+                failures.append('Mail cron next run time unreadable')
+                continue
+            if at and at >= now:
+                items.append({'name': short(job.get('name'), 120), 'at': at, 'kind': 'cron'})
+    except (OSError, ValueError, subprocess.TimeoutExpired):
+        failures.append('Mail cron schedule could not be read')
+    items.sort(key=lambda row: row['at'])
+    result = {'next': items[0] if items else None, 'items': items, 'read_at': now}
+    if failures:
+        # Only known fields survive, including when an old branch's snapshot contained extra private data.
+        if isinstance(previous, dict) and isinstance(previous.get('items'), list):
+            def safe_item(row):
+                return {k: row.get(k) for k in ('name', 'at', 'kind')} if isinstance(row, dict) else None
+            result = {'next': safe_item(previous.get('next')),
+                      'items': [safe_item(row) for row in previous['items'] if isinstance(row, dict)],
+                      'read_at': previous.get('read_at')}
+            result['stale'] = True
+        result['reason'] = '; '.join(dict.fromkeys(failures))
+    return result
+
+
+def main():
+    out = HOME / '.meshvault/status/deck/serverpage.json'
+    try:
+        previous = read_json(out)
+    except (OSError, ValueError):
+        previous = {}
+    previous = previous if isinstance(previous, dict) else {}
+    g, m = gateway(), mail(previous.get('mail'))
+    if g.get('ok') is None and isinstance(previous.get('gateway'), dict) and previous['gateway'].get('ok') is not None:
+        old = previous['gateway']
+        g = unknown('')
+        g.update({k: old.get(k) for k in ('ok', 'state', 'reply_ms', 'restarts', 'since', 'read_at')})
+        g.update(stale=True, reason='Gateway health could not be read; previous reading kept')
+    else:
+        g['read_at'] = int(time.time())
+    errors = [{'source': key, 'reason': part['reason']} for key, part in (('gateway', g), ('mail', m)) if part.get('reason')]
+    doc = {'t': int(time.time()), 'refresh': REFRESH, 'src': ['Hermes health', 'Local schedules'],
+           'gateway': g, 'mail': m, 'errors': errors}
+    out.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    fd, tmp = tempfile.mkstemp(prefix='serverpage.', suffix='.tmp', dir=out.parent)
+    try:
+        with os.fdopen(fd, 'w') as fh:
+            json.dump(doc, fh, ensure_ascii=False, separators=(',', ':'))
+        os.chmod(tmp, 0o600)
+        os.replace(tmp, out)
+    finally:
+        if os.path.exists(tmp):
+            os.unlink(tmp)
+    return 0
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

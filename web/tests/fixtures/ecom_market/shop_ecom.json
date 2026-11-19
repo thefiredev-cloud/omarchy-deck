@@ -1,0 +1,384 @@
+{
+ "v": 1,
+ "t": 1794703777,
+ "refresh": 3600,
+ "coverage": {
+  "sites": [
+   {
+    "site": "ebay",
+    "label": "eBay",
+    "kind": "marketplace",
+    "status": "never",
+    "state": "needs_keys",
+    "last_ok": null,
+    "n_24h": 0,
+    "t": null
+   },
+   {
+    "site": "amazon",
+    "label": "Amazon",
+    "kind": "retailer",
+    "status": "blocked",
+    "state": "blocked_by_site",
+    "last_ok": 1794637427,
+    "n_24h": 1608,
+    "t": 1794696833
+   },
+   {
+    "site": "walmart",
+    "label": "Walmart",
+    "kind": "retailer",
+    "status": "ok",
+    "state": "ok",
+    "last_ok": 1794703772,
+    "n_24h": 8107,
+    "t": 1794703772
+   },
+   {
+    "site": "bestbuy",
+    "label": "Best Buy",
+    "kind": "retailer",
+    "status": "ok",
+    "state": "ok",
+    "last_ok": 1794703592,
+    "n_24h": 385,
+    "t": 1794703592
+   },
+   {
+    "site": "costco",
+    "label": "Costco",
+    "kind": "retailer",
+    "status": "blocked",
+    "state": "blocked_by_site",
+    "last_ok": 1792449883,
+    "n_24h": 0,
+    "t": 1794673617
+   },
+   {
+    "site": "newegg",
+    "label": "Newegg",
+    "kind": "retailer",
+    "status": "ok",
+    "state": "ok",
+    "last_ok": 1794703621,
+    "n_24h": 3171,
+    "t": 1794703621
+   },
+   {
+    "site": "craigslist",
+    "label": "Craigslist",
+    "kind": "marketplace",
+    "status": "ok",
+    "state": "ok",
+    "last_ok": 1794703596,
+    "n_24h": 102,
+    "t": 1794703596
+   },
+   {
+    "site": "poshmark",
+    "label": "Poshmark",
+    "kind": "marketplace",
+    "status": "ok",
+    "state": "ok",
+    "last_ok": 1794703593,
+    "n_24h": 1040,
+    "t": 1794703593
+   },
+   {
+    "site": "backmarket",
+    "label": "Back Market",
+    "kind": "marketplace",
+    "status": "blocked",
+    "state": "blocked_by_site",
+    "last_ok": 1794637225,
+    "n_24h": 126,
+    "t": 1794640451
+   },
+   {
+    "site": "gamestop",
+    "label": "GameStop",
+    "kind": "retailer",
+    "status": "ok",
+    "state": "ok",
+    "last_ok": 1794703596,
+    "n_24h": 0,
+    "t": 1794703596
+   },
+   {
+    "site": "microcenter",
+    "label": "Micro Center",
+    "kind": "retailer",
+    "status": "blocked",
+    "state": "blocked_by_site",
+    "last_ok": 1791292519,
+    "n_24h": 0,
+    "t": 1794696938
+   },
+   {
+    "site": "macys",
+    "label": "Macy's",
+    "kind": "retailer",
+    "status": "stale",
+    "state": "blocked_by_site",
+    "last_ok": 1793611950,
+    "n_24h": 0,
+    "t": 1793767997
+   },
+   {
+    "site": "offerup",
+    "label": "OfferUp",
+    "kind": "marketplace",
+    "status": "ok",
+    "state": "ok",
+    "last_ok": 1794703695,
+    "n_24h": 613,
+    "t": 1794703695
+   },
+   {
+    "site": "facebook-marketplace",
+    "label": "Facebook Marketplace",
+    "kind": "marketplace",
+    "status": "ok",
+    "state": "ok",
+    "last_ok": 1794703699,
+    "n_24h": 602,
+    "t": 1794703699
+   }
+  ]
+ },
+ "watch": [
+  {
+   "slug": "rtx-4080",
+   "query": "rtx 4080",
+   "category": "computer",
+   "t": 1794703601,
+   "n": 26,
+   "sites_ok": 6,
+   "median": 900.0,
+   "chg7": -0.1429,
+   "chg30": null,
+   "history_days": 10,
+   "spark": [
+    905.8,
+    1150.0,
+    null,
+    null,
+    1050.0,
+    1050.0,
+    949.99,
+    900.0,
+    905.81,
+    900.0,
+    900.0,
+    900.0
+   ],
+   "best": {
+    "site": "newegg",
+    "price": 879.99,
+    "url": "https://www.newegg.com/gigabyte-gv-n4080aorusx-w-16gd-geforce-rtx-4080-16gb-graphics-card-liquid-cooler/p/N82E16814932558T",
+    "condition": "refurbished"
+   },
+   "by_site": [
+    {
+     "site": "newegg",
+     "median": 899.99,
+     "min": 879.99,
+     "n": 16,
+     "t": 1794703493
+    },
+    {
+     "site": "facebook-marketplace",
+     "median": 1200.0,
+     "min": 900.0,
+     "n": 5,
+     "t": 1794703601
+    },
+    {
+     "site": "offerup",
+     "median": 1400.0,
+     "min": 1100.0,
+     "n": 5,
+     "t": 1794703599
+    },
+    {
+     "site": "amazon",
+     "median": null,
+     "min": null,
+     "n": 0,
+     "t": 1794637033
+    },
+    {
+     "site": "backmarket",
+     "median": null,
+     "min": null,
+     "n": 0,
+     "t": 1794637163
+    },
+    {
+     "site": "craigslist",
+     "median": null,
+     "min": null,
+     "n": 0,
+     "t": 1794703493
+    }
+   ]
+  },
+  {
+   "slug": "dgx-spark",
+   "query": "dgx spark",
+   "category": "computer",
+   "t": 1794703634,
+   "n": 3,
+   "sites_ok": 6,
+   "median": 4999.99,
+   "chg7": 0.0999,
+   "chg30": null,
+   "history_days": 10,
+   "spark": [
+    5499.5,
+    5499.5,
+    null,
+    null,
+    4999.99,
+    4999.99,
+    4999.99,
+    4999.99,
+    4999.99,
+    4999.99,
+    4999.99,
+    5499.5
+   ],
+   "best": null,
+   "by_site": [
+    {
+     "site": "newegg",
+     "median": 4999.0,
+     "min": 4999.0,
+     "n": 1,
+     "t": 1794703528
+    },
+    {
+     "site": "amazon",
+     "median": 4999.99,
+     "min": 4999.99,
+     "n": 1,
+     "t": 1794637069
+    },
+    {
+     "site": "craigslist",
+     "median": 6000.0,
+     "min": 6000.0,
+     "n": 1,
+     "t": 1794703530
+    },
+    {
+     "site": "bestbuy",
+     "median": null,
+     "min": null,
+     "n": 0,
+     "t": 1794703493
+    },
+    {
+     "site": "facebook-marketplace",
+     "median": null,
+     "min": null,
+     "n": 0,
+     "t": 1794703634
+    },
+    {
+     "site": "offerup",
+     "median": null,
+     "min": null,
+     "n": 0,
+     "t": 1794703631
+    }
+   ]
+  }
+ ],
+ "movers": [
+  {
+   "slug": "rtx-5080",
+   "query": "rtx 5080",
+   "chg7": -0.2658,
+   "dir": "down",
+   "kind": "under_median",
+   "site": "facebook-marketplace",
+   "title": "\ud83d\udd25 ASUS PRIME RTX 5080 16GB OC Edition | BRAND NEW | $1,900 \ud83d\udd25",
+   "price": 1900.0,
+   "ref": 2588.0,
+   "url": "https://www.facebook.com/marketplace/item/4245471885754703/",
+   "condition": null,
+   "t": 1794703699
+  },
+  {
+   "slug": "rtx-5090",
+   "query": "rtx 5090",
+   "chg7": -0.2587,
+   "dir": "down",
+   "kind": "under_median",
+   "site": "poshmark",
+   "title": "ZOTAC GAMING GeForce RTX 5090 AMP Extreme Infinit PayPaI GS ONLY!",
+   "price": 2500.0,
+   "ref": 3372.53,
+   "url": "https://poshmark.com/listing/ZOTAC-GAMING-GeForce-RTX-5090-AMP-Extreme-Infinit-PayPaI-GS-ONLY-6af5fb394765b059944c6aac",
+   "condition": "used",
+   "t": 1794703593
+  },
+  {
+   "slug": "rtx-5080",
+   "query": "rtx 5080",
+   "chg7": -0.1889,
+   "dir": "down",
+   "kind": "under_median",
+   "site": "facebook-marketplace",
+   "title": "GIGABYTE NVIDIA GeForce RTX 5080 WINDFORCE OC SFF 16GB DLSS 4 RT",
+   "price": 2099.0,
+   "ref": 2588.0,
+   "url": "https://www.facebook.com/marketplace/item/2271401123431408/",
+   "condition": null,
+   "t": 1794703699
+  },
+  {
+   "slug": "fishing-crankbait-lure",
+   "query": "fishing crankbait lure",
+   "chg7": -0.2236,
+   "dir": "down",
+   "kind": "under_median",
+   "site": "walmart",
+   "title": "Rebel Crickhopper Matte Brown Fishing Lure - Multi-Species Topwater Crankbait",
+   "price": 6.96,
+   "ref": 8.96,
+   "url": "https://www.walmart.com/ip/Rebel-Crickhopper-Matte-Brown-Fishing-Lure-Multi-Species-Topwater-Crankbait/11156308804",
+   "condition": "new",
+   "t": 1794703600
+  },
+  {
+   "slug": "pellet-grill",
+   "query": "pellet grill",
+   "chg7": -0.201,
+   "dir": "down",
+   "kind": "drop",
+   "site": "walmart",
+   "title": "Traeger Pellet Grill, Woodridge 860 Sq Inch Wood Pellet Grill with Wi-Fi Connectivity, Black",
+   "price": 799.0,
+   "ref": 999.99,
+   "url": "https://www.walmart.com/ip/Traeger-Pellet-Grills-Woodridge-Grill/18755269286",
+   "condition": "new",
+   "t": 1794703529
+  },
+  {
+   "slug": "rtx-5080",
+   "query": "rtx 5080",
+   "chg7": -0.15,
+   "dir": "down",
+   "kind": "drop",
+   "site": "facebook-marketplace",
+   "title": "Gigabyte GeForce RTX 5080 Aero OC SFF 16G Graphics Card",
+   "price": 1700.0,
+   "ref": 2000.0,
+   "url": "https://www.facebook.com/marketplace/item/1854163485611770/",
+   "condition": null,
+   "t": 1794703699
+  }
+ ]
+}

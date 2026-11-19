@@ -1,0 +1,108 @@
+{
+ "feed": "travel-deals",
+ "generated_at": "2026-10-30T15:00:00Z",
+ "sources": [
+  {
+   "name": "Google Flights",
+   "url": "https://www.google.com/travel/flights",
+   "fetched_at": "2026-10-30T15:00:00Z"
+  },
+  {
+   "name": "Airline sale pages",
+   "url": "https://www.alaskaair.com/deals",
+   "fetched_at": "2026-10-30T15:00:00Z"
+  }
+ ],
+ "items": [
+  {
+   "id": "f-ath",
+   "rank": 1,
+   "kind": "flight",
+   "category": "positioning",
+   "title": "LAX to Athens via JFK, 2 tickets",
+   "subtitle": "LAX-JFK $129 + JFK-ATH $498, overnight at JFK",
+   "price": 627,
+   "currency": "USD",
+   "baseline_price": 782,
+   "savings": 155,
+   "savings_pct": 19.8,
+   "location": "ATH",
+   "route": "LAX-ATH",
+   "cabin": "economy",
+   "protected": false,
+   "risk": "Separate tickets: leave a long layover at JFK.",
+   "source_url": "https://www.google.com/travel/flights",
+   "as_of": "2026-10-30T15:00:00Z"
+  },
+  {
+   "id": "f-lis",
+   "rank": 2,
+   "kind": "flight",
+   "category": "normal",
+   "title": "LAX to Lisbon nonstop",
+   "subtitle": "TAP Air Portugal, 3 dates in January",
+   "price": 489,
+   "currency": "USD",
+   "baseline_price": 640,
+   "savings": 151,
+   "savings_pct": 23.6,
+   "location": "LIS",
+   "route": "LAX-LIS",
+   "cabin": "economy",
+   "protected": true,
+   "risk": null,
+   "source_url": "https://www.google.com/travel/flights",
+   "as_of": "2026-10-30T15:00:00Z"
+  },
+  {
+   "id": "h-tyo",
+   "rank": 3,
+   "kind": "hotel",
+   "category": "hotel_value",
+   "title": "Shinjuku 4-star, 5 nights",
+   "subtitle": "Rated 8.9, near the station",
+   "price": 142,
+   "currency": "USD",
+   "baseline_price": 198,
+   "savings": 56,
+   "savings_pct": 28.3,
+   "location": "Tokyo",
+   "route": null,
+   "protected": null,
+   "risk": null,
+   "source_url": "https://www.google.com/travel/hotels",
+   "as_of": "2026-10-30T15:00:00Z"
+  },
+  {
+   "id": "s-alaska",
+   "rank": 4,
+   "kind": "sale",
+   "category": "airline_sale",
+   "title": "Alaska Airlines fall sale",
+   "subtitle": "West Coast one-ways from $59, book by Nov 4",
+   "price": 59,
+   "currency": "USD",
+   "baseline_price": null,
+   "savings": null,
+   "savings_pct": null,
+   "location": "West Coast",
+   "route": null,
+   "protected": null,
+   "risk": null,
+   "source_url": "https://www.alaskaair.com/deals",
+   "as_of": "2026-10-30T15:00:00Z"
+  }
+ ],
+ "summary": {
+  "LAX-ATH": {
+   "best_normal": 782,
+   "best_combo": 627
+  }
+ },
+ "errors": [
+  {
+   "source": "kayak",
+   "error": "site blocks automated search, not bypassed"
+  }
+ ]
+}

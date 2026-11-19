@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "rule": "The honest source count is distinct datasets, not plugin files. Plugins that read files of one published dataset (one product of one publisher) share an entry below; a plugin not listed is its own dataset, named by its SOURCE name and publisher. Geography helpers (`geo`) and the Kodros listings collector (`not_counted`) never count. Collected counts: a dataset counts toward each side (residential, commercial) one of its plugins sits on, so the two sides can add up to more than the total. A dataset or publisher takes the best status of its plugins (ok, then stale, needs_key, unavailable). The number reported to the owner is datasets used (see used_rule).",
+  "used_rule": {
+    "text": "Main 2026-11-14: a loaded dataset counts toward a side only if that side uses it: at least one of its fields is a member of one of that side's metrics, an input of one of that side's scores (or of the rental grade, residential), or a catalog field shown on the ZIP sheet (fields.json shown has zip) whose catalog group belongs to that side. A metric, derived field or normalizer input that a used key depends on is used too. The plugin's SOURCE side is a hint, not the count. A loaded dataset with a plugin on a side that the side does not use is listed as collected, not used.",
+    "score_side": {"h_score": "residential", "rental_grade": "residential", "c_score": "commercial",
+                   "retail_score": "commercial", "office_score": "commercial", "industrial_score": "commercial",
+                   "multifamily_score": "commercial"},
+    "sheet_side_by_group": {"commercial": "commercial", "market": "residential", "people": "residential",
+                            "risk": "residential", "cost": "residential"}
+  },
+  "datasets": {
+    "hud_lihtc": {"name": "HUD Low-Income Housing Tax Credit database", "publisher": "US Department of Housing and Urban Development",
+                  "plugins": ["hud_lihtc", "lihtc_expiring"]},
+    "hud_fha_mf_loans": {"name": "HUD insured multifamily mortgages (active and terminated)", "publisher": "US Department of Housing and Urban Development",
+                         "plugins": ["fha_mf_endorsements", "fha_mf_maturity"]},
+    "fdic_call_reports": {"name": "FDIC bank call report financials", "publisher": "Federal Deposit Insurance Corporation",
+                          "plugins": ["fdic_call_cre", "fdic_state_cre"]},
+    "census_hvs": {"name": "Census Housing Vacancies and Homeownership (states and 75 largest metros)", "publisher": "US Census Bureau",
+                   "plugins": ["census_hvs_state", "census_hvs_metro"]},
+    "census_bps": {"name": "Census Building Permits Survey", "publisher": "US Census Bureau",
+                   "plugins": ["census_bps_county", "census_bps_metro", "census_bps_state"]},
+    "bls_ces_sm": {"name": "BLS Current Employment Statistics, State and Metro Area", "publisher": "US Bureau of Labor Statistics",
+                   "plugins": ["bls_ces_state", "bls_ces_metro"]},
+    "census_acs1": {"name": "Census American Community Survey 1-year (metros and states)", "publisher": "US Census Bureau",
+                    "plugins": ["acs1_metro", "acs1_state"]},
+    "census_acs5": {"name": "Census American Community Survey 5-year (ZCTA)", "publisher": "US Census Bureau",
+                    "plugins": ["census_acs5", "acs5_housing_people", "acs5_multifamily_zcta"]},
+    "census_zbp": {"name": "Census ZIP Code Business Patterns", "publisher": "US Census Bureau",
+                   "plugins": ["census_zbp", "census_zbp_detail", "census_zbp_prior", "zbp_detail"]},
+    "realtor_core": {"name": "Realtor.com residential listings core metrics by ZIP", "publisher": "Realtor.com",
+                     "plugins": ["realtor_zip", "realtor_zip_history", "realtor_hotness_zip", "realtor_metro", "realtor_state"]},
+    "redfin_data_center": {"name": "Redfin Data Center housing market by ZIP", "publisher": "Redfin",
+                           "plugins": ["redfin_zip_market", "redfin_zip_supply_signals", "redfin_mf_zip", "redfin_metro_market", "redfin_state_market"]},
+    "fhfa_hpi": {"name": "FHFA House Price Index (ZIP5, ZIP3 and tract tables)", "publisher": "Federal Housing Finance Agency",
+                 "plugins": ["fhfa_zip5", "fhfa_hpi_zip3", "fhfa_hpi_tract", "fred_state_housing"]},
+    "lehd_lodes": {"name": "LEHD Origin-Destination Employment Statistics (residence and workplace tables)",
+                   "publisher": "US Census Bureau", "plugins": ["lehd_lodes_rac", "lehd_lodes_wac"]},
+    "zillow_zhvi": {"name": "Zillow Home Value Index (all homes, tiers, home types, bedrooms)", "publisher": "Zillow Research",
+                    "plugins": ["zillow_zhvi", "zillow_zhvi_variants", "zillow_metro_market", "zillow_state_market"]},
+    "hud_fmr": {"name": "HUD Fair Market Rents (county and Small Area)", "publisher": "US Department of Housing and Urban Development",
+                "plugins": ["hud_safmr", "hud_fmr_county"]},
+    "hud_qct_dda": {"name": "HUD Qualified Census Tracts and Difficult Development Areas",
+                    "publisher": "US Department of Housing and Urban Development", "plugins": ["hud_qct_tract", "hud_dda_zcta"]},
+    "ipeds": {"name": "NCES Integrated Postsecondary Education Data System", "publisher": "National Center for Education Statistics",
+              "plugins": ["ipeds_hd", "ipeds_enroll"]}
+  },
+  "geo": ["census_gazetteer", "census_zcta_county", "census_cbsa", "geonames_postal", "usda_ruca_zip"],
+  "not_counted": {
+    "cre_listings_zip": "Kodros' own listings collector (asking prices from broker pages), not a published dataset"
+  },
+  "helper_files": {
+    "https://api.fdic.gov/banks/sod": "FDIC Summary of Deposits read by fdic_call_cre only to weight bank call reports by ZIP deposits",
+    "https://www2.census.gov/programs-surveys/popest/datasets/2020-%d/counties/totals/co-est%d-alldata.csv": "Census county population, a per-capita denominator for census_bfs_county and census_nes",
+    "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/%d_Gazetteer/%d_Gaz_counties_national.zip": "Census county gazetteer, county names and centroids"
+  },
+  "publishers": {
+    "US Census Bureau (OMB delineation)": "US Census Bureau",
+    "US Census Bureau, Longitudinal Employer-Household Dynamics": "US Census Bureau",
+    "HUD Office of Policy Development and Research": "US Department of Housing and Urban Development",
+    "US EPA": "US Environmental Protection Agency",
+    "CDC / ATSDR": "Centers for Disease Control and Prevention",
+    "FEMA": "Federal Emergency Management Agency",
+    "FEMA (OpenFEMA)": "Federal Emergency Management Agency",
+    "FEMA, National Flood Insurance Program (OpenFEMA)": "Federal Emergency Management Agency",
+    "FEMA / Oak Ridge National Laboratory": "Federal Emergency Management Agency",
+    "Board of Governors of the Federal Reserve System, via FRED": "Board of Governors of the Federal Reserve System",
+    "International Monetary Fund, via FRED": "International Monetary Fund",
+    "Federal Reserve Bank of St. Louis (FRED), Freddie Mac": "Freddie Mac",
+    "Realtor.com Economic Research": "Realtor.com"
+  }
+}

@@ -1,0 +1,75 @@
+{
+ "object": "list",
+ "total_cards": 32631,
+ "has_more": true,
+ "data": [
+  {
+   "object": "card",
+   "id": "fc817e07-c1f3-469f-9cf7-0945dea7400f",
+   "oracle_id": "6ad8011d-3471-4369-9d68-b264cc027487",
+   "name": "Sol Ring",
+   "edhrec_rank": 1,
+   "prices": {
+    "usd": "0.91",
+    "usd_foil": null,
+    "usd_etched": null,
+    "eur": "1.01",
+    "eur_foil": null,
+    "tix": "0.02"
+   },
+   "scryfall_uri": "https://scryfall.com/card/trc/499/sol-ring?utm_source=api",
+   "tcgplayer_id": 726040
+  },
+  {
+   "object": "card",
+   "id": "a73297d2-580c-4174-a427-265f6916d09f",
+   "oracle_id": "0895c9b7-ae7d-4bb3-af17-3b75deb50a25",
+   "name": "Command Tower",
+   "edhrec_rank": 2,
+   "prices": {
+    "usd": "0.28",
+    "usd_foil": null,
+    "usd_etched": null,
+    "eur": "0.25",
+    "eur_foil": null,
+    "tix": "0.02"
+   },
+   "scryfall_uri": "https://scryfall.com/card/trc/521/command-tower?utm_source=api",
+   "tcgplayer_id": 726072
+  },
+  {
+   "object": "card",
+   "id": "795df2ee-fbfc-4961-852c-e3ec50cc52da",
+   "oracle_id": "0bc7f093-bef0-4f1a-852c-4b75ebf54838",
+   "name": "Arcane Signet",
+   "edhrec_rank": 3,
+   "prices": {
+    "usd": "0.25",
+    "usd_foil": null,
+    "usd_etched": null,
+    "eur": "0.46",
+    "eur_foil": null,
+    "tix": "0.02"
+   },
+   "scryfall_uri": "https://scryfall.com/card/trc/485/arcane-signet?utm_source=api",
+   "tcgplayer_id": 726031
+  },
+  {
+   "object": "card",
+   "id": "0a4a51a3-fb8b-4611-8f94-fbcab547423c",
+   "oracle_id": "27b047e3-0d41-45e2-98e9-9391d7923a1e",
+   "name": "Exotic Orchard",
+   "edhrec_rank": 9,
+   "prices": {
+    "usd": "0.28",
+    "usd_foil": null,
+    "usd_etched": null,
+    "eur": "0.26",
+    "eur_foil": null,
+    "tix": "0.04"
+   },
+   "scryfall_uri": "https://scryfall.com/card/trc/528/exotic-orchard?utm_source=api",
+   "tcgplayer_id": 726077
+  }
+ ]
+}

@@ -1,0 +1,17 @@
+#!/usr/bin/env python3
+"""Deck e-commerce market feed: macro strip, platform board, best sellers, movers, category price trends and the
+owner's watch list, from 25+ public sources. Writes ecom-market.json (mode 600) to $DECK_FEED_DIR or
+~/.meshvault/status/house-feeds. The package `ecom_market` sits beside this file (repo: scripts/, installed: ~/ops/lib)."""
+import os
+import sys
+
+HERE = os.path.dirname(os.path.realpath(__file__))
+for cand in (HERE, os.path.expanduser("~/ops/lib")):
+    if os.path.isdir(os.path.join(cand, "ecom_market")):
+        sys.path.insert(0, cand)
+        break
+
+from ecom_market.run import main  # noqa: E402
+
+if __name__ == "__main__":
+    sys.exit(main())

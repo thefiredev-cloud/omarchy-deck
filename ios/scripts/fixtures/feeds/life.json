@@ -1,0 +1,76 @@
+{
+ "feed": "life",
+ "generated_at": "2026-10-30T15:00:00Z",
+ "sources": [
+  {
+   "name": "EIA",
+   "url": "https://www.eia.gov/petroleum/gasdiesel/",
+   "fetched_at": "2026-10-30T15:00:00Z"
+  },
+  {
+   "name": "Zillow Research",
+   "url": "https://www.zillow.com/research/data/",
+   "fetched_at": "2026-10-30T15:00:00Z"
+  }
+ ],
+ "items": [
+  {
+   "kind": "gas",
+   "category": "gas",
+   "title": "California regular gas",
+   "subtitle": "US average $3.12",
+   "price": 4.91,
+   "currency": "USD",
+   "place": "California",
+   "detail": "Week of Oct 26, EIA",
+   "source_url": "https://www.eia.gov/petroleum/gasdiesel/",
+   "as_of": "2026-10-26"
+  },
+  {
+   "kind": "home",
+   "category": "home",
+   "title": "Dana Point typical home value",
+   "subtitle": "79 homes · Median list $2.23M · sale $1.86M · 55 days on market",
+   "price": 1680000,
+   "currency": "USD",
+   "place": "Dana Point, CA",
+   "source_url": "https://www.zillow.com/research/data/",
+   "as_of": "2026-09-30"
+  },
+  {
+   "kind": "job",
+   "category": "job",
+   "title": "Platform Engineer",
+   "subtitle": "Hybrid, Irvine",
+   "org": "Orange County employer",
+   "pay_min": 150000,
+   "pay_max": 185000,
+   "price": null,
+   "currency": null,
+   "place": "Irvine, CA",
+   "posted_at": "2026-10-29",
+   "source_url": "https://example.com/jobs/platform-engineer",
+   "as_of": "2026-10-29"
+  },
+  {
+   "kind": "trend",
+   "category": "trend",
+   "title": "Mortgage rate, 30-year fixed",
+   "subtitle": "Freddie Mac weekly survey",
+   "value": 6.21,
+   "delta_7d_pct": -1.4,
+   "delta_1y_pct": null,
+   "price": null,
+   "currency": null,
+   "source_url": "https://www.freddiemac.com/pmms",
+   "as_of": "2026-10-29"
+  }
+ ],
+ "sections": {},
+ "errors": [
+  {
+   "source": "redfin",
+   "error": "rate limited, retry next run"
+  }
+ ]
+}

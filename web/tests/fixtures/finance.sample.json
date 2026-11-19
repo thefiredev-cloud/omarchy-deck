@@ -1,0 +1,289 @@
+{
+ "v": 1,
+ "t": 1791025000,
+ "refresh": 3600,
+ "src": [
+  "finance-master ledger (SAMPLE fixture, fake round numbers)"
+ ],
+ "errors": [
+  {
+   "source": "empower",
+   "reason": "phone locked, needs you present"
+  }
+ ],
+ "sample": true,
+ "inventory": {
+  "installed": 185,
+  "finance_related": 14,
+  "covered": 6,
+  "src": "iphone-apps skills (SAMPLE)",
+  "t": 1790938600
+ },
+ "apps": [
+  {
+   "id": "chase",
+   "name": "Chase",
+   "bundle": null,
+   "kind": "bank",
+   "route": "iphone_screen",
+   "status": "ok",
+   "last_ok": 1791023200,
+   "age_s": 1800,
+   "values": {
+    "balance_usd": 12000,
+    "as_of": 1791023200,
+    "items": [
+     {
+      "label": "Checking",
+      "usd": 8000
+     },
+     {
+      "label": "Savings",
+      "usd": 4000
+     }
+    ]
+   }
+  },
+  {
+   "id": "schoolsfirst",
+   "name": "SchoolsFirst FCU",
+   "bundle": null,
+   "kind": "bank",
+   "route": "iphone_screen",
+   "status": "stale",
+   "last_ok": 1790917000,
+   "age_s": 108000,
+   "values": {
+    "balance_usd": 5000,
+    "as_of": 1790917000,
+    "items": [
+     {
+      "label": "Checking",
+      "usd": 5000
+     }
+    ]
+   }
+  },
+  {
+   "id": "blueprint",
+   "name": "Blueprint",
+   "bundle": null,
+   "kind": "bank",
+   "route": "iphone_screen",
+   "status": "never",
+   "last_ok": null,
+   "age_s": null,
+   "values": null
+  },
+  {
+   "id": "ibkr",
+   "name": "Interactive Brokers",
+   "bundle": null,
+   "kind": "brokerage",
+   "route": "api",
+   "status": "ok",
+   "last_ok": 1791024400,
+   "age_s": 600,
+   "values": {
+    "balance_usd": 250000,
+    "as_of": 1791024400,
+    "items": [
+     {
+      "label": "VTI",
+      "usd": 100000
+     },
+     {
+      "label": "VXUS",
+      "usd": 50000
+     },
+     {
+      "label": "BND",
+      "usd": 50000
+     },
+     {
+      "label": "Cash",
+      "usd": 50000
+     }
+    ]
+   }
+  },
+  {
+   "id": "empower",
+   "name": "Empower",
+   "bundle": null,
+   "kind": "brokerage",
+   "route": "iphone_screen",
+   "status": "needs_unlock",
+   "last_ok": null,
+   "age_s": null,
+   "values": null
+  },
+  {
+   "id": "coinbase",
+   "name": "Coinbase",
+   "bundle": null,
+   "kind": "crypto",
+   "route": "iphone_screen",
+   "status": "ok",
+   "last_ok": 1791024000,
+   "age_s": 1000,
+   "values": {
+    "balance_usd": 10000,
+    "as_of": 1791024000,
+    "items": [
+     {
+      "label": "BTC",
+      "usd": 7000
+     },
+     {
+      "label": "ETH",
+      "usd": 3000
+     }
+    ]
+   }
+  },
+  {
+   "id": "kraken",
+   "name": "Kraken",
+   "bundle": null,
+   "kind": "crypto",
+   "route": "api",
+   "status": "ok",
+   "last_ok": 1791024100,
+   "age_s": 900,
+   "values": {
+    "balance_usd": 5000,
+    "as_of": 1791024100,
+    "items": [
+     {
+      "label": "BTC",
+      "usd": 5000
+     }
+    ]
+   }
+  },
+  {
+   "id": "coinbase-wallet",
+   "name": "Coinbase Wallet",
+   "bundle": null,
+   "kind": "crypto",
+   "route": "iphone_screen",
+   "status": "needs_owner",
+   "last_ok": null,
+   "age_s": null,
+   "values": null
+  },
+  {
+   "id": "paypal",
+   "name": "PayPal",
+   "bundle": null,
+   "kind": "payments",
+   "route": "iphone_screen",
+   "status": "ok",
+   "last_ok": 1791022600,
+   "age_s": 2400,
+   "values": {
+    "balance_usd": 300,
+    "as_of": 1791022600,
+    "items": []
+   }
+  },
+  {
+   "id": "venmo",
+   "name": "Venmo",
+   "bundle": null,
+   "kind": "payments",
+   "route": "iphone_screen",
+   "status": "blocked",
+   "last_ok": null,
+   "age_s": null,
+   "values": null
+  },
+  {
+   "id": "apple-wallet",
+   "name": "Apple Wallet",
+   "bundle": null,
+   "kind": "wallet",
+   "route": "iphone_screen",
+   "status": "never",
+   "last_ok": null,
+   "age_s": null,
+   "values": null
+  },
+  {
+   "id": "turbotax",
+   "name": "TurboTax",
+   "bundle": null,
+   "kind": "tax",
+   "route": "iphone_screen",
+   "status": "never",
+   "last_ok": null,
+   "age_s": null,
+   "values": null
+  },
+  {
+   "id": "amazon",
+   "name": "Amazon",
+   "bundle": null,
+   "kind": "shopping",
+   "route": "iphone_screen",
+   "status": "ok",
+   "last_ok": 1791022000,
+   "age_s": 3000,
+   "values": {
+    "balance_usd": null,
+    "as_of": 1791022000,
+    "items": [
+     {
+      "label": "Orders, last 30 days",
+      "usd": 400
+     }
+    ]
+   }
+  },
+  {
+   "id": "best-buy",
+   "name": "Best Buy",
+   "bundle": null,
+   "kind": "shopping",
+   "route": "iphone_screen",
+   "status": "never",
+   "last_ok": null,
+   "age_s": null,
+   "values": null
+  },
+  {
+   "id": "ez-receipts",
+   "name": "EZ Receipts",
+   "bundle": null,
+   "kind": "receipts",
+   "route": "iphone_screen",
+   "status": "never",
+   "last_ok": null,
+   "age_s": null,
+   "values": null
+  },
+  {
+   "id": "simplefin",
+   "name": "SimpleFIN bridge",
+   "bundle": null,
+   "kind": "other",
+   "route": "api",
+   "status": "never",
+   "last_ok": null,
+   "age_s": null,
+   "values": null
+  }
+ ],
+ "totals": {
+  "net_usd": 282300,
+  "by_kind": {
+   "bank": 17000,
+   "brokerage": 250000,
+   "crypto": 15000,
+   "payments": 300
+  },
+  "apps_ok": 6,
+  "apps": 16
+ }
+}

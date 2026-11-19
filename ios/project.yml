@@ -1,0 +1,150 @@
+name: OmarchyDeck
+options:
+  bundleIdPrefix: net.meshchat
+  deploymentTarget:
+    iOS: "18.0"
+    watchOS: "11.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    DEVELOPMENT_TEAM: "" # set your own Apple Developer team ID to sign
+    CODE_SIGN_STYLE: Automatic
+    MARKETING_VERSION: "1.1"
+    CURRENT_PROJECT_VERSION: "37"
+fileGroups:
+  - OmarchyDeck.storekit
+targets:
+  OmarchyDeck:
+    type: application
+    platform: iOS
+    sources:
+      - path: OmarchyDeck
+        excludes:
+          - PrivacyInfo.xcprivacy
+      - path: OmarchyDeck/PrivacyInfo.xcprivacy
+        buildPhase: resources
+      - path: Shared
+        excludes:
+          - Fixtures/**
+    dependencies:
+      - target: OmarchyDeckWatch
+        embed: true
+    info:
+      path: OmarchyDeck/Info.plist
+      properties:
+        CFBundleDisplayName: Omarchy Deck
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSHumanReadableCopyright: "© 2026 thefiredev-cloud"
+        ITSAppUsesNonExemptEncryption: false
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        # Geist and Geist Mono (official release v1.9.2, SIL OFL 1.1: OmarchyDeck/Fonts/OFL-Geist.txt). Must match
+        # DeckFontFiles.all; DeckTokensTests checks both lists.
+        UIAppFonts:
+          - Geist-Bold.ttf
+          - Geist-Medium.ttf
+          - Geist-Regular.ttf
+          - Geist-SemiBold.ttf
+          - GeistMono-Medium.ttf
+          - GeistMono-Regular.ttf
+          - GeistMono-SemiBold.ttf
+        UIStatusBarHidden: true
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        # All four orientations and no UIRequiresFullScreen, so iPad Split View and Slide Over are available.
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        # HTTPS only. Private network/VPN access is optional and configured by the customer.
+        NSLocalNetworkUsageDescription: Omarchy Deck connects to the self-hosted deck server you choose.
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: net.meshchat.deck
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ENABLE_PREVIEWS: YES
+  OmarchyDeckWatch:
+    type: application
+    platform: watchOS
+    sources:
+      - path: OmarchyDeckWatch
+        excludes:
+          - PrivacyInfo.xcprivacy
+      - path: OmarchyDeckWatch/PrivacyInfo.xcprivacy
+        buildPhase: resources
+      - path: Shared
+        excludes:
+          - Fixtures/**
+    info:
+      path: OmarchyDeckWatch/Info.plist
+      properties:
+        CFBundleDisplayName: Deck
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSHumanReadableCopyright: "© 2026 thefiredev-cloud"
+        ITSAppUsesNonExemptEncryption: false
+        WKApplication: true
+        WKCompanionAppBundleIdentifier: net.meshchat.deck
+        WKRunsIndependentlyOfCompanionApp: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: net.meshchat.deck.watchkitapp
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        TARGETED_DEVICE_FAMILY: "4"
+        SKIP_INSTALL: YES
+  OmarchyDeckTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: OmarchyDeckTests
+    dependencies:
+      - target: OmarchyDeck
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: net.meshchat.deck.tests
+        GENERATE_INFOPLIST_FILE: YES
+  OmarchyDeckUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: OmarchyDeckUITests
+      - path: OmarchyDeck.storekit
+        buildPhase: resources
+    dependencies:
+      - target: OmarchyDeck
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: net.meshchat.deck.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: OmarchyDeck
+schemes:
+  OmarchyDeck:
+    build:
+      targets:
+        OmarchyDeck: all
+        OmarchyDeckTests: [test]
+        OmarchyDeckUITests: [test]
+    run:
+      config: Debug
+      storeKitConfiguration: OmarchyDeck.storekit
+    test:
+      config: Debug
+      storeKitConfiguration: OmarchyDeck.storekit
+      targets:
+        - OmarchyDeckTests
+        - OmarchyDeckUITests
+  OmarchyDeckWatch:
+    build:
+      targets:
+        OmarchyDeckWatch: all
+    run:
+      config: Debug

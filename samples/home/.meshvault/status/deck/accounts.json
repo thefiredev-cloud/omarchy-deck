@@ -1,0 +1,23 @@
+{
+ "t": 1795051391,
+ "refresh": 300,
+ "stale": false,
+ "src": "fixture (synthetic)",
+ "errors": [],
+ "onepassword": {
+  "hosts": []
+ },
+ "drives": [],
+ "apple": {
+  "mini_reachable": true,
+  "library": {},
+  "events_today": [],
+  "bills_due": []
+ },
+ "composio": null,
+ "mcp": {
+  "omp": null,
+  "hermes": null
+ },
+ "dev_auth": {}
+}

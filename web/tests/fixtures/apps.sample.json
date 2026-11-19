@@ -1,0 +1,12 @@
+{
+  "t": 1794708000,
+  "dell": {"ok": true, "why": "", "needs_setup": true},
+  "items": [
+    {"id": "uptime", "name": "Uptime", "host": "PC", "area": "Tools", "does": "Site and camera uptime", "status": "up", "why": "", "frame": true, "url": "https://pc-desktop.example.ts.net:9444/", "wake": false},
+    {"id": "deals", "name": "Deals", "host": "PC", "area": "Shop", "does": "Listings near home and fares", "status": "up", "why": "", "frame": false, "url": "https://pc-desktop.example.ts.net:10501/", "wake": false},
+    {"id": "hermes-webui", "name": "Hermes WebUI", "host": "PC", "area": "AI", "does": "Hermes chat on phone and tablet", "status": "sign-in", "why": "needs sign-in", "frame": true, "url": "https://pc-desktop.example.ts.net:8443/", "wake": false},
+    {"id": "almanac", "name": "Almanac", "host": "PC", "area": "Life", "does": "Your history, 2006 to now", "status": "asleep", "why": "wakes on request", "frame": false, "url": "https://pc-desktop.example.ts.net:10505/", "wake": true},
+    {"id": "comfyui", "name": "ComfyUI", "host": "PC", "area": "Make", "does": "Image workflows", "status": "down", "why": "no answer", "frame": false, "url": "https://pc-desktop.example.ts.net:10521/", "wake": false},
+    {"id": "kodros-console", "name": "Kodros Console", "host": "PC", "area": "Work", "does": "Console (this PC only)", "status": "off", "why": "not running", "frame": false, "url": null, "wake": false}
+  ]
+}

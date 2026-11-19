@@ -1,0 +1,155 @@
+
+000
+FZUS56 KMTR 150035
+SRFMTR
+
+NORTHERN AND CENTRAL CALIFORNIA SURF ZONE FORECAST
+NATIONAL WEATHER SERVICE SAN FRANCISCO BAY AREA
+435 PM PST Sat Nov 14 2026
+
+...Please check with your local authorities on potential beach closures...
+
+CAZ505-151400-
+SONOMA AND MARIN COUNTY COASTAL AREAS-
+435 PM PST Sat Nov 14 2026
+
+...COASTAL FLOOD ADVISORY THROUGH 6 PM THIS EVENING...
+...HIGH SURF WARNING THROUGH 4 AM SUNDAY...
+
+.SUNDAY...
+Surf Height...................Northwest Facing Beaches - 14 to 18 feet.
+                              South Facing Beaches - 6 to 9 feet.
+Thunderstorm Potential........None expected.
+Water Temperature.............Missing.
+Weather.......................Mostly cloudy with rain.
+High Temperature..............57-65.
+Wind..........................SW at 17 MPH becoming SW at 11 MPH.
+Tides.........................High 4.3 feet (MLLW) 04:47 AM PST.
+                              Low 3.5 feet (MLLW) 09:14 AM PST.
+                              High 4.8 feet (MLLW) 02:27 PM PST.
+                              Low 0.3 feet (MLLW) 09:39 PM PST.
+
+.MONDAY...
+Surf Height...................West Facing Beaches - 16 to 21 feet.
+                              South Facing Beaches - 5 to 8 feet.
+Thunderstorm Potential........None expected.
+Weather.......................Mostly cloudy with a chance of rain.
+High Temperature..............54-63.
+Wind..........................NW at 8 MPH.
+Tides.........................High 4.4 feet (MLLW) 05:33 AM PST.
+                              Low 3.3 feet (MLLW) 10:38 AM PST.
+                              High 4.5 feet (MLLW) 03:31 PM PST.
+                              Low 0.5 feet (MLLW) 10:32 PM PST.
+
+
+$$
+
+
+CAZ509-151400-
+SAN FRANCISCO AND SAN MATEO COUNTY COASTAL AREAS-
+435 PM PST Sat Nov 14 2026
+
+...COASTAL FLOOD ADVISORY THROUGH 6 PM THIS EVENING...
+...HIGH SURF WARNING THROUGH 4 AM SUNDAY...
+
+.SUNDAY...
+Surf Height...................Northwest Facing Beaches - 14 to 18 feet.
+                              South Facing Beaches - 6 to 10 feet.
+Thunderstorm Potential........None expected.
+Water Temperature.............Around 65 degrees.
+Weather.......................Mostly cloudy with a chance of rain.
+High Temperature..............58-65.
+Wind..........................SW at 19 MPH.
+Tides.........................High 4.3 feet (MLLW) 04:47 AM PST.
+                              Low 3.5 feet (MLLW) 09:14 AM PST.
+                              High 4.8 feet (MLLW) 02:27 PM PST.
+                              Low 0.3 feet (MLLW) 09:39 PM PST.
+
+.MONDAY...
+Surf Height...................Northwest Facing Beaches - 15 to 20 feet.
+                              South Facing Beaches - 6 to 10 feet.
+Thunderstorm Potential........None expected.
+Weather.......................Mostly cloudy with a chance of rain.
+High Temperature..............51-63.
+Wind..........................NW at 10 MPH.
+Tides.........................High 4.4 feet (MLLW) 05:33 AM PST.
+                              Low 3.3 feet (MLLW) 10:38 AM PST.
+                              High 4.5 feet (MLLW) 03:31 PM PST.
+                              Low 0.5 feet (MLLW) 10:32 PM PST.
+
+
+$$
+
+
+CAZ529-151400-
+SANTA CRUZ COUNTY COASTAL AREAS-
+435 PM PST Sat Nov 14 2026
+
+...COASTAL FLOOD ADVISORY THROUGH 6 PM THIS EVENING...
+...HIGH SURF WARNING THROUGH 4 AM SUNDAY...
+
+.SUNDAY...
+Surf Height...................Northwest Facing Beaches - 12 to 16 feet.
+                              Southwest Facing Beaches - 6 to 9 feet.
+Thunderstorm Potential........None expected.
+Water Temperature.............67 to 68 degrees.
+Weather.......................Mostly cloudy with a chance of rain.
+High Temperature..............54-65.
+Wind..........................S at 17 MPH becoming S at 21 MPH.
+Tides.........................High 3.8 feet (MLLW) 04:24 AM PST.
+                              Low 3.5 feet (MLLW) 07:41 AM PST.
+                              High 4.5 feet (MLLW) 01:12 PM PST.
+                              Low 0.3 feet (MLLW) 09:15 PM PST.
+
+.MONDAY...
+Surf Height...................Northwest Facing Beaches - 15 to 19 feet.
+                              South Facing Beaches - 6 to 10 feet.
+Thunderstorm Potential........None expected.
+Weather.......................Mostly cloudy with rain likely.
+High Temperature..............51-62.
+Wind..........................NW at 13 MPH.
+Tides.........................High 3.9 feet (MLLW) 05:04 AM PST.
+                              Low 3.4 feet (MLLW) 09:23 AM PST.
+                              High 4.1 feet (MLLW) 02:21 PM PST.
+                              Low 0.5 feet (MLLW) 10:04 PM PST.
+
+
+$$
+
+
+CAZ530-151400-
+MONTEREY BAY AND BIG SUR COASTAL AREAS-
+435 PM PST Sat Nov 14 2026
+
+...COASTAL FLOOD ADVISORY THROUGH 6 PM THIS EVENING...
+...HIGH SURF WARNING THROUGH 4 AM SUNDAY...
+
+.SUNDAY...
+Surf Height...................Northwest Facing Beaches - 9 to 13 feet.
+                              South Facing Beaches - 4 to 7 feet.
+Thunderstorm Potential........None expected.
+Water Temperature.............Around 59 degrees.
+Weather.......................Mostly cloudy.
+High Temperature..............62-68.
+Wind..........................SE at 12 MPH becoming SE at 17 MPH.
+Tides.........................High 3.8 feet (MLLW) 04:24 AM PST.
+                              Low 3.5 feet (MLLW) 07:41 AM PST.
+                              High 4.5 feet (MLLW) 01:12 PM PST.
+                              Low 0.3 feet (MLLW) 09:15 PM PST.
+
+.MONDAY...
+Surf Height...................Northwest Facing Beaches - 12 to 16 feet.
+                              South Facing Beaches - 5 to 8 feet.
+Thunderstorm Potential........None expected.
+Weather.......................Mostly cloudy with rain likely.
+High Temperature..............59-63.
+Wind..........................NW at 8 MPH.
+Tides.........................High 3.9 feet (MLLW) 05:04 AM PST.
+                              Low 3.4 feet (MLLW) 09:23 AM PST.
+                              High 4.1 feet (MLLW) 02:21 PM PST.
+                              Low 0.5 feet (MLLW) 10:04 PM PST.
+
+
+$$
+
+

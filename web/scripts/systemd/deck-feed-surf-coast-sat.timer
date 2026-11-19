@@ -1,0 +1,10 @@
+[Unit]
+Description=Refresh the coast surf feed's satellite water temperature once a day (MUR is published about 1.5 days behind)
+
+[Timer]
+OnCalendar=*-*-* 04:40
+Persistent=true
+RandomizedDelaySec=10min
+
+[Install]
+WantedBy=timers.target

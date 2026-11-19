@@ -1,0 +1,295 @@
+{
+"dataset": "v2",
+"part": "summary",
+"schema": 2,
+"generated_at": 1794711256,
+"us": {
+"zips": 39040,
+"pop": 334837551,
+"home_value": 370203.0,
+"value_trend_1y": 1.99,
+"typical_rent": 1724.0,
+"gross_yield": 5.56,
+"days_on_market": 49.0,
+"mortgage_rate": 7.11,
+"price_cuts": 27.0,
+"redfin_inventory_yoy": 13.63,
+"affordability": 27.97,
+"value_forecast_1y": 1.3,
+"h_score": 48.1,
+"rent_trend_1y": 2.59,
+"value_trend_5y": 20.92,
+"home_value_conf": 0.56,
+"value_trend_1y_conf": 0.24,
+"typical_rent_conf": 0.5,
+"gross_yield_conf": 0.5,
+"days_on_market_conf": 0.48,
+"mortgage_rate_conf": 0.06,
+"price_cuts_conf": 0.22,
+"affordability_conf": 0.15,
+"value_forecast_1y_conf": 0.38,
+"rent_trend_1y_conf": 0.48,
+"value_trend_5y_conf": 0.21,
+"home_value_n": 31021,
+"value_trend_1y_n": 33020,
+"typical_rent_n": 33043,
+"gross_yield_n": 31021,
+"days_on_market_n": 29232,
+"mortgage_rate_n": 33043,
+"price_cuts_n": 28973,
+"affordability_n": 31006,
+"value_forecast_1y_n": 21035,
+"rent_trend_1y_n": 6198,
+"value_trend_5y_n": 33017
+},
+"mortgage": {
+"rate_30y": 7.11,
+"as_of": "2026-11-12",
+"source": "FRED MORTGAGE30US (Freddie Mac Primary Mortgage Market Survey)"
+},
+"coverage": {
+"zips_total": 39228,
+"with_zhvi": 26265,
+"with_rent": 38602,
+"with_listings_stats": 29063,
+"with_acs": 33772,
+"with_fmr": 38601,
+"with_biz": 34954,
+"with_renter_share": 32819,
+"with_crime_proxy": 26471,
+"with_colleges": 39189,
+"with_schools": 39189,
+"graded": 21944
+},
+"scores": {
+"h_score": {
+"label": "Home investment score",
+"universe": 22959,
+"kept_name": true,
+"inputs": [
+{
+"key": "gross_yield",
+"weight": 0.2,
+"direction": "higher"
+},
+{
+"key": "value_trend_5y",
+"weight": 0.1,
+"direction": "higher"
+},
+{
+"key": "value_trend_1y",
+"weight": 0.05,
+"direction": "higher"
+},
+{
+"key": "value_forecast_1y",
+"weight": 0.05,
+"direction": "higher"
+},
+{
+"key": "rent_trend_1y",
+"weight": 0.05,
+"direction": "higher"
+},
+{
+"key": "days_on_market",
+"weight": 0.05,
+"direction": "lower"
+},
+{
+"key": "sale_to_list",
+"weight": 0.04,
+"direction": "higher"
+},
+{
+"key": "affordability",
+"weight": 0.08,
+"direction": "lower"
+},
+{
+"key": "property_tax_rate",
+"weight": 0.04,
+"direction": "lower"
+},
+{
+"key": "vacancy_rate",
+"weight": 0.04,
+"direction": "lower"
+},
+{
+"key": "migration",
+"weight": 0.06,
+"direction": "higher"
+},
+{
+"key": "jobs_trend",
+"weight": 0.06,
+"direction": "higher"
+},
+{
+"key": "safety",
+"weight": 0.05,
+"direction": "higher"
+},
+{
+"key": "climate_risk",
+"weight": 0.05,
+"direction": "lower"
+},
+{
+"key": "population",
+"weight": 0.02,
+"direction": "higher"
+},
+{
+"key": "schools",
+"weight": 0.04,
+"direction": "higher"
+},
+{
+"key": "insurance_cost",
+"weight": 0.02,
+"direction": "lower"
+}
+],
+"min_inputs": "present weight >= 0.6, at least 6 inputs, and gross_yield or affordability present",
+"conf_field": "h_conf",
+"scored": 22482
+}
+},
+"grade_method": {
+"factors": [
+{
+"key": "renter_share",
+"weight": 0.15,
+"zero": 20,
+"full": 50
+},
+{
+"key": "rent_to_income",
+"weight": 0.1,
+"zero": 40,
+"full": 25
+},
+{
+"key": "gross_yield",
+"weight": 0.2,
+"zero": 4,
+"full": 10
+},
+{
+"key": "rent_trend_1y",
+"weight": 0.05,
+"zero": -2,
+"full": 5
+},
+{
+"key": "value_trend_5y",
+"weight": 0.05,
+"zero": 0,
+"full": 40
+},
+{
+"key": "vacancy_rate",
+"weight": 0.05,
+"zero": 12,
+"full": 3
+},
+{
+"key": "jobs_trend",
+"weight": 0.05,
+"zero": -2,
+"full": 3
+},
+{
+"key": "migration",
+"weight": 0.05,
+"zero": 25,
+"full": 75
+},
+{
+"key": "safety",
+"weight": 0.1,
+"zero": 20,
+"full": 80
+},
+{
+"key": "schools",
+"weight": 0.05,
+"zero": 20,
+"full": 80
+},
+{
+"key": "college_enroll_5mi",
+"weight": 0.05,
+"zero": 0,
+"full": 10000
+},
+{
+"key": "eviction_filing_rate",
+"weight": 0.03,
+"zero": 10,
+"full": 1
+},
+{
+"key": "flood_risk",
+"weight": 0.04,
+"zero": 80,
+"full": 20
+},
+{
+"key": "broadband",
+"weight": 0.03,
+"zero": 70,
+"full": 95
+}
+],
+"grades": [
+[
+"A",
+70.0
+],
+[
+"B",
+55.0
+],
+[
+"C",
+40.0
+]
+],
+"min_pop": 1000,
+"required": [
+"gross_yield"
+],
+"caps": [
+{
+"key": "gross_yield",
+"below": 4.0,
+"max_grade": "D",
+"flag": "yield_below_4pct"
+},
+{
+"key": "gross_yield",
+"below": 5.5,
+"max_grade": "C",
+"flag": "yield_below_5_5pct"
+}
+],
+"min_coverage": 0.6,
+"a_min_coverage": 0.8,
+"low_conf_below": 0.8,
+"note": "Each factor scores 0 to 100 on a straight line between its zero and full values (clamped). Area score is the weighted mean of the factors present. Coverage is the share of total weight present; area_conf is coverage times the mean confidence of the present factors. Grade A >= 70, B >= 55, C >= 40, else D; a gross yield under 5.5% holds the grade at C and under 4% at D. No grade below population 1,000, without a gross yield or under coverage 0.6; an A needs coverage 0.8.",
+"graded": {
+"A": 63,
+"B": 2692,
+"C": 12814,
+"D": 6913,
+"ungraded": 16746
+}
+},
+"age": 259200,
+"refresh": 604800,
+"stale": false
+}

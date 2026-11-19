@@ -1,0 +1,3709 @@
+{
+  "version": 1,
+  "generated_at": "2026-10-22T05:58:15Z",
+  "source": "hyprctl binds -j",
+  "total_binds": 249,
+  "unresolved_count": 0,
+  "unresolved": [],
+  "pages": [
+    {
+      "id": "workspaces",
+      "title": "Workspaces",
+      "icon": "🗂️",
+      "count": 44,
+      "keys": [
+        {
+          "index": 39,
+          "label": "Toggle workspace layout",
+          "combo": "Super + L",
+          "mods": [
+            "Super"
+          ],
+          "key": "L",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 44,
+          "label": "Switch to workspace 1",
+          "combo": "Super + 1",
+          "mods": [
+            "Super"
+          ],
+          "key": "1",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 45,
+          "label": "Move window to workspace 1",
+          "combo": "Super + Shift + 1",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "1",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 46,
+          "label": "Move window silently to workspace 1",
+          "combo": "Super + Alt + Shift + 1",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "1",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 47,
+          "label": "Switch to workspace 2",
+          "combo": "Super + 2",
+          "mods": [
+            "Super"
+          ],
+          "key": "2",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 48,
+          "label": "Move window to workspace 2",
+          "combo": "Super + Shift + 2",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "2",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 49,
+          "label": "Move window silently to workspace 2",
+          "combo": "Super + Alt + Shift + 2",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "2",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 50,
+          "label": "Switch to workspace 3",
+          "combo": "Super + 3",
+          "mods": [
+            "Super"
+          ],
+          "key": "3",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 51,
+          "label": "Move window to workspace 3",
+          "combo": "Super + Shift + 3",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "3",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 52,
+          "label": "Move window silently to workspace 3",
+          "combo": "Super + Alt + Shift + 3",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "3",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 53,
+          "label": "Switch to workspace 4",
+          "combo": "Super + 4",
+          "mods": [
+            "Super"
+          ],
+          "key": "4",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 54,
+          "label": "Move window to workspace 4",
+          "combo": "Super + Shift + 4",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "4",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 55,
+          "label": "Move window silently to workspace 4",
+          "combo": "Super + Alt + Shift + 4",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "4",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 56,
+          "label": "Switch to workspace 5",
+          "combo": "Super + 5",
+          "mods": [
+            "Super"
+          ],
+          "key": "5",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 57,
+          "label": "Move window to workspace 5",
+          "combo": "Super + Shift + 5",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "5",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 58,
+          "label": "Move window silently to workspace 5",
+          "combo": "Super + Alt + Shift + 5",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "5",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 59,
+          "label": "Switch to workspace 6",
+          "combo": "Super + 6",
+          "mods": [
+            "Super"
+          ],
+          "key": "6",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 60,
+          "label": "Move window to workspace 6",
+          "combo": "Super + Shift + 6",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "6",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 61,
+          "label": "Move window silently to workspace 6",
+          "combo": "Super + Alt + Shift + 6",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "6",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 62,
+          "label": "Switch to workspace 7",
+          "combo": "Super + 7",
+          "mods": [
+            "Super"
+          ],
+          "key": "7",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 63,
+          "label": "Move window to workspace 7",
+          "combo": "Super + Shift + 7",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "7",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 64,
+          "label": "Move window silently to workspace 7",
+          "combo": "Super + Alt + Shift + 7",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "7",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 65,
+          "label": "Switch to workspace 8",
+          "combo": "Super + 8",
+          "mods": [
+            "Super"
+          ],
+          "key": "8",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 66,
+          "label": "Move window to workspace 8",
+          "combo": "Super + Shift + 8",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "8",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 67,
+          "label": "Move window silently to workspace 8",
+          "combo": "Super + Alt + Shift + 8",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "8",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 68,
+          "label": "Switch to workspace 9",
+          "combo": "Super + 9",
+          "mods": [
+            "Super"
+          ],
+          "key": "9",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 69,
+          "label": "Move window to workspace 9",
+          "combo": "Super + Shift + 9",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "9",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 70,
+          "label": "Move window silently to workspace 9",
+          "combo": "Super + Alt + Shift + 9",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "9",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 71,
+          "label": "Switch to workspace 10",
+          "combo": "Super + 0",
+          "mods": [
+            "Super"
+          ],
+          "key": "0",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 72,
+          "label": "Move window to workspace 10",
+          "combo": "Super + Shift + 0",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "0",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 73,
+          "label": "Move window silently to workspace 10",
+          "combo": "Super + Alt + Shift + 0",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "0",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 74,
+          "label": "Toggle scratchpad",
+          "combo": "Super + S",
+          "mods": [
+            "Super"
+          ],
+          "key": "S",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 75,
+          "label": "Move window to scratchpad",
+          "combo": "Super + Alt + S",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "S",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 76,
+          "label": "Next workspace",
+          "combo": "Super + Tab",
+          "mods": [
+            "Super"
+          ],
+          "key": "Tab",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 77,
+          "label": "Previous workspace",
+          "combo": "Super + Shift + Tab",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "Tab",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 78,
+          "label": "Former workspace",
+          "combo": "Super + Ctrl + Tab",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "Tab",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 79,
+          "label": "Move workspace to left monitor",
+          "combo": "Super + Alt + Shift + Left arrow",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "Left arrow",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 80,
+          "label": "Move workspace to right monitor",
+          "combo": "Super + Alt + Shift + Right arrow",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "Right arrow",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 81,
+          "label": "Move workspace to up monitor",
+          "combo": "Super + Alt + Shift + Up arrow",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "Up arrow",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 82,
+          "label": "Move workspace to down monitor",
+          "combo": "Super + Alt + Shift + Down arrow",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "Down arrow",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 101,
+          "label": "Scroll active workspace forward",
+          "combo": "Super + Scroll down",
+          "mods": [
+            "Super"
+          ],
+          "key": "Scroll down",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 102,
+          "label": "Scroll active workspace backward",
+          "combo": "Super + Scroll up",
+          "mods": [
+            "Super"
+          ],
+          "key": "Scroll up",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 218,
+          "label": "Workspace overview",
+          "combo": "Super + F4",
+          "mods": [
+            "Super"
+          ],
+          "key": "F4",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 232,
+          "label": "Spaceview toggle",
+          "combo": "Shift + Tab",
+          "mods": [
+            "Shift"
+          ],
+          "key": "Tab",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        }
+      ]
+    },
+    {
+      "id": "windows",
+      "title": "Windows",
+      "icon": "🪟",
+      "count": 63,
+      "keys": [
+        {
+          "index": 28,
+          "label": "Close window",
+          "combo": "Super + W",
+          "mods": [
+            "Super"
+          ],
+          "key": "W",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 29,
+          "label": "Close all windows",
+          "combo": "Ctrl + Alt + Delete",
+          "mods": [
+            "Ctrl",
+            "Alt"
+          ],
+          "key": "Delete",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 30,
+          "label": "Toggle window split",
+          "combo": "Super + J",
+          "mods": [
+            "Super"
+          ],
+          "key": "J",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 31,
+          "label": "Pseudo window",
+          "combo": "Super + P",
+          "mods": [
+            "Super"
+          ],
+          "key": "P",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 32,
+          "label": "Toggle window floating/tiling",
+          "combo": "Super + T",
+          "mods": [
+            "Super"
+          ],
+          "key": "T",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 33,
+          "label": "Full screen",
+          "combo": "Super + F",
+          "mods": [
+            "Super"
+          ],
+          "key": "F",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 34,
+          "label": "Tiled full screen",
+          "combo": "Super + Ctrl + F",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "F",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 35,
+          "label": "Full width",
+          "combo": "Super + Alt + F",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "F",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 36,
+          "label": "Pop window out (float & pin)",
+          "combo": "Super + O",
+          "mods": [
+            "Super"
+          ],
+          "key": "O",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 37,
+          "label": "Save window width",
+          "combo": "Super + Alt + Home",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "Home",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 38,
+          "label": "Restore window width",
+          "combo": "Super + Home",
+          "mods": [
+            "Super"
+          ],
+          "key": "Home",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 40,
+          "label": "Focus on left window",
+          "combo": "Super + Left arrow",
+          "mods": [
+            "Super"
+          ],
+          "key": "Left arrow",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 41,
+          "label": "Focus on right window",
+          "combo": "Super + Right arrow",
+          "mods": [
+            "Super"
+          ],
+          "key": "Right arrow",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 42,
+          "label": "Focus on above window",
+          "combo": "Super + Up arrow",
+          "mods": [
+            "Super"
+          ],
+          "key": "Up arrow",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 43,
+          "label": "Focus on below window",
+          "combo": "Super + Down arrow",
+          "mods": [
+            "Super"
+          ],
+          "key": "Down arrow",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 83,
+          "label": "Swap window to the left",
+          "combo": "Super + Shift + Left arrow",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "Left arrow",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 84,
+          "label": "Swap window to the right",
+          "combo": "Super + Shift + Right arrow",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "Right arrow",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 85,
+          "label": "Swap window up",
+          "combo": "Super + Shift + Up arrow",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "Up arrow",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 86,
+          "label": "Swap window down",
+          "combo": "Super + Shift + Down arrow",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "Down arrow",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 87,
+          "label": "Focus on next monitor",
+          "combo": "Ctrl + Alt + Tab",
+          "mods": [
+            "Ctrl",
+            "Alt"
+          ],
+          "key": "Tab",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 88,
+          "label": "Focus on previous monitor",
+          "combo": "Ctrl + Alt + Shift + Tab",
+          "mods": [
+            "Ctrl",
+            "Alt",
+            "Shift"
+          ],
+          "key": "Tab",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 89,
+          "label": "Expand window left",
+          "combo": "Super + -",
+          "mods": [
+            "Super"
+          ],
+          "key": "-",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 90,
+          "label": "Shrink window left",
+          "combo": "Super + =",
+          "mods": [
+            "Super"
+          ],
+          "key": "=",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 91,
+          "label": "Shrink window up",
+          "combo": "Super + Shift + -",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "-",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 92,
+          "label": "Expand window down",
+          "combo": "Super + Shift + =",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "=",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 93,
+          "label": "Expand window left a little",
+          "combo": "Super + Alt + -",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "-",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 94,
+          "label": "Shrink window left a little",
+          "combo": "Super + Alt + =",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "=",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 95,
+          "label": "Shrink window up a little",
+          "combo": "Super + Alt + Shift + -",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "-",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 96,
+          "label": "Expand window down a little",
+          "combo": "Super + Alt + Shift + =",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "=",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 97,
+          "label": "Expand window left a lot",
+          "combo": "Super + Ctrl + -",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "-",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 98,
+          "label": "Shrink window left a lot",
+          "combo": "Super + Ctrl + =",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "=",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 99,
+          "label": "Shrink window up a lot",
+          "combo": "Super + Ctrl + Shift + -",
+          "mods": [
+            "Super",
+            "Ctrl",
+            "Shift"
+          ],
+          "key": "-",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 100,
+          "label": "Expand window down a lot",
+          "combo": "Super + Ctrl + Shift + =",
+          "mods": [
+            "Super",
+            "Ctrl",
+            "Shift"
+          ],
+          "key": "=",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 103,
+          "label": "Move window",
+          "combo": "Super + Left mouse button",
+          "mods": [
+            "Super"
+          ],
+          "key": "Left mouse button",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 104,
+          "label": "Resize window",
+          "combo": "Super + Right mouse button",
+          "mods": [
+            "Super"
+          ],
+          "key": "Right mouse button",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 105,
+          "label": "Toggle window grouping",
+          "combo": "Super + G",
+          "mods": [
+            "Super"
+          ],
+          "key": "G",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 106,
+          "label": "Move active window out of group",
+          "combo": "Super + Alt + G",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "G",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 107,
+          "label": "Move window to group on left",
+          "combo": "Super + Alt + Left arrow",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "Left arrow",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 108,
+          "label": "Move window to group on right",
+          "combo": "Super + Alt + Right arrow",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "Right arrow",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 109,
+          "label": "Move window to group on top",
+          "combo": "Super + Alt + Up arrow",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "Up arrow",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 110,
+          "label": "Move window to group on bottom",
+          "combo": "Super + Alt + Down arrow",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "Down arrow",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 111,
+          "label": "Next window in group",
+          "combo": "Super + Alt + Tab",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "Tab",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 112,
+          "label": "Previous window in group",
+          "combo": "Super + Alt + Shift + Tab",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "Tab",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 113,
+          "label": "Move grouped window focus left",
+          "combo": "Super + Ctrl + Left arrow",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "Left arrow",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 114,
+          "label": "Move grouped window focus right",
+          "combo": "Super + Ctrl + Right arrow",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "Right arrow",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 115,
+          "label": "Next window in group",
+          "combo": "Super + Alt + Scroll down",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "Scroll down",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 116,
+          "label": "Previous window in group",
+          "combo": "Super + Alt + Scroll up",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "Scroll up",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 117,
+          "label": "Switch to group window 1",
+          "combo": "Super + Alt + 1",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "1",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 118,
+          "label": "Switch to group window 2",
+          "combo": "Super + Alt + 2",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "2",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 119,
+          "label": "Switch to group window 3",
+          "combo": "Super + Alt + 3",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "3",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 120,
+          "label": "Switch to group window 4",
+          "combo": "Super + Alt + 4",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "4",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 121,
+          "label": "Switch to group window 5",
+          "combo": "Super + Alt + 5",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "5",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 138,
+          "label": "Toggle window transparency",
+          "combo": "Super + Backspace",
+          "mods": [
+            "Super"
+          ],
+          "key": "Backspace",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 139,
+          "label": "Toggle window gaps",
+          "combo": "Super + Shift + Backspace",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "Backspace",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 140,
+          "label": "Toggle single-window square aspect",
+          "combo": "Super + Ctrl + Backspace",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "Backspace",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 221,
+          "label": "Monitor scaling up",
+          "combo": "Super + /",
+          "mods": [
+            "Super"
+          ],
+          "key": "/",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 222,
+          "label": "Monitor scaling down",
+          "combo": "Super + Alt + /",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "/",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 233,
+          "label": "Game-safe window (focused)",
+          "combo": "Super + Alt + W",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "W",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 238,
+          "label": "Fathom: dive one window deeper",
+          "combo": "Alt + Tab",
+          "mods": [
+            "Alt"
+          ],
+          "key": "Tab",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 239,
+          "label": "Fathom: rise one window",
+          "combo": "Alt + Shift + Tab",
+          "mods": [
+            "Alt",
+            "Shift"
+          ],
+          "key": "Tab",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 240,
+          "label": "Fathom: dive one window deeper",
+          "combo": "Alt + Tab",
+          "mods": [
+            "Alt"
+          ],
+          "key": "Tab",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "fathom",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 241,
+          "label": "Fathom: rise one window",
+          "combo": "Alt + Shift + Tab",
+          "mods": [
+            "Alt",
+            "Shift"
+          ],
+          "key": "Tab",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "fathom",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 246,
+          "label": "WindowPeek: open window list (automatic)",
+          "combo": "Super + Alt + P",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "P",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        }
+      ]
+    },
+    {
+      "id": "apps",
+      "title": "Apps",
+      "icon": "🚀",
+      "count": 41,
+      "keys": [
+        {
+          "index": 131,
+          "label": "Tmux keybindings",
+          "combo": "Super + Alt + K",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "K",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 132,
+          "label": "Herdr keybindings",
+          "combo": "Super + Ctrl + K",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "K",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 133,
+          "label": "Calculator",
+          "combo": "Super + Ctrl + Q",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "Q",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 134,
+          "label": "Calculator",
+          "combo": "Calculator key",
+          "mods": [],
+          "key": "Calculator key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 170,
+          "label": "Calendar",
+          "combo": "Super + Ctrl + Alt + D",
+          "mods": [
+            "Super",
+            "Ctrl",
+            "Alt"
+          ],
+          "key": "D",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 187,
+          "label": "Terminal",
+          "combo": "Super + Enter",
+          "mods": [
+            "Super"
+          ],
+          "key": "Enter",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 188,
+          "label": "Browser",
+          "combo": "Super + Shift + Enter",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "Enter",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 189,
+          "label": "File manager",
+          "combo": "Super + Shift + F",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "F",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 190,
+          "label": "File manager (cwd)",
+          "combo": "Super + Alt + Shift + F",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "F",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 191,
+          "label": "Browser",
+          "combo": "Super + Shift + B",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "B",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 192,
+          "label": "Browser (private)",
+          "combo": "Super + Alt + Shift + B",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "B",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 193,
+          "label": "Editor",
+          "combo": "Super + Shift + N",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "N",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 194,
+          "label": "Tmux",
+          "combo": "Super + Alt + Enter",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "Enter",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 195,
+          "label": "Herdr",
+          "combo": "Super + Ctrl + Enter",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "Enter",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 196,
+          "label": "Music TUI",
+          "combo": "Super + Alt + Shift + M",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "M",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 197,
+          "label": "Docker",
+          "combo": "Super + Shift + D",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "D",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 198,
+          "label": "Signal",
+          "combo": "Super + Shift + G",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "G",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 199,
+          "label": "Obsidian",
+          "combo": "Super + Shift + O",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "O",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 200,
+          "label": "Omawrite",
+          "combo": "Super + Shift + W",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "W",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 201,
+          "label": "Passwords",
+          "combo": "Super + Shift + /",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "/",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 202,
+          "label": "ChatGPT",
+          "combo": "Super + Shift + A",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "A",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 203,
+          "label": "Grok",
+          "combo": "Super + Alt + Shift + A",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "A",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 204,
+          "label": "Calendar",
+          "combo": "Super + Shift + C",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "C",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 205,
+          "label": "YouTube",
+          "combo": "Super + Shift + Y",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "Y",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 206,
+          "label": "WhatsApp",
+          "combo": "Super + Alt + Shift + G",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "G",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 207,
+          "label": "Google Messages",
+          "combo": "Super + Ctrl + Shift + G",
+          "mods": [
+            "Super",
+            "Ctrl",
+            "Shift"
+          ],
+          "key": "G",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 208,
+          "label": "Google Photos",
+          "combo": "Super + Shift + P",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "P",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 209,
+          "label": "Google Maps",
+          "combo": "Super + Shift + S",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "S",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 210,
+          "label": "X",
+          "combo": "Super + Shift + X",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "X",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 211,
+          "label": "X Post",
+          "combo": "Super + Alt + Shift + X",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "X",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 212,
+          "label": "App grid",
+          "combo": "Super + Alt + Space",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "Space",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 213,
+          "label": "Spotify",
+          "combo": "Super + Shift + M",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "M",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 216,
+          "label": "Quick capture to Obsidian",
+          "combo": "Super + F2",
+          "mods": [
+            "Super"
+          ],
+          "key": "F2",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 217,
+          "label": "Focus timer",
+          "combo": "Super + F3",
+          "mods": [
+            "Super"
+          ],
+          "key": "F3",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 223,
+          "label": "Borealis Atlas",
+          "combo": "Super + Alt + B",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "B",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 224,
+          "label": "Obsidian Quick Capture",
+          "combo": "Super + Shift + I",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "I",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 225,
+          "label": "ADHD Big Timer",
+          "combo": "Super + Shift + T",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "T",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 227,
+          "label": "Rapoo Alt+wheel down: Herdr next tab",
+          "combo": "Alt + Scroll down",
+          "mods": [
+            "Alt"
+          ],
+          "key": "Scroll down",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 228,
+          "label": "Rapoo Alt+wheel up: Herdr previous tab",
+          "combo": "Alt + Scroll up",
+          "mods": [
+            "Alt"
+          ],
+          "key": "Scroll up",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 244,
+          "label": "Email",
+          "combo": "Super + Shift + E",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "E",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 245,
+          "label": "New email",
+          "combo": "Super + Alt + Shift + E",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "E",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        }
+      ]
+    },
+    {
+      "id": "media",
+      "title": "Media",
+      "icon": "🎛️",
+      "count": 25,
+      "keys": [
+        {
+          "index": 0,
+          "label": "Volume up",
+          "combo": "Volume up key",
+          "mods": [],
+          "key": "Volume up key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 1,
+          "label": "Volume down",
+          "combo": "Volume down key",
+          "mods": [],
+          "key": "Volume down key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 2,
+          "label": "Mute",
+          "combo": "Mute key",
+          "mods": [],
+          "key": "Mute key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 3,
+          "label": "Mute microphone",
+          "combo": "Mic mute key",
+          "mods": [],
+          "key": "Mic mute key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 4,
+          "label": "Brightness up",
+          "combo": "Brightness up key",
+          "mods": [],
+          "key": "Brightness up key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 5,
+          "label": "Brightness down",
+          "combo": "Brightness down key",
+          "mods": [],
+          "key": "Brightness down key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 6,
+          "label": "Brightness maximum",
+          "combo": "Shift + Brightness up key",
+          "mods": [
+            "Shift"
+          ],
+          "key": "Brightness up key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 7,
+          "label": "Brightness minimum",
+          "combo": "Shift + Brightness down key",
+          "mods": [
+            "Shift"
+          ],
+          "key": "Brightness down key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 8,
+          "label": "Keyboard brightness up",
+          "combo": "Keyboard light up key",
+          "mods": [],
+          "key": "Keyboard light up key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 9,
+          "label": "Keyboard brightness down",
+          "combo": "Keyboard light down key",
+          "mods": [],
+          "key": "Keyboard light down key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 10,
+          "label": "Keyboard backlight cycle",
+          "combo": "Keyboard light key",
+          "mods": [],
+          "key": "Keyboard light key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 14,
+          "label": "Volume up precise",
+          "combo": "Alt + Volume up key",
+          "mods": [
+            "Alt"
+          ],
+          "key": "Volume up key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 15,
+          "label": "Volume down precise",
+          "combo": "Alt + Volume down key",
+          "mods": [
+            "Alt"
+          ],
+          "key": "Volume down key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 16,
+          "label": "Brightness up precise",
+          "combo": "Alt + Brightness up key",
+          "mods": [
+            "Alt"
+          ],
+          "key": "Brightness up key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 17,
+          "label": "Brightness down precise",
+          "combo": "Alt + Brightness down key",
+          "mods": [
+            "Alt"
+          ],
+          "key": "Brightness down key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 18,
+          "label": "Next track",
+          "combo": "Next track key",
+          "mods": [],
+          "key": "Next track key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 19,
+          "label": "Next track",
+          "combo": "Alt + Play key",
+          "mods": [
+            "Alt"
+          ],
+          "key": "Play key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 20,
+          "label": "Pause",
+          "combo": "Pause key",
+          "mods": [],
+          "key": "Pause key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 21,
+          "label": "Play",
+          "combo": "Play key",
+          "mods": [],
+          "key": "Play key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 22,
+          "label": "Previous track",
+          "combo": "Previous track key",
+          "mods": [],
+          "key": "Previous track key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 23,
+          "label": "Previous track",
+          "combo": "Alt + Shift + Play key",
+          "mods": [
+            "Alt",
+            "Shift"
+          ],
+          "key": "Play key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 24,
+          "label": "Eject media",
+          "combo": "Eject key",
+          "mods": [],
+          "key": "Eject key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 25,
+          "label": "Switch audio output",
+          "combo": "Shift + Mute key",
+          "mods": [
+            "Shift"
+          ],
+          "key": "Mute key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 26,
+          "label": "Switch media source",
+          "combo": "Shift + Pause key",
+          "mods": [
+            "Shift"
+          ],
+          "key": "Pause key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 27,
+          "label": "Switch media source",
+          "combo": "Shift + Play key",
+          "mods": [
+            "Shift"
+          ],
+          "key": "Play key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        }
+      ]
+    },
+    {
+      "id": "screenshots",
+      "title": "Screenshots",
+      "icon": "📸",
+      "count": 8,
+      "keys": [
+        {
+          "index": 124,
+          "label": "Capture menu",
+          "combo": "Super + Ctrl + C",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "C",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 152,
+          "label": "Screenshot",
+          "combo": "Print Screen",
+          "mods": [],
+          "key": "Print Screen",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 153,
+          "label": "Screenrecording",
+          "combo": "Alt + Print Screen",
+          "mods": [
+            "Alt"
+          ],
+          "key": "Print Screen",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 154,
+          "label": "Make webcam overlay smaller",
+          "combo": "Super + Alt + [",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "[",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 155,
+          "label": "Make webcam overlay larger",
+          "combo": "Super + Alt + ]",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "]",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 156,
+          "label": "Color picker",
+          "combo": "Super + Print Screen",
+          "mods": [
+            "Super"
+          ],
+          "key": "Print Screen",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 157,
+          "label": "Extract text (OCR) from screenshot",
+          "combo": "Super + Ctrl + Print Screen",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "Print Screen",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 215,
+          "label": "Fullscreen screenshot and paste",
+          "combo": "Alt + Z",
+          "mods": [
+            "Alt"
+          ],
+          "key": "Z",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        }
+      ]
+    },
+    {
+      "id": "dictation",
+      "title": "Dictation",
+      "icon": "🎙️",
+      "count": 5,
+      "keys": [
+        {
+          "index": 186,
+          "label": "Toggle dictation",
+          "combo": "Super + Ctrl + X",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "X",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 214,
+          "label": "Voxtype Dictation Toggle",
+          "combo": "Super + H",
+          "mods": [
+            "Super"
+          ],
+          "key": "H",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 219,
+          "label": "Toggle dictation",
+          "combo": "Super + F9",
+          "mods": [
+            "Super"
+          ],
+          "key": "F9",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 242,
+          "label": "VoxType engine picker",
+          "combo": "Super + E",
+          "mods": [
+            "Super"
+          ],
+          "key": "E",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 243,
+          "label": "VoxType meeting controls",
+          "combo": "Super + M",
+          "mods": [
+            "Super"
+          ],
+          "key": "M",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        }
+      ]
+    },
+    {
+      "id": "other",
+      "title": "Other",
+      "icon": "⚙️",
+      "count": 63,
+      "keys": [
+        {
+          "index": 11,
+          "label": "Toggle touchpad",
+          "combo": "Touchpad toggle key",
+          "mods": [],
+          "key": "Touchpad toggle key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 12,
+          "label": "Enable touchpad",
+          "combo": "Touchpad on key",
+          "mods": [],
+          "key": "Touchpad on key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 13,
+          "label": "Disable touchpad",
+          "combo": "Touchpad off key",
+          "mods": [],
+          "key": "Touchpad off key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 122,
+          "label": "Omarchy menu",
+          "combo": "Super + Space",
+          "mods": [
+            "Super"
+          ],
+          "key": "Space",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 123,
+          "label": "Emojis",
+          "combo": "Super + Ctrl + E",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "E",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 125,
+          "label": "Toggle menu",
+          "combo": "Super + Ctrl + O",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "O",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 126,
+          "label": "Hardware menu",
+          "combo": "Super + Ctrl + H",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "H",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 127,
+          "label": "Omarchy menu",
+          "combo": "Super + Shift + F23 (Copilot key)",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "F23 (Copilot key)",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 128,
+          "label": "System menu",
+          "combo": "Super + Esc",
+          "mods": [
+            "Super"
+          ],
+          "key": "Esc",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 129,
+          "label": "Power menu",
+          "combo": "Power key",
+          "mods": [],
+          "key": "Power key",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true
+        },
+        {
+          "index": 130,
+          "label": "Keybindings",
+          "combo": "Super + K",
+          "mods": [
+            "Super"
+          ],
+          "key": "K",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 135,
+          "label": "Toggle top bar",
+          "combo": "Super + Shift + Space",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": "Space",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 136,
+          "label": "Background switcher",
+          "combo": "Super + Ctrl + Space",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "Space",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 137,
+          "label": "Theme menu",
+          "combo": "Super + Ctrl + Shift + Space",
+          "mods": [
+            "Super",
+            "Ctrl",
+            "Shift"
+          ],
+          "key": "Space",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 141,
+          "label": "Dismiss last notification",
+          "combo": "Super + ,",
+          "mods": [
+            "Super"
+          ],
+          "key": ",",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 142,
+          "label": "Dismiss all notifications",
+          "combo": "Super + Shift + ,",
+          "mods": [
+            "Super",
+            "Shift"
+          ],
+          "key": ",",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 143,
+          "label": "Toggle silencing notifications",
+          "combo": "Super + Ctrl + ,",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": ",",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 144,
+          "label": "Invoke last notification",
+          "combo": "Super + Alt + ,",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": ",",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 145,
+          "label": "Open notification history",
+          "combo": "Super + Alt + Shift + ,",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": ",",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 146,
+          "label": "Toggle locking on idle",
+          "combo": "Super + Ctrl + I",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "I",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 147,
+          "label": "Toggle nightlight",
+          "combo": "Super + Ctrl + N",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "N",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 148,
+          "label": "Toggle laptop display",
+          "combo": "Super + Ctrl + Delete",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "Delete",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 149,
+          "label": "Toggle laptop display mirroring",
+          "combo": "Super + Ctrl + Alt + Delete",
+          "mods": [
+            "Super",
+            "Ctrl",
+            "Alt"
+          ],
+          "key": "Delete",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 150,
+          "label": "Closed: Lid Switch",
+          "combo": "Lid closes",
+          "mods": [],
+          "key": "Lid closes",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true,
+          "note": "Laptop lid event, not a key. It runs by itself when the lid moves."
+        },
+        {
+          "index": 151,
+          "label": "Opened: Lid Switch",
+          "combo": "Lid opens",
+          "mods": [],
+          "key": "Lid opens",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": true,
+          "note": "Laptop lid event, not a key. It runs by itself when the lid moves."
+        },
+        {
+          "index": 158,
+          "label": "Share",
+          "combo": "Super + Ctrl + S",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "S",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 159,
+          "label": "Transcode",
+          "combo": "Super + Ctrl + .",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": ".",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 160,
+          "label": "Set reminder",
+          "combo": "Super + Ctrl + R",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "R",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 161,
+          "label": "Show reminders",
+          "combo": "Super + Ctrl + Alt + R",
+          "mods": [
+            "Super",
+            "Ctrl",
+            "Alt"
+          ],
+          "key": "R",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 162,
+          "label": "Clear reminders",
+          "combo": "Super + Ctrl + Shift + R",
+          "mods": [
+            "Super",
+            "Ctrl",
+            "Shift"
+          ],
+          "key": "R",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 163,
+          "label": "Show time",
+          "combo": "Super + Ctrl + Alt + T",
+          "mods": [
+            "Super",
+            "Ctrl",
+            "Alt"
+          ],
+          "key": "T",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 164,
+          "label": "Show battery remaining",
+          "combo": "Super + Ctrl + Alt + B",
+          "mods": [
+            "Super",
+            "Ctrl",
+            "Alt"
+          ],
+          "key": "B",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 165,
+          "label": "Toggle weather",
+          "combo": "Super + Ctrl + Alt + W",
+          "mods": [
+            "Super",
+            "Ctrl",
+            "Alt"
+          ],
+          "key": "W",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 166,
+          "label": "Agent",
+          "combo": "Super + Ctrl + Shift + A",
+          "mods": [
+            "Super",
+            "Ctrl",
+            "Shift"
+          ],
+          "key": "A",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 167,
+          "label": "Audio",
+          "combo": "Super + Ctrl + A",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "A",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 168,
+          "label": "Bluetooth",
+          "combo": "Super + Ctrl + B",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "B",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 169,
+          "label": "Display",
+          "combo": "Super + Ctrl + D",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "D",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 171,
+          "label": "Network",
+          "combo": "Super + Ctrl + W",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "W",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 172,
+          "label": "Power",
+          "combo": "Super + Ctrl + P",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "P",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 173,
+          "label": "Activity",
+          "combo": "Super + Ctrl + T",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "T",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 174,
+          "label": "Bar panel 1",
+          "combo": "Super + Ctrl + 1",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "1",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 175,
+          "label": "Bar panel 2",
+          "combo": "Super + Ctrl + 2",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "2",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 176,
+          "label": "Bar panel 3",
+          "combo": "Super + Ctrl + 3",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "3",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 177,
+          "label": "Bar panel 4",
+          "combo": "Super + Ctrl + 4",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "4",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 178,
+          "label": "Bar panel 5",
+          "combo": "Super + Ctrl + 5",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "5",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 179,
+          "label": "Bar panel 6",
+          "combo": "Super + Ctrl + 6",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "6",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 180,
+          "label": "Bar panel 7",
+          "combo": "Super + Ctrl + 7",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "7",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 181,
+          "label": "Bar panel 8",
+          "combo": "Super + Ctrl + 8",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "8",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 182,
+          "label": "Bar panel 9",
+          "combo": "Super + Ctrl + 9",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "9",
+          "key_known": true,
+          "key_inferred": true,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 183,
+          "label": "Zoom in",
+          "combo": "Super + Ctrl + Z",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "Z",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 184,
+          "label": "Reset zoom",
+          "combo": "Super + Ctrl + Alt + Z",
+          "mods": [
+            "Super",
+            "Ctrl",
+            "Alt"
+          ],
+          "key": "Z",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 185,
+          "label": "Lock system",
+          "combo": "Super + Ctrl + L",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "L",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 220,
+          "label": "Search keyboard shortcuts",
+          "combo": "Super + F12",
+          "mods": [
+            "Super"
+          ],
+          "key": "F12",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 226,
+          "label": "Middle click: paste clipboard",
+          "combo": "Middle mouse button",
+          "mods": [],
+          "key": "Middle mouse button",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 229,
+          "label": "Box paste (Ctrl+V)",
+          "combo": "Ctrl + V",
+          "mods": [
+            "Ctrl"
+          ],
+          "key": "V",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 230,
+          "label": "Box paste (Ctrl+Shift+V)",
+          "combo": "Ctrl + Shift + V",
+          "mods": [
+            "Ctrl",
+            "Shift"
+          ],
+          "key": "V",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 231,
+          "label": "Game Mode",
+          "combo": "Super + Ctrl + G",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "G",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 234,
+          "label": "Next theme (56-theme library)",
+          "combo": "Super + Alt + N",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "N",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 235,
+          "label": "Previous theme",
+          "combo": "Super + Alt + Shift + N",
+          "mods": [
+            "Super",
+            "Alt",
+            "Shift"
+          ],
+          "key": "N",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 236,
+          "label": "Next theme wallpaper",
+          "combo": "Super + Alt + M",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "M",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 237,
+          "label": "Clipboard history (clone)",
+          "combo": "Super + Ctrl + V",
+          "mods": [
+            "Super",
+            "Ctrl"
+          ],
+          "key": "V",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 247,
+          "label": "omabox: stop passing keys to the box",
+          "combo": "Super + Alt + Esc",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "Esc",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "omabox",
+          "mouse": false,
+          "locked": false
+        },
+        {
+          "index": 248,
+          "label": "omabox: pass keys to the box",
+          "combo": "Super + Alt + Esc",
+          "mods": [
+            "Super",
+            "Alt"
+          ],
+          "key": "Esc",
+          "key_known": true,
+          "key_inferred": false,
+          "submap": "",
+          "mouse": false,
+          "locked": false
+        }
+      ]
+    }
+  ]
+}

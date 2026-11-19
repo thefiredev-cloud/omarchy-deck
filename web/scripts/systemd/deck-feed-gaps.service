@@ -1,0 +1,11 @@
+[Unit]
+Description=Pixel Deck market gaps feed (trends plus housing, CRE, jobs, gigs, e-commerce and surf feeds, scored; next steps from the local cluster; writes ~/.kodros/status/deck/gaps.json)
+After=deck-feed-trends.service
+
+[Service]
+Slice=deckwork.slice
+Type=oneshot
+ExecStart=/usr/bin/python3 %h/ops/bin/deck-feed-gaps
+TimeoutStartSec=240
+Nice=10
+IOSchedulingClass=idle

@@ -1,0 +1,593 @@
+#!/usr/bin/env python3
+"""Pixel Deck trends feed -> ~/.kodros/status/deck/trends.json (the Deck's world view: what is moving now).
+
+Market-wide only. Nothing here reads the owner's watchlists, holdings or portfolio; no account, no key.
+  products  rank lists and movers the e-commerce feed already collected (house-feeds/ecom-market.json: Shopify store
+            best sellers, Steam, Scryfall, store price rises), Steam top sellers, the US App Store top free apps and
+            Product Hunt launches. rank_change compares with this feed's previous run when the source gives none.
+  tickers   Yahoo Finance most active, day gainers and losers (US, $2B+ market cap) and Yahoo trending tickers.
+            volume_ratio = today's volume / the average of the 30 sessions before it (Yahoo daily bars).
+  searches  Google Trends trending searches (public RSS) for the US and California, and the English Wikipedia most
+            viewed articles with day-over-day growth, kept only with commercial intent (products, brands, local
+            services, tech, real estate, finance): the local cluster answers keep or drop, a keyword rule backs it up.
+            People, sports, TV and news are dropped; `search_filter` reports the method and counts.
+Every source is listed in `sources` with ok, age_s and error. A failed source contributes nothing, never a guess.
+  deck-feed-trends                          # one run
+  DECK_FEED_DIR=/tmp/x deck-feed-trends     # stage the output somewhere else
+"""
+import datetime as dt
+import json
+import os
+import re
+import sys
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+import xml.etree.ElementTree as ET
+
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+import deck_feed_common as F  # noqa: E402
+import deck_markets_common as M  # noqa: E402
+from deck_feed_common import FetchError, short_reason  # noqa: E402
+
+NAME = "trends"
+REFRESH = 1800
+OUT_DIR = os.environ.get("DECK_FEED_DIR") or F.OUT_DIR
+ECOM_FILE = os.path.join(os.environ.get("DECK_HOUSE_DIR") or F.HOUSE_OUT_DIR, "ecom-market.json")
+ECOM_MAX_AGE = 2 * 3600  # the e-commerce feed refreshes hourly; past two hours it is not "now"
+CACHE_TTL = 25 * 60  # a rerun inside one 30-minute cycle never re-hits a site
+
+GT_RSS = "https://trends.google.com/trending/rss?geo=%s"
+STEAM = "https://store.steampowered.com/api/featuredcategories?cc=us&l=english"
+APPLE = "https://rss.marketingtools.apple.com/api/v2/us/apps/top-free/25/apps.json"
+PRODUCT_HUNT = "https://www.producthunt.com/feed"
+WIKI_TOP = "https://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia/all-access/%04d/%02d/%02d"
+YAHOO_TRENDING = "https://query1.finance.yahoo.com/v1/finance/trending/US?count=25"
+UA_JSON = {"User-Agent": "Mozilla/5.0", "Accept": "application/json"}
+UA_FEED = {"User-Agent": F.UA_FEED + " (+https://github.com/thefiredev-cloud/pixel-deck)"}
+
+MIN_CAP = 2e9  # a +40% microcap is noise, not a market signal
+MAX_TICKERS = 25
+MAX_CHARTS = 40
+VOLUME_SESSIONS = 30
+SEARCH_REGIONS = (("US", "US"), ("US-CA", "US-CA"))
+WIKI_CANDIDATES = 60  # most top articles are people and news; read deep enough that commercial ones survive the filter
+SEARCH_KEEP = 15  # kept terms per region
+
+
+class Run:
+    """Per-run source ledger: every source id ends up in `sources` once."""
+
+    def __init__(self):
+        self.sources = {}
+        self.errors = []
+        self.cache = F.Cache(NAME, CACHE_TTL)
+
+    def ok(self, sid, age_s=0):
+        prev = self.sources.get(sid)
+        if prev and not prev["ok"]:
+            return
+        self.sources[sid] = {"id": sid, "ok": True, "age_s": int(max(0, age_s)), "error": None}
+
+    def fail(self, sid, reason, age_s=None):
+        reason = short_reason(reason)
+        self.sources[sid] = {"id": sid, "ok": False, "age_s": None if age_s is None else int(max(0, age_s)),
+                             "error": reason}
+        self.errors.append({"source": sid, "reason": reason})
+
+    def get(self, url, headers, timeout=25):
+        """Body and its age in seconds (0 when fetched now, the cache age when reused)."""
+        path = self.cache._path(url)
+        body = self.cache.get(url, lambda: F.http_get(url, headers, timeout))
+        try:
+            age = time.time() - os.path.getmtime(path)
+        except OSError:
+            age = 0
+        return body, age
+
+    def get_json(self, url, headers, timeout=25):
+        body, age = self.get(url, headers, timeout)
+        try:
+            return json.loads(body), age
+        except ValueError as exc:
+            raise FetchError("bad JSON from %s" % urllib.parse.urlsplit(url).netloc) from exc
+
+
+def num(v):
+    return M.num(v)
+
+
+def clean(text, limit=140):
+    return re.sub(r"\s+", " ", str(text or "")).strip()[:limit]
+
+
+def iso(epoch):
+    return dt.datetime.fromtimestamp(epoch).astimezone().replace(microsecond=0).isoformat()
+
+
+def offer(row):
+    offers = ((row.get("detail") or {}).get("offers") or [])
+    return offers[0] if offers and isinstance(offers[0], dict) else {}
+
+
+def ecom_products(doc):
+    """Rising best sellers and demand-side movers (price rises, rank gains) from the e-commerce feed."""
+    out = []
+    rows = [r for r in (doc.get("bestsellers") or []) if isinstance(r, dict) and r.get("title")]
+    risers = sorted((r for r in rows if (num(r.get("rank_change")) or 0) > 0),
+                    key=lambda r: (-(num(r.get("rank_change")) or 0), num(r.get("rank")) or 999))
+    leaders, seen_platform = [], set()
+    for r in sorted(rows, key=lambda r: num(r.get("rank")) or 999):
+        plat = offer(r).get("platform")
+        if plat and plat not in seen_platform and num(r.get("rank")) == 1:
+            seen_platform.add(plat)
+            leaders.append(r)
+    picked, ids = [], set()
+    for r in risers[:20] + leaders[:15]:
+        if r.get("gid") in ids:
+            continue
+        ids.add(r.get("gid"))
+        picked.append(r)
+    for r in picked:
+        o = offer(r)
+        plat = o.get("platform") or "store"
+        rank, rc = num(r.get("rank")), num(r.get("rank_change"))
+        sig = "#%d on %s best sellers" % (rank, plat) if rank else "%s best seller" % plat
+        if rc and rc > 0:
+            sig += ", up %d" % rc
+        out.append({"title": clean(r["title"]), "category": r.get("category") or "other",
+                    "source": "%s best sellers (%s)" % (plat, o.get("source") or "ecom-market"),
+                    "rank": int(rank) if rank else None, "rank_change": int(rc) if rc is not None else None,
+                    "signal": sig, "price_median": num((r.get("price") or {}).get("median")), "url": o.get("url")})
+    movers = [r for r in (doc.get("movers") or []) if isinstance(r, dict) and r.get("kind") in ("price_rise", "rank_gain")]
+    movers.sort(key=lambda r: -abs(num(r.get("change_pct")) or 0))
+    for r in movers[:20]:
+        o = offer(r)
+        plat = o.get("platform") or "store"
+        ch = num(r.get("change_pct"))
+        if r["kind"] == "price_rise":
+            sig = "price up %.0f%% on %s (%s)" % (ch or 0, plat, r.get("period") or r.get("as_of") or "recent")
+        else:
+            sig = "rank gain on %s (%s)" % (plat, r.get("period") or r.get("as_of") or "recent")
+        out.append({"title": clean(r.get("title")), "category": r.get("category") or "other",
+                    "source": "%s movers (%s)" % (plat, o.get("source") or "ecom-market"),
+                    "rank": None, "rank_change": int(num(r.get("rank_change"))) if num(r.get("rank_change")) is not None else None,
+                    "signal": sig, "price_median": num((r.get("price") or {}).get("median")), "url": o.get("url")})
+    return out
+
+
+def steam_products(doc):
+    items = ((doc.get("top_sellers") or {}).get("items") or []) if isinstance(doc, dict) else []
+    out, seen = [], set()
+    for it in items:
+        if not isinstance(it, dict) or not it.get("name") or it.get("id") in seen:
+            continue
+        seen.add(it.get("id"))
+        price = num(it.get("final_price"))
+        disc = num(it.get("discount_percent")) or 0
+        rank = len(out) + 1
+        out.append({"title": clean(it["name"]), "category": "games", "source": "Steam top sellers (US)",
+                    "rank": rank, "rank_change": None,
+                    "signal": "#%d Steam top seller%s" % (rank, ", %d%% off" % disc if disc else ""),
+                    "price_median": round(price / 100.0, 2) if price is not None else None,
+                    "url": "https://store.steampowered.com/app/%s" % it["id"] if it.get("id") else None})
+    if not out:
+        raise FetchError("steam: no top sellers in the answer")
+    return out[:15]
+
+
+def apple_products(doc):
+    results = ((doc.get("feed") or {}).get("results") or []) if isinstance(doc, dict) else []
+    out = []
+    for i, r in enumerate(results[:20], 1):
+        if not isinstance(r, dict) or not r.get("name"):
+            continue
+        genre = next((g.get("name") for g in (r.get("genres") or []) if isinstance(g, dict) and g.get("name")), None)
+        out.append({"title": clean(r["name"]), "category": "apps" + (" / " + genre if genre else ""),
+                    "source": "US App Store top free iPhone apps", "rank": i, "rank_change": None,
+                    "signal": "#%d free iPhone app%s" % (i, " (%s)" % clean(r.get("artistName"), 60) if r.get("artistName") else ""),
+                    "price_median": 0.0, "url": r.get("url")})
+    if not out:
+        raise FetchError("app store: no chart rows")
+    return out
+
+
+ATOM = "{http://www.w3.org/2005/Atom}"
+
+
+def product_hunt_products(text):
+    try:
+        root = ET.fromstring(text)
+    except ET.ParseError as exc:
+        raise FetchError("product hunt: bad feed XML") from exc
+    out = []
+    for i, e in enumerate(root.findall(ATOM + "entry")[:20], 1):
+        title = clean(e.findtext(ATOM + "title"))
+        link = e.find(ATOM + "link")
+        published = (e.findtext(ATOM + "published") or "")[:10]
+        if not title:
+            continue
+        out.append({"title": title, "category": "software / AI", "source": "Product Hunt launches feed", "rank": i,
+                    "rank_change": None, "signal": "launched on Product Hunt%s" % (" " + published if published else ""),
+                    "price_median": None, "url": link.get("href") if link is not None else None})
+    if not out:
+        raise FetchError("product hunt: no entries")
+    return out
+
+
+def add_rank_change(products, previous):
+    """rank_change = previous rank - current rank, for products whose source gives no change itself."""
+    prev = {(p.get("source"), p.get("title")): p.get("rank") for p in previous if isinstance(p, dict)}
+    for p in products:
+        if p["rank_change"] is None and p["rank"] is not None:
+            old = prev.get((p["source"], p["title"]))
+            if isinstance(old, int):
+                p["rank_change"] = old - p["rank"]
+    return products
+
+
+# ---------------------------------------------------------------- tickers
+
+def chart_volume(symbol, run):
+    """(today's volume, 30-session average before today, quote dict) from Yahoo daily bars."""
+    doc, _age = run.get_json(M.YAHOO % urllib.parse.quote(symbol, safe="=-."), UA_JSON, 20)
+    try:
+        res = doc["chart"]["result"][0]
+        vols = res["indicators"]["quote"][0]["volume"]
+        meta = res["meta"]
+    except (KeyError, IndexError, TypeError) as exc:
+        raise FetchError("yahoo chart: unexpected shape for %s" % symbol) from exc
+    vols = [num(v) for v in (vols or [])]
+    today = num(meta.get("regularMarketVolume")) or (vols[-1] if vols else None)
+    prior = [v for v in vols[:-1] if v][-VOLUME_SESSIONS:]
+    avg = sum(prior) / len(prior) if len(prior) >= 20 else None
+    price = num(meta.get("regularMarketPrice")) or None  # an exact 0 is a feed hiccup, not a price
+    stamp = M.num(meta.get("regularMarketTime"))
+    return today, avg, {"name": M.display_name(meta), "price": price, "type": meta.get("instrumentType"),
+                        "t": int(stamp) if stamp is not None and stamp > 0 else None}
+
+def collect_tickers(run):
+    cands = {}
+
+    def note(sym, **kw):
+        c = cands.setdefault(sym, {"symbol": sym, "name": None, "price": None, "pct": None, "volume": None, "t": None,
+                                   "flags": [], "src": set(), "source_id": None})
+        for k, v in kw.items():
+            if k == "flag":
+                c["flags"].append(v)
+            elif k == "src":
+                c["src"].add(v)
+            elif v is not None and c.get(k) is None:
+                c[k] = v
+
+    for key, scr, label in (("active", "most_actives", "most active"), ("gainers", "day_gainers", "top gainer"),
+                            ("losers", "day_losers", "top loser")):
+        sid = "yahoo_screener_" + key
+        try:
+            doc, age = run.get_json(M.SCREENER % scr, UA_JSON, 25)
+            rows = M.parse_screener(doc, MIN_CAP)
+            if not rows:
+                raise FetchError("no rows at $2B+ market cap")
+            if key == "active":
+                rows.sort(key=lambda r: -(r["volume"] or 0))
+            else:
+                rows.sort(key=lambda r: r["pct"], reverse=(key == "gainers"))
+            for r in rows[:12]:
+                note(r["symbol"], name=r["name"], price=r["price"], pct=r["pct"], volume=r["volume"], t=r["t"],
+                     flag=label, src="Yahoo Finance %s" % label.replace("top ", "day "), source_id=sid)
+            run.ok(sid, age)
+        except FetchError as exc:
+            run.fail(sid, exc)
+    try:
+        doc, age = run.get_json(YAHOO_TRENDING, UA_JSON, 20)
+        quotes = doc["finance"]["result"][0]["quotes"]
+        n = 0
+        for q in quotes:
+            sym = q.get("symbol") if isinstance(q, dict) else None
+            if isinstance(sym, str) and re.fullmatch(r"[A-Z]{1,5}", sym):
+                note(sym, flag="trending on Yahoo Finance", src="Yahoo Finance trending tickers", source_id="yahoo_trending")
+                n += 1
+        if not n:
+            raise FetchError("no equity symbols")
+        run.ok("yahoo_trending", age)
+    except (FetchError, KeyError, IndexError, TypeError) as exc:
+        run.fail("yahoo_trending", exc if isinstance(exc, FetchError) else "yahoo trending: unexpected shape")
+
+    fails, charted, first_fail = 0, 0, None
+    order = sorted(cands.values(), key=lambda c: (-len(c["flags"]), -(c["volume"] or 0)))
+    for c in order[:MAX_CHARTS]:
+        try:
+            today, avg, q = chart_volume(c["symbol"], run)
+            charted += 1
+        except FetchError as exc:
+            fails += 1
+            c["volume_ratio"] = None
+            first_fail = first_fail or short_reason(exc)
+            continue
+        if q.get("type") not in (None, "EQUITY"):
+            c["drop"] = True
+            continue
+        c["volume_ratio"] = round(today / avg, 2) if today and avg else None
+        c["name"] = c["name"] or q.get("name")
+        c["price"] = c["price"] if c["price"] is not None else q.get("price")
+        c["t"] = c["t"] if c["t"] is not None else q.get("t")
+        c["volume"] = c["volume"] or today
+    if charted:
+        run.ok("yahoo_chart_volume")
+    elif order:
+        run.fail("yahoo_chart_volume", first_fail if fails else "no charts fetched")
+    out = []
+    for c in cands.values():
+        if c.get("drop") or (c["price"] is None and c.get("volume_ratio") is None):
+            continue
+        vr = c.get("volume_ratio")
+        if vr and vr >= 2 and "unusual volume" not in c["flags"]:
+            c["flags"].append("unusual volume")
+        parts = []
+        for f in c["flags"]:
+            if f == "most active" and c["volume"]:
+                parts.append("most active (%.1fM shares)" % (c["volume"] / 1e6))
+            elif f in ("top gainer", "top loser") and c["pct"] is not None:
+                parts.append("%s %+.1f%%" % (f, c["pct"]))
+            elif f == "unusual volume":
+                parts.append("volume %.1fx its 30-day average" % vr)
+            elif f not in ("top gainer", "top loser", "most active"):
+                parts.append(f)
+        weight = (vr or 1.0) + abs(c["pct"] or 0) / 5.0 + 0.5 * len(c["flags"])
+        out.append((weight, {"symbol": c["symbol"], "name": clean(c["name"] or c["symbol"], 60),
+                             "price": M.rnd(c["price"]), "pct": M.rnd(c["pct"], 2), "t": c["t"],
+                             "volume_ratio": vr, "reason": "; ".join(dict.fromkeys(parts)) or "market-wide mover",
+                             "source": ", ".join(sorted(c["src"])) + (", Yahoo daily bars" if vr else ""),
+                             "source_id": c["source_id"]}))
+    out.sort(key=lambda x: -x[0])
+    return [t for _w, t in out[:MAX_TICKERS]]
+
+
+# ---------------------------------------------------------------- searches
+
+HT = "{https://trends.google.com/trending/rss}"
+
+
+def parse_trends_rss(text, region):
+    try:
+        root = ET.fromstring(text)
+    except ET.ParseError as exc:
+        raise FetchError("google trends: bad RSS XML") from exc
+    out = []
+    for it in root.iter("item"):
+        term = clean(it.findtext("title"), 100)
+        if term:
+            out.append({"term": term, "region": region, "growth_pct": None,
+                        "source": "Google Trends trending searches RSS (%s, approx. %s searches)"
+                                  % (region, clean(it.findtext(HT + "approx_traffic"), 12) or "n/a")})
+    if not out:
+        raise FetchError("google trends: no items")
+    return out
+
+
+SKIP_ARTICLE = re.compile(r"^(Main_Page|Special:|Wikipedia:|Portal:|File:|Help:|Category:|Template:|Talk:|User:|-$)")
+
+
+def wiki_day(run, day):
+    doc, age = run.get_json(WIKI_TOP % (day.year, day.month, day.day), UA_FEED, 25)
+    try:
+        arts = doc["items"][0]["articles"]
+    except (KeyError, IndexError, TypeError) as exc:
+        raise FetchError("wikimedia: unexpected shape") from exc
+    return {a["article"]: a["views"] for a in arts if isinstance(a, dict) and isinstance(a.get("article"), str)
+            and not SKIP_ARTICLE.match(a["article"]) and isinstance(a.get("views"), int)}, age
+
+
+def wiki_searches(run):
+    """Most viewed English Wikipedia articles on the latest published day, growth against the day before."""
+    utc_today = dt.datetime.now(dt.timezone.utc).date()
+    last_exc = None
+    for back in (1, 2, 3):
+        day = utc_today - dt.timedelta(days=back)
+        try:
+            cur, age = wiki_day(run, day)
+            prev, _ = wiki_day(run, day - dt.timedelta(days=1))
+        except FetchError as exc:
+            last_exc = exc
+            continue
+        out = []
+        for art, views in sorted(cur.items(), key=lambda kv: -kv[1])[:WIKI_CANDIDATES]:
+            old = prev.get(art)
+            out.append({"term": art.replace("_", " "), "region": "global (English Wikipedia)",
+                        "growth_pct": round((views / old - 1) * 100, 1) if old else None,
+                        "source": "Wikimedia pageviews top articles %s (%s views)" % (day.isoformat(), format(views, ","))})
+        return out, age
+    raise last_exc or FetchError("wikimedia: no published day")
+
+
+# Commercial intent (owner 2026-11-17: celebrity and news noise is useless). The local cluster answers keep or drop per
+# term; a term it skips, or every term when it is down, falls to the keyword rule. NOISE always drops, even after a keep.
+COMMERCIAL = re.compile(
+    r"\b(price[sd]?|prices|sale|sales|deals?|discount|coupon|buy|shop\w*|store|stocks?|shares|ipo|earnings|market|crypto\w*"
+    r"|bitcoin|ethereum|mortgage|rates?|rent|rental|housing|homes?|real estate|realtor|zillow|redfin|apps?|iphone|ipad"
+    r"|android|pixel|samsung|apple|google|amazon|walmart|costco|target|nvidia|tesla|openai|chatgpt|gemini|claude|ai"
+    r"|software|chips?|gpu|rtx|playstation|ps5|xbox|nintendo|steam|recall|outage|black friday|cyber monday|launch"
+    r"|release date|subscription|insurance|tax|loans?|bank|credit|fed|inflation|gas prices?|startup|company|inc|corp)\b", re.I)
+NOISE = re.compile(
+    r"(\bvs\.?\b|\bv\.\s|\bscores?\b|\bhighlights\b|\bepisode\b|\bseason \d|\bfinale\b|\bdies\b|\bdeath|\bdead\b|\bobituary\b"
+    r"|\bnet worth\b|\bfilmography\b|\bcast\b|\blyrics\b|\bweather\b|\bnfl\b|\bnba\b|\bnhl\b|\bmlb\b|\bncaa\b|\bufc\b"
+    r"|\bafcon\b|\bqualifiers?\b|\bpremier league\b|\bwrestl|\bgrand prix\b|\bkills?\b|\bshooting\b"
+    r"|\((\d{4} )?(film|tv series|miniseries|series|season|album|song|band|novel|play|musical|actor|actress|singer)\)"
+    r"|\bfilms?\b|\btv series\b|\bhighest-grossing\b|^portrayal of\b|^list of\b)", re.I)
+CLUSTER = "http://127.0.0.1:8080/v1/chat/completions"
+CLUSTER_MODEL = "cluster-current"
+CLUSTER_TIMEOUT = 120  # 80 terms in one call; 60 s timed out while the cluster was busy (2026-11-17 run)
+
+
+def keyword_keep(term):
+    return bool(COMMERCIAL.search(term)) and not NOISE.search(term)
+
+
+def cluster_intent(terms):
+    """{term: True keep / False drop} from one local cluster call (public search terms only). Raises on failure."""
+    prompt = ("Classify each search term for commercial intent, for a small investor and founder looking for market "
+              "gaps. KEEP: products, brands, companies, shopping events, product categories, local services, technology "
+              "and AI, real estate, finance and markets. DROP: people (celebrities, athletes, politicians), sports games "
+              "and scores, TV, film and episodes, deaths, weather, crime and general news. Reply with JSON only: an object "
+              "mapping each term exactly as given to \"keep\" or \"drop\".\n" + json.dumps(terms, ensure_ascii=False))
+    payload = json.dumps({"model": CLUSTER_MODEL, "messages": [{"role": "user", "content": prompt}], "max_tokens": 2000,
+                          "temperature": 0, "stream": False, "cluster_class": "background",
+                          "chat_template_kwargs": {"enable_thinking": False}}).encode()
+    req = urllib.request.Request(CLUSTER, data=payload, headers={"Content-Type": "application/json",
+                                                                 "Authorization": "Bearer local"})
+    with urllib.request.urlopen(req, timeout=CLUSTER_TIMEOUT) as resp:
+        doc = json.load(resp)
+    text = (doc["choices"][0]["message"].get("content") or "")
+    m = re.search(r"(?s)\{.*\}", text)
+    if not m:
+        raise ValueError("no JSON object in the cluster reply")
+    got = json.loads(m.group(0))
+    return {str(k): str(v).strip().lower() == "keep" for k, v in got.items() if str(v).strip().lower() in ("keep", "drop")}
+
+
+def filter_searches(rows, run, use_cluster=True):
+    """Commercial-intent rows only, at most SEARCH_KEEP per region, and the filter's counts for the feed."""
+    terms = sorted({r["term"] for r in rows})
+    verdict, method = {}, "keyword rule (local cluster not asked)"
+    if use_cluster and terms:
+        try:
+            verdict = cluster_intent(terms)
+            method = "local cluster keep/drop (%s) for %d of %d terms, keyword rule for the rest" % (
+                CLUSTER_MODEL, sum(1 for t in terms if t in verdict), len(terms))
+        except (urllib.error.URLError, OSError, ValueError, KeyError, IndexError, TypeError) as exc:
+            run.errors.append({"source": "search intent cluster", "reason": short_reason(exc)})
+            method = "keyword rule (local cluster unavailable)"
+    kept, per_region = [], {}
+    dropped = wiki_checked = 0
+    for r in rows:
+        keep = verdict.get(r["term"], keyword_keep(r["term"])) and not NOISE.search(r["term"])
+        if keep and r.get("source_id") == "wikimedia_top_articles":
+            # an article title hides what it is ("Jailer 2", "No Time to Die"): Wikipedia's own short description
+            # says film, actor, franchise or product. Unknown (fetch failed) keeps the cluster's answer.
+            desc = wiki_description(run, r["term"])
+            wiki_checked += 1
+            keep = desc is None or not WIKI_NOISE.search(desc)
+        if keep and per_region.get(r["region"], 0) < SEARCH_KEEP:
+            per_region[r["region"]] = per_region.get(r["region"], 0) + 1
+            kept.append(r)
+        elif not keep:
+            dropped += 1
+    if wiki_checked:
+        method += "; Wikipedia short descriptions checked for %d kept articles" % wiki_checked
+    return kept, {"method": method, "candidates": len(rows), "kept": len(kept), "dropped": dropped,
+                  "over_cap": len(rows) - len(kept) - dropped}
+
+
+WIKI_SUMMARY = "https://en.wikipedia.org/api/rest_v1/page/summary/%s"
+WIKI_NOISE = re.compile(
+    r"\b(actor|actress|singer|rapper|musician|footballer|cricketer|athlete|player|politician|youtuber|presenter|comedian"
+    r"|director|filmmaker|model|born|died|film|films|television|tv series|web series|miniseries|soap opera|album|song"
+    r"|novel|episode|season|fictional|character|franchise|epic poem|tournament|championship|football|cricket|election"
+    r"|war|battle|massacre|disaster|hurricane|storm|shooting|murder|holiday|festival)\b", re.I)
+
+
+def wiki_description(run, title):
+    try:
+        doc, _age = run.get_json(WIKI_SUMMARY % urllib.parse.quote(title.replace(" ", "_"), safe=""), UA_FEED, 15)
+    except FetchError:
+        return None
+    d = doc.get("description") if isinstance(doc, dict) else None
+    return d if isinstance(d, str) else None
+
+
+# ---------------------------------------------------------------- main
+
+def read_json(path):
+    try:
+        with open(path, encoding="utf-8") as fh:
+            return json.load(fh)
+    except (OSError, ValueError):
+        return None
+
+
+def tag(rows, sid):
+    """source_id = the sources[].id a row came from (owner Deck 2026-11-17: per-row source age and failure flags);
+    `source` stays the display name. A ticker's source_id is the first source that listed it."""
+    for r in rows:
+        r["source_id"] = sid
+    return rows
+
+
+def main():
+    now = int(time.time())
+    run = Run()
+    previous = read_json(os.path.join(OUT_DIR, NAME + ".json")) or {}
+    products = []
+
+    try:
+        doc = read_json(ECOM_FILE)
+        if not isinstance(doc, dict):
+            raise FetchError("ecom-market.json missing or unreadable")
+        age = now - int(num(doc.get("t")) or 0)
+        if age > ECOM_MAX_AGE:
+            run.fail("ecom_market_feed", "ecom-market.json is %d min old (over %d)" % (age // 60, ECOM_MAX_AGE // 60), age)
+        else:
+            rows = ecom_products(doc)
+            if not rows:
+                raise FetchError("no rising best sellers or movers in ecom-market.json")
+            products += tag(rows, "ecom_market_feed")
+            run.ok("ecom_market_feed", age)
+    except FetchError as exc:
+        run.fail("ecom_market_feed", exc)
+
+    for sid, url, headers, parse, is_json in (
+            ("steam_top_sellers", STEAM, UA_JSON, steam_products, True),
+            ("app_store_top_free", APPLE, UA_JSON, apple_products, True),
+            ("product_hunt_feed", PRODUCT_HUNT, UA_FEED, product_hunt_products, False)):
+        try:
+            if is_json:
+                doc, age = run.get_json(url, headers, 40)
+            else:
+                doc, age = run.get(url, headers, 30)
+            products += tag(parse(doc), sid)
+            run.ok(sid, age)
+        except FetchError as exc:
+            run.fail(sid, exc)
+    add_rank_change(products, previous.get("products") or [])
+
+    tickers = collect_tickers(run)
+
+    searches = []
+    for geo, region in SEARCH_REGIONS:
+        sid = "google_trends_" + geo.lower().replace("-", "_")
+        try:
+            body, age = run.get(GT_RSS % geo, {"User-Agent": F.UA_BROWSER}, 25)
+            searches += tag(parse_trends_rss(body, region), sid)
+            run.ok(sid, age)
+        except FetchError as exc:
+            run.fail(sid, exc)
+    try:
+        rows, age = wiki_searches(run)
+        searches += tag(rows, "wikimedia_top_articles")
+        run.ok("wikimedia_top_articles", age)
+    except FetchError as exc:
+        run.fail("wikimedia_top_articles", exc)
+    searches, search_filter = filter_searches(searches, run, "--no-cluster" not in sys.argv[1:])
+
+    sources = sorted(run.sources.values(), key=lambda s: s["id"])
+    src = ["Google Trends RSS", "Yahoo Finance screeners and charts", "Steam store API", "Apple Marketing Tools RSS",
+           "Product Hunt feed", "Wikimedia pageviews API", "house-feeds/ecom-market.json"]
+    F.write_feed(NAME, REFRESH, src, run.errors, {
+        "generated_at": iso(now),
+        "sources": sources,
+        "products": products,
+        "tickers": tickers,
+        "searches": searches,
+        "search_filter": search_filter,
+    }, out_dir=OUT_DIR)
+    print("trends: %d products, %d tickers, %d searches (%d of %d candidates kept, %d dropped: %s); sources ok %d/%d"
+          % (len(products), len(tickers), len(searches), search_filter["kept"], search_filter["candidates"],
+             search_filter["dropped"], search_filter["method"], sum(s["ok"] for s in sources), len(sources)))
+    for e in run.errors:
+        print("  part failed: %s: %s" % (e["source"], e["reason"]))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

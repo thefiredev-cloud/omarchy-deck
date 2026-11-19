@@ -1,0 +1,22 @@
+[Unit]
+Description=Pixel Deck server (touch deck web UI, tailnet and localhost :8796)
+After=network-online.target tailscaled.service
+
+[Service]
+# The binary embeds static/, helper.py and the Pad agents; keys.json is read from PIXEL_DECK_BASE.
+# The deck token is read from ~/.config/pixel-deck/token at startup (never from the environment or this file).
+Environment=PATH=/usr/local/bin:/usr/bin:/bin:/usr/share/omarchy/bin:%h/.local/bin
+Environment=XDG_RUNTIME_DIR=/run/user/%U
+# Uncomment to change the defaults compiled into the binary:
+#Environment=PIXEL_DECK_BASE=%h/projects/pixel-deck
+#Environment=PIXEL_DECK_BINDS=127.0.0.1
+#Environment=PIXEL_DECK_PORT=8796
+# Extra Host names to accept (127.0.0.1, localhost, ::1 and the binds are always allowed; any other Host gets 403):
+#Environment=PIXEL_DECK_ALLOWED_HOSTS=pc-desktop.example.ts.net
+ExecStart=%h/.local/bin/pixel-deck
+Restart=always
+RestartSec=2
+Nice=10
+
+[Install]
+WantedBy=default.target

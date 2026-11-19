@@ -1,0 +1,9 @@
+[
+ {"workflow_id":1,"name":"CI","event":"push","status":"completed","conclusion":"failure","html_url":"https://github.com/o/A/actions/runs/9"},
+ {"workflow_id":1,"name":"CI","event":"push","status":"completed","conclusion":"success","html_url":"https://github.com/o/A/actions/runs/8"},
+ {"workflow_id":2,"name":"Deploy","event":"push","status":"completed","conclusion":"success","html_url":"https://github.com/o/A/actions/runs/7"},
+ {"workflow_id":2,"name":"Deploy","event":"push","status":"completed","conclusion":"failure","html_url":"https://github.com/o/A/actions/runs/6"},
+ {"workflow_id":3,"name":"PR only","event":"pull_request","status":"completed","conclusion":"failure","html_url":"https://github.com/o/A/actions/runs/5"},
+ {"workflow_id":4,"name":"Cancelled","event":"schedule","status":"completed","conclusion":"cancelled","html_url":"https://github.com/o/A/actions/runs/4"},
+ {"workflow_id":5,"name":"Nightly","event":"schedule","status":"completed","conclusion":"timed_out","html_url":"https://github.com/o/A/actions/runs/3"}
+]

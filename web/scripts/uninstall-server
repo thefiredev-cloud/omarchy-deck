@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Stop and remove the Pixel Deck server installed by scripts/install-server.
+#   scripts/uninstall-server
+#   DECK_BIN_DIR=DIR DECK_UNIT_DIR=DIR scripts/uninstall-server
+#
+# Disables and stops pixel-deck.service, removes the unit and the binary. The deck token
+# (~/.config/pixel-deck/token), feed state under ~/.meshvault/status and any .bak-<stamp>
+# binaries are left in place. The feed timers (deck-feed-*) are separate installs.
+set -euo pipefail
+
+bin="${DECK_BIN_DIR:-$HOME/.local/bin}"
+units="${DECK_UNIT_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user}"
+
+if command -v systemctl >/dev/null 2>&1; then
+  systemctl --user disable --now pixel-deck.service 2>/dev/null || true
+  systemctl --user reset-failed pixel-deck.service 2>/dev/null || true
+fi
+rm -f "$units/pixel-deck.service" "$bin/pixel-deck"
+if command -v systemctl >/dev/null 2>&1; then
+  systemctl --user daemon-reload
+fi
+echo "removed pixel-deck.service and $bin/pixel-deck"

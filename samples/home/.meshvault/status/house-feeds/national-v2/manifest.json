@@ -1,0 +1,4906 @@
+{
+ "schema": 2,
+ "generated_at": 1794700000,
+ "sources": [
+  {
+   "id": "acs5_housing_people",
+   "name": "Acs5 Housing People",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/acs5_housing_people",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "stale",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "bea_cagdp2",
+   "name": "Bea Cagdp2",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/bea_cagdp2",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "bea_cainc1",
+   "name": "Bea Cainc1",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/bea_cainc1",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "bls_laus_county",
+   "name": "Bls Laus County",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/bls_laus_county",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "bls_qcew_county",
+   "name": "Bls Qcew County",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/bls_qcew_county",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "cdc_places_zcta",
+   "name": "Cdc Places Zcta",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/cdc_places_zcta",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "cdc_svi",
+   "name": "Cdc Svi",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/cdc_svi",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "cdfi_opportunity_zones",
+   "name": "Cdfi Opportunity Zones",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/cdfi_opportunity_zones",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "stale",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "census_acs5",
+   "name": "Census Acs5",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/census_acs5",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "unavailable",
+   "reason": "fixture: not loaded",
+   "key_env": null,
+   "as_of": null,
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "census_bds",
+   "name": "Census Bds",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/census_bds",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "census_bfs_county",
+   "name": "Census Bfs County",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/census_bfs_county",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "census_bps_county",
+   "name": "Census Bps County",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/census_bps_county",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "census_cbp_county",
+   "name": "Census Cbp County",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/census_cbp_county",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "census_cbsa",
+   "name": "Census Cbsa",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/census_cbsa",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "census_gazetteer",
+   "name": "Census Gazetteer",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/census_gazetteer",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "stale",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "census_popest_county",
+   "name": "Census Popest County",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/census_popest_county",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "census_saipe_county",
+   "name": "Census Saipe County",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/census_saipe_county",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "census_zbp",
+   "name": "Census Zbp",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/census_zbp",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "census_zbp_detail",
+   "name": "Census Zbp Detail",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/census_zbp_detail",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "census_zbp_prior",
+   "name": "Census Zbp Prior",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/census_zbp_prior",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "census_zcta_county",
+   "name": "Census Zcta County",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/census_zcta_county",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "chr_homicides",
+   "name": "Chr Homicides",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/chr_homicides",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "stale",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "cre_listings_zip",
+   "name": "Cre Listings Zip",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/cre_listings_zip",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "eia_861_county",
+   "name": "Eia 861 County",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/eia_861_county",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "ejscreen_mirror",
+   "name": "Ejscreen Mirror",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/ejscreen_mirror",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "epa_airdata_aqi",
+   "name": "Epa Airdata Aqi",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/epa_airdata_aqi",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "epa_frs_zip",
+   "name": "Epa Frs Zip",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/epa_frs_zip",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "epa_walkability",
+   "name": "Epa Walkability",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/epa_walkability",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "fbi_cde_agency",
+   "name": "Fbi Cde Agency",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/fbi_cde_agency",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "needs_key",
+   "reason": "needs FBI_API_KEY",
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "fdic_call_cre",
+   "name": "Fdic Call Cre",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/fdic_call_cre",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "fdic_sod",
+   "name": "Fdic Sod",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/fdic_sod",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "fema_nri_tract",
+   "name": "Fema Nri Tract",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/fema_nri_tract",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "fhfa_hpi_tract",
+   "name": "Fhfa Hpi Tract",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/fhfa_hpi_tract",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "fhfa_hpi_zip3",
+   "name": "Fhfa Hpi Zip3",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/fhfa_hpi_zip3",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "fhfa_uad_tract",
+   "name": "Fhfa Uad Tract",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/fhfa_uad_tract",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "fhfa_zip5",
+   "name": "Fhfa Zip5",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/fhfa_zip5",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "stale",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "fhwa_hpms_county",
+   "name": "Fhwa Hpms County",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/fhwa_hpms_county",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "geonames_postal",
+   "name": "Geonames Postal",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/geonames_postal",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "gsa_iolp",
+   "name": "Gsa Iolp",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/gsa_iolp",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "hud_dda_zcta",
+   "name": "Hud Dda Zcta",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/hud_dda_zcta",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "hud_fmr_county",
+   "name": "Hud Fmr County",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/hud_fmr_county",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "hud_income_limits",
+   "name": "Hud Income Limits",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/hud_income_limits",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "hud_qct_tract",
+   "name": "Hud Qct Tract",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/hud_qct_tract",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "stale",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "hud_safmr",
+   "name": "Hud Safmr",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/hud_safmr",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "ipeds_enroll",
+   "name": "Ipeds Enroll",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/ipeds_enroll",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "ipeds_hd",
+   "name": "Ipeds Hd",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/ipeds_hd",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "irs_soi_county_migration",
+   "name": "Irs Soi County Migration",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/irs_soi_county_migration",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "irs_soi_zip",
+   "name": "Irs Soi Zip",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/irs_soi_zip",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "lehd_lodes_rac",
+   "name": "Lehd Lodes Rac",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/lehd_lodes_rac",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "lehd_lodes_wac",
+   "name": "Lehd Lodes Wac",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/lehd_lodes_wac",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "stale",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "nces_edge_schools",
+   "name": "Nces Edge Schools",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/nces_edge_schools",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "noaa_storm_events",
+   "name": "Noaa Storm Events",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/noaa_storm_events",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "openei_utility_rates_zip",
+   "name": "Openei Utility Rates Zip",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/openei_utility_rates_zip",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "openfema_disasters",
+   "name": "Openfema Disasters",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/openfema_disasters",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "openfema_nfip_claims",
+   "name": "Openfema Nfip Claims",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/openfema_nfip_claims",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "openfema_nfip_policies",
+   "name": "Openfema Nfip Policies",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/openfema_nfip_policies",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "opportunity_atlas_tract",
+   "name": "Opportunity Atlas Tract",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/opportunity_atlas_tract",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "stale",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "realtor_hotness_zip",
+   "name": "Realtor Hotness Zip",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/realtor_hotness_zip",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "realtor_zip",
+   "name": "Realtor Zip",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/realtor_zip",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "redfin_zip_market",
+   "name": "Redfin Zip Market",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/redfin_zip_market",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "redfin_zip_supply_signals",
+   "name": "Redfin Zip Supply Signals",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/redfin_zip_supply_signals",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "sba_504",
+   "name": "Sba 504",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/sba_504",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "sba_7a",
+   "name": "Sba 7A",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/sba_7a",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "sec_absee_cmbs",
+   "name": "Sec Absee Cmbs",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/sec_absee_cmbs",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "stale",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "urban_schools",
+   "name": "Urban Schools",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/urban_schools",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "usda_food_access",
+   "name": "Usda Food Access",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/usda_food_access",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "usda_ruca_zip",
+   "name": "Usda Ruca Zip",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/usda_ruca_zip",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "usfs_wildfire_county",
+   "name": "Usfs Wildfire County",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/usfs_wildfire_county",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "usps_coa_zip",
+   "name": "Usps Coa Zip",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/usps_coa_zip",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "zillow_listing_metrics_zip",
+   "name": "Zillow Listing Metrics Zip",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/zillow_listing_metrics_zip",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "zillow_zhvf",
+   "name": "Zillow Zhvf",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/zillow_zhvf",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "stale",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "zillow_zhvi",
+   "name": "Zillow Zhvi",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/zillow_zhvi",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  },
+  {
+   "id": "zillow_zori",
+   "name": "Zillow Zori",
+   "publisher": "Fixture publisher",
+   "homepage": "https://example.invalid/",
+   "url": "https://example.invalid/zillow_zori",
+   "license": "public domain",
+   "level": "zip",
+   "native": "zip",
+   "group": "residential",
+   "side": "residential",
+   "cadence": "monthly",
+   "status": "ok",
+   "reason": null,
+   "key_env": null,
+   "as_of": "2026-09",
+   "rows": 100,
+   "geos": 12,
+   "coverage": 0.9,
+   "seconds": 1.2,
+   "note": null
+  }
+ ],
+ "coverage": {
+  "zips_total": 12,
+  "with_zhvi": 6,
+  "with_rent": 7,
+  "with_listings_stats": 7,
+  "with_acs": 2,
+  "with_fmr": 1,
+  "with_biz": 7
+ },
+ "us": {
+  "pop": 335000,
+  "zhvi": 360000,
+  "zhvi_yoy": 1.2,
+  "rent": 2000,
+  "yield_gross": 6.6,
+  "active": 2000,
+  "dom": 50,
+  "biz_estabs": 22000
+ },
+ "states": [
+  {
+   "state": "CA",
+   "name": "California",
+   "zips": 5,
+   "pop": 190000,
+   "zhvi": 850000,
+   "zhvi_yoy": 3.2,
+   "rent": 2800,
+   "yield_gross": 4.4,
+   "list_price": null,
+   "active": 467,
+   "dom": 44,
+   "biz_estabs": 9420,
+   "biz_estabs_5y": 4.0,
+   "biz_emp": 104900
+  },
+  {
+   "state": "NY",
+   "name": "New York",
+   "zips": 1,
+   "pop": 25000,
+   "zhvi": 1000000,
+   "zhvi_yoy": 0.5,
+   "rent": 4500,
+   "yield_gross": 5.4,
+   "list_price": null,
+   "active": 500,
+   "dom": 80,
+   "biz_estabs": 9000,
+   "biz_estabs_5y": 1.0,
+   "biz_emp": 200000
+  },
+  {
+   "state": "TX",
+   "name": "Texas",
+   "zips": 1,
+   "pop": 120000,
+   "zhvi": 420000,
+   "zhvi_yoy": 1.5,
+   "rent": 2300,
+   "yield_gross": 6.57,
+   "list_price": null,
+   "active": 900,
+   "dom": 45,
+   "biz_estabs": 3000,
+   "biz_estabs_5y": 12.0,
+   "biz_emp": 40000
+  }
+ ],
+ "metros": [
+  {
+   "cbsa": "31080",
+   "name": "Los Angeles-Long Beach-Anaheim, CA",
+   "zips": 3,
+   "pop": 140000,
+   "zhvi": 1100000,
+   "zhvi_yoy": 3.4,
+   "rent": 3400,
+   "yield_gross": 3.9,
+   "active": 155,
+   "dom": 36,
+   "biz_estabs": 5800,
+   "biz_estabs_5y": 3.3
+  },
+  {
+   "cbsa": "41740",
+   "name": "San Diego-Chula Vista-Carlsbad, CA",
+   "zips": 1,
+   "pop": 45000,
+   "zhvi": 650000,
+   "zhvi_yoy": 2.5,
+   "rent": 3000,
+   "yield_gross": 5.54,
+   "active": 300,
+   "dom": 40,
+   "biz_estabs": 3500,
+   "biz_estabs_5y": 8.0
+  }
+ ],
+ "mortgage": {
+  "rate_30y": 6.5,
+  "as_of": "2026-11-06",
+  "source": "FRED MORTGAGE30US"
+ },
+ "score_method": {
+  "h": [
+   {
+    "key": "yield_gross",
+    "label": "Gross yield",
+    "weight": 0.4,
+    "direction": "high"
+   },
+   {
+    "key": "zhvi_yoy",
+    "label": "1-year change",
+    "weight": 0.3,
+    "direction": "high"
+   },
+   {
+    "key": "price_to_income",
+    "label": "Price to income",
+    "weight": 0.3,
+    "direction": "low"
+   }
+  ],
+  "c": [
+   {
+    "key": "biz_estabs_5y",
+    "label": "5-year establishment growth",
+    "weight": 0.4,
+    "direction": "high"
+   },
+   {
+    "key": "estabs_per_1k",
+    "label": "Establishments per 1,000",
+    "weight": 0.3,
+    "direction": "high"
+   },
+   {
+    "key": "biz_pay_per_emp",
+    "label": "Payroll per employee",
+    "weight": 0.3,
+    "direction": "high"
+   }
+  ]
+ },
+ "grade_method": {
+  "factors": [
+   {
+    "key": "renter_share",
+    "label": "Renter share of occupied homes",
+    "unit": "%",
+    "weight": 0.2,
+    "zero": 20.0,
+    "full": 50.0
+   },
+   {
+    "key": "rent_to_income",
+    "label": "Annual rent / median household income",
+    "unit": "%",
+    "weight": 0.15,
+    "zero": 40.0,
+    "full": 25.0
+   },
+   {
+    "key": "hh_income",
+    "label": "Median household income",
+    "unit": "$",
+    "weight": 0.1,
+    "zero": 35000,
+    "full": 75000
+   },
+   {
+    "key": "yield_gross",
+    "label": "Gross rent yield",
+    "unit": "%",
+    "weight": 0.2,
+    "zero": 4.0,
+    "full": 10.0
+   },
+   {
+    "key": "zhvi_yoy",
+    "label": "Home value change, 1 year",
+    "unit": "%",
+    "weight": 0.075,
+    "zero": -5.0,
+    "full": 5.0
+   },
+   {
+    "key": "zhvi_5y",
+    "label": "Home value change, 5 years",
+    "unit": "%",
+    "weight": 0.075,
+    "zero": 0.0,
+    "full": 40.0
+   },
+   {
+    "key": "homicide_rate",
+    "label": "Homicides per 100,000, county proxy for crime",
+    "unit": "/100k",
+    "weight": 0.1,
+    "zero": 15.0,
+    "full": 3.0
+   },
+   {
+    "key": "college_enroll_5mi",
+    "label": "College enrollment within 5 miles",
+    "unit": "students",
+    "weight": 0.1,
+    "zero": 0,
+    "full": 10000
+   }
+  ],
+  "grades": [
+   [
+    "A",
+    70.0
+   ],
+   [
+    "B",
+    55.0
+   ],
+   [
+    "C",
+    40.0
+   ]
+  ],
+  "min_pop": 1000,
+  "required": [
+   "yield_gross"
+  ],
+  "caps": [
+   {
+    "key": "yield_gross",
+    "below": 4.0,
+    "max_grade": "D",
+    "flag": "yield_below_4pct"
+   },
+   {
+    "key": "yield_gross",
+    "below": 5.5,
+    "max_grade": "C",
+    "flag": "yield_below_5_5pct"
+   }
+  ],
+  "min_coverage": 0.6,
+  "a_min_coverage": 0.8,
+  "low_conf_below": 0.8,
+  "note": "Each factor scores 0 to 100 on a straight line between its zero and full values (clamped). Area score is the weighted mean of the factors present; area_conf is the share of total weight present. Missing factors are skipped, never scored as zero. Grade A >= 70, B >= 55, C >= 40, else D. A gross yield under 5.5% holds the grade at C and under 4% at D (score clipped to that band). No grade below population 1,000, without a gross yield (no home price basis) or under coverage 0.6; an A needs coverage 0.8. Crime is the county homicide death rate (County Health Rankings, NCHS mortality files), a county-level proxy: ZIP-level crime is not published for free.",
+  "graded": {
+   "A": 1,
+   "B": 2,
+   "C": 2,
+   "D": 1,
+   "ungraded": 2
+  }
+ },
+ "fields": {
+  "zip": {
+   "name": "zip",
+   "label": "ZIP code",
+   "unit": "text",
+   "group": "geo",
+   "sources": [
+    "census_gazetteer"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "city": {
+   "name": "city",
+   "label": "City",
+   "unit": "text",
+   "group": "geo",
+   "sources": [
+    "geonames_postal"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "state": {
+   "name": "state",
+   "label": "State",
+   "unit": "text",
+   "group": "geo",
+   "sources": [
+    "census_zcta_county"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "county": {
+   "name": "county",
+   "label": "County",
+   "unit": "text",
+   "group": "geo",
+   "sources": [
+    "census_zcta_county"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "metro": {
+   "name": "metro",
+   "label": "Metro area",
+   "unit": "text",
+   "group": "geo",
+   "sources": [
+    "census_cbsa"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "lat": {
+   "name": "lat",
+   "label": "Latitude",
+   "unit": "index",
+   "group": "geo",
+   "sources": [
+    "census_gazetteer"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "lon": {
+   "name": "lon",
+   "label": "Longitude",
+   "unit": "index",
+   "group": "geo",
+   "sources": [
+    "census_gazetteer"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "pop": {
+   "name": "pop",
+   "label": "Population",
+   "unit": "count",
+   "group": "people",
+   "sources": [
+    "census_acs5"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "hh_income": {
+   "name": "hh_income",
+   "label": "Median household income",
+   "unit": "usd",
+   "group": "people",
+   "sources": [
+    "census_acs5"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "zhvi": {
+   "name": "zhvi",
+   "label": "Zillow home value index",
+   "unit": "usd",
+   "group": "market",
+   "sources": [
+    "zillow_zhvi"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "zhvi_yoy": {
+   "name": "zhvi_yoy",
+   "label": "Zillow home value change, 1 year",
+   "unit": "pct",
+   "group": "market",
+   "sources": [
+    "zillow_zhvi"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "zhvi_5y": {
+   "name": "zhvi_5y",
+   "label": "Zillow home value change, 5 years",
+   "unit": "pct",
+   "group": "market",
+   "sources": [
+    "zillow_zhvi"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "rent": {
+   "name": "rent",
+   "label": "Rent (legacy: Zillow, else HUD 2BR, else survey)",
+   "unit": "usd_month",
+   "group": "market",
+   "sources": [
+    "zillow_zori",
+    "hud_safmr",
+    "census_acs5"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "rent_src": {
+   "name": "rent_src",
+   "label": "Rent basis (legacy)",
+   "unit": "text",
+   "group": "market",
+   "sources": [
+    "zillow_zori",
+    "hud_safmr",
+    "census_acs5"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "rent_yoy": {
+   "name": "rent_yoy",
+   "label": "Zillow rent change, 1 year",
+   "unit": "pct",
+   "group": "market",
+   "sources": [
+    "zillow_zori"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "list_price": {
+   "name": "list_price",
+   "label": "Median list price (Realtor.com)",
+   "unit": "usd",
+   "group": "market",
+   "sources": [
+    "realtor_zip"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "active": {
+   "name": "active",
+   "label": "Active listings (Realtor.com)",
+   "unit": "count",
+   "group": "market",
+   "sources": [
+    "realtor_zip"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "dom": {
+   "name": "dom",
+   "label": "Median days listed (Realtor.com)",
+   "unit": "days",
+   "group": "market",
+   "sources": [
+    "realtor_zip"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "price_cut_share": {
+   "name": "price_cut_share",
+   "label": "Listings with a price cut (Realtor.com)",
+   "unit": "pct",
+   "group": "market",
+   "sources": [
+    "realtor_zip"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "yield_gross": {
+   "name": "yield_gross",
+   "label": "Gross rent yield (legacy basis)",
+   "unit": "pct",
+   "group": "market",
+   "sources": [
+    "zillow_zori",
+    "hud_safmr",
+    "zillow_zhvi",
+    "realtor_zip"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "price_to_income": {
+   "name": "price_to_income",
+   "label": "Price to household income (legacy basis)",
+   "unit": "ratio",
+   "group": "market",
+   "sources": [
+    "zillow_zhvi",
+    "realtor_zip",
+    "census_acs5"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "vacancy": {
+   "name": "vacancy",
+   "label": "Vacant homes (all reasons)",
+   "unit": "pct",
+   "group": "market",
+   "sources": [
+    "census_acs5"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "owner_share": {
+   "name": "owner_share",
+   "label": "Owner-occupied homes",
+   "unit": "pct",
+   "group": "market",
+   "sources": [
+    "census_acs5"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "biz_estabs": {
+   "name": "biz_estabs",
+   "label": "Business establishments",
+   "unit": "count",
+   "group": "commercial",
+   "sources": [
+    "census_zbp"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "biz_estabs_5y": {
+   "name": "biz_estabs_5y",
+   "label": "Establishment change, 5 years",
+   "unit": "pct",
+   "group": "commercial",
+   "sources": [
+    "census_zbp",
+    "census_zbp_prior"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "biz_emp": {
+   "name": "biz_emp",
+   "label": "Employees at local businesses",
+   "unit": "count",
+   "group": "commercial",
+   "sources": [
+    "census_zbp"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "biz_pay_per_emp": {
+   "name": "biz_pay_per_emp",
+   "label": "Annual payroll per employee",
+   "unit": "usd",
+   "group": "commercial",
+   "sources": [
+    "census_zbp"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "estabs_per_1k": {
+   "name": "estabs_per_1k",
+   "label": "Establishments per 1,000 residents",
+   "unit": "per_1k",
+   "group": "commercial",
+   "sources": [
+    "census_zbp",
+    "census_acs5"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "retail_estabs": {
+   "name": "retail_estabs",
+   "label": "Retail establishments (2-digit, legacy)",
+   "unit": "count",
+   "group": "commercial",
+   "sources": [
+    "census_zbp_detail"
+   ],
+   "kind": "legacy",
+   "agg": "sum",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "office_estabs": {
+   "name": "office_estabs",
+   "label": "Office-using establishments (legacy)",
+   "unit": "count",
+   "group": "commercial",
+   "sources": [
+    "census_zbp_detail"
+   ],
+   "kind": "legacy",
+   "agg": "sum",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "industrial_estabs": {
+   "name": "industrial_estabs",
+   "label": "Industrial establishments (legacy)",
+   "unit": "count",
+   "group": "commercial",
+   "sources": [
+    "census_zbp_detail"
+   ],
+   "kind": "legacy",
+   "agg": "sum",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "com_listings": {
+   "name": "com_listings",
+   "label": "Commercial listings for sale",
+   "unit": "count",
+   "group": "commercial",
+   "sources": [
+    "cre_listings_zip"
+   ],
+   "kind": "source",
+   "agg": "sum",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "metric": null,
+   "level": "zip",
+   "native": "zip",
+   "lane": "NationalListings",
+   "status": "build_replaces_legacy",
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "com_median_price": {
+   "name": "com_median_price",
+   "label": "Median commercial asking price",
+   "unit": "usd",
+   "group": "commercial",
+   "sources": [
+    "cre_listings_zip"
+   ],
+   "kind": "source",
+   "agg": "pop_weighted_median",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "metric": null,
+   "level": "zip",
+   "native": "zip",
+   "lane": "NationalListings",
+   "status": "build_replaces_legacy",
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "com_median_cap": {
+   "name": "com_median_cap",
+   "label": "Median asking cap rate",
+   "unit": "pct",
+   "group": "commercial",
+   "sources": [
+    "cre_listings_zip"
+   ],
+   "kind": "source",
+   "agg": "pop_weighted_median",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "metric": "asking_cap",
+   "level": "zip",
+   "native": "zip",
+   "lane": "NationalListings",
+   "status": "build_replaces_legacy",
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "h_score": {
+   "name": "h_score",
+   "label": "Home investment score",
+   "unit": "score",
+   "group": "score",
+   "sources": [
+    "derived"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "c_score": {
+   "name": "c_score",
+   "label": "Business base score (v1 formula)",
+   "unit": "score",
+   "group": "score",
+   "sources": [
+    "derived"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "renter_share": {
+   "name": "renter_share",
+   "label": "Renter-occupied homes",
+   "unit": "pct",
+   "group": "market",
+   "sources": [
+    "census_acs5"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "median_age": {
+   "name": "median_age",
+   "label": "Median age",
+   "unit": "years",
+   "group": "people",
+   "sources": [
+    "census_acs5"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "rent_to_income": {
+   "name": "rent_to_income",
+   "label": "Annual rent as share of household income",
+   "unit": "pct",
+   "group": "market",
+   "sources": [
+    "zillow_zori",
+    "hud_safmr",
+    "census_acs5"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "homicide_rate": {
+   "name": "homicide_rate",
+   "label": "Homicides per 100,000 (county proxy)",
+   "unit": "per_100k",
+   "group": "risk",
+   "sources": [
+    "chr_homicides"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75,
+   "level": "county"
+  },
+  "colleges_5mi": {
+   "name": "colleges_5mi",
+   "label": "Colleges within 5 miles",
+   "unit": "count",
+   "group": "people",
+   "sources": [
+    "ipeds_hd"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "college_enroll_5mi": {
+   "name": "college_enroll_5mi",
+   "label": "College students within 5 miles",
+   "unit": "count",
+   "group": "people",
+   "sources": [
+    "ipeds_enroll"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "colleges_10mi": {
+   "name": "colleges_10mi",
+   "label": "Colleges within 10 miles",
+   "unit": "count",
+   "group": "people",
+   "sources": [
+    "ipeds_hd"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "college_enroll_10mi": {
+   "name": "college_enroll_10mi",
+   "label": "College students within 10 miles",
+   "unit": "count",
+   "group": "people",
+   "sources": [
+    "ipeds_enroll"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "schools_5mi": {
+   "name": "schools_5mi",
+   "label": "Public schools within 5 miles",
+   "unit": "count",
+   "group": "people",
+   "sources": [
+    "nces_edge_schools"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "area_score": {
+   "name": "area_score",
+   "label": "Rental area score",
+   "unit": "score",
+   "group": "score",
+   "sources": [
+    "derived"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "area_grade": {
+   "name": "area_grade",
+   "label": "Rental area grade",
+   "unit": "text",
+   "group": "score",
+   "sources": [
+    "derived"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "area_conf": {
+   "name": "area_conf",
+   "label": "Rental area grade confidence",
+   "unit": "ratio",
+   "group": "score",
+   "sources": [
+    "derived"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "home_value": {
+   "name": "home_value",
+   "label": "Typical home value",
+   "unit": "usd",
+   "group": "metric",
+   "sources": [
+    "acs5_housing_people",
+    "fhfa_uad_tract",
+    "realtor_zip",
+    "redfin_zip_market",
+    "zillow_listing_metrics_zip",
+    "zillow_zhvi"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "value_trend_1y": {
+   "name": "value_trend_1y",
+   "label": "Home value change, 1 year",
+   "unit": "pct",
+   "group": "metric",
+   "sources": [
+    "fhfa_hpi_tract",
+    "fhfa_hpi_zip3",
+    "redfin_zip_market",
+    "zillow_zhvi"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "value_trend_5y": {
+   "name": "value_trend_5y",
+   "label": "Home value change, 5 years",
+   "unit": "pct",
+   "group": "metric",
+   "sources": [
+    "fhfa_hpi_tract",
+    "fhfa_hpi_zip3",
+    "fhfa_zip5",
+    "zillow_zhvi"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "value_forecast_1y": {
+   "name": "value_forecast_1y",
+   "label": "Home value forecast, 12 months",
+   "unit": "pct",
+   "group": "metric",
+   "sources": [
+    "zillow_zhvf"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "typical_rent": {
+   "name": "typical_rent",
+   "label": "Typical rent",
+   "unit": "usd_month",
+   "group": "metric",
+   "sources": [
+    "census_acs5",
+    "hud_fmr_county",
+    "hud_safmr",
+    "zillow_zori"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "rent_trend_1y": {
+   "name": "rent_trend_1y",
+   "label": "Rent change, 1 year",
+   "unit": "pct",
+   "group": "metric",
+   "sources": [
+    "hud_fmr_county",
+    "zillow_zori"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "gross_yield": {
+   "name": "gross_yield",
+   "label": "Gross rent yield",
+   "unit": "pct",
+   "group": "metric",
+   "sources": [
+    "derived"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "inventory": {
+   "name": "inventory",
+   "label": "Homes for sale",
+   "unit": "count",
+   "group": "metric",
+   "sources": [
+    "realtor_zip",
+    "redfin_zip_market",
+    "zillow_listing_metrics_zip"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "days_on_market": {
+   "name": "days_on_market",
+   "label": "Days to sell",
+   "unit": "days",
+   "group": "metric",
+   "sources": [
+    "realtor_zip",
+    "redfin_zip_market",
+    "zillow_listing_metrics_zip"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "lower",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "sale_to_list": {
+   "name": "sale_to_list",
+   "label": "Sale to list price",
+   "unit": "pct",
+   "group": "metric",
+   "sources": [
+    "redfin_zip_market",
+    "zillow_listing_metrics_zip"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "price_cuts": {
+   "name": "price_cuts",
+   "label": "Listings with a price cut",
+   "unit": "pct",
+   "group": "metric",
+   "sources": [
+    "realtor_zip",
+    "redfin_zip_supply_signals",
+    "zillow_listing_metrics_zip"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "lower",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "market_heat": {
+   "name": "market_heat",
+   "label": "Market heat",
+   "unit": "score",
+   "group": "metric",
+   "sources": [
+    "realtor_hotness_zip",
+    "redfin_zip_market",
+    "redfin_zip_supply_signals"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "affordability": {
+   "name": "affordability",
+   "label": "Payment as share of income",
+   "unit": "pct",
+   "group": "metric",
+   "sources": [
+    "derived"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "lower",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "property_tax_rate": {
+   "name": "property_tax_rate",
+   "label": "Effective property tax rate",
+   "unit": "pct",
+   "group": "metric",
+   "sources": [
+    "acs5_housing_people"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "lower",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "vacancy_rate": {
+   "name": "vacancy_rate",
+   "label": "Vacant homes, not counting seasonal",
+   "unit": "pct",
+   "group": "metric",
+   "sources": [
+    "acs5_housing_people",
+    "census_acs5"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "lower",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "population": {
+   "name": "population",
+   "label": "Population",
+   "unit": "count",
+   "group": "metric",
+   "sources": [
+    "census_acs5"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "pop_trend": {
+   "name": "pop_trend",
+   "label": "Population change since 2020 (county)",
+   "unit": "pct",
+   "group": "metric",
+   "sources": [
+    "census_popest_county"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "migration": {
+   "name": "migration",
+   "label": "People moving in",
+   "unit": "score",
+   "group": "metric",
+   "sources": [
+    "census_acs5",
+    "census_popest_county",
+    "irs_soi_county_migration",
+    "usps_coa_zip"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "income": {
+   "name": "income",
+   "label": "Household income",
+   "unit": "usd",
+   "group": "metric",
+   "sources": [
+    "census_acs5",
+    "census_saipe_county",
+    "hud_income_limits",
+    "irs_soi_zip"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "income_trend": {
+   "name": "income_trend",
+   "label": "Income change per year",
+   "unit": "pct",
+   "group": "metric",
+   "sources": [
+    "bea_cainc1",
+    "irs_soi_zip"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "jobs_trend": {
+   "name": "jobs_trend",
+   "label": "Job change, 1 year (county)",
+   "unit": "pct",
+   "group": "metric",
+   "sources": [
+    "bls_qcew_county"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "wages": {
+   "name": "wages",
+   "label": "Average annual wage",
+   "unit": "usd",
+   "group": "metric",
+   "sources": [
+    "bls_qcew_county",
+    "census_cbp_county",
+    "census_zbp"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "unemployment": {
+   "name": "unemployment",
+   "label": "Unemployment rate",
+   "unit": "pct",
+   "group": "metric",
+   "sources": [
+    "acs5_housing_people",
+    "bls_laus_county"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "lower",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "schools": {
+   "name": "schools",
+   "label": "School quality",
+   "unit": "score",
+   "group": "metric",
+   "sources": [
+    "opportunity_atlas_tract",
+    "urban_schools"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "safety": {
+   "name": "safety",
+   "label": "Safety",
+   "unit": "score",
+   "group": "metric",
+   "sources": [
+    "chr_homicides",
+    "fbi_cde_agency"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "climate_risk": {
+   "name": "climate_risk",
+   "label": "Natural hazard risk",
+   "unit": "score",
+   "group": "metric",
+   "sources": [
+    "fema_nri_tract",
+    "noaa_storm_events",
+    "openfema_disasters",
+    "usfs_wildfire_county"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "lower",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "flood_risk": {
+   "name": "flood_risk",
+   "label": "Flood risk",
+   "unit": "score",
+   "group": "metric",
+   "sources": [
+    "census_acs5",
+    "fema_nri_tract",
+    "openfema_nfip_claims",
+    "openfema_nfip_policies"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "lower",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "insurance_cost": {
+   "name": "insurance_cost",
+   "label": "Insurance cost pressure",
+   "unit": "score",
+   "group": "metric",
+   "sources": [
+    "fema_nri_tract",
+    "openfema_nfip_policies"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "lower",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "health": {
+   "name": "health",
+   "label": "Community health",
+   "unit": "score",
+   "group": "metric",
+   "sources": [
+    "cdc_places_zcta",
+    "cdc_svi",
+    "ejscreen_mirror",
+    "epa_airdata_aqi"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "broadband": {
+   "name": "broadband",
+   "label": "Homes with broadband",
+   "unit": "pct",
+   "group": "metric",
+   "sources": [
+    "acs5_housing_people"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "walkability": {
+   "name": "walkability",
+   "label": "Walkability",
+   "unit": "score",
+   "group": "metric",
+   "sources": [
+    "census_gazetteer",
+    "epa_walkability",
+    "lehd_lodes_wac",
+    "usda_food_access"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "new_supply": {
+   "name": "new_supply",
+   "label": "Homes permitted per 1,000 residents",
+   "unit": "per_1k",
+   "group": "metric",
+   "sources": [
+    "census_acs5",
+    "census_bps_county"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "business_base": {
+   "name": "business_base",
+   "label": "Businesses",
+   "unit": "count",
+   "group": "metric",
+   "sources": [
+    "census_zbp"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "business_growth": {
+   "name": "business_growth",
+   "label": "Business growth",
+   "unit": "score",
+   "group": "metric",
+   "sources": [
+    "bea_cagdp2",
+    "bls_qcew_county",
+    "census_zbp",
+    "census_zbp_prior"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "business_formation": {
+   "name": "business_formation",
+   "label": "New business starts",
+   "unit": "score",
+   "group": "metric",
+   "sources": [
+    "census_bds",
+    "census_bfs_county"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "jobs_total": {
+   "name": "jobs_total",
+   "label": "Jobs located here",
+   "unit": "count",
+   "group": "metric",
+   "sources": [
+    "census_zbp",
+    "lehd_lodes_wac"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "jobs_office": {
+   "name": "jobs_office",
+   "label": "Office-using jobs",
+   "unit": "count",
+   "group": "metric",
+   "sources": [
+    "lehd_lodes_wac"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "jobs_retail": {
+   "name": "jobs_retail",
+   "label": "Retail jobs",
+   "unit": "count",
+   "group": "metric",
+   "sources": [
+    "lehd_lodes_wac"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "jobs_industrial": {
+   "name": "jobs_industrial",
+   "label": "Industrial jobs",
+   "unit": "count",
+   "group": "metric",
+   "sources": [
+    "lehd_lodes_wac"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "daytime_pop": {
+   "name": "daytime_pop",
+   "label": "Daytime population",
+   "unit": "count",
+   "group": "metric",
+   "sources": [
+    "census_acs5",
+    "lehd_lodes_rac",
+    "lehd_lodes_wac"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "sb_lending": {
+   "name": "sb_lending",
+   "label": "Small business lending per business",
+   "unit": "usd",
+   "group": "metric",
+   "sources": [
+    "census_zbp",
+    "sba_504",
+    "sba_7a"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "deposits": {
+   "name": "deposits",
+   "label": "Bank deposits",
+   "unit": "usd",
+   "group": "metric",
+   "sources": [
+    "fdic_sod"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "deposit_growth": {
+   "name": "deposit_growth",
+   "label": "Bank deposit change, 1 year",
+   "unit": "pct",
+   "group": "metric",
+   "sources": [
+    "fdic_sod"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "bank_cre_concentration": {
+   "name": "bank_cre_concentration",
+   "label": "Local banks' CRE exposure",
+   "unit": "pct",
+   "group": "metric",
+   "sources": [
+    "fdic_call_cre"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "lower",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "cmbs_occupancy": {
+   "name": "cmbs_occupancy",
+   "label": "Occupancy of CMBS-financed buildings",
+   "unit": "pct",
+   "group": "metric",
+   "sources": [
+    "sec_absee_cmbs"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "asking_cap": {
+   "name": "asking_cap",
+   "label": "Asking cap rate",
+   "unit": "pct",
+   "group": "metric",
+   "sources": [
+    "cre_listings_zip"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "cap_spread": {
+   "name": "cap_spread",
+   "label": "Asking cap minus 10-year Treasury",
+   "unit": "pct_pts",
+   "group": "metric",
+   "sources": [
+    "derived"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "incentives": {
+   "name": "incentives",
+   "label": "Share of ZIP in an incentive area",
+   "unit": "pct",
+   "group": "metric",
+   "sources": [
+    "cdfi_opportunity_zones",
+    "hud_dda_zcta",
+    "hud_qct_tract"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "commercial_risk": {
+   "name": "commercial_risk",
+   "label": "Commercial property risk",
+   "unit": "score",
+   "group": "metric",
+   "sources": [
+    "ejscreen_mirror",
+    "epa_frs_zip",
+    "fdic_call_cre",
+    "fema_nri_tract",
+    "gsa_iolp",
+    "openfema_nfip_claims"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "lower",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "power_cost": {
+   "name": "power_cost",
+   "label": "Commercial electricity price",
+   "unit": "kwh_cents",
+   "group": "metric",
+   "sources": [
+    "eia_861_county",
+    "openei_utility_rates_zip"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "lower",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "traffic": {
+   "name": "traffic",
+   "label": "Traffic on the busiest road (county)",
+   "unit": "count",
+   "group": "metric",
+   "sources": [
+    "fhwa_hpms_county"
+   ],
+   "kind": "metric",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "rankable": true,
+   "in_zips": true,
+   "coverage": 0.75
+  },
+  "home_value_conf": {
+   "name": "home_value_conf",
+   "label": "Typical home value, confidence",
+   "unit": "ratio",
+   "group": "metric",
+   "sources": [
+    "derived"
+   ],
+   "kind": "metric_conf",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "data"
+   ],
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "typical_rent_conf": {
+   "name": "typical_rent_conf",
+   "label": "Typical rent, confidence",
+   "unit": "ratio",
+   "group": "metric",
+   "sources": [
+    "derived"
+   ],
+   "kind": "metric_conf",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "data"
+   ],
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "h_conf": {
+   "name": "h_conf",
+   "label": "Home investment score, confidence",
+   "unit": "ratio",
+   "group": "score",
+   "sources": [
+    "derived"
+   ],
+   "kind": "score_conf",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "retail_score": {
+   "name": "retail_score",
+   "label": "Retail property score",
+   "unit": "score",
+   "group": "score",
+   "sources": [
+    "derived"
+   ],
+   "kind": "score",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "retail_conf": {
+   "name": "retail_conf",
+   "label": "Retail property score, confidence",
+   "unit": "ratio",
+   "group": "score",
+   "sources": [
+    "derived"
+   ],
+   "kind": "score_conf",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "office_score": {
+   "name": "office_score",
+   "label": "Office property score",
+   "unit": "score",
+   "group": "score",
+   "sources": [
+    "derived"
+   ],
+   "kind": "score",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "office_conf": {
+   "name": "office_conf",
+   "label": "Office property score, confidence",
+   "unit": "ratio",
+   "group": "score",
+   "sources": [
+    "derived"
+   ],
+   "kind": "score_conf",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "industrial_score": {
+   "name": "industrial_score",
+   "label": "Industrial property score",
+   "unit": "score",
+   "group": "score",
+   "sources": [
+    "derived"
+   ],
+   "kind": "score",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "industrial_conf": {
+   "name": "industrial_conf",
+   "label": "Industrial property score, confidence",
+   "unit": "ratio",
+   "group": "score",
+   "sources": [
+    "derived"
+   ],
+   "kind": "score_conf",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "multifamily_score": {
+   "name": "multifamily_score",
+   "label": "Multifamily property score",
+   "unit": "score",
+   "group": "score",
+   "sources": [
+    "derived"
+   ],
+   "kind": "score",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "multifamily_conf": {
+   "name": "multifamily_conf",
+   "label": "Multifamily property score, confidence",
+   "unit": "ratio",
+   "group": "score",
+   "sources": [
+    "derived"
+   ],
+   "kind": "score_conf",
+   "agg": "none",
+   "better": "higher",
+   "shown": [
+    "rank",
+    "zip",
+    "data"
+   ],
+   "in_zips": true,
+   "rankable": true,
+   "coverage": 0.75
+  },
+  "ruca_class": {
+   "name": "ruca_class",
+   "label": "Rural-urban class",
+   "unit": "text",
+   "group": "geo",
+   "sources": [
+    "usda_ruca_zip"
+   ],
+   "kind": "source",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "zip",
+    "data"
+   ],
+   "metric": null,
+   "level": "zip",
+   "native": "zip",
+   "lane": "SrcRisk",
+   "status": "built",
+   "in_zips": true,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "county_fips": {
+   "name": "county_fips",
+   "label": "County FIPS",
+   "unit": "text",
+   "group": "geo",
+   "sources": [
+    "census_zcta_county"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "cbsa": {
+   "name": "cbsa",
+   "label": "CBSA code",
+   "unit": "text",
+   "group": "geo",
+   "sources": [
+    "census_cbsa"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": true,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "fhfa_hpi_5y": {
+   "name": "fhfa_hpi_5y",
+   "label": "Repeat-sales price change, 5 years (ZIP)",
+   "unit": "pct",
+   "group": "market",
+   "sources": [
+    "fhfa_zip5"
+   ],
+   "kind": "legacy",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "zip",
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": false,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "redfin_median_sale": {
+   "name": "redfin_median_sale",
+   "label": "Median sale price, 3 months",
+   "unit": "usd",
+   "group": "market",
+   "sources": [
+    "redfin_zip_market"
+   ],
+   "kind": "source",
+   "agg": "pop_weighted_median",
+   "better": null,
+   "shown": [
+    "zip",
+    "data"
+   ],
+   "metric": null,
+   "level": "zip",
+   "native": "zip",
+   "lane": "SrcMarket",
+   "status": "built",
+   "in_zips": false,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "acs_value_median": {
+   "name": "acs_value_median",
+   "label": "Median home value (survey)",
+   "unit": "usd",
+   "group": "people",
+   "sources": [
+    "acs5_housing_people"
+   ],
+   "kind": "source",
+   "agg": "pop_weighted_median",
+   "better": "higher",
+   "shown": [
+    "zip",
+    "data"
+   ],
+   "metric": null,
+   "level": "zip",
+   "native": "zip",
+   "lane": "SrcPeople",
+   "status": "built",
+   "in_zips": false,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "m": {
+   "name": "m",
+   "label": "Blended metric parts: value, confidence, source count and the member fields used (object)",
+   "unit": "text",
+   "group": "meta",
+   "sources": [
+    "derived"
+   ],
+   "kind": "nested",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "data"
+   ],
+   "legacy": false,
+   "in_zips": false,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "hist": {
+   "name": "hist",
+   "label": "History series for charts (served by the history route; legacy route merges it back)",
+   "unit": "text",
+   "group": "meta",
+   "sources": [
+    "derived"
+   ],
+   "kind": "nested",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": false,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "score_parts": {
+   "name": "score_parts",
+   "label": "Score component percentiles (object)",
+   "unit": "text",
+   "group": "meta",
+   "sources": [
+    "derived"
+   ],
+   "kind": "nested",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": false,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "grade_parts": {
+   "name": "grade_parts",
+   "label": "Rental grade factor points (object)",
+   "unit": "text",
+   "group": "meta",
+   "sources": [
+    "derived"
+   ],
+   "kind": "nested",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": false,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "sectors": {
+   "name": "sectors",
+   "label": "Establishments by 2-digit industry (list)",
+   "unit": "text",
+   "group": "meta",
+   "sources": [
+    "census_zbp_detail"
+   ],
+   "kind": "nested",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": false,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "fmr": {
+   "name": "fmr",
+   "label": "HUD small area fair market rents by bedroom (object)",
+   "unit": "text",
+   "group": "meta",
+   "sources": [
+    "hud_safmr"
+   ],
+   "kind": "nested",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": false,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "acs": {
+   "name": "acs",
+   "label": "Survey housing facts (object)",
+   "unit": "text",
+   "group": "meta",
+   "sources": [
+    "census_acs5"
+   ],
+   "kind": "nested",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": false,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "grade_flags": {
+   "name": "grade_flags",
+   "label": "Rental grade flags (list)",
+   "unit": "text",
+   "group": "meta",
+   "sources": [
+    "derived"
+   ],
+   "kind": "nested",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": false,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "h_score_v1": {
+   "name": "h_score_v1",
+   "label": "Home investment score, v1 formula (one release, for comparison)",
+   "unit": "score",
+   "group": "meta",
+   "sources": [
+    "derived"
+   ],
+   "kind": "nested",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "data"
+   ],
+   "legacy": false,
+   "in_zips": false,
+   "rankable": false,
+   "coverage": 0.75
+  },
+  "field_sources": {
+   "name": "field_sources",
+   "label": "Legacy per-field provenance (built from the fields catalog on request; not stored in v2 shards)",
+   "unit": "text",
+   "group": "meta",
+   "sources": [
+    "derived"
+   ],
+   "kind": "nested",
+   "agg": "none",
+   "better": null,
+   "shown": [
+    "data"
+   ],
+   "legacy": true,
+   "in_zips": false,
+   "rankable": false,
+   "coverage": 0.75
+  }
+ },
+ "metrics": {
+  "home_value": {
+   "label": "Typical home value",
+   "unit": "usd",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "value_trend_1y": {
+   "label": "Home value change, 1 year",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "value_trend_5y": {
+   "label": "Home value change, 5 years",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "value_forecast_1y": {
+   "label": "Home value forecast, 12 months",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "typical_rent": {
+   "label": "Typical rent",
+   "unit": "usd_month",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "rent_trend_1y": {
+   "label": "Rent change, 1 year",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "gross_yield": {
+   "label": "Gross rent yield",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "inventory": {
+   "label": "Homes for sale",
+   "unit": "count",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "days_on_market": {
+   "label": "Days to sell",
+   "unit": "days",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "sale_to_list": {
+   "label": "Sale to list price",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "price_cuts": {
+   "label": "Listings with a price cut",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "market_heat": {
+   "label": "Market heat",
+   "unit": "score",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "affordability": {
+   "label": "Payment as share of income",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "property_tax_rate": {
+   "label": "Effective property tax rate",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "vacancy_rate": {
+   "label": "Vacant homes, not counting seasonal",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "population": {
+   "label": "Population",
+   "unit": "count",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "pop_trend": {
+   "label": "Population change since 2020 (county)",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "migration": {
+   "label": "People moving in",
+   "unit": "score",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "income": {
+   "label": "Household income",
+   "unit": "usd",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "income_trend": {
+   "label": "Income change per year",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "jobs_trend": {
+   "label": "Job change, 1 year (county)",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "wages": {
+   "label": "Average annual wage",
+   "unit": "usd",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "unemployment": {
+   "label": "Unemployment rate",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "schools": {
+   "label": "School quality",
+   "unit": "score",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "safety": {
+   "label": "Safety",
+   "unit": "score",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "climate_risk": {
+   "label": "Natural hazard risk",
+   "unit": "score",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "flood_risk": {
+   "label": "Flood risk",
+   "unit": "score",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "insurance_cost": {
+   "label": "Insurance cost pressure",
+   "unit": "score",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "health": {
+   "label": "Community health",
+   "unit": "score",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "broadband": {
+   "label": "Homes with broadband",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "walkability": {
+   "label": "Walkability",
+   "unit": "score",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "new_supply": {
+   "label": "Homes permitted per 1,000 residents",
+   "unit": "per_1k",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "mortgage_rate": {
+   "label": "30-year mortgage rate",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "business_base": {
+   "label": "Businesses",
+   "unit": "count",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "business_growth": {
+   "label": "Business growth",
+   "unit": "score",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "business_formation": {
+   "label": "New business starts",
+   "unit": "score",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "jobs_total": {
+   "label": "Jobs located here",
+   "unit": "count",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "jobs_office": {
+   "label": "Office-using jobs",
+   "unit": "count",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "jobs_retail": {
+   "label": "Retail jobs",
+   "unit": "count",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "jobs_industrial": {
+   "label": "Industrial jobs",
+   "unit": "count",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "daytime_pop": {
+   "label": "Daytime population",
+   "unit": "count",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "sb_lending": {
+   "label": "Small business lending per business",
+   "unit": "usd",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "deposits": {
+   "label": "Bank deposits",
+   "unit": "usd",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "deposit_growth": {
+   "label": "Bank deposit change, 1 year",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "bank_cre_concentration": {
+   "label": "Local banks' CRE exposure",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "stock_commercial_sqft": {
+   "label": "Commercial building footprint",
+   "unit": "sqft",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "stock_industrial_sqft": {
+   "label": "Industrial building footprint",
+   "unit": "sqft",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "cmbs_occupancy": {
+   "label": "Occupancy of CMBS-financed buildings",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "cmbs_dscr": {
+   "label": "Debt coverage of CMBS-financed buildings",
+   "unit": "ratio",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "cmbs_delinquency": {
+   "label": "CMBS loans behind on payments",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "cmbs_cap": {
+   "label": "CMBS implied cap rate",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "asking_cap": {
+   "label": "Asking cap rate",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "cap_spread": {
+   "label": "Asking cap minus 10-year Treasury",
+   "unit": "pct_pts",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "incentives": {
+   "label": "Share of ZIP in an incentive area",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "commercial_risk": {
+   "label": "Commercial property risk",
+   "unit": "score",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "power_cost": {
+   "label": "Commercial electricity price",
+   "unit": "kwh_cents",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "traffic": {
+   "label": "Traffic on the busiest road (county)",
+   "unit": "count",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  },
+  "cre_market": {
+   "label": "US commercial property prices and delinquency",
+   "unit": "pct",
+   "coverage": 0.8,
+   "median_conf": 0.7
+  }
+ },
+ "scores": {
+  "h_score": {
+   "label": "Home investment score",
+   "coverage": 0.6
+  },
+  "c_score": {
+   "label": "Business base score (v1, unchanged)",
+   "coverage": 0.6
+  },
+  "retail_score": {
+   "label": "Retail property score",
+   "coverage": 0.6
+  },
+  "office_score": {
+   "label": "Office property score",
+   "coverage": 0.6
+  },
+  "industrial_score": {
+   "label": "Industrial property score",
+   "coverage": 0.6
+  },
+  "multifamily_score": {
+   "label": "Multifamily property score",
+   "coverage": 0.6
+  }
+ },
+ "aggregate_method": {
+  "note": "fixture"
+ }
+}

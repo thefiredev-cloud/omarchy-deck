@@ -1,0 +1,5 @@
+[
+ {"name":"site","paused":false,"targets":{"production":{"alias":["site.example"]}},"latestDeployments":[{"readyState":"READY","createdAt":1790771863616,"url":"site-abc.vercel.app"}]},
+ {"name":"blocked","paused":true,"latestDeployments":[{"readyState":"BLOCKED","createdAt":1790562750179,"url":"blocked-x.vercel.app"}]},
+ {"name":"never","paused":false,"latestDeployments":[]}
+]

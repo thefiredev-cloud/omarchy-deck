@@ -1,0 +1,318 @@
+{
+ "schema": 1,
+ "generated_at": 1794450000,
+ "sources": [
+  {
+   "id": "zhvi",
+   "name": "Zillow ZHVI",
+   "url": "https://www.zillow.com/research/data/",
+   "as_of": "2026-09-30",
+   "rows": 6,
+   "status": "ok",
+   "reason": null
+  },
+  {
+   "id": "zbp",
+   "name": "Census ZIP Business Patterns",
+   "url": "https://www.census.gov/",
+   "as_of": "2022",
+   "rows": 7,
+   "status": "ok",
+   "reason": null
+  },
+  {
+   "id": "crexi",
+   "name": "Commercial listings",
+   "url": "https://example.com",
+   "as_of": null,
+   "rows": 0,
+   "status": "unavailable",
+   "reason": "Site blocks automated reads"
+  },
+  {
+   "id": "chr_homicides",
+   "name": "County Health Rankings 2025, homicides per 100,000 (NCHS mortality files), county-level crime proxy",
+   "url": "https://example.invalid/chr.csv",
+   "as_of": "2016-2022",
+   "rows": 3,
+   "status": "ok",
+   "reason": null,
+   "level": "county"
+  },
+  {
+   "id": "ipeds_hd",
+   "name": "IPEDS institutional characteristics HD2024, degree-granting active colleges with lat/lon",
+   "url": "https://example.invalid/hd.zip",
+   "as_of": "2024-25",
+   "rows": 3,
+   "status": "ok",
+   "reason": null
+  },
+  {
+   "id": "crime_zip_level",
+   "name": "ZIP-level crime",
+   "url": null,
+   "as_of": null,
+   "rows": null,
+   "status": "unavailable",
+   "reason": "not freely published nationally; synthetic fixture"
+  }
+ ],
+ "coverage": {
+  "zips_total": 8,
+  "with_zhvi": 6,
+  "with_rent": 7,
+  "with_listings_stats": 7,
+  "with_acs": 2,
+  "with_fmr": 1,
+  "with_biz": 7
+ },
+ "us": {
+  "pop": 335000,
+  "zhvi": 360000,
+  "zhvi_yoy": 1.2,
+  "rent": 2000,
+  "yield_gross": 6.6,
+  "active": 2000,
+  "dom": 50,
+  "biz_estabs": 22000
+ },
+ "states": [
+  {
+   "state": "CA",
+   "name": "California",
+   "zips": 5,
+   "pop": 190000,
+   "zhvi": 850000,
+   "zhvi_yoy": 3.2,
+   "rent": 2800,
+   "yield_gross": 4.4,
+   "list_price": null,
+   "active": 467,
+   "dom": 44,
+   "biz_estabs": 9420,
+   "biz_estabs_5y": 4.0,
+   "biz_emp": 104900
+  },
+  {
+   "state": "NY",
+   "name": "New York",
+   "zips": 1,
+   "pop": 25000,
+   "zhvi": 1000000,
+   "zhvi_yoy": 0.5,
+   "rent": 4500,
+   "yield_gross": 5.4,
+   "list_price": null,
+   "active": 500,
+   "dom": 80,
+   "biz_estabs": 9000,
+   "biz_estabs_5y": 1.0,
+   "biz_emp": 200000
+  },
+  {
+   "state": "TX",
+   "name": "Texas",
+   "zips": 1,
+   "pop": 120000,
+   "zhvi": 420000,
+   "zhvi_yoy": 1.5,
+   "rent": 2300,
+   "yield_gross": 6.57,
+   "list_price": null,
+   "active": 900,
+   "dom": 45,
+   "biz_estabs": 3000,
+   "biz_estabs_5y": 12.0,
+   "biz_emp": 40000
+  }
+ ],
+ "metros": [
+  {
+   "cbsa": "31080",
+   "name": "Los Angeles-Long Beach-Anaheim, CA",
+   "zips": 3,
+   "pop": 140000,
+   "zhvi": 1100000,
+   "zhvi_yoy": 3.4,
+   "rent": 3400,
+   "yield_gross": 3.9,
+   "active": 155,
+   "dom": 36,
+   "biz_estabs": 5800,
+   "biz_estabs_5y": 3.3
+  },
+  {
+   "cbsa": "41740",
+   "name": "San Diego-Chula Vista-Carlsbad, CA",
+   "zips": 1,
+   "pop": 45000,
+   "zhvi": 650000,
+   "zhvi_yoy": 2.5,
+   "rent": 3000,
+   "yield_gross": 5.54,
+   "active": 300,
+   "dom": 40,
+   "biz_estabs": 3500,
+   "biz_estabs_5y": 8.0
+  }
+ ],
+ "mortgage": {
+  "rate_30y": 6.5,
+  "as_of": "2026-11-06",
+  "source": "FRED MORTGAGE30US"
+ },
+ "score_method": {
+  "h": [
+   {
+    "key": "yield_gross",
+    "label": "Gross yield",
+    "weight": 0.4,
+    "direction": "high"
+   },
+   {
+    "key": "zhvi_yoy",
+    "label": "1-year change",
+    "weight": 0.3,
+    "direction": "high"
+   },
+   {
+    "key": "price_to_income",
+    "label": "Price to income",
+    "weight": 0.3,
+    "direction": "low"
+   }
+  ],
+  "c": [
+   {
+    "key": "biz_estabs_5y",
+    "label": "5-year establishment growth",
+    "weight": 0.4,
+    "direction": "high"
+   },
+   {
+    "key": "estabs_per_1k",
+    "label": "Establishments per 1,000",
+    "weight": 0.3,
+    "direction": "high"
+   },
+   {
+    "key": "biz_pay_per_emp",
+    "label": "Payroll per employee",
+    "weight": 0.3,
+    "direction": "high"
+   }
+  ]
+ },
+ "grade_method": {
+  "factors": [
+   {
+    "key": "renter_share",
+    "label": "Renter share of occupied homes",
+    "unit": "%",
+    "weight": 0.2,
+    "zero": 20.0,
+    "full": 50.0
+   },
+   {
+    "key": "rent_to_income",
+    "label": "Annual rent / median household income",
+    "unit": "%",
+    "weight": 0.15,
+    "zero": 40.0,
+    "full": 25.0
+   },
+   {
+    "key": "hh_income",
+    "label": "Median household income",
+    "unit": "$",
+    "weight": 0.1,
+    "zero": 35000,
+    "full": 75000
+   },
+   {
+    "key": "yield_gross",
+    "label": "Gross rent yield",
+    "unit": "%",
+    "weight": 0.2,
+    "zero": 4.0,
+    "full": 10.0
+   },
+   {
+    "key": "zhvi_yoy",
+    "label": "Home value change, 1 year",
+    "unit": "%",
+    "weight": 0.075,
+    "zero": -5.0,
+    "full": 5.0
+   },
+   {
+    "key": "zhvi_5y",
+    "label": "Home value change, 5 years",
+    "unit": "%",
+    "weight": 0.075,
+    "zero": 0.0,
+    "full": 40.0
+   },
+   {
+    "key": "homicide_rate",
+    "label": "Homicides per 100,000, county proxy for crime",
+    "unit": "/100k",
+    "weight": 0.1,
+    "zero": 15.0,
+    "full": 3.0
+   },
+   {
+    "key": "college_enroll_5mi",
+    "label": "College enrollment within 5 miles",
+    "unit": "students",
+    "weight": 0.1,
+    "zero": 0,
+    "full": 10000
+   }
+  ],
+  "grades": [
+   [
+    "A",
+    70.0
+   ],
+   [
+    "B",
+    55.0
+   ],
+   [
+    "C",
+    40.0
+   ]
+  ],
+  "min_pop": 1000,
+  "required": [
+   "yield_gross"
+  ],
+  "caps": [
+   {
+    "key": "yield_gross",
+    "below": 4.0,
+    "max_grade": "D",
+    "flag": "yield_below_4pct"
+   },
+   {
+    "key": "yield_gross",
+    "below": 5.5,
+    "max_grade": "C",
+    "flag": "yield_below_5_5pct"
+   }
+  ],
+  "min_coverage": 0.6,
+  "a_min_coverage": 0.8,
+  "low_conf_below": 0.8,
+  "note": "Each factor scores 0 to 100 on a straight line between its zero and full values (clamped). Area score is the weighted mean of the factors present; area_conf is the share of total weight present. Missing factors are skipped, never scored as zero. Grade A >= 70, B >= 55, C >= 40, else D. A gross yield under 5.5% holds the grade at C and under 4% at D (score clipped to that band). No grade below population 1,000, without a gross yield (no home price basis) or under coverage 0.6; an A needs coverage 0.8. Crime is the county homicide death rate (County Health Rankings, NCHS mortality files), a county-level proxy: ZIP-level crime is not published for free.",
+  "graded": {
+   "A": 1,
+   "B": 2,
+   "C": 2,
+   "D": 1,
+   "ungraded": 2
+  }
+ }
+}

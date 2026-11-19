@@ -1,0 +1,10 @@
+# Pinned Apple toolchain for Xcode builds, signing and archives.
+#
+# Xcode cannot run in a container: it is macOS-only and Apple's license limits macOS to Apple
+# hardware. The Docker image in this repository covers the Linux-testable part (Packages/DrawYearsCore);
+# scripts/check-ios-toolchain.sh fails when the running Xcode or XcodeGen differs from these values.
+#
+# Values verified on the Mac mini signing seat on 2026-10-24.
+XCODE_VERSION=27.0
+XCODE_BUILD=27A266a
+XCODEGEN_VERSION=2.46.0

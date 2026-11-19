@@ -1,0 +1,250 @@
+{
+ "t": 1795051391,
+ "refresh": 300,
+ "stale": false,
+ "src": "fixture (synthetic)",
+ "errors": [],
+ "items": [
+  {
+   "id": "skill:x-posting",
+   "kind": "skill",
+   "name": "x-posting",
+   "label": "Posts for the brand",
+   "does": "Drafts and posts short updates for you to approve.",
+   "area": "Sales",
+   "ao": 0,
+   "earns": true,
+   "desc": "Trigger text for agents",
+   "group": "other",
+   "arg": "x-posting",
+   "targets": [
+    "hermes"
+   ],
+   "tier": "core",
+   "score": 90,
+   "where": [
+    "hermes"
+   ],
+   "why": "Used daily"
+  },
+  {
+   "id": "skill:cold-outreach",
+   "kind": "skill",
+   "name": "fixture-cold-email-pipeline",
+   "label": "Cold email outreach",
+   "does": "Finds prospects and drafts cold emails for you to approve.",
+   "area": "Sales",
+   "ao": 0,
+   "earns": true,
+   "desc": "Trigger text for agents",
+   "group": "other",
+   "arg": "fixture-cold-email-pipeline",
+   "targets": [
+    "hermes"
+   ],
+   "tier": "useful",
+   "score": 70,
+   "where": [
+    "hermes"
+   ],
+   "why": ""
+  },
+  {
+   "id": "skill:gig-sweep",
+   "kind": "skill",
+   "name": "fixture-gig-lead-sweep",
+   "label": "Gig lead search",
+   "does": "Looks over public job boards for work you can bid on.",
+   "area": "Sales",
+   "ao": 0,
+   "earns": true,
+   "desc": "Trigger text for agents",
+   "group": "other",
+   "arg": "fixture-gig-lead-sweep",
+   "targets": [
+    "hermes"
+   ],
+   "tier": "useful",
+   "score": 65,
+   "where": [
+    "hermes"
+   ],
+   "why": ""
+  },
+  {
+   "id": "skill:dev-engineering",
+   "kind": "skill",
+   "name": "dev-engineering",
+   "label": "Build and fix our apps",
+   "does": "Helps write, test and ship code for the company products.",
+   "area": "Company",
+   "ao": 1,
+   "earns": false,
+   "desc": "Trigger text for agents",
+   "group": "other",
+   "arg": "dev-engineering",
+   "targets": [
+    "hermes"
+   ],
+   "tier": "core",
+   "score": 88,
+   "where": [
+    "hermes"
+   ],
+   "why": ""
+  },
+  {
+   "id": "skill:site-check",
+   "kind": "skill",
+   "name": "fixture-site-check",
+   "label": "Website health check",
+   "does": "Visits each company site and reports anything broken.",
+   "area": "Company",
+   "ao": 1,
+   "earns": false,
+   "desc": "Trigger text for agents",
+   "group": "other",
+   "arg": "fixture-site-check",
+   "targets": [
+    "hermes"
+   ],
+   "tier": "useful",
+   "score": 55,
+   "where": [
+    "hermes"
+   ],
+   "why": ""
+  },
+  {
+   "id": "skill:bill-alerts",
+   "kind": "skill",
+   "name": "fixture-finance-alerts-ops",
+   "label": "Bill and money alerts",
+   "does": "Warns you before bills are due and when money moves.",
+   "area": "Money",
+   "ao": 2,
+   "earns": false,
+   "desc": "Trigger text for agents",
+   "group": "other",
+   "arg": "fixture-finance-alerts-ops",
+   "targets": [
+    "hermes"
+   ],
+   "tier": "core",
+   "score": 80,
+   "where": [
+    "hermes"
+   ],
+   "why": ""
+  },
+  {
+   "id": "skill:social-inbox",
+   "kind": "skill",
+   "name": "social-inbox",
+   "label": "Check messages and mail",
+   "does": "Looks over your inbox and lists what needs an answer.",
+   "area": "Life",
+   "ao": 3,
+   "earns": false,
+   "desc": "Trigger text for agents",
+   "group": "other",
+   "arg": "social-inbox",
+   "targets": [
+    "hermes"
+   ],
+   "tier": "useful",
+   "score": 70,
+   "where": [
+    "hermes"
+   ],
+   "why": ""
+  },
+  {
+   "id": "skill:camera-recap",
+   "kind": "skill",
+   "name": "fixture-camera-recap",
+   "label": "Overnight camera recap",
+   "does": "Lists what the cameras saw overnight.",
+   "area": "House",
+   "ao": 4,
+   "earns": false,
+   "desc": "Trigger text for agents",
+   "group": "other",
+   "arg": "fixture-camera-recap",
+   "targets": [
+    "hermes"
+   ],
+   "tier": "niche",
+   "score": 35,
+   "where": [
+    "hermes"
+   ],
+   "why": ""
+  },
+  {
+   "id": "skill:cluster-gauge",
+   "kind": "skill",
+   "name": "fixture-cluster-gauge",
+   "label": "Local AI model health",
+   "does": "Shows whether the local AI models are up and how fast they answer.",
+   "area": "Computers",
+   "ao": 5,
+   "earns": false,
+   "desc": "Trigger text for agents",
+   "group": "other",
+   "arg": "fixture-cluster-gauge",
+   "targets": [
+    "hermes"
+   ],
+   "tier": "useful",
+   "score": 60,
+   "where": [
+    "hermes",
+    "dell"
+   ],
+   "why": ""
+  },
+  {
+   "id": "automation:timer-fixture-deck-feed-markets",
+   "kind": "automation",
+   "name": "fixture-deck-feed-markets",
+   "label": "Market prices",
+   "does": "Updates stock and crypto prices on your Deck every 5 minutes.",
+   "area": "Behind the scenes",
+   "ao": 6,
+   "earns": false,
+   "desc": "Trigger text for agents",
+   "group": "other",
+   "arg": "fixture-deck-feed-markets",
+   "targets": [],
+   "tier": "core",
+   "score": 75,
+   "where": [
+    "hermes"
+   ],
+   "why": ""
+  },
+  {
+   "id": "skill:old-thing",
+   "kind": "skill",
+   "name": "fixture-old-thing",
+   "label": "Old helper nobody uses",
+   "does": "No description yet.",
+   "area": "Computers",
+   "ao": 5,
+   "earns": false,
+   "desc": "Trigger text for agents",
+   "group": "other",
+   "arg": "fixture-old-thing",
+   "targets": [
+    "hermes"
+   ],
+   "tier": "dead",
+   "score": 5,
+   "where": [
+    "hermes"
+   ],
+   "why": ""
+  }
+ ]
+}

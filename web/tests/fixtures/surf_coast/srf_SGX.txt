@@ -1,0 +1,93 @@
+
+000
+FZUS56 KSGX 142136
+SRFSGX
+
+Surf Zone Forecast
+National Weather Service San Diego CA
+136 PM PST Sat Nov 14 2026
+
+CAZ552-151130-
+Orange County Coastal Areas-
+136 PM PST Sat Nov 14 2026
+
+...OBSERVED TIDES ARE 1.2 TO 1.4 FEET ABOVE ASTRONOMICAL TIDE PREDICTIONS...
+
+...HIGH SURF ADVISORY THROUGH 10 AM SUNDAY...
+...COASTAL FLOOD ADVISORY THROUGH 4 PM THIS AFTERNOON...
+...HIGH RIP CURRENT RISK...
+
+.THIS AFTERNOON THROUGH SUNDAY...
+Rip Current Risk*.............High.
+Surf Height...................4 to 7 feet with sets to 8 feet today.
+  3 to 6 feet Sunday.
+Thunderstorm Potential........None expected.
+Water Temperature.............71 to 74 degrees.
+Astronomical Tides............
+        Newport Beach.........High 4.4 feet (MLLW) 11:47 AM PST.
+                              Low 0.6 feet (MLLW) 08:10 PM PST.
+Remarks.......................Mixed west swell from 260 degrees and south swell from 190 degrees.
+
+.MONDAY...
+Rip Current Risk*.............High.
+Surf Height...................4 to 7 feet with sets to 8 feet.
+Thunderstorm Potential........None expected.
+Astronomical Tides............
+        Newport Beach.........High 3.5 feet (MLLW) 04:10 AM PST.
+                              Low 3.3 feet (MLLW) 07:35 AM PST.
+                              High 4.1 feet (MLLW) 01:06 PM PST.
+                              Low 0.7 feet (MLLW) 09:06 PM PST.
+Remarks.......................Mixed west swell from 260 degrees and south swell from 200 degrees.
+
+
+&&
+
+Rip Current Risks:
+* Low Risk - Life threatening rip currents are unlikely but still could occur.
+* Moderate Risk - Life threatening rip currents are possible.
+* High Risk - Life threatening rip currents are likely.
+
+$$
+
+
+CAZ043-151130-
+San Diego County Coastal Areas-
+136 PM PST Sat Nov 14 2026
+
+...OBSERVED TIDES ARE 1.2 TO 1.4 FEET ABOVE ASTRONOMICAL TIDE PREDICTIONS...
+
+...HIGH SURF ADVISORY THROUGH 10 AM SUNDAY...
+...COASTAL FLOOD ADVISORY THROUGH 4 PM THIS AFTERNOON...
+...HIGH RIP CURRENT RISK...
+
+.THIS AFTERNOON THROUGH SUNDAY...
+Rip Current Risk*.............High.
+Surf Height...................6 to 8 feet with sets to 10 feet today.
+  4 to 7 feet with locally higher sets Sunday.
+Thunderstorm Potential........None expected.
+Water Temperature.............68 to 75 degrees.
+Astronomical Tides............
+        La Jolla..............High 4.4 feet (MLLW) 11:35 AM PST.
+                              Low 0.6 feet (MLLW) 08:03 PM PST.
+Remarks.......................West swell from 270 degrees.
+
+.MONDAY...
+Rip Current Risk*.............High.
+Surf Height...................5 to 8 feet with sets to 10 feet.
+Thunderstorm Potential........None expected.
+Astronomical Tides............
+        La Jolla..............High 3.5 feet (MLLW) 04:13 AM PST.
+                              Low 3.3 feet (MLLW) 07:20 AM PST.
+                              High 4.0 feet (MLLW) 12:52 PM PST.
+                              Low 0.7 feet (MLLW) 09:00 PM PST.
+Remarks.......................West swell from 280 degrees.
+
+
+&&
+
+Rip Current Risks:
+* Low Risk - Life threatening rip currents are unlikely but still could occur.
+* Moderate Risk - Life threatening rip currents are possible.
+* High Risk - Life threatening rip currents are likely.
+
+$$

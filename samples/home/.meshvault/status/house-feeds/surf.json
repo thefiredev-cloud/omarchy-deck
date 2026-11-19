@@ -1,0 +1,41 @@
+{
+ "t": 1795051391,
+ "refresh": 300,
+ "stale": false,
+ "src": "fixture (synthetic)",
+ "errors": [],
+ "spots": [
+  {
+   "name": "Salt Creek",
+   "period_s": 15,
+   "swell_dir_deg": 225,
+   "wind_kt": 5,
+   "wind_dir_deg": 0,
+   "water_temp_f": 73,
+   "wave_ft_min": 2,
+   "wave_ft_max": 2,
+   "rating": "fair"
+  },
+  {
+   "name": "Strands",
+   "period_s": 15,
+   "swell_dir_deg": 225,
+   "wind_kt": 5,
+   "wind_dir_deg": 0,
+   "water_temp_f": 73,
+   "wave_ft_min": 2,
+   "wave_ft_max": 2,
+   "rating": "fair"
+  }
+ ],
+ "tide": {
+  "station": "Fixture Pier",
+  "next": [
+   {
+    "type": "H",
+    "at": 1795065791,
+    "ft": 3.1
+   }
+  ]
+ }
+}

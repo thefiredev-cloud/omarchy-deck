@@ -1,0 +1,267 @@
+/* Surf (lane PgSurf, 2026-11-14): Cabo to the Columbia River. Built on ui.css components (.spot .cards .coast .htw
+   .chart .flist .strip); this file only places sections per device class and draws what is Surf's own (compact spot
+   card line, outlook pairs, tide and latitude charts). Blueprint: PageBlueprints section 6; critique 2, 3, 8, 9, 18, 19. */
+
+/* ---------- page grid: one column on P, section order per class below ---------- */
+.sf{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s-6);align-items:start}
+.sf>.sect,.sf-board>.sect{min-width:0}
+.sf-board{display:contents}
+.sf .cards{grid-auto-rows:1fr}
+/* P is one column: equal rows there only leave a blank band under the shorter cards */
+@media (max-width:599px){.sf .cards{grid-auto-rows:auto}}
+
+/* ---------- compact spot and region card: name with pips, the height large, one meta line ---------- */
+.sf .spot{gap:var(--s-1);padding:var(--s-3) var(--s-4);container-type:inline-size}
+.sf .spot header{flex-wrap:wrap;row-gap:0;align-items:center}
+.sf .spot header b{min-width:0}
+.sf .spot-m{align-items:center;gap:var(--s-3);min-width:0}
+.sf .spot-m .big{flex:none;min-width:0;white-space:nowrap}
+.sf .spot-m .big .conf{margin-left:.3em;font-size:var(--fs-meta)}
+/* a narrow card (five across on D, a big-day "12-15 ft") stacks the meta line under the height instead of overflowing */
+@container (max-width:17rem){.sf .spot-m{flex-direction:column;align-items:flex-start;gap:var(--s-1)}}
+.sf .spot .one{line-height:var(--lh-row);text-wrap:pretty}
+.sf .spot .one .sv,.sf .spot .one .conf,.sf .sf-w,.sf .sf-nw{white-space:nowrap}
+/* a phrase that must not split ("High tide 11:47 am") moves to the next line whole; wider than the line, it still wraps.
+   The separator between parts is a space painted with a dot: where the line breaks the space collapses to nothing,
+   so no line ends or starts on a dot */
+.sf .sf-u{display:inline-block;max-width:100%}
+.sf .sf-sep,.sf-tmr .sf-sep{word-spacing:.55em;background:radial-gradient(circle,currentColor .065em,transparent .085em) 50% 55%/100% 100% no-repeat}
+.sf .sv,.sf-tmr .sv{font-family:var(--mono);font-weight:var(--fw-med);font-variant-numeric:tabular-nums;color:var(--c-text-1)}
+.sf .spot .why{font-size:var(--fs-meta)}
+.sf .sf-model{font-size:var(--fs-meta);color:var(--c-text-2)}
+.sf .sf-reg{color:var(--c-text-1)}
+.sf .pips.none{color:var(--c-text-2)}
+.sf .sf-none{margin-top:var(--s-3)}
+.sf-more{margin-top:var(--s-3)}
+.sf-nobuoy{margin-bottom:var(--s-2)}
+/* the spot list: a compact two-line row on a phone, the priority table from L up */
+.sf-plist .fr small{display:flex;justify-content:flex-end}
+@media (max-width:599px){.sf-tbl{display:none}}
+@media (min-width:600px){.sf-plist{display:none}}
+/* the buoy name may wrap, so the P1 columns keep their units */
+.sf-buoys .htbl .place b{white-space:normal}
+/* a wide table shares its width by content: neighbours keep a real gap (a right-aligned figure never runs into the
+   left-aligned word after it), and from D up, where the table carries P2 and P3 columns, the name column takes about
+   three tenths instead of all the spare width. TV keeps its own table (P1 only) */
+@container tbl (min-width:52rem){html:not(.tv) .sf .htbl th,html:not(.tv) .sf .htbl td{padding-left:var(--s-4);padding-right:var(--s-4)}}
+@media (min-width:1100px) and (min-height:500px){html:not(.tv) .sf .htbl tr>:first-child{width:30%}}
+/* W4-7: on a wide window (his 2470 desktop) three tenths is 550 px for 200 px names; from 1600 the name column takes
+   what its names need and the forecast columns get the rest */
+@media (min-width:1600px) and (min-height:500px){html:not(.tv) .sf .htbl tr>:first-child{width:1%;white-space:nowrap}}
+/* P and L are phones: the spot and buoy lists show five rows and one Show more, Best right now three (surf.js marks the
+   section open); an open list ends with Show fewer */
+.sf-more5,.sf-fewer5{display:none}
+@media (max-width:599px),(min-width:600px) and (max-height:499px){
+  .sf-cap5:not(.open) .sf-plist>.frow:nth-child(n+6),.sf-cap5:not(.open) .htbl tbody>tr:nth-child(n+6),.sf-cap5:not(.open) .sf-more:not(.sf-more5){display:none}
+  .sf-cap5:not(.open) .sf-more5,.sf-cap5.open .sf-fewer5{display:inline-flex}
+  .sf-cap3:not(.open) .cards>.spot:nth-child(n+4){display:none}
+  .sf-cap3:not(.open) .sf-more5,.sf-cap3.open .sf-fewer5{display:inline-flex}
+}
+
+/* ---------- M4 fold and decision 4 ---------- */
+/* a card that holds two or more breaks reading the same: each name its own tap, a comma between */
+.sf .sf-grp header{align-items:flex-start}
+.sf-nms{flex:1;min-width:0;display:flex;flex-wrap:wrap;align-items:center;column-gap:0}
+.sf-nm{display:inline-flex;align-items:center;min-height:var(--hit);padding:0;border:0;background:none;color:var(--c-text-1);font:inherit;font-size:var(--fs-lead);font-weight:var(--fw-med);text-align:left;text-decoration:underline;text-decoration-color:var(--c-text-3);text-underline-offset:.2em;cursor:pointer}
+.sf-nmc{color:var(--c-text-2);margin-right:.35em}
+/* a region's head with its height once, then each break's row (rating, wind, tide); it takes the whole width of the
+   cards grid and its rows sit in columns where the width allows */
+.sf-rht{font-size:var(--fs-meta);color:var(--c-text-2);white-space:nowrap}
+.sf .cards>.sf-rhd{grid-column:1/-1}
+.sf .sf-rhd .sf-rrows{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,16rem),1fr));column-gap:var(--s-5);background:none;border:0;border-radius:0;padding:0;margin-top:var(--s-2)}
+.sf .sf-rhd .sf-rrows .frow{border-top:var(--hair)}
+.sf .sf-rhd .sf-rrows .frow .fl b{font-size:var(--fs-body)}
+/* "Region" in a list's height column: the note above the list says what it means */
+.sf-rgn{font-weight:var(--fw-reg);color:var(--c-text-2)}
+.sf-rnote{margin-bottom:var(--s-2)}
+/* TV board: the head across the band, seven rows side by side, name and rating only (the board holds one band) */
+html.tv .sf-rhd .sf-rrows{grid-template-columns:repeat(var(--sf-spots,1),minmax(0,1fr));column-gap:var(--s-2);margin-top:var(--s-1)}
+html.tv .sf-rhd .sf-rrows .frow{flex-direction:column;align-items:flex-start;gap:var(--s-1);min-height:0;padding:var(--s-1) 0;border-top:0}
+html.tv .sf-rhd .sf-rrows .fl small,html.tv .sf-rhd .sf-rrows .frow::after{display:none}
+html.tv .sf-rhd .sf-rrows .fr{align-items:flex-start;max-width:none}
+html.tv .sf-rhd .spot-m{flex-direction:row;align-items:baseline}
+
+/* a phone buoy card names a missing value in words, not with a lone dot under its label */
+@media (max-width:599px){.sf .htbl td .na{font-size:0}.sf .htbl td .na::after{content:"No data";font-size:var(--fs-body);color:var(--c-text-2)}}
+
+/* ---------- header controls: the region button and the toggle share one row on every class ---------- */
+#pg-surf .sf-ctl{display:flex;flex-wrap:nowrap;align-items:center;gap:var(--s-2);min-width:0}
+
+/* ---------- alerts (M3): one line for the home-region alerts, the rest of the coast as one quiet line under it ---------- */
+.sf-ral{display:inline-flex;align-items:center;gap:var(--s-2)}
+/* P and L: the warn mark names the block, so the Alerts title spends no row (first data within 200 / 130 px); the home
+   spots need no title while the filter shows their own region, so four whole cards fit the first screen at 390 x 844.
+   Under All coast or another region they keep it (surf.js .sf-mine-t) */
+@media (max-width:599px),(max-height:499px){.sf-alerts>.secttl,.sf-mine:not(.sf-mine-t)>.secttl{display:none}}
+.sf .sf-al1{font-size:var(--fs-body);line-height:var(--lh-row);color:var(--c-text-2);text-wrap:pretty}
+.sf .sf-al1>b{font-weight:var(--fw-med);color:var(--c-text-1);white-space:nowrap}
+.sf-coast-al{margin-top:var(--s-1);padding-left:0;padding-right:0;color:var(--c-text-2)}
+/* from 600 px wide the quiet line sits beside the alerts line, so the block is one row */
+@media (min-width:600px){.sf-alerts{flex-direction:row;flex-wrap:wrap;align-items:center;column-gap:var(--s-5)}.sf-alerts>.secttl{flex:1 0 100%}.sf-alerts>.flist{flex:1 1 24rem}.sf-alerts>.sf-coast-al{margin-top:0}}
+
+/* the coast strip marks a model-only segment with its hatch; the hollow-square value mark is for numbers only */
+.sf .coast .cs.model::before{content:none;display:none}
+/* V9, W3: each cell is a track and the bar in it is the region's height on one shared scale (surf.js sets --h from the
+   tallest region), in the rating shade, brighter is better; no reading keeps the hatch */
+.sf .coast .cs:not(.none)>i{background:var(--c-panel-2)}
+html:not(.tv) .sf .coast .cs>i{height:3rem}
+.sf-hb{position:absolute;left:0;right:0;bottom:0;height:var(--h);min-height:2px;border-radius:2px 2px 0 0;background:var(--c-ramp-2)}
+.sf .cs[data-q="1"] .sf-hb{background:var(--c-ramp-1)}.sf .cs[data-q="3"] .sf-hb{background:var(--c-ramp-3)}.sf .cs[data-q="4"] .sf-hb{background:var(--c-ramp-4)}.sf .cs[data-q="5"] .sf-hb{background:var(--c-ramp-5)}
+.sf-cnote{margin-top:var(--s-2)}
+/* the tallest region is named where the cells print no figures (P, L and T); D and TV print them */
+@media (min-width:1100px) and (min-height:500px){.sf-cn-t{display:none}}
+/* A10: on a phone the fourteen cells fill the panel, at least 24 px each at 390 (21 with the panel's own padding) */
+@media (max-width:599px){.sf .coast{padding-left:2px;padding-right:2px}.sf .coast ol{gap:1px}.sf .coast-ends{padding:0 var(--s-3)}}
+
+/* ---------- P (M3, answer first): the alerts line, the home spots, Best right now (three, Show 2 more), then the coast
+   strip and the live cams; the rest in blueprint order ---------- */
+@media (max-width:599px){
+  .sf-alerts{order:1}.sf-mine{order:2}.sf-best{order:3}.sf-coast{order:4}.sf-cams{order:5}.sf-regions{order:6}.sf-spots{order:7}.sf-buoys{order:8}.sf-temp{order:9}
+}
+/* ---------- L (phone landscape and the Pixel): as P, full width; the home spots first (three whole cards in 411 px),
+   then Best right now before the coast strip ---------- */
+@media (min-width:600px) and (max-height:499px){
+  .sf{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-5)}
+  .sf-alerts{order:1;grid-column:1/-1}.sf-mine{order:2;grid-column:1/-1}.sf-best{order:3;grid-column:1/-1}.sf-coast{order:4;grid-column:1/-1}
+  .sf-cams{order:5;grid-column:1/-1}.sf-regions{order:6;grid-column:1/-1}.sf-spots{order:7;grid-column:1/-1}
+  .sf-temp{order:8;grid-column:1/-1}.sf-buoys{order:9;grid-column:1/-1}
+}
+/* ---------- T: alerts, coast, then spots full width; the temperature chart above the buoy list, both full width
+   (the list runs 2,000 px past a chart beside it) ---------- */
+@media (min-width:600px) and (max-width:1099px) and (min-height:500px){
+  .sf{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sf-alerts{order:1}.sf-coast{order:2}.sf-mine{order:3}.sf-best{order:4}.sf-cams{order:5}.sf-regions{order:6}.sf-spots{order:7}.sf-temp{order:8}.sf-buoys{order:9}
+  .sf-alerts,.sf-coast,.sf-mine,.sf-best,.sf-cams,.sf-regions,.sf-spots,.sf-temp,.sf-buoys{grid-column:1/-1}
+}
+/* ---------- D and XL (M3, W1): 12 columns; the alerts line, then Your spots 6/12 beside Best right now 6/12 (7 and 5
+   cards: three rows beside two at 1440, two beside two at 1920), then the coast strip full width; the temperature
+   chart above the buoy list ---------- */
+@media (min-width:1100px) and (min-height:500px){
+  .sf{grid-template-columns:repeat(12,minmax(0,1fr))}
+  .sf-alerts{order:1}.sf-mine{order:2}.sf-best{order:3}.sf-coast{order:4}.sf-cams{order:5}.sf-regions{order:6}.sf-spots{order:7}.sf-temp{order:8}.sf-buoys{order:9}
+  .sf-alerts,.sf-coast,.sf-mine,.sf-cams,.sf-regions,.sf-spots{grid-column:1/-1}
+  html:not(.tv) .sf-mine{grid-column:1/7}html:not(.tv) .sf-best{grid-column:7/-1}
+  /* the TV board was tuned with the old span (PR #277); TV keeps it */
+  .sf-buoys,.sf-temp{grid-column:span 6}
+  html:not(.tv) .sf-temp,html:not(.tv) .sf-buoys{grid-column:1/-1}
+  html:not(.tv) .sf-mine .cards,html:not(.tv) .sf-best .cards{grid-template-columns:repeat(auto-fill,minmax(min(100%,10.5rem),1fr))}
+  .sf-regions .cards{grid-template-columns:repeat(auto-fill,minmax(17rem,1fr))}
+}
+
+/* ---------- TV: the board (ShellTv's fixed-height .board) holds the seven home spots in one band, the one-row coast
+   strip, and the top three of Best right now; alerts, regions, buoys and temperature sit one Down press below.
+   A TV home card carries name, pips and the height; its meta line is not carried (never a cut line). ---------- */
+.sf-best3,.sf-tvu{display:none}
+html.tv .sf{grid-template-columns:minmax(0,1fr);gap:var(--s-5)}
+html.tv .sf-board{order:1}html.tv .sf-alerts{order:3}html.tv .sf-regions{order:4}html.tv .sf-buoys{order:5}html.tv .sf-temp{order:6}
+html.tv .sf-board>.sf-mine{order:1}html.tv .sf-board>.sf-coast{order:2}html.tv .sf-board>.sf-best3{order:3;display:block}
+/* the cams are not on TV: a remote cannot leave a playing frame */
+html.tv .sf>.sf-best,html.tv .sf-spots,html.tv .sf-cams{display:none}
+html.tv .sf-board .secttl{margin-bottom:var(--s-2)}
+html.tv .sf-mine .cards{grid-template-columns:repeat(7,minmax(0,1fr));grid-auto-rows:auto;gap:var(--s-2)}
+/* A region group takes the cells of its breaks, not a whole extra band between ordinary cards.
+   Otherwise a single region-only break pushes the coast below the board and out of the remote's candidate set. */
+html.tv .sf-mine .cards>.sf-rhd{grid-column:span var(--sf-spots,1)}
+html.tv .sf-mine .cards>.sf-grp{grid-column:span var(--sf-spots,1)}
+html.tv .sf-rht{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+html.tv .sf-best3 .cards{grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:auto;gap:var(--s-2)}
+html.tv .sf-board .spot{padding:var(--s-2) var(--s-3)}
+html.tv .sf-mine .spot header{flex-direction:column;align-items:flex-start}
+html.tv .sf-board .spot-m{flex-direction:column;align-items:flex-start;gap:var(--s-1)}
+html.tv .sf-board .spot .one,html.tv .sf-board .sf-model,html.tv .sf-board .why{display:none}
+/* V10: the board hides the cards' "Forecast only" line, so the coast note under the strip names the hatch and the
+   hollow square in one quiet line */
+html.tv .sf-cnote{margin-top:var(--s-1);font-size:var(--fs-micro);line-height:1.2}
+/* a Best card on the board: name and pips on one row, the height, the region (the model mark stays on the value) */
+html.tv .sf-best3 .spot-m{flex-direction:row;align-items:baseline;gap:var(--s-3)}
+html.tv .sf-best3 .spot .sf-reg{display:block}
+/* coast values: the bare number from 1600 up (where tv.css paints them), the unit named once in the title */
+html.tv .sf-coast .sf-cu{display:none}
+@media (min-width:1600px){html.tv .sf-tvu{display:inline;color:var(--c-text-2);font-size:var(--fs-meta)}}
+
+/* ---------- live cams (L11, L12): the two city piers as 16:9 tiles that play here on a tap, one at a time, with
+   Stop; no picture from another host, so a tile is the panel with its play mark and name until it plays. Every other
+   cam is a link row with the trailing arrow ---------- */
+.sf-camg{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr));gap:var(--s-3);margin-bottom:var(--s-3)}
+.sf-cam{display:flex;flex-direction:column;min-width:0;background:var(--c-panel);border:var(--hair);border-radius:var(--r-panel);overflow:hidden}
+.sf-camm{position:relative;aspect-ratio:16/9;background:var(--c-panel-2)}
+.sf-camv{position:absolute;inset:0;display:block;width:100%;height:100%;padding:0;border:0;background:none;color:var(--c-text-1);font:inherit;cursor:pointer}
+.sf-campb{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;box-shadow:inset 0 0 0 2px var(--c-text-1)}
+.sf-campb::after{content:"";position:absolute;left:22px;top:17px;border-style:solid;border-width:11px 0 11px 18px;border-color:transparent transparent transparent var(--c-text-1)}
+.sf-camn{position:absolute;left:var(--s-4);right:var(--s-4);bottom:var(--s-3);text-align:left;font-size:var(--fs-lead);font-weight:var(--fw-med)}
+.sf-camf{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
+.sf-cam.on .sf-camv{display:none}
+.sf-camc{display:flex;align-items:center;justify-content:space-between;gap:var(--s-3);min-height:var(--hit);padding:var(--s-1) var(--s-4)}
+.sf-camc small{min-width:0;font-size:var(--fs-meta);color:var(--c-text-2)}
+.sf-camx{display:none;flex:none}
+.sf-cam.on .sf-camx{display:inline-flex}
+.sf-camnone{margin-top:var(--s-2)}
+.sf-camnone a{display:inline-flex;align-items:center;min-height:var(--hit);margin-right:var(--s-4);color:var(--c-text-1)}
+/* a phone (P and L) draws each pier as a row until it is tapped; the 16:9 box opens with the player */
+@media (max-width:599px),(max-height:499px){
+  .sf-cam:not(.on) .sf-camm{aspect-ratio:auto;background:none}
+  .sf-cam:not(.on) .sf-camv{position:static;display:flex;align-items:center;gap:var(--s-3);min-height:var(--hit);padding:var(--s-3) var(--s-4);text-align:left}
+  .sf-cam:not(.on) .sf-campb{position:relative;left:auto;top:auto;flex:none;width:32px;height:32px;margin:0}
+  .sf-cam:not(.on) .sf-campb::after{left:12px;top:9px;border-width:7px 0 7px 11px}
+  .sf-cam:not(.on) .sf-camn{position:static;flex:1;min-width:0}
+  .sf-cam:not(.on) .sf-camh{display:inline}
+  .sf-cam:not(.on) .sf-camc{padding-top:0}
+}
+.sf-camh{display:none;flex:none;font-size:var(--fs-meta);color:var(--c-text-2)}
+/* an HDOnTap row: the row opens its snapshot in a fixed 16:9 box (no jump when the picture lands); Live view beside */
+.sf .sf-snap+.sf-snap,.sf .sf-snap+.frow,.sf .frow+.sf-snap{border-top:var(--hair)}
+.sf-snr{border-top:0;gap:var(--s-3)}
+.sf-snb{flex:1;min-width:0;display:flex;align-items:center;min-height:var(--hit);padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.sf-live{flex:none;display:inline-flex;align-items:center;min-height:var(--hit);color:var(--c-text-1);font-size:var(--fs-meta)}
+.sf-snapm{position:relative;aspect-ratio:16/9;margin:0 0 var(--s-3);border-radius:var(--r-ctl);overflow:hidden;background:var(--c-panel-2)}
+.sf-snapm img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sf-snapx{margin:0 0 var(--s-3)}
+
+/* ---------- 7-day outlook: one column per day, a morning and an afternoon bar, shade by rating ---------- */
+.sf-obars{display:grid;grid-template-columns:repeat(var(--days,7),minmax(0,1fr));gap:var(--s-2);align-items:end;container-type:inline-size}
+.sf-day{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0}
+.sf-dh{font-family:var(--mono);font-size:var(--fs-micro);font-weight:var(--fw-med);color:var(--c-text-1);white-space:nowrap}
+.sf-pair{display:grid;grid-template-columns:1fr 1fr;gap:2px;width:100%;height:6rem;align-items:end}
+.sf-ob{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;min-width:0;gap:2px}
+.sf-ob i{display:block;width:100%;height:var(--h);min-height:2px;border-radius:2px 2px 0 0;background:var(--c-ramp-2)}
+.sf-ob[data-q="1"] i{background:var(--c-ramp-1)}.sf-ob[data-q="3"] i{background:var(--c-ramp-3)}.sf-ob[data-q="4"] i{background:var(--c-ramp-4)}.sf-ob[data-q="5"] i{background:var(--c-ramp-5)}
+.sf-ob.none i{background:var(--c-hatch)}
+.sf-obars.model .sf-ob i{background-image:var(--c-hatch);background-blend-mode:multiply}
+.sf-ob span{display:none;font-size:var(--fs-micro);color:var(--c-text-2);white-space:nowrap}
+.sf-dw{font-size:var(--fs-micro);color:var(--c-text-2);white-space:nowrap}
+.sf-dl{font-size:var(--fs-meta);color:var(--c-text-1);white-space:nowrap}
+.sf-day .conf{font-size:var(--fs-meta)}
+@container (min-width:34rem){.sf-ob span{display:block}.sf-dw{display:none}}
+.sf-tmr{margin:0 0 var(--s-3);font-size:var(--fs-body);color:var(--c-text-2);text-wrap:pretty}
+.sf-obk{font-size:var(--fs-meta)}
+
+/* ---------- tide curve and latitude chart on the shared .chart ---------- */
+.chart .ln.sf-dash{stroke-dasharray:6 5}
+.sf-tide{--ar:2.4/1}
+.chart .lbl.sf-el{transform:translate(0,-115%)}.chart .lbl.sf-el.lo{transform:translate(0,15%)}
+.chart .lbl.sf-er{transform:translate(-100%,-115%)}.chart .lbl.sf-er.lo{transform:translate(-100%,15%)}
+.chart .nowl{z-index:1}
+.sf-lat{--ar:2/1;container-type:inline-size}
+@media (min-width:600px){.sf-lat{--ar:2.6/1}}
+@media (min-width:1100px) and (min-height:500px){.sf-lat{--ar:2.2/1}}
+/* full width at L, D and XL: a wider chart keeps it under a screen tall */
+@media (min-width:600px) and (max-height:499px){.sf-lat{--ar:3.4/1}}
+@media (min-width:1100px) and (min-height:500px){html:not(.tv) .sf-lat{--ar:4/1}}
+/* San Diego and San Francisco between the end names only where the chart holds all four apart; never overprinted */
+.sf-lat .xt.sf-xm{display:none}
+@container (min-width:32rem){.sf-lat .xt.sf-xm{display:block}}
+.sf-lat .lbl.sf-you{transform:translate(-50%,-130%)}
+.sf-legend{display:flex;flex-wrap:wrap;gap:var(--s-1) var(--s-4);margin-top:var(--s-2);font-size:var(--fs-meta);color:var(--c-text-2)}
+.sf-legend>span{display:inline-flex;align-items:center;gap:var(--s-2)}
+.sf-legend .lg-pt{display:inline-block;width:.55rem;height:.55rem}
+.sf-legend .sf-lg-you{background:var(--c-signal)}
+.sf-lg-ln{display:inline-block;width:1.4em;border-top:2px solid var(--c-text-1)}
+.sf-lg-ln.dash{border-top-style:dashed}
+
+/* ---------- legacy: the old Life/Work surf card (deck.js surf(), surfOutlook()) until PgWork removes it; delete with it ---------- */
+.sh-outlook{display:flex;flex-direction:column;gap:var(--sp-2);flex:none}
+.sh-spot{background:var(--raised);box-shadow:var(--edge);border-radius:var(--r-card);padding:var(--sp-3) var(--sp-4);display:flex;flex-direction:column;gap:var(--sp-1);min-width:0}
+.sh-spot>b{font-size:var(--fs-body);font-weight:var(--fw-semi);color:var(--text-1)}
+.sh-spot>small{color:var(--text-2);line-height:1.35}
+.sh-spot>small.sh-src{color:var(--text-3)}
+.sh-days{display:flex;flex-wrap:wrap;gap:var(--sp-1) var(--sp-3);font-size:var(--fs-meta);color:var(--text-1);font-variant-numeric:tabular-nums}

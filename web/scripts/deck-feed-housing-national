@@ -1,0 +1,217 @@
+#!/usr/bin/env python3
+"""Pixel Deck national housing and commercial dataset v2 (program 2026-11-14, DataArch).
+
+Every source is a plugin under scripts/national/sources/ (the 18 old loaders are wrapped there too). Steps:
+  1. run.py runs every plugin in its own child (timeout, memory cap, last good reuse) -> one status row per source
+  2. legacy/assemble.py builds the v1 ZIP records from the wrapped legacy results (same code as before)
+  3. the plugin fields go into a columnar store through the tract and county crosswalks (xwalk.py)
+  4. blend.py derives fields and blends the headline metrics with a confidence, nulling what the validity table in
+     metrics.json rejects (with a reason); score.py scores and grades
+  5. writer.py writes house-feeds/national-v2/ (new), then house-feeds/national/ (compat, the v1 shape, carrying the
+     v2 housing score and rental grade), manifests last
+
+Usage: deck-feed-housing-national [--out DIR] [--force] [--only a,b] [--skip a,b] [--jobs N] [--timeout S]
+  --out DIR (or DECK_NATIONAL_OUT) is the parent of national/ and national-v2/; default ~/.kodros/status/house-feeds.
+  The resolved output dirs are printed on the first line. Also creates ~/.config/pixel-deck/invest-profile.json once
+  with defaults (never overwrites).
+One run at a time: an flock on ~/.cache/deck-housing-national/.run.lock; a second run prints who holds it and exits 0 without
+touching any output. The timer unit (scripts/systemd/deck-feed-housing-national.service) allows 90 minutes, see its comment.
+"""
+import fcntl
+import gc
+import json
+import os
+import sys
+import time
+
+HERE = os.path.dirname(os.path.realpath(__file__))
+for _cand in (os.path.join(os.path.dirname(HERE), "lib", "deck-national"), os.path.join(HERE, "national")):
+    if os.path.isdir(os.path.join(_cand, "legacy")):
+        NATIONAL_DIR = _cand
+        break
+else:
+    sys.exit("deck-feed-housing-national: scripts/national not found next to %s" % HERE)
+sys.path.insert(0, os.path.join(NATIONAL_DIR, "legacy"))
+sys.path.insert(0, NATIONAL_DIR)
+import assemble  # noqa: E402  legacy/assemble.py
+import blend  # noqa: E402
+import national_area as A  # noqa: E402
+import national_build as B  # noqa: E402
+import national_fetch as F  # noqa: E402
+import run as R  # noqa: E402
+import score  # noqa: E402
+import writer as W  # noqa: E402
+import xwalk as X  # noqa: E402
+
+LIVE_PARENT = os.path.expanduser("~/.kodros/status/house-feeds")
+LOCK = os.path.join(F.CACHE_DIR, ".run.lock")
+
+
+def income_lookup():
+    path, _ = F.fetch(B.LA_LISTING_URL, "la_county_class_salary.pdf", min_age=7 * 86400)
+    return path
+
+
+def county_xwalk(store):
+    """xwalk getter (DataArch section 4): county sums apportion by ZIP population share (ACS); "county_jobs", the key
+    commercial county sources ask for, by ZIP job share from the LODES workplace table (merged before any county
+    source), else population when LODES did not load. Tract and the rest keep land shares."""
+    cache = {}
+
+    def weights(field):
+        return {z: store.get(field, i) for z, i in store.ix.items()}
+
+    def get(level):
+        if level not in cache:
+            base = X.get(level)
+            if level == "county":
+                cache[level] = X.reweighted(base, weights("pop"), "population")
+            elif level == "county_jobs":
+                jobs = store.has("lodes_jobs_total")
+                cache[level] = X.reweighted(base, weights("lodes_jobs_total" if jobs else "pop"),
+                                            "jobs" if jobs else "population")
+            else:
+                cache[level] = base
+        return cache[level]
+    return get
+
+
+def main():
+    o = R.parse_args(sys.argv[1:])
+    parent = o["out"] or os.path.abspath(os.path.expanduser(os.environ.get("DECK_NATIONAL_OUT") or LIVE_PARENT))
+    out_v2, out_v1 = os.path.join(parent, "national-v2"), os.path.join(parent, "national")
+    print("deck-feed-housing-national: writing %s and %s" % (out_v2, out_v1), flush=True)
+    os.makedirs(F.CACHE_DIR, mode=0o700, exist_ok=True)
+    lock = open(LOCK, "a+")  # a+: a run that loses the race must not truncate what the holder wrote
+    try:
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        lock.seek(0)
+        print("deck-feed-housing-national: another run holds the lock (%s); exiting" % (lock.read().strip() or "holder not recorded"),
+              flush=True)
+        return 0
+    # The flock goes with the process (a SIGKILL from the unit timeout frees it); the text only says who holds it.
+    lock.seek(0)
+    lock.truncate()
+    lock.write("pid %d since %s" % (os.getpid(), time.strftime("%Y-%m-%dT%H:%M:%S%z")))
+    lock.flush()
+    t0 = time.time()
+    print("deck-feed-housing-national: started pid %d, lock %s" % (os.getpid(), LOCK), flush=True)
+    runs = R.run_all(force=o["force"], only=o["only"], skip=o["skip"], jobs=o["jobs"], timeout=o["timeout"])
+    t_plugins = time.time() - t0
+    reports = {rep["id"]: rep for rep, _ in runs}
+
+    # legacy records (v1 fields) from the wrapped legacy plugins, plus the v1 listing fields from cre_listings_zip
+    results = {}
+    for rep, path in runs:
+        legacy = (rep.get("source") or {}).get("legacy")
+        if (legacy or rep["id"] == assemble.LISTINGS) and rep.get("status") in R.MERGED and path:
+            results[rep["id"]] = R.load_result(path)
+            if legacy:
+                rep["legacy_row"] = results[rep["id"]].get("legacy_row")
+    P, src, v1_rows = assemble.inputs(results, reports)
+    del results
+    if not P.get("gaz"):
+        print("deck-feed-housing-national: Census ZCTA gazetteer unavailable; keeping the previous output")
+        for rep, _ in runs:
+            print("  " + R.line(rep))
+        return 1
+    land = {z: v.get("aland_sqmi") for z, v in P["gaz"].items()}
+    records = assemble.build(P, src)
+    del P
+    gc.collect()
+    counts_v1 = B.score_all(records)
+    grades_v1 = A.grade_all(records)
+
+    # v2: columnar store, plugin merge, derived fields, blend, scores
+    store = X.Store(records)
+    W.load_legacy(store, records, land, runs)
+    # the v1 listing fields are the cre_listings_zip plugin's in v2 (merged below, not copied from the records)
+    reserved = (set(store.fields()) | set(B.COLS) | {m["id"] for m in blend.METRICS} |
+                {m["id"] + "_conf" for m in blend.METRICS} | set(score.SCORES) | set(score.CONF_FIELD.values()) |
+                set(next(iter(records.values()))) | {"listings", "h_score_v1"}) - set(assemble.COM_FIELDS)
+    county_of = {z: r.get("county_fips") for z, r in records.items()}
+    hist = {}
+    owner, context = R.merge(store, runs, reserved, county_of, xwalk_get=county_xwalk(store), hist=hist)
+    W.context_down(store, context)
+    blender = blend.Blender(store)
+    derived = blender.derive_fields()
+    metric_stats = blender.blend_all()
+    scorer = score.Scorer(blender)
+    score_stats = scorer.score_all()
+    grades_v2 = scorer.grade_all()
+    # compat national/ carries the v2 rental grade (one grade per ZIP wherever it is read); coverage counts it too
+    W.compat_grades(records, store, scorer)
+    W.compat_follows(records, store, blender)
+
+    # rollups and manifests
+    gen = int(time.time())
+    us, states, metros = B.rollups(records)
+    mortgage, fred_row = assemble.mortgage_block(context, reports.get("fred_mortgage_rates"))
+    v1_sources = [v1_rows[s] for s in assemble.V1_ROWS] + [assemble.CRIME_ROW, fred_row]
+    manifest_v1 = {
+        "schema": 1, "generated_at": gen, "sources": v1_sources, "coverage": B.coverage(records),
+        "us": us, "states": states, "metros": metros, "mortgage": mortgage,
+        "score_method": W.score_method(counts_v1, score_stats["h_score"]["scored"]),
+        "grade_method": dict(score.GRADE_METHOD, note=score.GRADE_NOTE, graded=grades_v2),
+        "aggregate_method": B.AGG_NOTE,
+    }
+
+    us2, states2, metros2 = json.loads(json.dumps([us, states, metros]))
+    W.v2_rollups(store, us2, states2, metros2, context)
+    rows = W.mark_used(W.source_rows(store, runs, owner))
+    sources_count = W.source_counts(rows)
+    side_counts = {side: sources_count[side]["ok"]["datasets"] + sources_count[side]["stale"]["datasets"]
+                   for side in ("residential", "commercial")}
+    used_counts = {side: sources_count[side]["used"]["datasets"] for side in ("residential", "commercial", "total")}
+    coverage = dict(manifest_v1["coverage"], zips_total=store.n,
+                    metrics={k: v["zips"] for k, v in metric_stats.items()},
+                    scores={k: v["scored"] for k, v in score_stats.items()}, sources=sources_count)
+    manifest = dict(manifest_v1, schema=2, sources=rows, coverage=coverage, us=us2, states=states2, metros=metros2,
+                    fields=W.field_catalog(store, runs),
+                    metrics={m["id"]: {"label": m["label"], "unit": m["unit"], "side": m["side"], "better": m["better"],
+                                       "blend": m["blend"], "rankable": m["rankable"], "shown": m["shown"],
+                                       "members": [x["field"] for x in m["members"]], "note": m.get("note"),
+                                       "zips": metric_stats.get(m["id"], {}).get("zips"),
+                                       "median_conf": metric_stats.get(m["id"], {}).get("median_conf"),
+                                       "limits": blend.VALIDITY.get(m["id"]),
+                                       "nulled": metric_stats.get(m["id"], {}).get("nulled")}
+                             for m in blend.METRICS},
+                    scores={k: dict(v, **score_stats.get(k, {})) for k, v in score.SCORES.items()},
+                    grade_method=dict(score.GRADE_METHOD, note=score.GRADE_NOTE, graded=grades_v2),
+                    grade_method_v1=dict(A.GRADE_METHOD, note=A.GRADE_NOTE, graded=grades_v1), context=context,
+                    counts={"distinct_ok_by_side": side_counts, "distinct_used_by_side": used_counts,
+                            "rule": "distinct_ok_by_side: distinct datasets that loaded (ok or stale) per plugin side, "
+                                    "datasets.json grouping, geography files and the Kodros listings collector "
+                                    "excluded; distinct_used_by_side: of those, the datasets each side uses "
+                                    "(datasets.json used_rule), the number reported to the owner; coverage.sources "
+                                    "has plugins, datasets and publishers per side and status"},
+                    methods={"confidence": blend.SPEC["confidence"], "blend": blend.SPEC["blend"],
+                             "xwalk": X.METHOD_NOTE, "score_rules": blend.SPEC["score_rules"],
+                             "marks": "A value's mark means how well its sources agree and how fresh they are. A "
+                                      "score's mark means how many of its inputs exist for this ZIP.",
+                             "validity": dict(blend.SPEC["validity"], nulled=blender.nulled()),
+                             "income": blender.income_method()},
+                    members_without_source=W.members_without_source(store), derived=derived)
+    out = W.write_v2(out_v2, store, records, blender, scorer, manifest, hist, gen)
+    W.compat_scores(records, store, scorer)
+    shards_v1 = W.write_compat(out_v1, records, manifest_v1)
+    profile = B.ensure_invest_profile(lambda: B.la_county_income(income_lookup))
+    print("housing-national v2: %d ZIPs, %d fields, %d shards (%.0f MB v2), compat %d shards, %.0fs (plugins %.0fs), "
+          "peak %s MB; invest profile %s" % (store.n, len(store.fields()), out["shards"], out["bytes"] / 1e6,
+                                             shards_v1, time.time() - t0, t_plugins, R._hwm_mb(), profile))
+    for scope in ("residential", "commercial", "total"):
+        b = sources_count[scope]
+        print("  %-11s " % scope + "  ".join("%s %d/%d/%d" % (st, b[st]["plugins"], b[st]["datasets"],
+                                                              b[st]["publishers"]) for st in W.STATUS_ORDER)
+              + "  (plugins/datasets/publishers); used %d datasets" % b["used"]["datasets"])
+    print("  scores: " + json.dumps(score_stats) + " grades v2: " + json.dumps(grades_v2))
+    for r in rows:
+        print("  %-30s %-6s %-11s %-11s as_of=%-10s rows=%-8s zips=%-6s %s" % (
+            r["id"], r["kind"], r["side"], r["status"], r.get("as_of"), r.get("rows"), r.get("coverage"),
+            r.get("reason") or ""))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

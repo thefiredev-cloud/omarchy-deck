@@ -1,0 +1,35 @@
+{
+ "t": 1795051391,
+ "refresh": 300,
+ "stale": false,
+ "src": "fixture (synthetic)",
+ "errors": [],
+ "engine": {
+  "status": "up",
+  "served_name": "fixture-model",
+  "container": "ctn",
+  "max_model_len": 131072,
+  "port": 8080,
+  "up_since": 1794964991
+ },
+ "proxy": {
+  "pc_desktop_8080_up": true,
+  "models": [
+   "fixture-model"
+  ]
+ },
+ "bench": {
+  "prose_tps": 23.9,
+  "code_tps": 34.5,
+  "conc6_tps": 69.8,
+  "prefill_tps": 1508,
+  "at": "2026-09-30"
+ },
+ "ratchet": {
+  "last_outcome": "rejected",
+  "last_date": "2026-10-04",
+  "next_run": 1795054991
+ },
+ "nodes": [],
+ "candidates": []
+}

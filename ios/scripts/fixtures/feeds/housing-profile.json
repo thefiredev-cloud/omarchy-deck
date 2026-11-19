@@ -1,0 +1,11 @@
+{
+ "profile": {},
+ "stored": false,
+ "budget": {
+  "budget": 1000000,
+  "basis": "income",
+  "max_price_income": 1000000,
+  "max_price_cash": 1200000
+ },
+ "t": 1794600000
+}

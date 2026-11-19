@@ -1,0 +1,284 @@
+#!/usr/bin/env python3
+"""Pixel Deck markets feed -> house-feeds/markets.json.
+
+Public market data only (no account, no key, no order): index and futures quotes, VIX, the 10-year
+yield, dollar, oil, gold and crypto; the `watchlist` rows (market-wide trending tickers from deck-feed-trends, plus
+the symbols held, flagged `held`, which only the private Portfolio column charts); US large-cap movers; and upcoming
+catalysts (earnings from Nasdaq, macro releases from BLS, BEA and the Federal Reserve). Every quote carries `t` (the
+epoch of the price) and `src`; a failed source is listed in `errors` and its field is null, never zero.
+Owner 2026-11-17: the owner's own watch list is no longer shown. Trending rows carry `trending: true`, `reason` and
+`volume_ratio` (today's volume over its 30-session average) from deck/trends.json; a missing or stale trends.json
+leaves only the held rows and is listed in `errors`.
+Holdings quantities and amounts live in deck-feed-portfolio, not here.
+The extra collectors (deck-feed-markets-calendar: treasury auctions, dividends, IPOs, splits, long-range
+macro and earnings; deck-feed-markets-filings: SEC filings and news) write their own files, which
+deck_markets_extra merges into `catalysts`: upcoming events in date order, then recent filings and news.
+"""
+import datetime as dt
+import json
+import os
+import sys
+import time
+
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+import deck_markets_common as M  # noqa: E402
+import deck_markets_extra as E  # noqa: E402
+from deck_feed_common import OUT_DIR, FetchError, short_reason, write_house_feed  # noqa: E402
+
+NAME = "markets"
+REFRESH = 300
+
+# (id, label, yahoo symbol, group, decimals hint)
+BOARD = [
+    ("spy", "S&P 500 (SPY)", "SPY", "us"), ("qqq", "Nasdaq 100 (QQQ)", "QQQ", "us"), ("dia", "Dow (DIA)", "DIA", "us"),
+    ("iwm", "Russell 2000 (IWM)", "IWM", "us"),
+    ("es", "S&P futures", "ES=F", "futures"), ("nq", "Nasdaq futures", "NQ=F", "futures"),
+    ("vix", "VIX", "^VIX", "vol"), ("us10y", "10-year yield", "^TNX", "rates"),
+    ("dxy", "Dollar index", "DX-Y.NYB", "fx"), ("eurusd", "EUR/USD", "EURUSD=X", "fx"),
+    ("usdjpy", "USD/JPY", "USDJPY=X", "fx"),
+    ("wti", "Crude oil", "CL=F", "commodity"), ("gold", "Gold", "GC=F", "commodity"),
+]
+CRYPTO = ["BTC", "ETH", "SOL", "XRP"]
+# groups whose rows also carry today's 5-minute path (the 1D chart); the rest chart daily closes only
+INTRADAY_GROUPS = {"us", "futures", "vol"}
+
+
+def with_intraday(row, sym, errors):
+    """Adds `intra` (today's path) to a quote row. A failed fetch leaves it null and is listed, never guessed."""
+    try:
+        row["intra"] = M.intraday(sym)
+    except FetchError as exc:
+        errors.append({"source": "intraday " + sym, "reason": short_reason(exc)})
+        row["intra"] = None
+    return row
+
+
+held_symbols = E.held_symbols
+
+TRENDS = os.path.join(OUT_DIR, "trends.json")
+TRENDS_MAX_AGE = 3 * 3600  # deck-feed-trends runs every 30 minutes; three hours old is no longer "trending"
+MAX_TRENDING = 12  # every row is quoted every 5 minutes: keep the Yahoo load small
+
+
+def trending_tickers(errors, now_epoch, path=None):
+    """Market-wide trending tickers from deck-feed-trends (most active, day gainers and losers, unusual volume, Yahoo
+    trending), best first. Never the owner's watch list. A missing, unreadable or stale file gives [] and an error."""
+    try:
+        with open(path or TRENDS, encoding="utf-8") as fh:
+            doc = json.load(fh)
+    except (OSError, ValueError) as exc:
+        errors.append({"source": "trends.json", "reason": "unreadable: " + short_reason(exc, 80)})
+        return []
+    t = M.num(doc.get("t")) if isinstance(doc, dict) else None
+    if t is not None and t - now_epoch > E.FUTURE_SLACK:  # a stamp ahead of the clock cannot show its age: not current
+        errors.append({"source": "trends.json", "reason": "stamped in the future; no trending rows"})
+        return []
+    if t is None or now_epoch - t > TRENDS_MAX_AGE:
+        errors.append({"source": "trends.json", "reason": "older than 3 hours; no trending rows"})
+        return []
+    out = []
+    for r in doc.get("tickers") or []:
+        sym = r.get("symbol") if isinstance(r, dict) else None
+        if isinstance(sym, str) and sym and sym not in (x["symbol"] for x in out):
+            out.append({"symbol": sym, "reason": r.get("reason") if isinstance(r.get("reason"), str) else None,
+                        "volume_ratio": M.num(r.get("volume_ratio"))})
+    return out[:MAX_TRENDING]
+
+
+def watch_symbols(held, trending=()):
+    """Symbols quoted into `watchlist`: holdings first (their held rows feed the private Portfolio charts and the
+    Watchlist column hides them), then the market-wide trending tickers."""
+    out = list(held)
+    for t in trending:
+        if t["symbol"] not in out:
+            out.append(t["symbol"])
+    return out
+
+
+def mark_trending(watch, trending):
+    """Adds trending, reason and volume_ratio to the watchlist rows. A row's own reason (a rejected quote) wins."""
+    meta = {t["symbol"]: t for t in trending}
+    for w in watch:
+        t = meta.get(w["symbol"])
+        w["trending"] = t is not None
+        if t:
+            w["volume_ratio"] = t["volume_ratio"]
+            if t["reason"] and not w.get("reason"):
+                w["reason"] = t["reason"]
+    return watch
+
+
+def reject_future_quotes(rows, now_epoch, errors):
+    """Keep history and row identity, but never publish a future price as a current quote."""
+    for row in rows:
+        t = M.num(row.get("t"))
+        if t is not None and t > now_epoch:
+            reason = "quote timestamp is in the future"
+            row.update(price=None, chg=None, pct=None, t=None, reason=reason)
+            errors.append({"source": "quote " + row["symbol"], "reason": reason})
+    return rows
+
+
+def reject_future_movers(mv, now_epoch, errors):
+    """A mover priced after the clock is no current quote: price and change null, one error per symbol (a name on two lists
+    is listed once), the row kept like a rejected board row."""
+    for rows in mv.values():
+        if isinstance(rows, list):
+            fresh = []
+            reject_future_quotes([r for r in rows if isinstance(r, dict)], now_epoch, fresh)
+            errors += [e for e in fresh if e not in errors]
+    return mv
+
+
+def collect_board(errors):
+    rows = []
+    for ident, label, sym, group in BOARD:
+        try:
+            q = M.quote(sym, errors)
+        except FetchError as exc:
+            errors.append({"source": "quote " + sym, "reason": short_reason(exc)})
+            q = None
+        row = {"id": ident, "label": label, "symbol": sym, "group": group,
+               "price": q and q["price"], "chg": q and q["chg"], "pct": q and q["pct"],
+               "t": q and q["t"], "src": q and q["src"], "hist": (q and q.get("hist")) or []}
+        rows.append(with_intraday(row, sym, errors) if q and group in INTRADAY_GROUPS else row)
+    now = int(time.time())
+    for a in CRYPTO:
+        try:
+            q = M.crypto_quote(a, now)
+        except FetchError as exc:
+            errors.append({"source": "kraken " + a, "reason": short_reason(exc)})
+            q = None
+        rows.append({"id": a.lower(), "label": a, "symbol": a, "group": "crypto",
+                     "price": q and q["price"], "chg": q and q["chg"], "pct": q and q["pct"],
+                     "t": q and q["t"], "src": q and q["src"], "basis": "24h",
+                     "hist": (q and q.get("hist")) or [], "intra": q and q.get("intra")})
+    return reject_future_quotes(rows, now, errors)
+
+
+def collect_watch(syms, held, errors):
+    held = set(held)
+    rows = []
+    for s in syms:
+        try:
+            q = M.quote(s, errors)
+        except FetchError as exc:
+            errors.append({"source": "quote " + s, "reason": short_reason(exc)})
+            q = None
+        row = {"symbol": s, "name": q and q["name"], "held": s in held,
+               "price": q and q["price"], "chg": q and q["chg"], "pct": q and q["pct"],
+               "t": q and q["t"], "src": q and q["src"], "hist": (q and q.get("hist")) or []}
+        rows.append(with_intraday(row, s, errors) if q else row)
+    return reject_future_quotes(rows, int(time.time()), errors)
+
+
+def next_report(symbol, earnings):
+    """Earliest report date for the symbol in the fetched earnings window, else null."""
+    hits = sorted(e["date"] for e in earnings if e["symbol"] == symbol)
+    return hits[0] if hits else None
+
+
+OPEN_MAX_AGE = 1800  # open session: Yahoo is about 15 min delayed, so a half hour old quote is already behind
+CLOSED_MAX_AGE = 5 * 86400  # pre, after and closed sessions keep the last regular session through a long weekend
+
+
+def quote_fresh(row, now_epoch, session):
+    """True when the row's quote time is known and recent enough to speak for the market right now. Crypto trades
+    around the clock, so a closed equity session never excuses an old crypto quote."""
+    t = M.num(row.get("t"))
+    price = M.num(row.get("price"))
+    if t is None or price is None or price == 0 or t > now_epoch:
+        return False
+    return now_epoch - t <= (OPEN_MAX_AGE if session == "open" or row.get("group") == "crypto" else CLOSED_MAX_AGE)
+
+
+def quotes_as_of(board, now_epoch=None):
+    """Epoch of the newest non-crypto quote no later than now, else null."""
+    ts = [r["t"] for r in board if r.get("group") != "crypto" and M.num(r.get("t")) is not None
+          and (now_epoch is None or r["t"] <= now_epoch)]
+    return max(ts) if ts else None
+
+
+def headline(board, now_epoch, session):
+    by = {r["id"]: r for r in board if quote_fresh(r, now_epoch, session)}
+
+    def pc(i):
+        r = by.get(i)
+        return None if not r or r["pct"] is None else "%+.2f%%" % r["pct"]
+
+    parts = []
+    for ident, label in (("spy", "S&P 500"), ("qqq", "Nasdaq 100")):
+        if pc(ident):
+            parts.append("%s %s" % (label, pc(ident)))
+    vix = by.get("vix")
+    if vix:
+        parts.append("VIX %.1f" % vix["price"])
+    y = by.get("us10y")
+    if y:
+        parts.append("10y %.2f%%" % y["price"])
+    btc = by.get("btc")
+    if btc:
+        parts.append("BTC $%s (%s)" % (format(round(btc["price"]), ","), pc("btc") or "n/a"))
+    lead = {"open": "Open", "pre": "Pre-market", "after": "After hours", "closed": "Closed"}[session]
+    return "%s. %s" % (lead, ", ".join(parts)) if parts else None
+
+
+def main():
+    now = int(time.time())
+    today = dt.datetime.fromtimestamp(now, M.ET).date()
+    errors, src = [], ["finance.yahoo.com chart", "api.kraken.com public", "api.nasdaq.com earnings",
+                       "bls.gov, bea.gov, federalreserve.gov calendars", "deck/trends.json (market-wide trending tickers)"]
+    held = held_symbols()
+    trending = trending_tickers(errors, now)
+    syms = watch_symbols(held, trending)
+    board = collect_board(errors)
+    watch = mark_trending(collect_watch(syms, held, errors), trending)
+    mv, mv_err = M.movers()
+    errors += mv_err
+    reject_future_movers(mv, now, errors)
+
+    days = M.next_trading_days(today, 8)
+    rows, e_err = M.earnings_window(days)
+    errors += e_err
+    macro, m_err = M.macro_calendar(today, 10)
+    errors += m_err
+    core = macro + M.earnings_catalysts(rows, set(syms), today)
+    extra, extra_src = [], []
+    for name in E.EXTRA_FEEDS:
+        items, s, errs = E.load_extra(name, now)
+        extra += items
+        extra_src += s
+        errors += errs
+    catalysts = E.merge_catalysts(core, extra)
+    for w in watch:
+        w["next_earnings"] = next_report(w["symbol"], rows)
+
+    session = M.session_state(now)
+    spy = next((r for r in board if r["id"] == "spy" and r["t"]), None)
+    session_doc = {
+        "state": session,
+        "last_close": dt.datetime.fromtimestamp(spy["t"], M.ET).date().isoformat() if spy else None,
+        "et_date": today.isoformat(),
+    }
+    # One generated_at per feed: panels compute "Updated ... ago" from it. as_of is separate per block: the price block says when its
+    # newest quote was priced (a closed market keeps its last close), never the time this file was written.
+    write_house_feed(NAME, REFRESH, src + extra_src, errors, {
+        "generated_at": now,
+        "as_of": {"quotes": quotes_as_of(board, now)},
+        "session": session_doc,
+        "headline": headline(board, now, session),
+        "board": board,
+        "watchlist": watch,
+        "movers": {**mv, "basis": "US large caps (market cap $10B+) from the Yahoo day screeners"},
+        "catalysts": catalysts,
+    })
+    ok = sum(1 for r in board + watch if r["price"] is not None)
+    print("markets: %d/%d quotes, %d movers, %d catalysts, %d errors, session %s"
+          % (ok, len(board) + len(watch), sum(len(v) for k, v in mv.items() if isinstance(v, list)),
+             len(catalysts), len(errors), session))
+    for e in errors:
+        print("  part failed: %s: %s" % (e["source"], e["reason"]))
+
+
+if __name__ == "__main__":
+    main()
