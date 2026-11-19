@@ -1,4 +1,4 @@
-//! Read-only, owner-local Fleet widget facts. No network discovery, account calls, or game launch.
+//! Read-only, owner-local Fleet widget facts. No network discovery or account calls.
 //! Missing sources remain unavailable rather than becoming zero or copied demo values.
 use crate::util::{iso_to_epoch, now_epoch};
 use serde_json::{json, Value};
@@ -127,19 +127,12 @@ pub async fn build(home: &Path) -> Value {
         Ok(text) => neighbors_from(&text),
         Err(_) => json!({"cached_reachable_count":null,"error":"ARP cache unavailable","discovery":false}),
     };
-    let hydra = home.join(".local/bin/hydra-launcher");
-    let installed = tokio::fs::metadata(&hydra).await.map(|m| {
-        use std::os::unix::fs::PermissionsExt;
-        m.is_file() && m.permissions().mode() & 0o111 != 0
-    }).unwrap_or(false);
     let radar = home.join(".config/omarchy/plugins/yuters.flight-radar/manifest.json");
     let radar_installed = tokio::fs::metadata(&radar).await.map(|m| m.is_file()).unwrap_or(false);
     json!({"t":now,"thermal":thermal,
         "outbound":{"src":"~/Documents/outreach/queue and quote-followup-2026-10-03/queue",
             "legacy_queue":legacy,"quote_followup_queue":quote,"drafts":null,"outbound_agents":null,
             "note":"File counts are staged queue records, not approvals, sends, distinct agents, or draft count"},
-        "hydra":{"installed":installed,"src":"~/.local/bin/hydra-launcher",
-            "note":"Installation presence does not prove game access or a signed-in session"},
         "flightradar":{"installed":radar_installed,"live_state_observed":false,
             "src":"~/.config/omarchy/plugins/yuters.flight-radar/manifest.json",
             "note":"Plugin installation is separate from its live OpenSky aircraft state"},

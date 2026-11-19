@@ -26,7 +26,7 @@ REFRESH = 3600
 
 PHASE1 = dict({sid: macro.load_fred(sid) for sid in FRED_SOURCES}, **{
     "apple_chart": market.load_apple, "tranco": market.load_tranco, "google_trends": market.load_trends,
-    "shopify_stores": market.load_shopify, "steam_store": market.load_steam, "reverb_api": market.load_reverb,
+    "shopify_stores": market.load_shopify, "reverb_api": market.load_reverb,
     "scryfall": market.load_scryfall, "drewry_wci": macro.load_drewry, "fedex_fuel": macro.load_fedex,
     "usps_prices": macro.load_usps, "port_la": macro.load_port_la, "federal_register": macro.load_fedreg,
     "shop_collector": market.load_shop, "bestbuy_api": keyed.load_bestbuy, "etsy_api": keyed.load_etsy,
@@ -120,7 +120,7 @@ def build_feed(results, history, now):
     build.record_watches(watches["items"], history)
 
     offers = []
-    for sid in ("steam_store", "shopify_stores", "reverb_api", "scryfall", "bestbuy_api", "etsy_api"):
+    for sid in ("shopify_stores", "reverb_api", "scryfall", "bestbuy_api", "etsy_api"):
         offers += build._data(results, sid) or []
     offers += ebay.get("offers") or []
     products = prod.build_products(offers, history, today)

@@ -55,7 +55,7 @@ test('trending title: the size or pack token that tells models apart survives th
   assert.equal(S.cardTitle('GIGABYTE AORUS GeForce RTX 4080 16GB GDDR6X PCI Express 4.0 ATX Graphics Card GV-N4080AORUSX W-16GD'), 'GIGABYTE AORUS GeForce RTX 4080 16GB\u2026');
   assert.equal(S.cardTitle('GIGABYTE AORUS GeForce RTX 5090 32GB GDDR7 PCI Express 5.0 ATX Graphics Card GV-N5090AORUSM ICE-32GD'), 'GIGABYTE AORUS GeForce RTX 5090 32GB\u2026');
   // a token just past the cut (characters 37 to 44) is kept, still ending at a word
-  assert.equal(S.cardTitle('Samsung 990 PRO NVMe M.2 Internal SSD 2TB with Heatsink for PS5'), 'Samsung 990 PRO NVMe M.2 Internal SSD 2TB\u2026');
+  assert.equal(S.cardTitle('Samsung 990 PRO NVMe M.2 Internal SSD 2TB with Heatsink for Desktop'), 'Samsung 990 PRO NVMe M.2 Internal SSD 2TB\u2026');
   assert.equal(S.cardTitle('Hint Canned Water Zero Sugar Lemon 12 pack, Blueberry flavor and more'), 'Hint Canned Water Zero Sugar Lemon 12 pack\u2026');
   assert.equal(S.cardTitle('Hint Canned Water Zero Sugar Lemon (12-Pack) Blueberry flavor and more'), 'Hint Canned Water Zero Sugar Lemon (12-Pack)\u2026');
   assert.equal(S.cardTitle('Smart Water Vapor Distilled 16.9 fl oz, 24 Bottles of spring water'), 'Smart Water Vapor Distilled 16.9 fl oz\u2026');

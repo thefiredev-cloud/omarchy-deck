@@ -108,7 +108,7 @@ export function jobsFeed() {
 }
 
 export const hockeyFeed = () => feed({ live: [], teams: [
-  { abbr: 'ANA', name: 'Ducks', record: '1-0-0', points: 2, standing: '1st Pacific', last_game: { result: 'W', score: '4-2', opp: 'SJS' }, next_game: { opp: 'FLA', at: now() + 3600 * 22, tv: 'Prime Video/KCOP-13', gc: '/gamecenter/fla-vs-ana/2026/10/04/2026020037', home: true, type: 'reg' } },
+  { abbr: 'ANA', name: 'Ducks', record: '1-0-0', points: 2, standing: '1st Pacific', last_game: { result: 'W', score: '4-2', opp: 'SJS' }, next_game: { opp: 'FLA', at: now() + 3600 * 22, tv: 'KCOP-13', gc: '/gamecenter/fla-vs-ana/2026/10/04/2026020037', home: true, type: 'reg' } },
   { abbr: 'LAK', name: 'Kings', record: '0-1-0', points: 0, standing: '8th Pacific', last_game: { result: 'L', score: '1-3', opp: 'VGK' }, next_game: { opp: 'FLA', at: now() + 3600 * 46, tv: 'ESPN', gc: '/gamecenter/fla-vs-lak/2026/10/06/2026020052', home: true, type: 'reg' } } ] });
 
 export const surfFeed = () => feed({ spots: [
@@ -164,6 +164,6 @@ export const schedulesFeed = () => feed({ counts: { total: 3, failing: 2, runnin
   { id: 'hermes:a3', name: 'Fixture: engagement watch', host: 'pc-desktop', kind: 'hermes', schedule: 'every 30m', enabled: true, last: now() - 600, next: now() + 1200, result: 'ok', detail: '' }] }] });
 
 // Workspaces 1 to 5 with the apps on each (helper.py ws-list): the second is current
-export const wsList = () => ({ ok: true, active: 2, ws: [{ id: 1, n: 5, apps: ['Chromium', 'Ghostty', 'Firefox'], more: 1 }, { id: 2, n: 2, apps: ['Spotify', 'Obsidian'], more: 0 }, { id: 3, n: 0, apps: [], more: 0 }, { id: 4, n: 1, apps: ['Nautilus'], more: 0 }, { id: 5, n: 0, apps: [], more: 0 }], other: { n: 1, apps: ['Game'], more: 0 } });
+export const wsList = () => ({ ok: true, active: 2, ws: [{ id: 1, n: 5, apps: ['Chromium', 'Ghostty', 'Firefox'], more: 1 }, { id: 2, n: 2, apps: ['Spotify', 'Obsidian'], more: 0 }, { id: 3, n: 0, apps: [], more: 0 }, { id: 4, n: 1, apps: ['Nautilus'], more: 0 }, { id: 5, n: 0, apps: [], more: 0 }], other: { n: 1, apps: ['Mirror'], more: 0 } });
 
 export const FEEDS = { jobs: jobsFeed, hockey: hockeyFeed, surf: surfFeed, realestate: realestateFeed, launch: launchFeed, products: productsFeed, cluster: clusterFeed, dev: devFeed, accounts: accountsFeed, schedules: schedulesFeed, perfloop: () => feed({ enabled: false, stop: false, runs_today: { total: 0 } }), car: () => feed({ battery: 39, range: 109, locked: true, charging: 'Disconnected', charge_limit: 80 }) };

@@ -615,7 +615,6 @@ pub fn group_of(label: &str) -> &'static str {
         || has("dictation")
         || has("voxtype")
         || has("voice")
-        || has("game mode")
         || has("scale")
         || has("backlight")
         || has("touchpad")

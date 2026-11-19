@@ -433,9 +433,9 @@ mod tests {
         let raw = include_str!("../../keys.json");
         let Ok(v) = serde_json::from_str::<Value>(raw) else { panic!("keys.json does not parse") };
         let keys = v["keys"].as_array().cloned().unwrap_or_default();
-        assert_eq!(keys.len(), 43);
+        assert_eq!(keys.len(), 40);
         let groups: Vec<&str> = v["groups"].as_array().into_iter().flatten().filter_map(|g| g["id"].as_str()).collect();
-        assert_eq!(groups, ["apps", "media", "workspaces", "window", "system", "tv", "games", "music", "sprinklers", "house"]);
+        assert_eq!(groups, ["apps", "media", "workspaces", "window", "system", "tv", "music", "sprinklers", "house"]);
         for k in &keys {
             let g = k["group"].as_str().unwrap_or("");
             assert!(groups.contains(&g), "{k} has group {g}");

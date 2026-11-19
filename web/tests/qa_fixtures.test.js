@@ -123,7 +123,7 @@ test('fixtures wsList: active id identifies a listed workspace and empty workspa
   assert.equal(workspaces.ws.find((workspace) => workspace.id === workspaces.active).id, 2);
   assert.deepEqual(workspaces.ws.map(({ id, n }) => [id, n]), [[1, 5], [2, 2], [3, 0], [4, 1], [5, 0]]);
   assert.deepEqual(workspaces.ws.find((workspace) => workspace.id === 3).apps, []);
-  assert.deepEqual(workspaces.other.apps, ['Game']);
+  assert.deepEqual(workspaces.other.apps, ['Mirror']);
 });
 
 test('fixtures fleetBoard: every drive percentage follows its used and free space, and the backup board shares the timestamp', async () => {

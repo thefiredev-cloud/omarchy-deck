@@ -509,10 +509,10 @@ enum DeckFeedParser {
         h.hasPrefix("www.") ? String(h.dropFirst(4)) : h
     }
 
-    /// A shop-watch search ("steam deck oled") as a product name ("Steam Deck OLED"). Brand words keep their own casing.
+    /// A shop-watch search ("sony oled tv") as a product name ("Sony OLED TV"). Brand words keep their own casing.
     static func productName(_ query: String) -> String {
         let brands = ["ipad": "iPad", "iphone": "iPhone", "airpods": "AirPods", "macbook": "MacBook", "imac": "iMac",
-                      "oled": "OLED", "tv": "TV", "gpu": "GPU", "ssd": "SSD", "ps5": "PS5", "xbox": "Xbox",
+                      "oled": "OLED", "tv": "TV", "gpu": "GPU", "ssd": "SSD",
                       "kitchenaid": "KitchenAid", "gopro": "GoPro", "dji": "DJI", "rtx": "RTX", "dgx": "DGX"]
         return query.split(separator: " ").map { word in
             let lower = word.lowercased()

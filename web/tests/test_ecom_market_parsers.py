@@ -168,12 +168,6 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual([(o["title"], o["rank"]) for o in offers[:2]],
                          [("Atlas Sweatpant", 1), ("Quilted Colville Overshirt", 2)])
 
-    def test_steam_search_rows_with_sale_price(self):
-        rows = sk.parse_steam_search(js("steam_topsellers.json"))
-        self.assertEqual(rows[0], {"appid": "2406770", "title": "Bodycam", "price": 26.65, "regular": 33.32,
-                                   "discount_pct": 20, "url": "https://store.steampowered.com/app/2406770"})
-        self.assertIsNone(rows[1]["regular"])
-
     def test_reverb_median_skips_accessories_and_bundles(self):
         med, n = sk.parse_reverb(js("reverb_yamaha_p45.json"), "Yamaha", "P-45")
         self.assertEqual((med, n), (449.99, 8))

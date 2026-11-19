@@ -26,14 +26,14 @@ const ACCESSORY_WORDS: &[&str] = &[
     // replacement and service
     "replacement", "replacements", "repair", "accessory", "accessories", "attachment", "attachments", "liner", "liners", "parchment",
     // non-products and digital goods
-    "membership", "subscription", "eshop", "download", "downloads",
-    // clothing and gear sold around bikes and consoles
+    "membership", "subscription", "download", "downloads",
+    // clothing and gear sold around bikes and electronics
     "shorts", "bib", "bibs", "jersey", "jerseys", "helmet", "helmets", "gloves", "pedals", "pump", "controller", "controllers",
     "grip", "grips",
 ];
 const ACCESSORY_PHRASES: &[&str] = &[
     "screen protector", "tempered glass", "digital code", "digital download", "gift card", "user manual", "instruction manual",
-    "service manual", "repair manual", "game card", "memory card", "online membership", "spare parts", "parts only",
+    "service manual", "repair manual", "memory card", "online membership", "spare parts", "parts only",
     "for parts", "parts or repair", "parts kit",
 ];
 const EXEMPT_PHRASES: &[&str] = &["stand mixer", "stand mixers"];
@@ -250,8 +250,6 @@ mod tests {
         assert!(!ok("ASUS RTX 4070 Ti Super", "rtx 4070"));
         assert!(ok("SAMSUNG 55-Inch Class QLED Q60D Smart TV", "samsung 55 inch tv"));
         assert!(ok("Samsung 55inch Crystal UHD Television", "samsung 55 inch tv"));
-        assert!(ok("Nintendo Switch OLED with Dock", "nintendo switch"));
-        assert!(!ok("Nintendo Switch Pro Controller", "nintendo switch"));
         assert!(ok("Road Bikes for Men, 700C", "road bike"));
     }
 
@@ -259,7 +257,7 @@ mod tests {
     fn paper_promises_are_never_a_deal_and_outliers_leave_the_band() {
         assert!(deal_title_ok("Apple iPhone 13 128GB Unlocked"));
         for bad in ["iPhone 13 with AppleCare+", "TV 3-Year Protection Plan", "Switch with 2 Year Warranty", "Laptop with a 12-month plan",
-            "Xbox Gift Card", "Ninja Air Fryer with 3 years", ""] {
+            "Store Gift Card", "Ninja Air Fryer with 3 years", ""] {
             assert!(!deal_title_ok(bad), "{bad}");
         }
         assert!(deal_title_ok("Road Bike with 21 Speeds"));
@@ -271,9 +269,9 @@ mod tests {
     fn must_and_exclude_are_whole_phrases() {
         assert!(title_ok("KitchenAid Artisan Stand Mixer 5 Qt", "kitchenaid mixer", "stand", ""));
         assert!(!title_ok("KitchenAid Hand Mixer", "kitchenaid mixer", "stand", ""));
-        assert!(!title_ok("Joy-Con (L/R) for Nintendo Switch", "nintendo switch", "", "l r"));
-        assert!(title_ok("Nintendo Switch Lite Blue", "nintendo switch", "", "l r"));
-        assert!(!title_ok("Gaming PC RTX 4070", "rtx 4070", "", "pc,laptop"));
+        assert!(!title_ok("Side Brush (L/R) for Robot Vacuum", "robot vacuum", "", "l r"));
+        assert!(title_ok("Robot Vacuum S8 Black", "robot vacuum", "", "l r"));
+        assert!(!title_ok("Desktop PC RTX 4070", "rtx 4070", "", "pc,laptop"));
         assert!(!title_ok("", "rtx 4070", "", ""));
     }
 
@@ -309,13 +307,13 @@ mod tests {
 
     #[test]
     fn a_bundled_accessory_is_cut_out_but_a_bare_one_rejects() {
-        assert!(title_ok("Nintendo Switch Console with Carrying Case", "nintendo switch", "", ""));
-        assert!(title_ok("Nintendo Switch and Mario Kart Controller Bundle", "nintendo switch", "", ""));
-        assert!(!title_ok("Nintendo Switch Carrying Case", "nintendo switch", "", ""));
-        assert!(!title_ok("Nintendo Switch Controller", "nintendo switch", "", ""));
+        assert!(title_ok("Canon EOS R50 Camera with Carrying Case", "canon eos r50", "", ""));
+        assert!(title_ok("Canon EOS R50 and Battery Grip Bundle", "canon eos r50", "", ""));
+        assert!(!title_ok("Canon EOS R50 Carrying Case", "canon eos r50", "", ""));
+        assert!(!title_ok("Canon EOS R50 Grip", "canon eos r50", "", ""));
         // a bundle marker with no accessory after it removes nothing
-        assert!(title_ok("Nintendo Switch with Dock", "nintendo switch", "", ""));
-        assert!(strip_bundles(&norm_tokens("Switch with Dock")).contains(&"with"));
+        assert!(title_ok("Canon EOS R50 with Dock", "canon eos r50", "", ""));
+        assert!(strip_bundles(&norm_tokens("Camera with Dock")).contains(&"with"));
     }
 
     #[test]
@@ -328,7 +326,7 @@ mod tests {
     #[test]
     fn accessory_phrases_reject_unless_the_query_names_them() {
         assert!(!title_ok("Samsung TV for parts", "samsung tv", "", ""));
-        assert!(!title_ok("Nintendo Switch Game Card", "nintendo switch", "", ""));
+        assert!(!title_ok("Canon EOS R50 Memory Card", "canon eos r50", "", ""));
         assert!(title_ok("Amazon Gift Card 50", "amazon gift card", "", ""));
     }
 
@@ -360,7 +358,7 @@ mod tests {
 
     #[test]
     fn more_paper_promises_are_not_deals() {
-        for bad in ["Laptop HP Care Pack 3 Years", "Photoshop Digital Download", "Costco Membership 1 Year", "PS5 E-Gift Card",
+        for bad in ["Laptop HP Care Pack 3 Years", "Photoshop Digital Download", "Costco Membership 1 Year", "Store E-Gift Card",
             "Camera with 1yr Warranty", "Laptop with 12 months support"] {
             assert!(!deal_title_ok(bad), "{bad}");
         }

@@ -99,9 +99,9 @@ mod tests {
 
     fn file(t: u64, movers: usize) -> String {
         let rows: Vec<Value> = (0..movers)
-            .map(|i| json!({"gid": format!("steam:{i}"), "kind": "on_sale", "change_pct": -20.0, "rank": null,
+            .map(|i| json!({"gid": format!("gtin:{i}"), "kind": "on_sale", "change_pct": -20.0, "rank": null,
                             "price": {"median": 9.99, "low": 9.99, "high": 9.99},
-                            "detail": {"offers": [{"platform": "Steam", "price": 9.99, "source": "steam_store", "api_key": "k"}]}}))
+                            "detail": {"offers": [{"platform": "Best Buy", "price": 9.99, "source": "bestbuy_api", "api_key": "k"}]}}))
             .collect();
         json!({"v": 1, "t": t, "refresh": 3600, "generated_at": "2026-11-14T18:40:00-08:00", "movers": rows,
                "macro": [{"key": "ecom_share", "value": 17.1, "period": "2026-Q2", "yoy": null, "change": 0.0}],
@@ -121,7 +121,7 @@ mod tests {
         assert_eq!(v["macro"][0]["yoy"], Value::Null);
         assert_eq!(v["macro"][0]["change"], json!(0.0));
         assert_eq!(v["categories"][0]["platform_index"]["hist"][0][1], json!(100.0));
-        assert_eq!(v["movers"][449]["detail"]["offers"][0]["platform"], "Steam");
+        assert_eq!(v["movers"][449]["detail"]["offers"][0]["platform"], "Best Buy");
         assert_eq!(v["sources"][0]["key_env"][1], "EBAY_CLIENT_SECRET");
         assert_eq!((v["stale"].as_bool(), v["age"].as_u64(), v["t"].as_u64()), (Some(false), Some(60), Some(NOW - 60)));
     }

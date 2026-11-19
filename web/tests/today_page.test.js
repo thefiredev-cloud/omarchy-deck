@@ -148,7 +148,7 @@ const summary = { mortgage: { rate_30y: 7.11 } };
 const zip = { zip: '92647', city: 'Huntington Beach', value_trend_1y: 7.06, x: { m: { value_trend_1y: { v: 7.06, c: 0.62 } } } };
 const ecom = { watches: { items: [
   { label: 'rtx 4080', median: 900, change_7d: -14.29 },
-  { label: 'steam deck oled', median: 549, change_7d: 2.1 },
+  { label: 'sony wh-1000xm5', median: 549, change_7d: 2.1 },
 ] } };
 const hockey = { teams: [{ abbr: 'ANA', name: 'Anaheim Ducks', record: '10-8-1', standing: '3rd Pacific', next_game: { opp: 'NYI', at: T + 3600, home: true } }], live: [] };
 const onthisday = { total: 34, years: [{ year: 2024, count: 14 }, { year: 2019, count: 9 }] };

@@ -20,7 +20,7 @@ const LIST = (over) => Object.assign({
     { id: 4, n: 2, apps: ['Obsidian'], more: 0 },
     { id: 5, n: 0, apps: [], more: 0 },
   ],
-  other: { n: 1, apps: ['Game'], more: 0 },
+  other: { n: 1, apps: ['Mirror'], more: 0 },
 }, over || {});
 
 test('a good answer is read per workspace, with the current one and the rest', () => {
@@ -29,7 +29,7 @@ test('a good answer is read per workspace, with the current one and the rest', (
   assert.equal(p.active, 2);
   assert.deepEqual(Object.keys(p.ws), ['1', '2', '3', '4', '5']);
   assert.deepEqual(p.ws[1], { n: 5, apps: ['Chromium', 'Ghostty', 'Firefox'], more: 1 });
-  assert.deepEqual(p.other, { n: 1, apps: ['Game'], more: 0 });
+  assert.deepEqual(p.other, { n: 1, apps: ['Mirror'], more: 0 });
 });
 
 test('anything off-shape is "not known", never a guess', () => {

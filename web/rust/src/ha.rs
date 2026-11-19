@@ -54,9 +54,9 @@ pub fn other_tenant(s: &str) -> bool {
 /// House scripts a deck key may run: (script id, fixed `variables` JSON or "", second tap required). The phone
 /// sends a `keys.json` index only; HA ids and variables never come from the client. Bounded actions only:
 /// `water_zone` (free zone and minutes) and `tv_app_launch` (free app) are deliberately absent, and Rain Bird is
-/// limited to stop, a 2-day delay and clearing the delay. Power, rest, Xbox-on and every sprinkler key need a
+/// limited to stop, a 2-day delay and clearing the delay. TV power and every sprinkler key need a
 /// second tap whatever keys.json says.
-pub const HA_SCRIPTS: [(&str, &str, bool); 16] = [
+pub const HA_SCRIPTS: [(&str, &str, bool); 13] = [
     ("living_tv_power", "", true),
     ("living_volume_up", "", false),
     ("living_volume_down", "", false),
@@ -65,9 +65,6 @@ pub const HA_SCRIPTS: [(&str, &str, bool); 16] = [
     ("living_back", "", false),
     ("tv_volume_up", "", false),
     ("tv_volume_down", "", false),
-    ("living_ps5", "", false),
-    ("living_ps5_standby", "", true),
-    ("living_xbox_on", "", true),
     // the house speaker (media_player.pyleusa) is off (D12); the Bedroom HomePod is a live target the script accepts
     ("house_music_play_on", r#"{"target":"media_player.main_bedroom_2"}"#, false),
     ("stop_all_watering", "", true),
@@ -1477,7 +1474,7 @@ mod tests {
         let confirm: Vec<&str> = HA_SCRIPTS.iter().filter(|s| s.2).map(|s| s.0).collect();
         assert_eq!(
             confirm,
-            ["living_tv_power", "living_ps5_standby", "living_xbox_on", "stop_all_watering", "rain_delay_2_days", "clear_rain_delay"]
+            ["living_tv_power", "stop_all_watering", "rain_delay_2_days", "clear_rain_delay"]
         );
         assert!(script_confirm("stop_all_watering") && !script_confirm("living_mute") && !script_confirm("nope"));
         assert_eq!(script_body("nope"), None);
@@ -1540,7 +1537,7 @@ mod tests {
             ("light_on", "light.kitchen", "light/turn_on"),
             ("light_off", "light.kitchen", "light/turn_off"),
             ("light_toggle", "light.kitchen", "light/toggle"),
-            ("scene_on", "scene.movie_night", "scene/turn_on"),
+            ("scene_on", "scene.dinner", "scene/turn_on"),
             ("media_pp", "media_player.main_bedroom", "media_player/media_play_pause"),
             ("climate_set", "climate.hall", "climate/set_temperature"),
         ] {
@@ -1604,7 +1601,7 @@ mod tests {
             {"entity_id": "light.kitchen", "state": "on", "last_updated": t, "attributes": {"friendly_name": "Kitchen"}},
             {"entity_id": "light.morgan_lamp", "state": "on", "last_updated": t, "attributes": {"friendly_name": "Lamp"}},
             {"entity_id": "light.den", "state": "on", "last_updated": t, "attributes": {"friendly_name": "Morgan's den"}},
-            {"entity_id": "scene.movie", "state": "unknown", "last_updated": t, "attributes": {"friendly_name": "Movie"}},
+            {"entity_id": "scene.evening", "state": "unknown", "last_updated": t, "attributes": {"friendly_name": "Evening"}},
             {"entity_id": "climate.hall", "state": "heat", "last_updated": t,
              "attributes": {"current_temperature": 68, "temperature": 70, "hvac_action": "heating", "friendly_name": "Hall"}},
             {"entity_id": "lock.front", "state": "locked", "last_updated": t, "attributes": {"friendly_name": "Front door"}},
@@ -1644,7 +1641,7 @@ mod tests {
         assert_eq!(v["counts"]["irrigation_valves"], 1);
         let mut ids: Vec<&str> = ctl.iter().map(String::as_str).collect();
         ids.sort_unstable();
-        assert_eq!(ids, ["climate.hall", "light.kitchen", "scene.movie"]);
+        assert_eq!(ids, ["climate.hall", "light.kitchen", "scene.evening"]);
         // nobody else's data leaves: no other person, no tracker, no entity whose id or name names a household member
         let all = v.to_string().to_lowercase();
         for w in ["morgan", "quill", "loto", "device_tracker", "person.", "pyleusa", "macbook", "den"] {

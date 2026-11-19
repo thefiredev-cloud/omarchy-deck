@@ -71,11 +71,11 @@ so the generic 200-row feed cap never trims it, and adds `src`, `t`, `age`, `sta
    "price_coverage": "blocked", "price_detail": {"n_24h": 1608, "last_ok": 1794637427, "sources": ["shop_amazon"]},
    "note": null}],
  "bestsellers": [
-  {"gid": "steam:2406770", "id_basis": "steam", "title": "Bodycam", "brand": null, "category": "games", "kind": "bestseller",
+  {"gid": "bestbuy:6505727", "id_basis": "catalog_id", "title": "Desk Lamp", "brand": null, "category": "home", "kind": "bestseller",
    "rank": 1, "rank_change": null, "price": {"median": 26.65, "low": 26.65, "high": 26.65}, "platforms_n": 1,
    "change_pct": null, "as_of": "2026-11-14",
-   "detail": {"offers": [{"platform": "Steam", "price": 26.65, "regular": 33.32, "discount_pct": 20.0, "rank": 1,
-              "url": "https://store.steampowered.com/app/2406770", "as_of": "2026-11-14", "source": "steam_store"}]}}],
+   "detail": {"offers": [{"platform": "Best Buy", "price": 26.65, "regular": 33.32, "discount_pct": 20.0, "rank": 1,
+              "url": "https://www.bestbuy.com/site/6505727.p", "as_of": "2026-11-14", "source": "bestbuy_api"}]}}],
  "movers": [
   {"gid": "shoplisting:1ec07768c922", "id_basis": "catalog_id", "title": "ASUS PRIME RTX 5080 16GB OC Edition",
    "category": "computers", "kind": "under_median", "rank": null, "rank_change": null,
@@ -124,7 +124,7 @@ so the generic 200-row feed cap never trims it, and adds `src`, `t`, `age`, `sta
               "paid": 4, "macro_series": 28, "platforms": 42, "platforms_priced": 11, "bestsellers": 172, "movers": 112,
               "products_tracked": 1557, "merged_products": 0, "categories": 8, "watches": 13, "trending": 10,
               "trending_shopping": 0},
- "errors": [{"source": "shop_gamestop", "reason": "no listings read in 24 h"}]}
+ "errors": [{"source": "shop_macys", "reason": "no listings read in 24 h"}]}
 ```
 
 ## Fields
@@ -138,7 +138,7 @@ so the generic 200-row feed cap never trims it, and adds `src`, `t`, `age`, `sta
 `trending[].shopping` is true only when the title contains, as whole words and case-insensitive, a shopping event or
 deal word (`black friday`, `cyber monday`, `prime day`, `deals`, `sale`, `coupon`, `discount`, `clearance`, `restock`,
 `preorder`, `price drop`, `gift guide`, `doorbuster` and a few more) or a store name that is not also an everyday word
-(Amazon, Walmart, Costco, Best Buy, eBay, Etsy, Temu, SHEIN, Home Depot, Lowe's and others; Target, Shop and Steam are
+(Amazon, Walmart, Costco, Best Buy, eBay, Etsy, Temu, SHEIN, Home Depot, Lowe's and others; Target and Shop are
 left out). `deal` alone (trade deal) and `sales` (home sales) do not count. The full list is `SHOPPING_TERMS` in
 `scripts/ecom_market/sources_market.py`. Anything else is false.
 
@@ -171,7 +171,7 @@ Tranco ranks are global domains and the chart is the US App Store: a board order
 ### Products: `bestsellers[]` and `movers[]`
 | Field | Meaning |
 |---|---|
-| `gid`, `id_basis` | Merged identity. Strongest first: `gtin:<14 digits>` (`gtin`, check digit verified), `steam:<appid>` (`steam`), `bm:<brand>:<model>` (`brand_model`), the platform's catalog id such as `shopify:<host>:<id>`, `scryfall:<oracle id>`, `shoplisting:<hash>`, `watch:<slug>` (`catalog_id`), `title:<words>` (`title`). A brand plus model offer joins the GTIN product that states the same brand and model. |
+| `gid`, `id_basis` | Merged identity. Strongest first: `gtin:<14 digits>` (`gtin`, check digit verified), `bm:<brand>:<model>` (`brand_model`), the platform's catalog id such as `shopify:<host>:<id>`, `scryfall:<oracle id>`, `shoplisting:<hash>`, `watch:<slug>` (`catalog_id`), `title:<words>` (`title`). A brand plus model offer joins the GTIN product that states the same brand and model. |
 | `title`, `brand`, `category` | `category` is a `categories[].key` or null. |
 | `kind` | `bestseller`; movers: `price_drop`, `price_rise` (5 % to 80 % against our stored price 1 to 8 days back, and only when the product had the same number of platforms on both days), `on_sale` (10 % or more under the platform's own regular price), `rank_gain` (5 places or more), `under_median` (a listing under the cross-site median, from the shop collector). A listing drop from the shop collector beyond 80 % and the trend row of a watch whose 7-day change is held are left out. |
 | `rank`, `rank_change` | Best rank across platforms and the change since the last stored day. |
@@ -182,7 +182,7 @@ Tranco ranks are global domains and the chart is the US App Store: a board order
 | `detail.offers[]` | `platform`, `price`, `regular`, `discount_pct`, `rank`, `url`, `as_of`, `source`, and `n` (listings behind a median) or `reference` (the median a listing is compared with). The only place a price names where it came from. |
 
 ### `categories[]`
-`key`, `label` (`computers`, `electronics`, `home`, `apparel`, `beauty`, `games`, `music`, `collectibles`, `outdoors`,
+`key`, `label` (`computers`, `electronics`, `home`, `apparel`, `beauty`, `music`, `collectibles`, `outdoors`,
 `grocery`), `value` (price change in percent over one period, or null; never a blend of two periods), `basis`
 (`platforms`: the store matched-panel change; `official_mom`: the CPI one-month change, used only when the store panel
 does not hold; null with neither), `period` (of the value: `30 days to <day>` or `<from> to <day>` for the store change,
@@ -234,7 +234,7 @@ or a paid service; the reason says which; never called); `error` (failed with no
 - Keyless, live: FRED-hosted official series grouped by publisher (Census quarterly e-commerce, Census advance retail,
   BLS CPI, BLS import prices, BLS PPI freight and parcel, BEA PCE goods, EIA diesel, Cass Freight Index, University of
   Michigan sentiment, BTS freight index), App Store top free shopping chart, Tranco list, Google Trends RSS, Wikipedia
-  page views, six Shopify store catalogs and their best-seller collections, Steam top sellers and specials, Reverb
+  page views, six Shopify store catalogs and their best-seller collections, Reverb
   listings, Scryfall card prices, Drewry World Container Index, FedEx fuel surcharges, USPS Notice 123, Port of Los
   Angeles, Federal Register trade notices, and the shop collector's per-site lanes (Walmart, Best Buy, Newegg, Craigslist,
   Poshmark, OfferUp, Facebook Marketplace, plus walled and quiet lanes reported as such).
@@ -243,7 +243,7 @@ or a paid service; the reason says which; never called); `error` (failed with no
   `~/.hermes/.env`. Values are never logged. OAuth tokens and Best Buy rows are not cached on disk.
 - Refused (listed, never called): Amazon, Walmart best sellers, eBay and Etsy site pages, Target, Home Depot, Lowe's,
   Wayfair, Chewy, Mercari, Temu, SHEIN, TikTok Shop, Google Shopping, Google Play charts, UPS fuel page, Port of Long
-  Beach, CamelCamelCamel, CheapShark (robots.txt disallows its API path), Amazon search suggestions.
+  Beach, CamelCamelCamel, Amazon search suggestions.
 - Paid (price only): Keepa EUR 49 a month, Rainforest $23 to $83 a month, DataForSEO $50 minimum top-up, Similarweb
   about $15,000 a year.
 

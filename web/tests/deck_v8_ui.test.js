@@ -109,7 +109,7 @@ test('fleet signals carry no age in their title and show unavailable values with
     'pc-desktop': { cpu_c: 61, cpu_sensor: 'Tctl', gpu_c: 57 },
     spark: { soc_c: 50, gpu_c: 55 },
   }, findings: [] }, outbound: { src: 'queue files', legacy_queue: { files: 3 }, quote_followup_queue: { files: 1 }, drafts: null, outbound_agents: null },
-  hydra: { installed: true, src: 'package inventory' }, flightradar: { installed: true, live_state_observed: false },
+  flightradar: { installed: true, live_state_observed: false },
   neighbors: { cached_reachable_count: 2, src: '/proc/net/arp', discovery: false } };
   const h = D.fleetSignals(feed, NOW);
   assert.match(h, /^<div class="secttl"><span>Fleet signals<\/span><\/div>/, 'design v3: no "Updated" in the title');

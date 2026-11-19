@@ -1,6 +1,6 @@
 """One product per real item across platforms, then the best-seller and mover lists.
 
-Identity, strongest first: a valid GTIN (UPC/EAN, padded to 14), a Steam app id, brand plus model, the platform's own
+Identity, strongest first: a valid GTIN (UPC/EAN, padded to 14), brand plus model, the platform's own
 catalog id, the normalized title. An offer with brand plus model and no GTIN joins a GTIN product that states the same
 brand and model, so a Best Buy row (UPC) and a Reverb row (make, model) of one item become one product."""
 import hashlib
@@ -35,8 +35,6 @@ def identity(o):
     g = gtin14(o.get("gtin"))
     if g:
         return "gtin:" + g, "gtin"
-    if o.get("steam_appid"):
-        return "steam:%s" % o["steam_appid"], "steam"
     bm = brand_model_key(o.get("brand"), o.get("model"))
     if bm:
         return bm, "brand_model"

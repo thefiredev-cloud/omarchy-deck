@@ -2857,7 +2857,7 @@ mod tests {
         // a real-shaped file with more rows than the generic feed cap
         let home = root.join("fresh");
         let _ = std::fs::create_dir_all(home.join(".meshvault/status/house-feeds"));
-        let rows: Vec<Value> = (0..320).map(|i| json!({"gid": format!("steam:{i}"), "kind": "on_sale", "change_pct": -20.0})).collect();
+        let rows: Vec<Value> = (0..320).map(|i| json!({"gid": format!("gtin:{i}"), "kind": "on_sale", "change_pct": -20.0})).collect();
         let file = json!({"v": 1, "t": util::now_epoch() - 60, "refresh": 3600, "movers": rows, "coverage": {"ok": 30, "needs_key": 6},
                           "sources": [{"id": "ebay_browse", "status": "needs_key"}], "secret_dump": "DO_NOT_SERVE"});
         let _ = std::fs::write(home.join(ecom_market::REL), file.to_string());
@@ -3378,9 +3378,9 @@ mod tests {
         let v: Value = serde_json::from_str(&body).unwrap_or(Value::Null);
         assert_eq!(v["keys"].as_array().map(Vec::len), Some(keys.len()));
         assert!(!body.contains("\"i\""));
-        // C4: 43 keys with their groups, the ten group headings, and the second tap on every risky house key
-        assert_eq!(keys.len(), 43);
-        assert_eq!(v["groups"].as_array().map(Vec::len), Some(10));
+        // C4: 40 keys with their groups, the nine group headings, and the second tap on every risky house key
+        assert_eq!(keys.len(), 40);
+        assert_eq!(v["groups"].as_array().map(Vec::len), Some(9));
         assert_eq!(v["keys"][water]["group"], "sprinklers");
         assert_eq!((&v["keys"][water]["confirm"], &v["keys"][tvpow]["confirm"]), (&json!(true), &json!(true)));
         assert_eq!(v["keys"][status]["confirm"], json!(false));

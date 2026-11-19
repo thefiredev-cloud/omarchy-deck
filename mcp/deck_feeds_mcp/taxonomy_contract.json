@@ -342,7 +342,7 @@
   {
    "slug": "hockey_sports",
    "name": "Hockey and sports",
-   "definition": "Team, league and arena work. He played at a high level and still follows the game.",
+   "definition": "Team, league and arena work.",
    "subs": [
     {
      "slug": "hockey_operations",
@@ -362,7 +362,7 @@
     {
      "slug": "venue_operations",
      "name": "Venue and events",
-     "definition": "Runs the arena, events and game day operations."
+     "definition": "Runs the arena, events and event day operations."
     },
     {
      "slug": "coaching_development",
@@ -465,7 +465,7 @@
    "category": "ai_software",
    "subcategory": "software_engineering",
    "weight": 10,
-   "pattern": "\\bsoftware (engineer|developer)\\b|\\b(aws|cloud|game) developer\\b|\\bengineering manager\\b|\\btechnical lead\\b"
+   "pattern": "\\bsoftware (engineer|developer)\\b|\\b(aws|cloud) developer\\b|\\bengineering manager\\b|\\btechnical lead\\b"
   },
   {
    "category": "ai_software",
@@ -663,7 +663,7 @@
    "category": "hockey_sports",
    "subcategory": "team_business",
    "weight": 13,
-   "pattern": "\\b(ticket (sales|operations|executive)|premium seating|group sales|partnership activation|game presentation|fan experience|suite sales)\\b"
+   "pattern": "\\b(ticket (sales|operations|executive)|premium seating|group sales|partnership activation|fan experience|suite sales)\\b"
   },
   {
    "category": "hockey_sports",

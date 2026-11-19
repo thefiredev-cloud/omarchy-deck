@@ -351,7 +351,7 @@ const DeckShop = (() => {
   }
 
   // ---------- category prices ----------
-  const CAT_ORDER = ['computers', 'home', 'outdoors', 'grocery', 'games', 'music', 'apparel', 'electronics', 'beauty', 'collectibles'];
+  const CAT_ORDER = ['computers', 'home', 'outdoors', 'grocery', 'music', 'apparel', 'electronics', 'beauty', 'collectibles'];
   const CAT_CORE = ['computers', 'home', 'outdoors', 'grocery'];
   const BUILD_DAYS = 14;
   // the value's own period: an official month-over-month change says its month, the store index says its window
@@ -667,7 +667,7 @@ const DeckShop = (() => {
   }
 
   // ---------- render: Market ----------
-  const CAT_CHIPS = [['all', 'All'], ['computers', 'Computers'], ['home', 'Home'], ['outdoors', 'Outdoors'], ['grocery', 'Grocery'], ['games', 'Games'], ['music', 'Music'], ['apparel', 'Apparel']];
+  const CAT_CHIPS = [['all', 'All'], ['computers', 'Computers'], ['home', 'Home'], ['outdoors', 'Outdoors'], ['grocery', 'Grocery'], ['music', 'Music'], ['apparel', 'Apparel']];
   const chipRow = (list, on, attr, label, cls) => '<div class="chips scroll' + (cls ? ' ' + cls : '') + '" role="group" aria-label="' + esc(label) + '">' +
     list.map(([k, t]) => '<button type="button" data-' + attr + '="' + esc(k) + '" aria-pressed="' + (k === on) + '"' + (k === on ? ' class="on"' : '') + '>' + esc(t) + '</button>').join('') + '</div>';
   const segRow = (list, on, attr, label) => '<div class="seg" role="group" aria-label="' + esc(label) + '">' +
@@ -719,8 +719,8 @@ const DeckShop = (() => {
   }
   // one trending product: its rank, its seller title cut at a word (the link carries the whole title), the signal, the source with
   // that source's own age (or that it did not report), the median price and the rank move as a shape and a number. Unknown draws nothing.
-  // The producer writes a source as "Steam best sellers (steam_store)": the parenthesised id is the collector's, not words to read, and
-  // a source the signal already names ("#17 on Steam best sellers, up 16") is not said twice. A source's age reads "14 min ago".
+  // The producer writes a source as "Best Buy best sellers (bestbuy_api)": the parenthesised id is the collector's, not words to read, and
+  // a source the signal already names ("#17 on Best Buy best sellers, up 16") is not said twice. A source's age reads "14 min ago".
   const srcLabel = (source, signal) => {
     const n = str(source, 80).replace(/\s*\([a-z0-9_.-]+\)\s*$/i, '');
     return n && String(signal || '').toLowerCase().indexOf(n.toLowerCase()) >= 0 ? '' : n;
@@ -781,7 +781,7 @@ const DeckShop = (() => {
         : r.ofNew == null ? F().na() : esc(r.ofNew + '%') + (r.newPrice != null ? '<small>' + esc('new ' + priceText(r.newPrice)) + '</small>' : '')
     });
   }
-  const CAT_WORD = { computers: 'Computers', electronics: 'Electronics', home: 'Home', apparel: 'Apparel', beauty: 'Beauty', games: 'Games', music: 'Music', collectibles: 'Collectibles', outdoors: 'Outdoors', grocery: 'Grocery' };
+  const CAT_WORD = { computers: 'Computers', electronics: 'Electronics', home: 'Home', apparel: 'Apparel', beauty: 'Beauty', music: 'Music', collectibles: 'Collectibles', outdoors: 'Outdoors', grocery: 'Grocery' };
   const catWord = (k) => CAT_WORD[k] || '';
   function categoryCard(c) {
     const sp = !c.indexBuilding && c.spark.filter((x) => x != null).length > 1 ? U().spark(c.spark, { w: 120, h: 24 }) : '';

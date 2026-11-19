@@ -757,7 +757,7 @@ async function fire(b,k,i){if(b.dataset.wait)return;
 // A key's row is its served `group` (keys.json); a key without one is grouped by its action, so the rows stay right for
 // whatever keys.json the host serves. Row names come from the served `groups` list, else the names below.
 const KEYROWS=(()=>{
- const GROUPS=[['apps','Apps'],['media','Media'],['workspaces','Go to workspace'],['window','Move window'],['system','System'],['tv','TV'],['games','Games'],['music','Music'],['sprinklers','Sprinklers'],['house','House']];
+ const GROUPS=[['apps','Apps'],['media','Media'],['workspaces','Go to workspace'],['window','Move window'],['system','System'],['tv','TV'],['music','Music'],['sprinklers','Sprinklers'],['house','House']];
  const GID=/^[a-z][a-z0-9_-]{0,23}$/;
  const label=(id,served)=>{const s=Array.isArray(served)?served.find(x=>x&&x.id===id&&typeof x.name==='string'&&x.name.trim()):null;if(s)return s.name.trim().slice(0,40);const g=GROUPS.find(x=>x[0]===id);return g?g[1]:id};
  function group(k){if(k&&typeof k.group==='string'&&GID.test(k.group))return k.group;

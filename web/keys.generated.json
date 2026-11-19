@@ -2,7 +2,7 @@
   "version": 1,
   "generated_at": "2026-10-22T05:58:15Z",
   "source": "hyprctl binds -j",
-  "total_binds": 249,
+  "total_binds": 247,
   "unresolved_count": 0,
   "unresolved": [],
   "pages": [
@@ -675,7 +675,7 @@
       "id": "windows",
       "title": "Windows",
       "icon": "🪟",
-      "count": 63,
+      "count": 62,
       "keys": [
         {
           "index": 28,
@@ -1514,21 +1514,6 @@
             "Alt"
           ],
           "key": "/",
-          "key_known": true,
-          "key_inferred": false,
-          "submap": "",
-          "mouse": false,
-          "locked": false
-        },
-        {
-          "index": 233,
-          "label": "Game-safe window (focused)",
-          "combo": "Super + Alt + W",
-          "mods": [
-            "Super",
-            "Alt"
-          ],
-          "key": "W",
           "key_known": true,
           "key_inferred": false,
           "submap": "",
@@ -2770,7 +2755,7 @@
       "id": "other",
       "title": "Other",
       "icon": "⚙️",
-      "count": 63,
+      "count": 62,
       "keys": [
         {
           "index": 11,
@@ -3591,21 +3576,6 @@
             "Shift"
           ],
           "key": "V",
-          "key_known": true,
-          "key_inferred": false,
-          "submap": "",
-          "mouse": false,
-          "locked": false
-        },
-        {
-          "index": 231,
-          "label": "Game Mode",
-          "combo": "Super + Ctrl + G",
-          "mods": [
-            "Super",
-            "Ctrl"
-          ],
-          "key": "G",
           "key_known": true,
           "key_inferred": false,
           "submap": "",

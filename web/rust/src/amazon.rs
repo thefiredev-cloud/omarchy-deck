@@ -7,7 +7,7 @@
 //! Amazon price per day, the 7 and 30 day change (`chg30` compares with 28 days back, the oldest day a 30 day window
 //! reliably holds), and which offers dropped. Across watches: the deal list, the same drops (lower than the price
 //! before, or at least DROP under their own 7 day average), one row per product page. The watch's own filters and the
-//! shoptrends title rules (relevance.rs) are applied here, so a case or a game never counts as a headphone or console price.
+//! shoptrends title rules (relevance.rs) are applied here, so a case never counts as a headphone or vacuum price.
 use crate::relevance::{deal_title_ok, price_band, title_ok};
 use crate::util::{iso_to_epoch, now_epoch, run};
 use serde_json::{json, Value};
@@ -191,7 +191,7 @@ pub fn from_rows(text: &str, now: u64) -> Value {
     for (slug, (query, mut items)) in watches.into_iter().take(MAX_WATCH) {
         items.sort_by(|a, b| f(a, "price").partial_cmp(&f(b, "price")).unwrap_or(std::cmp::Ordering::Equal));
         // shoptrends price sanity: with 5 or more current prices, an offer outside 0.3 to 4 times their median is not this
-        // product (a game under a console search); a protection plan or gift card is never a price
+        // product (a filter under a vacuum search); a protection plan or gift card is never a price
         let band = price_band(&items.iter().filter(|i| i["current"] == true).filter_map(|i| f(i, "price")).collect::<Vec<_>>());
         let inside = |p: f64| band.is_none_or(|(lo, hi)| p >= lo && p <= hi);
         let cur: Vec<&Value> = items
@@ -320,17 +320,17 @@ mod tests {
         let r = rows(vec![
             item("kitchenaid-mixer", 1, "KitchenAid Artisan Stand Mixer", 299.0, t, json!({"must": "stand"})),
             item("kitchenaid-mixer", 2, "KitchenAid Hand Mixer", 59.0, t, json!({"must": "stand"})),
-            item("nintendo-switch", 3, "Joy-Con (L/R) for Nintendo Switch", 70.0, t, json!({"excl": "l r"})),
-            item("nintendo-switch", 4, "Nintendo Switch OLED", 299.0, t, json!({"excl": "l r"})),
-            item("nintendo-switch", 5, "Nintendo Switch Lite", 199.0, t, json!({"url": "https://evil.example/dp/1"})),
-            item("nintendo-switch", 6, "Nintendo Switch \"quoted\"", 189.0, t, json!({"url": "https://www.amazon.com/dp/\"x"})),
+            item("robot-vacuum", 3, "Side Brush (L/R) for Robot Vacuum", 70.0, t, json!({"excl": "l r"})),
+            item("robot-vacuum", 4, "Robot Vacuum S8", 299.0, t, json!({"excl": "l r"})),
+            item("robot-vacuum", 5, "Robot Vacuum S8 Lite", 199.0, t, json!({"url": "https://evil.example/dp/1"})),
+            item("robot-vacuum", 6, "Robot Vacuum \"quoted\"", 189.0, t, json!({"url": "https://www.amazon.com/dp/\"x"})),
         ]);
         let v = from_rows(&r, NOW);
         let by = |slug: &str| v["watch"].as_array().and_then(|a| a.iter().find(|w| w["slug"] == slug)).cloned().unwrap_or_default();
         assert_eq!(by("kitchenaid-mixer")["best"]["title"], "KitchenAid Artisan Stand Mixer");
         assert_eq!(by("kitchenaid-mixer")["offers"], 1);
-        assert_eq!(by("nintendo-switch")["best"]["title"], "Nintendo Switch OLED");
-        assert_eq!(by("nintendo-switch")["offers"], 1);
+        assert_eq!(by("robot-vacuum")["best"]["title"], "Robot Vacuum S8");
+        assert_eq!(by("robot-vacuum")["offers"], 1);
         assert!(!v.to_string().contains("evil.example"));
     }
 

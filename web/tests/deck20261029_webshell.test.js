@@ -71,14 +71,14 @@ test('W8 and C4: rows come from the served group, named from the served groups l
   const served = [
     { label: 'Terminal', action: 'launch', arg: 'terminal', group: 'apps' },
     { label: 'Living TV power', action: 'ha-script', arg: 'living_tv_power', group: 'tv', confirm: true },
-    { label: 'PS5 rest', action: 'ha-script', arg: 'living_ps5_standby', group: 'games', confirm: true },
+    { label: 'Play music', action: 'ha-script', arg: 'house_music_play_on', group: 'music' },
     { label: 'Rain delay', action: 'ha-script', arg: 'rain_delay_2_days', group: 'sprinklers' },
     { label: 'Status to my iPhone', action: 'ha-script', arg: 'house_status_to_phone', group: 'house' },
   ];
-  const groups = [{ id: 'apps', name: 'Apps' }, { id: 'tv', name: 'Television' }, { id: 'games', name: 'Games' }, { id: 'sprinklers', name: 'Sprinklers' }, { id: 'house', name: 'House' }];
+  const groups = [{ id: 'apps', name: 'Apps' }, { id: 'tv', name: 'Television' }, { id: 'music', name: 'Music' }, { id: 'sprinklers', name: 'Sprinklers' }, { id: 'house', name: 'House' }];
   const rows = KEYROWS.rows(served, groups);
-  assert.deepEqual(Array.from(rows, (r) => r.id), ['apps', 'tv', 'games', 'sprinklers', 'house']);
-  assert.deepEqual(Array.from(rows, (r) => r.name), ['Apps', 'Television', 'Games', 'Sprinklers', 'House']);
+  assert.deepEqual(Array.from(rows, (r) => r.id), ['apps', 'tv', 'music', 'sprinklers', 'house']);
+  assert.deepEqual(Array.from(rows, (r) => r.name), ['Apps', 'Television', 'Music', 'Sprinklers', 'House']);
   assert.deepEqual(Array.from(rows).flatMap((r) => Array.from(r.keys, (x) => x.i)), [0, 1, 2, 3, 4], 'each key keeps its served index');
   // a served group with no name falls back to the LANE's own list, then the id
   assert.equal(KEYROWS.rows([{ action: 'x', group: 'sprinklers' }])[0].name, 'Sprinklers');

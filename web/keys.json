@@ -14,7 +14,6 @@
   {"id": "window", "name": "Move window"},
   {"id": "system", "name": "System"},
   {"id": "tv", "name": "TV"},
-  {"id": "games", "name": "Games"},
   {"id": "music", "name": "Music"},
   {"id": "sprinklers", "name": "Sprinklers"},
   {"id": "house", "name": "House"}
@@ -59,10 +58,6 @@
   {"label": "TV back", "icon": "↩️", "action": "ha-script", "arg": "living_back", "group": "tv"},
   {"label": "Bed vol +", "icon": "🔊", "action": "ha-script", "arg": "tv_volume_up", "group": "tv"},
   {"label": "Bed vol -", "icon": "🔉", "action": "ha-script", "arg": "tv_volume_down", "group": "tv"},
-
-  {"label": "PS5 input", "icon": "🎮", "action": "ha-script", "arg": "living_ps5", "group": "games"},
-  {"label": "PS5 rest", "icon": "💤", "action": "ha-script", "arg": "living_ps5_standby", "confirm": true, "group": "games"},
-  {"label": "Xbox on", "icon": "🟩", "action": "ha-script", "arg": "living_xbox_on", "confirm": true, "group": "games"},
 
   {"label": "Play music", "icon": "🎵", "action": "ha-script", "arg": "house_music_play_on", "group": "music"},
   {"label": "Bed play", "icon": "⏯️", "action": "ha-media", "arg": "play-pause", "group": "music"},

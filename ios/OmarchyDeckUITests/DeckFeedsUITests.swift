@@ -374,15 +374,15 @@ final class DeckFeedsUITests: XCTestCase {
         XCTAssertTrue(any["shop.watch.sheet"].firstMatch.waitForExistence(timeout: 10), "a watch opens its sheet")
         XCTAssertTrue(any["shop.watch.stores"].firstMatch.waitForExistence(timeout: 5), "the sheet lists stores")
         app.buttons["shop.sheet.done"].firstMatch.tap()
-        let games = app.buttons["shop.category.games"].firstMatch
-        scrollTo(app, games)
-        games.tap()
+        let outdoors = app.buttons["shop.category.outdoors"].firstMatch
+        scrollTo(app, outdoors)
+        outdoors.tap()
         XCTAssertTrue(any["shop.product.0"].firstMatch.waitForExistence(timeout: 5), "a category keeps its products")
         // The category row runs past the phone edge: it scrolls to its last chip, which is never stranded off screen.
         // Swipe the row that holds the chips, while it is on screen (it sits above the platform board, and `scrollTo`
         // only moves down the page).
         // Chips are the categories that have products (`ShopMarket.categoryChips`); on the fixture the last is Beauty.
-        let chips = any.matching(identifier: "chips.row").containing(.button, identifier: "shop.category.games").firstMatch
+        let chips = any.matching(identifier: "chips.row").containing(.button, identifier: "shop.category.outdoors").firstMatch
         let last = app.buttons["shop.category.beauty"].firstMatch
         XCTAssertTrue(chips.isHittable, "the category row must be on screen after picking a category")
         for _ in 0..<8 where !(last.exists && last.isHittable) { chips.swipeLeft() }

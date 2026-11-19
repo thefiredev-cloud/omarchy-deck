@@ -228,7 +228,7 @@ test('a refused press says why, and a press that never reaches the house says so
     const el = fakeEl();
     House.render(el, NOW);
     await flush();
-    el.click({ disabled: false, getAttribute: (k) => ({ 'data-hx-act': 'scene_on', 'data-hx-e': 'scene.movie' })[k] ?? null });
+    el.click({ disabled: false, getAttribute: (k) => ({ 'data-hx-act': 'scene_on', 'data-hx-e': 'scene.dinner' })[k] ?? null });
     await flush();
     assert.match(el.innerHTML, c.says);
     assert.equal(timers.at(-1).ms, 2500, 'a refusal waits longer before the re-read');

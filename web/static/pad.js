@@ -90,7 +90,7 @@
     if (has('workspace') || has('spaceview') || has('overview')) return 'Workspaces';
     if (has('window') || has('focus') || has('split') || has('float') || has('full screen') || has('fullscreen') || has('scratchpad') || has('monitor') || has('gap') || has('transparency') || has('tiling') || has('swap') || has('grouping') || has('group')) return 'Windows';
     if (has('menu') || has('launcher') || has('app grid') || has('spotlight') || has('switcher')) return 'Launchers/menus';
-    if (has('lock') || has('idle') || has('theme') || has('wallpaper') || has('notification') || has('dictation') || has('voxtype') || has('voice') || has('game mode') || has('scale') || has('backlight') || has('touchpad') || has('night')) return 'System';
+    if (has('lock') || has('idle') || has('theme') || has('wallpaper') || has('notification') || has('dictation') || has('voxtype') || has('voice') || has('scale') || has('backlight') || has('touchpad') || has('night')) return 'System';
     if (has('terminal') || has('browser') || has('email') || has('calculator') || has('herdr') || has('tmux') || has('whatsapp') || has('obsidian') || has('calendar') || has('photo') || has('atlas') || has('mail') || s === 'x' || s === 'x post') return 'Apps';
     return 'Other';
   }

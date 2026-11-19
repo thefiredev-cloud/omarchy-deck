@@ -64,23 +64,23 @@ final class DeckShopTests: XCTestCase {
         XCTAssertEqual(grill.cheapest?.platform, "Walmart")
         XCTAssertEqual(grill.cheapest?.regular, 999.99, "the reference price stands in for a missing regular price")
         XCTAssertFalse(grill.isBlended, "one store's price is a raw reading and carries no mark")
-        let games = shop.products(category: "games")
-        XCTAssertFalse(games.isEmpty)
-        XCTAssertTrue(games.allSatisfy { $0.category == "games" })
-        XCTAssertTrue(shop.categoryChips.contains("games"))
+        let outdoors = shop.products(category: "outdoors")
+        XCTAssertFalse(outdoors.isEmpty)
+        XCTAssertTrue(outdoors.allSatisfy { $0.category == "outdoors" })
+        XCTAssertTrue(shop.categoryChips.contains("outdoors"))
     }
 
     func testCategoriesBlendPartsAndSayWhenTheIndexIsBuilding() throws {
         let (shop, _) = try market()
-        XCTAssertEqual(shop.categories.count, 10)
+        XCTAssertEqual(shop.categories.count, 9)
         let computers = try XCTUnwrap(shop.categories.first { $0.key == "computers" })
         XCTAssertEqual(ShopWords.percent(computers.value), "+0.6%")
         XCTAssertEqual(computers.confidence?.confidence.dots, 2)
         XCTAssertEqual(computers.building, "Building · 6 of 14 days")
         XCTAssertEqual(computers.parts.first?.weight, "weight 1.00")
-        let games = try XCTUnwrap(shop.categories.first { $0.key == "games" })
-        XCTAssertNil(games.value, "a category with no trend stays nil")
-        XCTAssertEqual(games.building, "Building · 0 of 14 days")
+        let cards = try XCTUnwrap(shop.categories.first { $0.key == "collectibles" })
+        XCTAssertNil(cards.value, "a category with no trend stays nil")
+        XCTAssertEqual(cards.building, "Building · 0 of 14 days")
     }
 
     /// A category value covers one period. The store change carries the confidence mark; the official month alone is
@@ -92,13 +92,13 @@ final class DeckShopTests: XCTestCase {
            "confidence":{"score":0.8,"label":"high","reasons":["no store panel"]}},
           {"key":"computers","label":"Computers","value":-1.4,"basis":"platforms","period":"30 days to 2026-11-14",
            "confidence":{"score":0.8,"label":"high","reasons":["12 products on 3 sites"]}},
-          {"key":"games","label":"Games","value":null,"basis":null,"confidence":{"score":0.15}}]}
+          {"key":"music","label":"Music","value":null,"basis":null,"confidence":{"score":0.15}}]}
         """#.utf8)) as? [String: Any]))
         let home = try XCTUnwrap(shop.categories.first { $0.key == "home" })
         XCTAssertEqual(home.basis, "official_mom")
         XCTAssertNil(home.mark, "the official month alone carries no mark")
         XCTAssertEqual(try XCTUnwrap(shop.categories.first { $0.key == "computers" }).mark?.dots, 3)
-        XCTAssertNil(try XCTUnwrap(shop.categories.first { $0.key == "games" }).mark, "no value, no mark")
+        XCTAssertNil(try XCTUnwrap(shop.categories.first { $0.key == "music" }).mark, "no value, no mark")
         XCTAssertFalse(shop.notes.contains { $0.contains("blend our") }, "the old blend note is gone")
         XCTAssertTrue(shop.notes.contains { $0.hasPrefix("Each category change covers one period") })
     }
@@ -110,13 +110,13 @@ final class DeckShopTests: XCTestCase {
         XCTAssertTrue(shop.platforms[1].pricesTracked)
         XCTAssertFalse(shop.platforms[2].pricesTracked, "Amazon walls our reads")
         XCTAssertEqual(shop.needsSetup, 6)
-        XCTAssertEqual(page.sources.count, 66)
+        XCTAssertEqual(page.sources.count, 64)
         XCTAssertEqual(page.sources.filter { $0.state == .needsKey }.count, 6)
-        XCTAssertEqual(page.sources.filter { $0.state == .blocked }.count, 29)
-        let gamestop = try XCTUnwrap(page.sources.first { $0.id == "shop_gamestop" })
-        XCTAssertEqual(gamestop.state, .stale, "a row already out of date keeps that state when this run also failed")
+        XCTAssertEqual(page.sources.filter { $0.state == .blocked }.count, 28)
+        let lane = try XCTUnwrap(page.sources.first { $0.id == "shop_bhphoto" })
+        XCTAssertEqual(lane.state, .stale, "a row already out of date keeps that state when this run also failed")
         XCTAssertEqual(page.sources.first?.asOf, "Q2 2026")
-        XCTAssertTrue(page.notes.contains { $0.hasPrefix("30 of 66 sources answering") })
+        XCTAssertTrue(page.notes.contains { $0.hasPrefix("29 of 64 sources answering") })
     }
 
     func testMoneyAndValueWords() {

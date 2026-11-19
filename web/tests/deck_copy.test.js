@@ -170,7 +170,7 @@ test('no file name, endpoint, port, path, run id or HTTP code is visible on any 
     products: Object.values(D.products(feeds.products(), NOW)).join(''),
     today: [D.tdNeedsHtml(D.tdNeeds({ products: feeds.products() }), []), D.tdCluster(feeds.cluster(), NOW).html, D.tdCal(null, feeds.accounts(), NOW).html,
       D.tdHome({ car: feeds.car(), ha: { entities: {} }, cams: { cams: [{ ready: true }] } }, NOW).html, D.tdGlance({ hockey: feeds.hockey() }).html].join(''),
-    money: D.finPage({ t: T(5), refresh: 300, errors: [], apps: [{ id: 'a', name: 'A', kind: 'bank', route: 'api', status: 'ok', last_ok: T(5), has_values: true }, { id: 'b', name: 'B', status: 'blocked', reason: 'blocked by ~/x.json' }] }, NOW, null), board: D.board(board, NOW).join(''), signals: D.fleetSignals({ t: T(5), thermal: { src: 'fleet-temps.json', hosts: { a: { cpu_c: 50 } } }, outbound: { src: '~/q/outbound.json' }, hydra: { src: 'pkgs.db' }, flightradar: {}, neighbors: { src: '/proc/net/arp' } }, NOW),
+    money: D.finPage({ t: T(5), refresh: 300, errors: [], apps: [{ id: 'a', name: 'A', kind: 'bank', route: 'api', status: 'ok', last_ok: T(5), has_values: true }, { id: 'b', name: 'B', status: 'blocked', reason: 'blocked by ~/x.json' }] }, NOW, null), board: D.board(board, NOW).join(''), signals: D.fleetSignals({ t: T(5), thermal: { src: 'fleet-temps.json', hosts: { a: { cpu_c: 50 } } }, outbound: { src: '~/q/outbound.json' }, flightradar: {}, neighbors: { src: '/proc/net/arp' } }, NOW),
   };
   for (const [k, v] of Object.entries(ok)) sweeps.push([k, v]);
   for (const f of broken) {

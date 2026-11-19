@@ -16,7 +16,7 @@ OLD = [("launch", a) for a in ("terminal", "browser", "files", "hermes", "spotif
     ("media-act", "prev"), ("media-act", "play-pause"), ("media-act", "next"), ("mute", "")] + [
     ("ws", str(i)) for i in range(1, 6)] + [("mvws", str(i)) for i in range(1, 6)] + [
     ("launch", "menu"), ("launch", "nightlight"), ("screenshot", ""), ("lock", "")]
-RISKY = {"living_tv_power", "living_ps5_standby", "living_xbox_on", "stop_all_watering", "rain_delay_2_days", "clear_rain_delay"}
+RISKY = {"living_tv_power", "stop_all_watering", "rain_delay_2_days", "clear_rain_delay"}
 
 
 def ha_scripts():
@@ -27,12 +27,12 @@ def ha_scripts():
 
 
 class HouseKeys(unittest.TestCase):
-    def test_43_keys_in_ten_groups_and_the_old_26_keep_their_index(self):
+    def test_40_keys_in_nine_groups_and_the_old_26_keep_their_index(self):
         keys = KEYS["keys"]
-        self.assertEqual(len(keys), 43)
+        self.assertEqual(len(keys), 40)
         self.assertEqual([(k["action"], k.get("arg", "")) for k in keys[:26]], OLD)
         groups = [g["id"] for g in KEYS["groups"]]
-        self.assertEqual(groups, ["apps", "media", "workspaces", "window", "system", "tv", "games", "music", "sprinklers", "house"])
+        self.assertEqual(groups, ["apps", "media", "workspaces", "window", "system", "tv", "music", "sprinklers", "house"])
         for k in keys:
             self.assertIn(k["group"], groups, k)
             self.assertTrue(1 <= len(k["label"]) <= 14, k)
@@ -40,7 +40,7 @@ class HouseKeys(unittest.TestCase):
 
     def test_every_house_key_is_one_allowlisted_script_and_risky_ones_ask_twice(self):
         table = ha_scripts()
-        self.assertEqual(len(table), 16)
+        self.assertEqual(len(table), 13)
         house = [k for k in KEYS["keys"] if k["action"] == "ha-script"]
         self.assertEqual(sorted(k["arg"] for k in house), sorted(t[0] for t in table))
         for k in house:

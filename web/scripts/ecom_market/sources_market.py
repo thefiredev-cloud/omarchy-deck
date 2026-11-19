@@ -1,5 +1,5 @@
 """Market sources with no key: rank lists (App Store chart, Tranco), interest (Google Trends RSS, Wikipedia views),
-public catalogs (Shopify stores, Steam store, Reverb, Scryfall) and the owner's shop collector feed.
+public catalogs (Shopify stores, Reverb, Scryfall) and the owner's shop collector feed.
 
 Product sources return offers: {platform, site, title, brand, model, gtin, ext_id, price, regular, rank, url,
 category, source, as_of}. Parsers are pure and raise SourceUnavailable on a broken body."""
@@ -94,7 +94,7 @@ def load_tranco(ctx, now):
 HT = "{https://trends.google.com/trending/rss}"
 
 # A trending search is shopping when its title contains one of these as whole words (case-insensitive): shopping
-# events and deal words, or a store name that is not also an everyday word ("target", "shop", "steam" are left out).
+# events and deal words, or a store name that is not also an everyday word ("target" and "shop" are left out).
 # Anything else stays false: no guessing. "deal" alone is out ("trade deal"); so is "sales" ("home sales").
 SHOPPING_TERMS = (
     "black friday", "cyber monday", "prime day", "prime big deal days", "deals", "sale", "coupon", "coupons",
@@ -238,56 +238,6 @@ def load_shopify(ctx, now):
         raise SourceUnavailable("; ".join(fails)[:200])
     return {"as_of": day, "count": len(offers), "data": offers,
             "note": ("%d of %d stores failed" % (len(fails), len(SHOPIFY_STORES))) if fails else None}
-
-
-# ---------------------------------------------------------------- Steam store search
-_ROW = re.compile(r'<a href="https://store\.steampowered\.com/(app|bundle|sub)/(\d+)[^"]*"(.*?)</a>', re.S)
-
-
-def parse_steam_search(body):
-    """search/results JSON (infinite=1) -> [{appid, title, price, regular, discount_pct, url}] in page order.
-    Prices are dollars; free titles and bundles are skipped."""
-    if not isinstance(body, dict) or "results_html" not in body:
-        raise SourceUnavailable("Steam search answered no results")
-    out = []
-    for kind, ident, rest in _ROW.findall(body["results_html"]):
-        if kind != "app":
-            continue
-        t = re.search(r'<span class="title">(.*?)</span>', rest, re.S)
-        final = re.search(r'data-price-final="(\d+)"', rest)
-        orig = re.search(r'class="discount_original_price">\s*\$([\d,.]+)', rest)
-        disc = re.search(r'data-discount="(\d+)"', rest)
-        price = int(final.group(1)) / 100.0 if final else None
-        if not t or not price:
-            continue
-        out.append({"appid": ident, "title": html.unescape(re.sub(r"<[^>]+>", "", t.group(1))).strip()[:160],
-                    "price": price, "regular": num(orig.group(1)) if orig else None,
-                    "discount_pct": int(disc.group(1)) if disc else 0,
-                    "url": "https://store.steampowered.com/app/%s" % ident})
-    if not out and body.get("total_count", 0):
-        raise SourceUnavailable("Steam search layout changed: no rows parsed")
-    return out
-
-
-def load_steam(ctx, now):
-    day = _day(now)
-    base = "https://store.steampowered.com/search/results/?query&start=0&count=50&cc=us&l=english&infinite=1"
-    top = parse_steam_search(ctx.get_json(base + "&filter=topsellers", "topsellers.json", min_age=50 * 60))
-    specials = parse_steam_search(ctx.get_json(base + "&specials=1", "specials.json", min_age=50 * 60))
-    if not top:
-        raise SourceUnavailable("Steam top sellers list was empty")
-    offers, seen = [], set()
-    for rank, rows in ((True, top), (False, specials)):
-        for i, r in enumerate(rows, 1):
-            if r["appid"] in seen:
-                continue
-            seen.add(r["appid"])
-            offers.append({"platform": "Steam", "site": "steam", "title": r["title"], "brand": None, "model": None,
-                           "gtin": None, "ext_id": "steam:" + r["appid"], "steam_appid": r["appid"], "price": r["price"],
-                           "regular": r["regular"] if r["regular"] and r["regular"] > r["price"] else None,
-                           "rank": i if rank else None, "url": r["url"], "category": "games",
-                           "source": "steam_store", "as_of": day})
-    return {"as_of": day, "count": len(top) + len(specials), "data": offers}
 
 
 # ---------------------------------------------------------------- Reverb listings API

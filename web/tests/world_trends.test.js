@@ -205,12 +205,12 @@ test('Shop Trending: rank, title, signal, source with its age, median price and 
   assert.match(vis(S.trendRow(S.trendingList(tr2, 'all')[1])), /Amazon Best Sellers \(sporting goods\), 15 min ago/);
   // the collector's id in parentheses is not a word to read, and a source the signal already names is not said twice; the long signal wraps at
   // spaces (only "up 16" and "14 min ago" stay whole)
-  const steam = { key: 'x', title: 'Queen\u2019s Domain', source: 'Steam best sellers (steam_store)', signal: '#17 on Steam best sellers, up 16', age: 840, rank: 17, move: 16, median: 19.99 };
-  const line = S.trendRow(steam);
-  assert.match(vis(line), /#17 on Steam best sellers, up 16 · 14 min ago \$19\.99/);
-  assert.doesNotMatch(line, /steam_store/);
-  assert.match(line, /#17 on Steam best sellers, up\u00a016 \u00B7 14\u00a0min\u00a0ago/);
-  assert.match(vis(S.trendRow(Object.assign({}, steam, { signal: 'Trending up' }))), /Trending up · Steam best sellers, 14 min ago/);
+  const row = { key: 'x', title: 'Desk Lamp', source: 'Etsy best sellers (etsy_api)', signal: '#17 on Etsy best sellers, up 16', age: 840, rank: 17, move: 16, median: 19.99 };
+  const line = S.trendRow(row);
+  assert.match(vis(line), /#17 on Etsy best sellers, up 16 · 14 min ago \$19\.99/);
+  assert.doesNotMatch(line, /etsy_api/);
+  assert.match(line, /#17 on Etsy best sellers, up\u00a016 \u00B7 14\u00a0min\u00a0ago/);
+  assert.match(vis(S.trendRow(Object.assign({}, row, { signal: 'Trending up' }))), /Trending up · Etsy best sellers, 14 min ago/);
 });
 
 test('Shop Trending: nothing yet is a skeleton; missing or malformed is not reporting with Try again; none is one quiet line', () => {

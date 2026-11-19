@@ -270,9 +270,9 @@
    }
   },
   {
-   "slug": "nintendo-switch-2",
-   "query": "nintendo switch 2",
-   "category": "gaming",
+   "slug": "robot-vacuum-s8",
+   "query": "robot vacuum s8",
+   "category": "home",
    "t": 1791029300,
    "n": 310,
    "sites_ok": 9,
@@ -418,14 +418,14 @@
    },
    "best": {
     "site": "facebook-marketplace",
-    "title": "Nintendo Switch 2 Console Mario Kart World Bundle with Neon Blue and Neon Red Joy-Con Controllers, 256GB Storage, Dock, HDMI Cable, AC Adapter, Carrying Case and Screen Protector - Brand New in Box, Sealed, Free Shipping",
+    "title": "Robot Vacuum S8 with Self-Empty Dock",
     "price": 299.0,
     "url": "https://sfbay.craigslist.org/sample-switch-2",
     "condition": "used",
     "vs_median": -0.1321
    },
    "season": {
-    "basis": "wikipedia:Nintendo_Switch_2",
+    "basis": "wikipedia:Robotic_vacuum_cleaner",
     "by_month": [
      0.7,
      0.7,
@@ -530,8 +530,8 @@
  ],
  "movers": [
   {
-   "slug": "nintendo-switch-2",
-   "query": "nintendo switch 2",
+   "slug": "robot-vacuum-s8",
+   "query": "robot vacuum s8",
    "chg7": 0.034,
    "dir": "up"
   },
@@ -555,10 +555,10 @@
    "condition": "new"
   },
   {
-   "slug": "nintendo-switch-2",
-   "query": "nintendo switch 2",
+   "slug": "robot-vacuum-s8",
+   "query": "robot vacuum s8",
    "site": "backmarket",
-   "title": "Nintendo Switch 2 console, refurbished",
+   "title": "Robot Vacuum S8, refurbished",
    "price": 342.0,
    "median": 386.0,
    "vs_median": -0.114,

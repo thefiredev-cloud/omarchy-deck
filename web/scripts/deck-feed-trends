@@ -3,7 +3,7 @@
 
 Market-wide only. Nothing here reads the owner's watchlists, holdings or portfolio; no account, no key.
   products  rank lists and movers the e-commerce feed already collected (house-feeds/ecom-market.json: Shopify store
-            best sellers, Steam, Scryfall, store price rises), Steam top sellers, the US App Store top free apps and
+            best sellers, Scryfall, store price rises), the US App Store top free apps and
             Product Hunt launches. rank_change compares with this feed's previous run when the source gives none.
   tickers   Yahoo Finance most active, day gainers and losers (US, $2B+ market cap) and Yahoo trending tickers.
             volume_ratio = today's volume / the average of the 30 sessions before it (Yahoo daily bars).
@@ -39,7 +39,6 @@ ECOM_MAX_AGE = 2 * 3600  # the e-commerce feed refreshes hourly; past two hours 
 CACHE_TTL = 25 * 60  # a rerun inside one 30-minute cycle never re-hits a site
 
 GT_RSS = "https://trends.google.com/trending/rss?geo=%s"
-STEAM = "https://store.steampowered.com/api/featuredcategories?cc=us&l=english"
 APPLE = "https://rss.marketingtools.apple.com/api/v2/us/apps/top-free/25/apps.json"
 PRODUCT_HUNT = "https://www.producthunt.com/feed"
 WIKI_TOP = "https://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia/all-access/%04d/%02d/%02d"
@@ -155,26 +154,6 @@ def ecom_products(doc):
                     "rank": None, "rank_change": int(num(r.get("rank_change"))) if num(r.get("rank_change")) is not None else None,
                     "signal": sig, "price_median": num((r.get("price") or {}).get("median")), "url": o.get("url")})
     return out
-
-
-def steam_products(doc):
-    items = ((doc.get("top_sellers") or {}).get("items") or []) if isinstance(doc, dict) else []
-    out, seen = [], set()
-    for it in items:
-        if not isinstance(it, dict) or not it.get("name") or it.get("id") in seen:
-            continue
-        seen.add(it.get("id"))
-        price = num(it.get("final_price"))
-        disc = num(it.get("discount_percent")) or 0
-        rank = len(out) + 1
-        out.append({"title": clean(it["name"]), "category": "games", "source": "Steam top sellers (US)",
-                    "rank": rank, "rank_change": None,
-                    "signal": "#%d Steam top seller%s" % (rank, ", %d%% off" % disc if disc else ""),
-                    "price_median": round(price / 100.0, 2) if price is not None else None,
-                    "url": "https://store.steampowered.com/app/%s" % it["id"] if it.get("id") else None})
-    if not out:
-        raise FetchError("steam: no top sellers in the answer")
-    return out[:15]
 
 
 def apple_products(doc):
@@ -407,7 +386,7 @@ COMMERCIAL = re.compile(
     r"\b(price[sd]?|prices|sale|sales|deals?|discount|coupon|buy|shop\w*|store|stocks?|shares|ipo|earnings|market|crypto\w*"
     r"|bitcoin|ethereum|mortgage|rates?|rent|rental|housing|homes?|real estate|realtor|zillow|redfin|apps?|iphone|ipad"
     r"|android|pixel|samsung|apple|google|amazon|walmart|costco|target|nvidia|tesla|openai|chatgpt|gemini|claude|ai"
-    r"|software|chips?|gpu|rtx|playstation|ps5|xbox|nintendo|steam|recall|outage|black friday|cyber monday|launch"
+    r"|software|chips?|gpu|rtx|recall|outage|black friday|cyber monday|launch"
     r"|release date|subscription|insurance|tax|loans?|bank|credit|fed|inflation|gas prices?|startup|company|inc|corp)\b", re.I)
 NOISE = re.compile(
     r"(\bvs\.?\b|\bv\.\s|\bscores?\b|\bhighlights\b|\bepisode\b|\bseason \d|\bfinale\b|\bdies\b|\bdeath|\bdead\b|\bobituary\b"
@@ -537,7 +516,6 @@ def main():
         run.fail("ecom_market_feed", exc)
 
     for sid, url, headers, parse, is_json in (
-            ("steam_top_sellers", STEAM, UA_JSON, steam_products, True),
             ("app_store_top_free", APPLE, UA_JSON, apple_products, True),
             ("product_hunt_feed", PRODUCT_HUNT, UA_FEED, product_hunt_products, False)):
         try:
@@ -571,7 +549,7 @@ def main():
     searches, search_filter = filter_searches(searches, run, "--no-cluster" not in sys.argv[1:])
 
     sources = sorted(run.sources.values(), key=lambda s: s["id"])
-    src = ["Google Trends RSS", "Yahoo Finance screeners and charts", "Steam store API", "Apple Marketing Tools RSS",
+    src = ["Google Trends RSS", "Yahoo Finance screeners and charts", "Apple Marketing Tools RSS",
            "Product Hunt feed", "Wikimedia pageviews API", "house-feeds/ecom-market.json"]
     F.write_feed(NAME, REFRESH, src, run.errors, {
         "generated_at": iso(now),

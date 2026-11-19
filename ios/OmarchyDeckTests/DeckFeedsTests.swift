@@ -87,7 +87,7 @@ final class DeckFeedsTests: XCTestCase {
         {"t":1793375100,"stale":false,"sources":["shoptrends"],"errors":[],
          "deals":[{"slug":"x","title":"Headphones","site":"bestbuy","price":198.0,"median":248.0,"vs_median":-0.2016,
                    "url":"https://www.bestbuy.com/x","condition":"new"}],
-         "movers":[{"query":"steam deck oled","category":"gaming","median":489.0,"chg7":-0.081},
+         "movers":[{"query":"sony oled tv","category":"electronics","median":489.0,"chg7":-0.081},
                    {"query":"ipad air","median":549.0,"chg7":0.034}]}
         """#
         guard case .loaded(let page) = DeckFeedParser.state(feed: "ecom", status: 200, body: json(body)) else {
@@ -103,7 +103,7 @@ final class DeckFeedsTests: XCTestCase {
         XCTAssertEqual(page.cards[1].badgeTone, .good)
         XCTAssertEqual(page.cards[2].badge, "Up 3%")
         XCTAssertEqual(page.cards[2].badgeTone, .caution)
-        XCTAssertEqual(page.cards[1].title, "Steam Deck OLED")
+        XCTAssertEqual(page.cards[1].title, "Sony OLED TV")
         XCTAssertEqual(page.cards[2].title, "iPad Air")
     }
 
@@ -212,7 +212,7 @@ final class DeckFeedsTests: XCTestCase {
     }
 
     func testShopSearchesBecomeProductNamesKeepingBrandCasing() {
-        XCTAssertEqual(DeckFeedParser.productName("steam deck oled"), "Steam Deck OLED")
+        XCTAssertEqual(DeckFeedParser.productName("sony oled tv"), "Sony OLED TV")
         XCTAssertEqual(DeckFeedParser.productName("iphone 16 pro"), "iPhone 16 Pro")
         XCTAssertEqual(DeckFeedParser.productName("kitchenaid mixer"), "KitchenAid Mixer")
     }

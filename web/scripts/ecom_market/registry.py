@@ -84,7 +84,6 @@ LIVE_SOURCES = {
     "wikimedia": ("Wikipedia page views", "Wikimedia Foundation", "api", "interest", "https://wikimedia.org/api/rest_v1/"),
     "shopify_stores": ("Shopify store catalogs", "Allbirds, Kith, Tentree, Brooklinen, Taylor Stitch, ColourPop", "catalog", "prices",
                        "https://shopify.dev/docs/storefronts/themes/architecture/templates/product"),
-    "steam_store": ("Steam store top sellers and specials", "Valve", "catalog", "prices", "https://store.steampowered.com/search/?filter=topsellers"),
     "reverb_api": ("Reverb listings API", "Reverb", "api", "prices", "https://reverb.com/page/api"),
     "scryfall": ("Scryfall card prices", "Scryfall (TCGplayer market prices)", "api", "prices", "https://scryfall.com/docs/api"),
     "drewry_wci": ("World Container Index", "Drewry", "page", "macro",
@@ -134,7 +133,6 @@ REFUSED_SOURCES = {
     "ups_fuel": ("UPS fuel surcharge page", "UPS", "Bot wall (Access Denied)", "https://www.ups.com/us/en/support/shipping-support/shipping-costs-rates/fuel-surcharges.page"),
     "port_long_beach": ("Port of Long Beach statistics", "Port of Long Beach", "Bot wall (HTTP 403)", "https://polb.com/business/port-statistics/"),
     "camelcamelcamel": ("CamelCamelCamel price drops", "CamelCamelCamel", "Bot wall (Cloudflare challenge)", "https://camelcamelcamel.com/"),
-    "cheapshark": ("CheapShark game deals API", "CheapShark", "robots.txt disallows /api/1.0/", "https://apidocs.cheapshark.com/"),
     "amazon_suggest": ("Amazon search suggestions", "Amazon", "Undocumented endpoint; Amazon terms bar robots",
                        "https://www.amazon.com/gp/help/customer/display.html?nodeId=508088"),
 }
@@ -187,7 +185,6 @@ PLATFORMS = [
     ("IKEA", "ikea.com", "retailer", "1452164827", None, None),
     ("Kroger", "kroger.com", "grocery", "403901186", None, None),
     ("Dollar General", "dollargeneral.com", "retailer", "561311442", None, None),
-    ("Steam", "steampowered.com", "marketplace", None, None, "steam_store"),
     ("Reverb", "reverb.com", "marketplace", None, None, "reverb_api"),
     ("TCGplayer", "tcgplayer.com", "marketplace", None, None, "scryfall"),
 ]
@@ -202,7 +199,6 @@ CATEGORIES = {
     "home": ("Home", "cpi_home", "sales_furniture"),
     "apparel": ("Clothing and shoes", "cpi_apparel", "sales_clothing"),
     "beauty": ("Beauty and personal care", "cpi_personal_care", "sales_health"),
-    "games": ("PC games", None, None),
     "music": ("Music gear", "cpi_music", "sales_hobby"),
     "collectibles": ("Trading cards", None, "sales_hobby"),
     "outdoors": ("Outdoors and sports", None, "sales_hobby"),
@@ -210,7 +206,7 @@ CATEGORIES = {
 }
 # shop collector watch category -> feed category
 WATCH_CATEGORY = {"computer": "computers", "laptops": "computers", "tv": "electronics", "audio": "electronics",
-                  "phones": "electronics", "gaming": "electronics", "kitchen": "home", "home": "home", "apparel": "apparel",
+                  "phones": "electronics", "kitchen": "home", "home": "home", "apparel": "apparel",
                   "bikes": "outdoors", "outdoors": "outdoors", "grocery": "grocery"}
 # Wikipedia articles for watches that do not name one themselves
 WATCH_WIKI = {"rtx-5090": "GeForce_50_series", "rtx-5080": "GeForce_50_series", "rtx-4080": "GeForce_40_series",

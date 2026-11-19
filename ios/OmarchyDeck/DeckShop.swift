@@ -197,7 +197,7 @@ struct ShopMarket: Equatable {
 
     /// Category chips that have products: All plus each category key in the blueprint order.
     var categoryChips: [String] {
-        let order = ["computers", "home", "outdoors", "grocery", "games", "music", "apparel", "electronics", "phones",
+        let order = ["computers", "home", "outdoors", "grocery", "music", "apparel", "electronics", "phones",
                      "beauty", "collectibles"]
         let present = Set((bestsellers + movers).compactMap(\.category))
         return order.filter { present.contains($0) }
@@ -267,7 +267,6 @@ enum ShopWords {
         case "home": return "Home"
         case "apparel": return "Apparel"
         case "beauty": return "Beauty"
-        case "games": return "Games"
         case "music": return "Music"
         case "collectibles": return "Collectibles"
         case "outdoors": return "Outdoors"

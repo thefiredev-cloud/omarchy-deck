@@ -189,14 +189,13 @@ def spaces():
     return {"ok": False, "error": "The workspace overview is not installed on this computer."}
 
 # Window classes become short plain names. Only the class is read: a window title can hold a page or a message, so it never leaves the machine.
-APP_ALIAS = {"gamescope": "Game", "fleet-mirror": "Mirror"}
+APP_ALIAS = {"fleet-mirror": "Mirror"}
 WS_SHOWN = 5
 
 def app_name(cls):
     c = (cls or "").strip()
     if not c: return None
     if c in APP_ALIAS: return APP_ALIAS[c]
-    if re.match(r"^steam_app_", c, re.I): return "Game"
     c = c.split(".")[-1] if "." in c else c
     c = re.sub(r"[^A-Za-z0-9 _+-]", "", c).replace("_", " ").replace("-", " ").strip()[:20]
     return (c[:1].upper() + c[1:]) if c else None

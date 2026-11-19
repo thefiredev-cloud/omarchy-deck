@@ -198,13 +198,13 @@ class HelperActions(unittest.TestCase):
         '{"class":"org.mozilla.firefox","title":"x","mapped":true,"hidden":false,"workspace":{"id":1}},'
         '{"class":"spotify","title":"x","mapped":true,"hidden":false,"workspace":{"id":1}},'
         '{"class":"obsidian","title":"x","mapped":true,"hidden":false,"workspace":{"id":3}},'
-        '{"class":"steam_app_1234","title":"x","mapped":true,"hidden":false,"workspace":{"id":6}},'
+        '{"class":"fleet-mirror","title":"x","mapped":true,"hidden":false,"workspace":{"id":6}},'
         '{"class":"ghost","title":"x","mapped":false,"hidden":false,"workspace":{"id":2}},'
         '{"class":"","title":"no class","mapped":true,"hidden":false,"workspace":{"id":2}}]')
 
     def test_app_names_are_short_plain_words_from_the_class_only(self):
         for cls, want in (("chromium", "Chromium"), ("org.mozilla.firefox", "Firefox"), ("com.mitchellh.ghostty", "Ghostty"),
-                          ("steam_app_1234", "Game"), ("gamescope", "Game"), ("fleet-mirror", "Mirror"),
+                          ("fleet-mirror", "Mirror"),
                           ("my_app-name", "My app name"), ("a" * 50, "A" * 1 + "a" * 19), ("", None), (None, None), ("!!!", None)):
             with self.subTest(cls=cls):
                 self.assertEqual(helper.app_name(cls), want)
@@ -219,7 +219,7 @@ class HelperActions(unittest.TestCase):
         self.assertEqual((one["n"], one["apps"], one["more"]), (5, ["Chromium", "Ghostty", "Firefox"], 1))
         self.assertEqual(r["ws"][1], {"id": 2, "n": 0, "apps": [], "more": 0})
         self.assertEqual(r["ws"][2]["apps"], ["Obsidian"])
-        self.assertEqual(r["other"], {"n": 1, "apps": ["Game"], "more": 0})
+        self.assertEqual(r["other"], {"n": 1, "apps": ["Mirror"], "more": 0})
         self.assertNotIn("title", repr(r))
         self.assertNotIn("private page title", repr(r))
 

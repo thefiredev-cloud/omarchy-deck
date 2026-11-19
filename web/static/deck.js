@@ -2203,7 +2203,7 @@ function syncRowLine(h,k,b,now){const e=redact(str(h.error,30)),s=num(h.stale_s)
    const label=num(h&&h.cpu_c)!=null?'CPU':num(h&&h.soc_c)!=null?'SoC':num(h&&h.skin_c)!=null?'Skin':'CPU';
    const value=num(h&&h.cpu_c)??num(h&&h.soc_c)??num(h&&h.skin_c),gpu=num(h&&h.gpu_c),sensor=str(h&&(h.cpu_sensor||h.soc_sensor),24);
    return row(str(name,24)||'Device',label+' '+fmt(value,0,'\u00B0C')+' \u00B7 GPU '+fmt(gpu,0,'\u00B0C'),'',value==null&&gpu==null?'stale':'','','',sensor?['Sensor '+sensor]:[])}).join('');
-  const o=isObj(f.outbound)?f.outbound:{},h=isObj(f.hydra)?f.hydra:{},fl=isObj(f.flightradar)?f.flightradar:{},n=isObj(f.neighbors)?f.neighbors:{};
+  const o=isObj(f.outbound)?f.outbound:{},fl=isObj(f.flightradar)?f.flightradar:{},n=isObj(f.neighbors)?f.neighbors:{};
   const queue=x=>num(x&&x.files)==null?'unknown':fmt(x.files);
   const count=x=>num(x)==null?'unknown':fmt(x);
   return title+tile('Temperatures',thermal.error||!total?'Not reporting':measured+' of '+total+' machines reporting',
@@ -2211,8 +2211,7 @@ function syncRowLine(h,k,b,now){const e=redact(str(h.error,30)),s=num(h.stale_s)
    (temp?'<div class="flist">'+temp+'</div>':'')+
    tile('Outbound mail',queue(o.legacy_queue)+' waiting \u00B7 '+queue(o.quote_followup_queue)+' follow-ups',
     'Drafts '+count(o.drafts)+' \u00B7 agents '+count(o.outbound_agents),o.error?'bad':'stale','',[str(o.src,60)].filter(Boolean))+
-   '<div class="flist">'+row('Hydra',h.installed===true?'Installed (not checked whether it is running)':h.installed===false?'Not installed':'Status unknown','','','','',[str(h.src,40)].filter(Boolean))+
-    row('Flight radar',fl.installed===true?'Installed (live aircraft not checked)':fl.installed===false?'Not installed':'Status unknown','','','','',[str(fl.src,40)].filter(Boolean))+
+   '<div class="flist">'+row('Flight radar',fl.installed===true?'Installed (live aircraft not checked)':fl.installed===false?'Not installed':'Status unknown','','','','',[str(fl.src,40)].filter(Boolean))+
     row('Network neighbors',num(n.cached_reachable_count)==null?'Status unknown':fmt(n.cached_reachable_count)+' known devices \u00B7 no new scan','','','','',[str(n.src,40)].filter(Boolean))+'</div>'}
 
  // ---- v8: Launch run window: safe markdown, one row per tool, human status line (all pure) ----

@@ -155,10 +155,10 @@ class FeedTests(unittest.TestCase):
         now = shop["t"] + 600
         ok = lambda data, as_of="2026-11-14": {"status": "ok", "data": data, "as_of": as_of, "count": 1,  # noqa: E731
                                               "checked_at": now, "reason": None}
-        steam = [{"platform": "Steam", "site": "steam", "title": "Bodycam", "steam_appid": "1", "ext_id": "steam:1",
-                  "price": 26.65, "regular": 33.32, "rank": 1, "url": None, "category": "games",
-                  "source": "steam_store", "as_of": "2026-11-14"}]
-        res = {"shop_collector": ok(shop), "steam_store": ok(steam),
+        store = [{"platform": "Best Buy", "site": "bestbuy", "title": "Desk Lamp", "ext_id": "bestbuy:1",
+                  "price": 26.65, "regular": 33.32, "rank": 1, "url": None, "category": "home",
+                  "source": "bestbuy_api", "as_of": "2026-11-14"}]
+        res = {"shop_collector": ok(shop), "bestbuy_api": ok(store),
                "apple_chart": ok(sk.parse_apple(json.loads((FX / "apple_shopping.json").read_text()))),
                "tranco": ok({"as_of": "2026-11-14", "ranks": {"amazon.com": 29, "walmart.com": 482}}),
                "ebay_browse": {"status": "needs_key", "reason": "needs EBAY_CLIENT_ID and EBAY_CLIENT_SECRET",
@@ -180,7 +180,7 @@ class FeedTests(unittest.TestCase):
         self.assertEqual(board["Amazon"]["price_coverage"], "blocked")
         self.assertEqual(board["eBay"]["price_coverage"], "needs_key")
         self.assertEqual(board["Walmart"]["signals"]["app_rank"], 2)
-        self.assertEqual(feed["bestsellers"][0]["gid"], "steam:1")
+        self.assertEqual(feed["bestsellers"][0]["gid"], "bestbuy:1")
         self.assertTrue(any(m["kind"] == "on_sale" for m in feed["movers"]))
         w = feed["watches"]["items"][0]
         self.assertEqual(w["slug"], "rtx-4080")

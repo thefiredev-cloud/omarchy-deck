@@ -42,7 +42,6 @@ class IdentityTests(unittest.TestCase):
     def test_identity_order(self):
         self.assertEqual(products.identity(offer(gtin="885909950805", brand="Apple", model="MX123")),
                          ("gtin:00885909950805", "gtin"))
-        self.assertEqual(products.identity(offer(steam_appid="730")), ("steam:730", "steam"))
         self.assertEqual(products.identity(offer(brand="Fender", model="Player Stratocaster")),
                          ("bm:fender:playerstratocaster", "brand_model"))
         self.assertEqual(products.identity(offer(ext_id="shopify:kith.com:1")), ("shopify:kith.com:1", "catalog_id"))
@@ -71,13 +70,13 @@ class MergeTests(TmpHistory):
         self.assertEqual(len(products.build_products(rows, self.hist, TODAY)), 2)
 
     def test_one_price_per_platform_uses_its_lowest_offer(self):
-        rows = [offer(platform="Steam", steam_appid="1", price=20.0), offer(platform="Steam", steam_appid="1", price=15.0)]
+        rows = [offer(platform="Best Buy", ext_id="bestbuy:1", price=20.0), offer(platform="Best Buy", ext_id="bestbuy:1", price=15.0)]
         p = products.build_products(rows, self.hist, TODAY)[0]
         self.assertEqual((p["platforms_n"], p["price"]["low"]), (1, 15.0))
 
     def test_rank_change_against_the_last_stored_day(self):
-        self.hist.put_rank("steam:1", "2026-11-13", 9)
-        p = products.build_products([offer(steam_appid="1", rank=2)], self.hist, TODAY)[0]
+        self.hist.put_rank("bestbuy:1", "2026-11-13", 9)
+        p = products.build_products([offer(ext_id="bestbuy:1", rank=2)], self.hist, TODAY)[0]
         self.assertEqual(p["rank_change"], 7)
         best = products.bestsellers([p])
         self.assertEqual(best[0]["kind"], "bestseller")
@@ -95,35 +94,35 @@ class MergeTests(TmpHistory):
                        url="https://kith.com/products/juniper-hoodie-black"),
                  offer(platform="Tentree", ext_id="shopify:www.tentree.com:8", brand="tentree", title="Juniper T-Shirt",
                        rank=5, url=tt + "mens-juniper-tshirt-white"),
-                 offer(steam_appid="1", title="Bodycam", rank=7), offer(steam_appid="2", title="Bodycam", rank=8)]
+                 offer(ext_id="bestbuy:1", title="Desk Lamp", rank=7), offer(ext_id="bestbuy:2", title="Desk Lamp", rank=8)]
         best = products.bestsellers(products.build_products(rows, self.hist, TODAY))
         self.assertEqual([(b["brand"], b["title"], b["rank"], b["variants_n"]) for b in best],
                          [("tentree", "Juniper Hoodie", 2, 3), ("Kith", "Juniper Hoodie", 3, 1),
                           ("tentree", "Juniper T-Shirt", 5, 1), ("tentree", "Juniper Hoodie", 6, 1),
-                          (None, "Bodycam", 7, 1), (None, "Bodycam", 8, 1)])
+                          (None, "Desk Lamp", 7, 1), (None, "Desk Lamp", 8, 1)])
         for key in ("gid", "price", "platforms_n", "rank_change", "detail"):  # the page's fields keep their shape
             self.assertIn(key, best[0])
 
 
 class MoverTests(TmpHistory):
     def test_price_drop_against_the_stored_price_a_week_ago(self):
-        self.hist.put_price("steam:1", "2026-11-07", 40.0)
-        self.hist.put_price("steam:2", "2026-11-07", 10.0)
-        ps = products.build_products([offer(steam_appid="1", price=30.0), offer(steam_appid="2", price=10.2)],
+        self.hist.put_price("bestbuy:1", "2026-11-07", 40.0)
+        self.hist.put_price("bestbuy:2", "2026-11-07", 10.0)
+        ps = products.build_products([offer(ext_id="bestbuy:1", price=30.0), offer(ext_id="bestbuy:2", price=10.2)],
                                      self.hist, TODAY)
         rows = products.movers(ps, self.hist, TODAY)
-        self.assertEqual([(r["gid"], r["kind"], r["change_pct"]) for r in rows], [("steam:1", "price_drop", -25.0)])
+        self.assertEqual([(r["gid"], r["kind"], r["change_pct"]) for r in rows], [("bestbuy:1", "price_drop", -25.0)])
         self.assertEqual(rows[0]["period"], "2026-11-07 to 2026-11-14")
 
     def test_first_day_has_no_invented_price_moves(self):
-        ps = products.build_products([offer(steam_appid="1", price=30.0)], self.hist, TODAY)
+        ps = products.build_products([offer(ext_id="bestbuy:1", price=30.0)], self.hist, TODAY)
         self.assertEqual(products.movers(ps, self.hist, TODAY), [])
 
     def test_sale_needs_ten_percent_off_the_platforms_regular_price(self):
-        ps = products.build_products([offer(steam_appid="1", price=8.0, regular=10.0),
-                                      offer(steam_appid="2", price=9.5, regular=10.0)], self.hist, TODAY)
+        ps = products.build_products([offer(ext_id="bestbuy:1", price=8.0, regular=10.0),
+                                      offer(ext_id="bestbuy:2", price=9.5, regular=10.0)], self.hist, TODAY)
         rows = products.movers(ps, self.hist, TODAY)
-        self.assertEqual([(r["gid"], r["kind"], r["change_pct"]) for r in rows], [("steam:1", "on_sale", -20.0)])
+        self.assertEqual([(r["gid"], r["kind"], r["change_pct"]) for r in rows], [("bestbuy:1", "on_sale", -20.0)])
 
     def test_shop_collector_movers_keep_their_meaning(self):
         shop = json.loads((ROOT / "tests/fixtures/ecom_market/shop_ecom.json").read_text())
@@ -138,7 +137,7 @@ class MoverTests(TmpHistory):
         self.assertEqual(len({r["gid"] for r in rows}), len(rows), "two listings of one watch are two movers")
 
 
-def cat_items(gids, category, platform="Steam"):
+def cat_items(gids, category, platform="Best Buy"):
     return [{"gid": g, "category": category, "price": {"median": 1.0}, "platforms_n": 1,
              "detail": {"offers": [{"platform": platform}]}} for g in gids]
 
@@ -192,8 +191,8 @@ class IndexTests(TmpHistory):
             self.fill("late%d" % i, [500.0 + i], start=TODAY)
         idx = build.platform_index(self.hist, panel + ["late%d" % i for i in range(40)], TODAY)
         self.assertEqual((idx["change_7d"], idx["panel_7d"]["n"]), (2.0, 12))
-        cat = next(c for c in build.build_categories(cat_items(panel, "games"), self.hist, TODAY, {}, [])
-                   if c["key"] == "games")
+        cat = next(c for c in build.build_categories(cat_items(panel, "outdoors"), self.hist, TODAY, {}, [])
+                   if c["key"] == "outdoors")
         self.assertEqual((cat["basis"], cat["value"], cat["period"]), ("platforms", 2.0, "2026-11-07 to 2026-11-14"))
         self.assertEqual((cat["parts"][0]["measure"], cat["parts"][0]["n_products"]), ("change_7d", 12))
 
@@ -251,15 +250,15 @@ class IndexTests(TmpHistory):
         for g in gids:
             for i in range(32):
                 self.hist.put_price(g, build.shift_day("2026-10-14", i), 10 * (1 + 0.002 * i))
-        cat = next(c for c in build.build_categories(cat_items(gids, "games"), self.hist, TODAY, {}, [])
-                   if c["key"] == "games")
+        cat = next(c for c in build.build_categories(cat_items(gids, "outdoors"), self.hist, TODAY, {}, [])
+                   if c["key"] == "outdoors")
         self.assertEqual(cat["basis"], "platforms")
         self.assertEqual(cat["period"], "30 days to 2026-11-14")
         self.assertEqual(cat["parts"][0]["measure"], "change_30d")
         self.assertAlmostEqual(cat["value"], cat["platform_index"]["change_30d"])
 
     def test_category_without_any_part_is_null_not_zero(self):
-        cat = next(c for c in build.build_categories([], self.hist, TODAY, {}, []) if c["key"] == "games")
+        cat = next(c for c in build.build_categories([], self.hist, TODAY, {}, []) if c["key"] == "outdoors")
         self.assertIsNone(cat["value"])
         self.assertIsNone(cat["basis"])
         self.assertIsNone(cat["period"])
@@ -369,11 +368,11 @@ class MoveEvidenceTests(TmpHistory):
         self.assertEqual(w["change_7d_reason"], "4 listings 7 days ago; a change needs 10")
 
     def test_movers_leave_out_what_the_evidence_cannot_carry_and_count_it(self):
-        self.hist.put_price("steam:1", "2026-11-07", 40.0, platforms_n=1)
-        self.hist.put_price("steam:2", "2026-11-07", 10.0, platforms_n=2)  # two platforms then, one now
-        self.hist.put_price("steam:3", "2026-11-07", 10.0, platforms_n=1)
-        ps = products.build_products([offer(steam_appid="1", price=30.0), offer(steam_appid="2", price=6.0),
-                                      offer(steam_appid="3", price=1.0)], self.hist, TODAY)
+        self.hist.put_price("bestbuy:1", "2026-11-07", 40.0, platforms_n=1)
+        self.hist.put_price("bestbuy:2", "2026-11-07", 10.0, platforms_n=2)  # two platforms then, one now
+        self.hist.put_price("bestbuy:3", "2026-11-07", 10.0, platforms_n=1)
+        ps = products.build_products([offer(ext_id="bestbuy:1", price=30.0), offer(ext_id="bestbuy:2", price=6.0),
+                                      offer(ext_id="bestbuy:3", price=1.0)], self.hist, TODAY)
         shop = {"movers": [{"slug": "canned-water", "query": "canned water", "kind": "trend", "chg7": 1.858, "price": 29.99,
                             "site": None, "url": None},
                            {"slug": "fire-blanket", "query": "fire blanket", "kind": "drop", "chg7": -0.85, "price": 3.0,
@@ -381,7 +380,7 @@ class MoveEvidenceTests(TmpHistory):
         dropped = {}
         rows = products.shop_mover_rows(shop, {}, TODAY, {}, {"canned-water": "trend mover: too few listings"}, dropped)
         rows = products.movers(ps, self.hist, TODAY, rows, dropped)
-        self.assertEqual([(r["gid"], r["change_pct"]) for r in rows], [("steam:1", -25.0)])
+        self.assertEqual([(r["gid"], r["change_pct"]) for r in rows], [("bestbuy:1", -25.0)])
         self.assertEqual(dropped, {"platform mix changed": 1, "beyond the bound": 2, "trend mover: too few listings": 1})
 
     def test_a_category_resting_on_the_official_month_says_so_and_has_no_score(self):
@@ -390,7 +389,7 @@ class MoveEvidenceTests(TmpHistory):
         cat = next(c for c in build.build_categories([], self.hist, TODAY, cpi, []) if c["key"] == "apparel")
         self.assertEqual((cat["basis"], cat["confidence"]["score"], cat["confidence"]["label"]), ("official_mom", None, "official"))
         self.assertEqual(cat["confidence"]["reasons"][0], "official monthly figure; store prices too few to cross-check it")
-        none = next(c for c in build.build_categories([], self.hist, TODAY, {}, []) if c["key"] == "games")
+        none = next(c for c in build.build_categories([], self.hist, TODAY, {}, []) if c["key"] == "outdoors")
         self.assertEqual((none["confidence"]["score"], none["confidence"]["label"]), (None, None))
 
 

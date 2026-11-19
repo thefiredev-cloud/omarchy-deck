@@ -92,8 +92,6 @@ pub const PC: &[App] = &[
     App { open: "/house-ipad/start", ..app("house-assistant", "Home Assistant", "Home", "House controls and phone app", 8123, Some(8124)) },
     app("team-chat", "Team Chat", "Home", "House chat", 3080, Some(10451)),
     app("music-assistant", "Music Assistant", "Media", "House speakers and Spotify Connect", 8095, Some(10449)),
-    app("jellyfin", "Jellyfin movies", "Media", "Movie library", 8920, Some(8920)),
-    app("retro-games", "Games", "Media", "Retro games server", 8570, Some(8572)),
     app("rf-observatory", "RF observatory", "Tools", "Local RF dashboard", 8791, Some(10529)),
     App { probe: "/status", open: "/status", ..app("vram-pool", "VRAM pool", "Cluster", "GPU memory pool status", 8100, Some(10530)) },
     app("uptime", "Uptime", "Tools", "Site and camera uptime", 8942, Some(9444)),

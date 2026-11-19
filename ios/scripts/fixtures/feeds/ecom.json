@@ -41,9 +41,9 @@
  ],
  "movers": [
   {
-   "slug": "steam-deck-oled",
-   "query": "steam deck oled",
-   "category": "gaming",
+   "slug": "sony-oled-tv",
+   "query": "sony oled tv",
+   "category": "electronics",
    "median": 489.0,
    "chg7": -0.081,
    "chg30": null,
