@@ -81,7 +81,7 @@ Run the tests:
 
 ```sh
 (cd web/rust && cargo test --locked)
-(cd web && node --test tests/*.test.js && python3 -m unittest discover -s tests)
+(cd web && node --test tests/*.test.js && python3 -m unittest discover -s tests && python3 -m unittest discover -s scripts/tests)
 (cd mcp && pip install -r requirements.txt && python3 -m unittest discover -s tests)
 (cd ios && bash scripts/linux-test.sh)
 ```
