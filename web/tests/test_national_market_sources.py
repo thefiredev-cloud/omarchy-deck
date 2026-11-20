@@ -1,5 +1,7 @@
 """Behavioral coverage for shared Zillow and Redfin market parsers."""
 import csv
+import struct
+import zipfile
 import sys
 import tempfile
 import unittest
@@ -66,6 +68,50 @@ class RedfinMarketParserTests(unittest.TestCase):
             "2025-03": {"12345": {"redfin_median_sale": 300000}},
         })
 
+
+class CensusDivisionParserTests(unittest.TestCase):
+    @staticmethod
+    def _dbf():
+        fields = (("CBSAFP", 5), ("METDIVFP", 5), ("NAME", 30))
+        header_size = 32 + len(fields) * 32 + 1
+        record_size = 1 + sum(width for _, width in fields)
+        header = bytearray(32)
+        struct.pack_into("<IHH", header, 4, 16, header_size, record_size)
+        descriptors = bytearray()
+        for name, width in fields:
+            descriptor = bytearray(32)
+            descriptor[:len(name)] = name.encode("ascii")
+            descriptor[11] = ord("C")
+            descriptor[16] = width
+            descriptors.extend(descriptor)
+        records = bytearray()
+        for index in range(16):
+            deleted = index == 15
+            parent = "10000"
+            code = "%05d" % (20000 + index)
+            name = ("Deleted" if deleted else "Division %d" % index).ljust(30)
+            records.extend((b"*" if deleted else b" ") + parent.encode() + code.encode() + name.encode())
+        return bytes(header + descriptors + b"\r" + records + b"\x1a")
+
+    def test_census_divisions_reads_parent_codes_and_skips_deleted_rows(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "divisions.zip"
+            with zipfile.ZipFile(path, "w") as archive:
+                archive.writestr("division.dbf", self._dbf())
+
+            divisions = _redfin_segments.census_divisions(path)
+
+        self.assertEqual(len(divisions), 15)
+        self.assertEqual(divisions["20000"], {"parent": "10000", "title": "Division 0"})
+
+    def test_metro_resolver_rejects_ambiguous_normalized_titles(self):
+        resolve = _redfin_segments.metro_resolver({
+            "12345": "Springfield Metro Area",
+            "54321": "Springfield",
+        })
+
+        self.assertIsNone(resolve("99999", "Springfield"))
+        self.assertEqual(resolve("12345", "Different title"), "12345")
 
 if __name__ == "__main__":
     unittest.main()
