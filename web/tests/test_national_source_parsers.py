@@ -13,6 +13,8 @@ import _bls_ces  # noqa: E402
 import _bps  # noqa: E402
 from ctx import SourceUnavailable  # noqa: E402
 import census_bps_county  # noqa: E402
+import fdic_call_cre  # noqa: E402
+import sec_absee_cmbs  # noqa: E402
 
 
 class BlsCesParserTests(unittest.TestCase):
@@ -80,6 +82,52 @@ class BlsCesParserTests(unittest.TestCase):
         )
 
 
+
+
+class FdicCallCreTests(unittest.TestCase):
+    def test_parse_weights_ratios_by_covered_deposits_and_drops_undercovered_zip(self):
+        banks = {
+            "1": {"assets": 1000, "equity": 100, "cre": 300, "mf": 100},
+            "2": {"assets": 2000, "equity": 200, "cre": 1000, "mf": 400},
+        }
+        branches = {
+            "02108": {"1": 80, "2": 20},
+            "10001": {"1": 49, "missing": 51},
+        }
+
+        data = fdic_call_cre.parse(branches, banks)
+
+        self.assertEqual(data, {
+            "02108": {
+                "fdiccre_pct_assets": 34.0,
+                "fdiccre_mf_pct_assets": 12.0,
+                "fdiccre_pct_equity": 340.0,
+            }
+        })
+
+
+class SecCmbsAggregateTests(unittest.TestCase):
+    def test_aggregate_combines_property_metrics_and_excludes_unknown_status(self):
+        rows = [
+            {"zip": "02108", "type": "OF", "noi": 100000, "occ": 90, "value": 1000000,
+             "nra": 50000, "dscr": 1.25, "delinq": True},
+            {"zip": "02108", "type": "OF", "noi": 50000, "occ": 80, "value": 1000000,
+             "nra": 50000, "dscr": 1.5, "delinq": False},
+            {"zip": "02108", "type": "ZZ", "noi": None, "occ": None, "value": None,
+             "nra": None, "dscr": None, "delinq": None},
+        ]
+
+        data = sec_absee_cmbs.aggregate(rows)
+
+        self.assertEqual(data["02108"]["cmbs_props"], 3)
+        self.assertEqual(data["02108"]["cmbs_occ_median"], 85.0)
+        self.assertEqual(data["02108"]["cmbs_cap_rate"], 7.5)
+        self.assertEqual(data["02108"]["cmbs_noi_psf_median"], 1.5)
+        self.assertEqual(data["02108"]["cmbs_delinq_share"], 50.0)
+        self.assertEqual(data["02108"]["cmbs_status_known"], 2)
+        self.assertEqual(data["02108"]["cmbs_office_props"], 2)
+        self.assertEqual(data["02108"]["cmbs_office_delinq"], 50.0)
+        self.assertEqual(data["02108"]["cmbs_retail_props"], 0)
 class BuildingPermitsTrailingTests(unittest.TestCase):
     def test_trailing_falls_back_to_ytd_arithmetic_and_drops_negative_areas(self):
         def row(value):
