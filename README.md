@@ -34,8 +34,8 @@ flowchart LR
   feeds -->|"read"| srv
   feeds -->|"read"| mcp
   srv <-->|"loopback"| svc
-  srv -->|"HTTPS, token cookie"| web
-  srv -->|"HTTPS, token cookie"| ios
+  srv -->|"HTTPS via proxy, token cookie"| web
+  srv -->|"HTTPS via proxy, token cookie"| ios
   ios -->|"fixed actions"| watch
   mcp -->|"stdio"| agent
 ```
@@ -44,10 +44,10 @@ Static copy: [docs/architecture.svg](docs/architecture.svg).
 
 ## How it works
 
-1. Collectors run on systemd timers. Each one writes a single JSON file with a timestamp, its refresh period and a list of sources that failed.
+1. Collectors run on systemd timers. Each one writes a single JSON file with `t` (epoch seconds), `refresh` (period in seconds), `src` (sources it read) and `errors` (sources that failed).
 2. The deck server reads those files on request, trims each to the fields its page uses, and adds `age` and `stale`. A missing or old feed shows as "Not reporting" or "Out of date", never as zero.
-3. Controls (media keys, workspace switch, Home Assistant scripts) go through a fixed allowlist. The client sends an index; it never sends a command, path or entity id. Each press is rate limited and logged.
-4. The Pad page is a trackpad and keyboard over a WebSocket. The server starts a small input agent per session that writes to `ydotoold` on the target machine.
+3. Controls (media keys, workspace switch, Home Assistant scripts) go through a fixed allowlist. The client sends an index or a name from that list, such as a key macro index or a house action with its entity id. The server refuses anything off the list before it runs a command or calls Home Assistant. Each press is rate limited and logged.
+4. The Pad page is a trackpad and keyboard over a WebSocket. The server starts a small input agent per session that writes to `ydotoold` on Linux hosts or Quartz on the Mac mini.
 5. The iOS app is a native shell around the same web deck. Each server gets its own WebKit data store, the token is used once to get a session cookie, and an offline sample deck works with no server.
 6. The MCP server gives AI agents read-only tools over the same feed files. It never writes and never opens a network connection.
 
