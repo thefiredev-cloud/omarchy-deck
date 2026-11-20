@@ -47,7 +47,7 @@ The front-end tests load the real scripts from `web/static` in Node and check th
    head -c 24 /dev/urandom | base64 > ~/.config/pixel-deck/token
    chmod 600 ~/.config/pixel-deck/token
    ```
-3. Install the binary and the systemd user unit: `web/scripts/install-server`. It copies the binary to `~/.local/bin/pixel-deck`, backs up any old one, and enables `pixel-deck.service`.
+3. Install the binary and the systemd user unit: `web/scripts/install-server`. It copies the binary to `~/.local/bin/pixel-deck`, backs up any old one, and enables `pixel-deck.service`. A service that already runs keeps the old binary until you run `systemctl --user restart pixel-deck.service`.
 4. Edit the unit with `systemctl --user edit pixel-deck.service` to set:
    - `PIXEL_DECK_BASE`: the `web/` directory of this checkout (the server reads `keys.json` there).
    - `PIXEL_DECK_BINDS`: addresses to listen on, comma separated. The default is `127.0.0.1`.
@@ -60,7 +60,7 @@ Remove it with `web/scripts/uninstall-server`.
 
 ## 4. Collectors
 
-Each collector is a script plus a systemd user timer. Install the ones you want:
+Collectors are scripts. Most run from a systemd user timer. Install the ones you want:
 
 ```sh
 web/scripts/install-ops-feeds deck-feed-stalls deck-feed-serverpage
@@ -68,7 +68,7 @@ web/scripts/install-traffic-feed
 web/scripts/install-national          # national housing data from public sources (large first run)
 ```
 
-The surf, market, trends and e-commerce collectors (`web/scripts/deck-feed-*`) ship with unit files in `web/scripts/systemd/`. Copy a pair into `~/.config/systemd/user/`, put the script on the path the unit names, then `systemctl --user enable --now <name>.timer`. Each script's header says what it reads and where it writes. Set `DECK_FEED_DIR` to stage output somewhere other than `~/.meshvault/status`.
+The surf, trends and e-commerce collectors (`web/scripts/deck-feed-*`) ship with unit files in `web/scripts/systemd/`. `deck-feed-markets`, `deck-feed-crons` and `deck-feed-dev` ship none. Copy a pair into `~/.config/systemd/user/`, put the script at `~/ops/bin/<name>` (the path the unit names), then `systemctl --user enable --now <name>.timer`. Each script's header says what it reads and where it writes. Set `DECK_FEED_DIR` to stage output somewhere other than `~/.meshvault/status`.
 
 ## 5. iOS app on a Mac (Xcode)
 

@@ -6,7 +6,7 @@ A self-hosted status board and touch remote for the machines you run yourself. O
 
 ## What it needs and where data goes
 
-- Hardware: any Linux server with systemd. It needs no GPU and no VRAM. The release binary is about 7 MB and carries the whole web UI inside it. Built and tested on x86-64.
+- Hardware: any Linux server with systemd. It needs no GPU and no VRAM. The release binary carries the whole web UI inside it. Built and tested on x86-64.
 - Data stays on the box. Collectors write JSON files to local disk. The server reads those files and talks to services on loopback or your LAN (Home Assistant, a local model server, the agent gateway).
 - Outbound calls are limited to what you install: collectors fetch public data (NOAA buoys, FRED rates, Census tables), and the server asks Open-Meteo for the weather line. Nothing else leaves the machine by default.
 - Phones and tablets reach the server over HTTPS on your own network or VPN. Access is a token you create on the server.
