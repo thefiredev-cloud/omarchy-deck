@@ -12,6 +12,7 @@ sys.path.insert(0, str(ROOT / "scripts" / "national" / "sources"))
 import _bls_ces  # noqa: E402
 import _bps  # noqa: E402
 from ctx import SourceUnavailable  # noqa: E402
+import census_bps_county  # noqa: E402
 
 
 class BlsCesParserTests(unittest.TestCase):
@@ -115,6 +116,48 @@ class BuildingPermitsParserTests(unittest.TestCase):
 
         self.assertEqual(label, "2026-11")
         self.assertEqual(data, {"31080": {"u1": 10, "u24": 50, "u5": 50, "b5": 40, "v5": 60000}})
+
+
+class CensusCountyPermitsTests(unittest.TestCase):
+    def test_month_parser_uses_trailing_estimates_when_county_name_has_comma(self):
+        estimates = ["0", "3", "101", "0", "5", "202", "0", "7", "303", "0", "11", "404"]
+        reported = ["0"] * 12
+        row = ["202501", "06", "001", "San Francisco, City", "x", "x", *estimates, *reported]
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "county.txt"
+            path.write_text(",".join(row) + "\n", encoding="latin-1")
+
+            data, month = census_bps_county.parse_month(path)
+
+        self.assertEqual(month, "2025-01")
+        self.assertEqual(data, {
+            "06001": {"units_1": 3, "units_2_4": 12, "units_5plus": 11, "value": 1010}
+        })
+
+    def test_trailing_months_sum_only_counties_present_in_every_file(self):
+        months = [
+            {
+                "06001": {"units_1": 2, "units_2_4": 3, "units_5plus": 4, "value": 100},
+                "06003": {"units_1": 20, "units_2_4": 30, "units_5plus": 40, "value": 1000},
+            },
+            {
+                "06001": {"units_1": 5, "units_2_4": 6, "units_5plus": 7, "value": 200},
+                "06005": {"units_1": 50, "units_2_4": 60, "units_5plus": 70, "value": 2000},
+            },
+        ]
+
+        data, dropped = census_bps_county.combine(months)
+
+        self.assertEqual(dropped, 2)
+        self.assertEqual(data, {
+            "06001": {
+                "bps_units_12m": 27,
+                "bps_units_1_12m": 7,
+                "bps_units_2_4_12m": 9,
+                "bps_units_5plus_12m": 11,
+                "bps_value_12m": 300,
+            }
+        })
 
 
 if __name__ == "__main__":
