@@ -16,6 +16,7 @@ import _federal_layers as federal  # noqa: E402
 import _xlsx  # noqa: E402
 import _cbsa_names as cbsa  # noqa: E402
 import _counties as counties  # noqa: E402
+import _hvs as hvs  # noqa: E402
 import _fha_bf90 as fha  # noqa: E402
 from ctx import SourceUnavailable  # noqa: E402
 
@@ -197,6 +198,36 @@ class CbsaNameTests(unittest.TestCase):
             write_xlsx(path, [["CBSA Code", "CBSA Title"], ["11700", "Aberdeen, SD"]])
             with self.assertRaisesRegex(SourceUnavailable, "parsed to 1 areas"):
                 cbsa.parse(path)
+
+
+
+
+class HousingVacancySurveyTests(unittest.TestCase):
+    def test_parse_table_returns_latest_state_values_and_annual_history(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "hvs.xlsx"
+            write_xlsx(path, [
+                ["State", "First Quarter 2023", "Fourth Quarter 2023", "First Quarter 2024", "Fourth Quarter 2024"],
+                ["California", "4.1", "4.2", "4.3", "4.4"],
+                ["New York", "5.1", None, "5.3", "5.4"],
+            ])
+
+            result, history, latest = hvs.parse_table(path, "hvs_rental_vacancy", "state", history=True)
+
+        self.assertEqual(latest, "2024Q4")
+        self.assertEqual(result, {"CA": {"hvs_rental_vacancy": 4.4}, "NY": {"hvs_rental_vacancy": 5.4}})
+        self.assertEqual(history, {
+            "CA": {"hvs_rental_vacancy": [["2023Q4", 4.2], ["2024Q4", 4.4]]},
+            "NY": {"hvs_rental_vacancy": [["2024Q4", 5.4]]},
+        })
+
+    def test_parse_table_rejects_workbooks_without_usable_observations(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "hvs.xlsx"
+            write_xlsx(path, [["First Quarter 2024"], ["Not a state", "7.1"]])
+
+            with self.assertRaisesRegex(SourceUnavailable, "no usable state observations"):
+                hvs.parse_table(path, "hvs_rental_vacancy", "state")
 
 
 class InsuredMultifamilyTests(unittest.TestCase):
