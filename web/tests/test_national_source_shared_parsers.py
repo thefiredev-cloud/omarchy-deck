@@ -35,6 +35,39 @@ class AcsTableTests(unittest.TestCase):
         self.assertEqual(count, 2)
         self.assertEqual(records, {"00501": {"rent": 1200.0}, "90210": {"rent": None}})
 
+    def test_sparse_tables_allow_unpublished_geographies_below_full_minimum(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            first = Path(tmp) / "first.dat"
+            second = Path(tmp) / "second.dat"
+            first.write_text(
+                "GEO_ID|B25064_E001\n"
+                "860Z200US00501|100\n"
+                "860Z200US00502|200\n"
+                "860Z200US00503|300\n",
+                encoding="utf-8",
+            )
+            second.write_text(
+                "GEO_ID|B25065_E001\n"
+                "860Z200US00501|10\n"
+                "860Z200US00502|20\n",
+                encoding="utf-8",
+            )
+
+            records, count = _acs.parse_tables(
+                {"b25064": first, "b25065": second},
+                {"b25064": {"E001": "rent"}, "b25065": {"E001": "units"}},
+                "zip",
+                minimum=3,
+                sparse=True,
+            )
+
+        self.assertEqual(count, 3)
+        self.assertEqual(records, {
+            "00501": {"rent": 100.0, "units": 10.0},
+            "00502": {"rent": 200.0, "units": 20.0},
+            "00503": {"rent": 300.0},
+        })
+
     def test_parse_tables_rejects_duplicate_normalized_geographies(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "table.dat"
@@ -112,6 +145,29 @@ class BeaSharedParserTests(unittest.TestCase):
             "01007": {"1": {2022: 300.0, 2023: 350.0}},
         })
         self.assertEqual(_bea.latest_year(rows, "1", years, share=0.7), 2022)
+
+    def test_read_lines_keeps_multiple_requested_line_codes_per_area(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "regional.zip"
+            with zipfile.ZipFile(path, "w") as archive:
+                archive.writestr(
+                    "CAINC1_ALL_AREAS.csv",
+                    "GeoFIPS,LineCode,Description,2022\n"
+                    '"06037",1,Personal income,100\n'
+                    '"06037",3,Population,200\n'
+                    '"06000",1,California,999\n'
+                    '"06037",2,Other line,300\n',
+                )
+
+            rows, years = _bea.read_lines(path, {"1", "3"})
+
+        self.assertEqual(years, [2022])
+        self.assertEqual(rows, {
+            "06037": {
+                "1": {2022: 100.0},
+                "3": {2022: 200.0},
+            },
+        })
 
 if __name__ == "__main__":
     unittest.main()
