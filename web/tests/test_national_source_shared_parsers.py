@@ -1,8 +1,9 @@
-"""Behavioral tests for shared ACS and Realtor.com source parsers."""
+"""Behavioral tests for shared ACS, BEA, and Realtor.com source parsers."""
 import csv
 import sys
 import tempfile
 import unittest
+import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -10,6 +11,7 @@ sys.path.insert(0, str(ROOT / "scripts" / "national"))
 sys.path.insert(0, str(ROOT / "scripts" / "national" / "sources"))
 
 import _acs  # noqa: E402
+import _bea  # noqa: E402
 import _realtor_core  # noqa: E402
 from ctx import SourceUnavailable  # noqa: E402
 
@@ -85,6 +87,31 @@ class RealtorCoreTests(unittest.TestCase):
         })
         self.assertEqual(info, {"no_key": 1, "flagged": 1})
 
+
+class BeaSharedParserTests(unittest.TestCase):
+    def test_read_lines_keeps_county_values_and_selects_latest_well_reported_year(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "regional.zip"
+            with zipfile.ZipFile(path, "w") as archive:
+                archive.writestr(
+                    "CAINC1_ALL_AREAS.csv",
+                    "GeoFIPS,LineCode,Description,2022,2023\n"
+                    '"01001",1,County A,100,(NA)\n'
+                    '"01003",1,County B,200,250\n'
+                    '"01000",1,Alabama,999,999\n'
+                    '"01005",2,Other line,300,300\n'
+                    '"01007",1,County D,300,350\n',
+                )
+
+            rows, years = _bea.read_lines(path, {"1"})
+
+        self.assertEqual(years, [2022, 2023])
+        self.assertEqual(rows, {
+            "01001": {"1": {2022: 100.0, 2023: None}},
+            "01003": {"1": {2022: 200.0, 2023: 250.0}},
+            "01007": {"1": {2022: 300.0, 2023: 350.0}},
+        })
+        self.assertEqual(_bea.latest_year(rows, "1", years, share=0.7), 2022)
 
 if __name__ == "__main__":
     unittest.main()
