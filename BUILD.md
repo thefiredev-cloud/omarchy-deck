@@ -44,9 +44,10 @@ The front-end tests load the real scripts from `web/static` in Node and check th
 2. Create the access token. The server refuses to start without it.
    ```sh
    install -d -m 700 ~/.config/pixel-deck
-   head -c 24 /dev/urandom | base64 > ~/.config/pixel-deck/token
+   head -c 24 /dev/urandom | base64 | tr '+/' '-_' > ~/.config/pixel-deck/token
    chmod 600 ~/.config/pixel-deck/token
    ```
+   The `tr` keeps the token URL-safe. A `+` in the `?t=` link decodes to a space, so the bootstrap fails.
 3. Install the binary and the systemd user unit: `web/scripts/install-server`. It copies the binary to `~/.local/bin/pixel-deck`, backs up any old one, and enables `pixel-deck.service`. A service that already runs keeps the old binary until you run `systemctl --user restart pixel-deck.service`.
 4. Edit the unit with `systemctl --user edit pixel-deck.service` to set:
    - `PIXEL_DECK_BASE`: the `web/` directory of this checkout (the server reads `keys.json` there).
