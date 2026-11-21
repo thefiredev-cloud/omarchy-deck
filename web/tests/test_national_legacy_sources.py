@@ -3,7 +3,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts" / "national"))
@@ -51,6 +51,36 @@ class SafmrCandidatesTests(unittest.TestCase):
             "https://www.huduser.gov/portal/datasets/fmr/fmr2028/FY28_safmrs.xlsx",
             "https://www.huduser.gov/portal/datasets/fmr/fmr2027/FY27_safmrs.xlsx",
         ])
+
+
+class ChrDataYearsTests(unittest.TestCase):
+    def test_reads_homicide_data_years_from_measures_text(self):
+        class Context:
+            def fetch(self, *args, **kwargs):
+                return "/unused/chr_measures.pdf", {}
+
+        with patch.object(
+            _legacy.subprocess,
+            "run",
+            return_value=Mock(stdout="Homicides* 2017-2023\n"),
+        ):
+            years = _legacy._chr_data_years(Context(), 2025)
+
+        self.assertEqual(years, "2017-2023")
+
+    def test_returns_none_when_measures_text_has_no_homicide_years(self):
+        class Context:
+            def fetch(self, *args, **kwargs):
+                return "/unused/chr_measures.pdf", {}
+
+        with patch.object(
+            _legacy.subprocess,
+            "run",
+            return_value=Mock(stdout="Measures\nHomicides* Not reported\n"),
+        ):
+            years = _legacy._chr_data_years(Context(), 2025)
+
+        self.assertIsNone(years)
 
 
 if __name__ == "__main__":
