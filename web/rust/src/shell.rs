@@ -155,7 +155,7 @@ mod tests {
     fn sw_version_tracks_every_shell_file() {
         let Some(list) = shell_list(crate::SW_JS) else { panic!("sw.js declares SHELL") };
         assert!(list.len() > 20, "the real list is read, {} entries", list.len());
-        assert!(list.contains(&"/".to_string()) && !list.contains(&"/sw.js".to_string()));
+        assert!(list.iter().any(|i: &String| i == "/") && !list.iter().any(|i: &String| i == "/sw.js"));
         let tokens = crate::SW_JS.windows(TOKEN.len()).filter(|w| *w == TOKEN).count();
         assert_eq!(tokens, 1, "the token appears once, in V only");
         for p in &list {

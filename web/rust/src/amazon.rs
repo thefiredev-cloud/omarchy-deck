@@ -125,7 +125,7 @@ fn round2(x: f64) -> f64 {
 fn change(hist: &[(u64, f64)], back: u64) -> Option<f64> {
     let &(last_d, last_p) = hist.last()?;
     let &(_, then) = hist.iter().rev().find(|(d, _)| *d + back <= last_d)?;
-    (then > 0.0).then(|| (last_p - then) / then).map(|c| (c * 10_000.0).round() / 10_000.0)
+    (then > 0.0).then_some((last_p - then) / then).map(|c| (c * 10_000.0).round() / 10_000.0)
 }
 
 pub fn from_rows(text: &str, now: u64) -> Value {
