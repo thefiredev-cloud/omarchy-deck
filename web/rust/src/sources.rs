@@ -2098,7 +2098,7 @@ mod tests {
         assert_eq!(v["sources"][0], "amazon-bestsellers", "the file's own src list stays the envelope's source names");
         let errs: Vec<String> = v["errors"].as_array().into_iter().flatten().map(|e| format!("{}: {}", short(e.get("source"), 60), short(e.get("reason"), 160))).collect();
         assert_eq!(errs.iter().filter(|e| e.starts_with("ebay-trending")).count(), 1, "a failed source the file already named is not doubled: {errs:?}");
-        assert!(errs.contains(&"reddit-buyitforlife: timeout".to_string()), "{errs:?}");
+        assert!(errs.iter().any(|i| i == "reddit-buyitforlife: timeout"), "{errs:?}");
         assert!(errs.iter().any(|e| e.starts_with("products: 1 of 5 rows dropped")), "{errs:?}");
         assert!(errs.iter().any(|e| e.starts_with("tickers: 1 of 4 rows dropped")), "{errs:?}");
         let p = &v["products"];
@@ -2121,7 +2121,7 @@ mod tests {
         assert_eq!(v["tickers"], json!([]));
         let reasons: Vec<String> = v["errors"].as_array().into_iter().flatten().map(|e| format!("{}: {}", short(e.get("source"), 60), short(e.get("reason"), 160))).collect();
         for want in ["products: not a list", "searches: missing from the file", "sources: no source list"] {
-            assert!(reasons.contains(&want.to_string()), "{want} in {reasons:?}");
+            assert!(reasons.iter().any(|i| i == want), "{want} in {reasons:?}");
         }
         assert_eq!(deck_feed_from(d, "not json", None, 1_794_928_000)["error"], "bad json");
     }

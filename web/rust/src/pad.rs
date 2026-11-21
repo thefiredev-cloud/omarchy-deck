@@ -719,12 +719,12 @@ mod tests {
         let m = agent_argv("mini").unwrap_or_default();
         assert_eq!(m[0], "ssh");
         assert!(
-            m.contains(&"mini".to_string())
+            m.iter().any(|i| i == "mini")
                 && m.last()
                     .is_some_and(|c| c.starts_with("/usr/bin/python3 -u -c '"))
         );
         let d = agent_argv("Dell").unwrap_or_default();
-        assert!(d.contains(&"mesh".to_string()));
+        assert!(d.iter().any(|i| i == "mesh"));
         let l = agent_argv("pc-desktop").unwrap_or_default();
         assert_eq!(&l[..3], &["/usr/bin/python3", "-u", "-c"]);
         assert!(agent_argv("evil").is_none());

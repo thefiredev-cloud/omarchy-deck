@@ -1758,8 +1758,8 @@ mod tests {
     fn commercial_rank_keeps_unpriced_rows_under_a_budget() {
         let v = rank_of(&[("kind", "commercial"), ("state", "CA"), ("max_price", "1000000")]);
         let z = zips(&v);
-        assert!(!z.contains(&"92647".to_string()), "priced above the budget");
-        assert!(z.contains(&"92624".to_string()), "no commercial price: the budget does not apply");
+        assert!(!z.iter().any(|i| i == "92647"), "priced above the budget");
+        assert!(z.iter().any(|i| i == "92624"), "no commercial price: the budget does not apply");
         assert_eq!(z.first().map(String::as_str), Some("92101"), "highest c_score first");
         let e = rank_of(&[("kind", "commercial"), ("sort", "estabs"), ("limit", "2")]);
         assert_eq!(e["rows"].as_array().map(Vec::len), Some(2));
@@ -1787,7 +1787,7 @@ mod tests {
         assert_eq!(all["total"], 8, "no grade filter keeps every row");
         let z = zips(&all);
         assert_eq!(z.first().map(String::as_str), Some("92101"));
-        assert!(z[6..].contains(&"93501".to_string()) && z[6..].contains(&"99999".to_string()), "ungraded sort last");
+        assert!(z[6..].iter().any(|i| i == "93501") && z[6..].iter().any(|i| i == "99999"), "ungraded sort last");
         assert!(all["rows"][7]["area_grade"].is_null());
     }
 
@@ -1861,7 +1861,7 @@ mod tests {
         let z = zips(&gy);
         assert_eq!(&z[..2], &["44507".to_string(), "93501".to_string()]);
         assert_eq!(gy["sort_dir"], "desc");
-        assert!(z[10..].contains(&"59001".to_string()) && z[10..].contains(&"99999".to_string()), "no yield sorts last");
+        assert!(z[10..].iter().any(|i| i == "59001") && z[10..].iter().any(|i| i == "99999"), "no yield sorts last");
         // better: lower -> smallest first
         let dom = ok_v2(&[("sort", "days_on_market"), ("limit", "2")], &[]);
         assert_eq!((zips(&dom), dom["sort_dir"].as_str()), (vec!["90011".to_string(), "77494".to_string()], Some("asc")));
@@ -1880,7 +1880,7 @@ mod tests {
         let down = zips(&ok_v2(&[("sort", "gross_yield")], &[]));
         let present: Vec<&String> = down.iter().filter(|x| !["59001", "99999"].contains(&x.as_str())).collect();
         assert_eq!(z.first(), present.last().copied(), "the lowest yield first");
-        assert!(z[10..].contains(&"59001".to_string()) && z[10..].contains(&"99999".to_string()), "no yield still sorts last");
+        assert!(z[10..].iter().any(|i| i == "59001") && z[10..].iter().any(|i| i == "99999"), "no yield still sorts last");
         let dom = ok_v2(&[("sort", "days_on_market"), ("dir", "desc"), ("limit", "1")], &[]);
         assert_eq!(dom["sort_dir"], "desc");
         assert_ne!(zips(&dom), vec!["90011".to_string()]);
@@ -1924,7 +1924,7 @@ mod tests {
         let c = ok_v2(&[("kind", "commercial"), ("type", "industrial"), ("min_conf", "0.5")], &[]);
         let z = zips(&c);
         assert_eq!(z.first().map(String::as_str), Some("92101"), "77494 has conf 0.3");
-        assert!(!z.contains(&"59001".to_string()), "null conf is dropped");
+        assert!(!z.iter().any(|i| i == "59001"), "null conf is dropped");
         assert_eq!(c["filters"]["min_conf"], 0.5);
         assert!(c["cols"].as_array().is_some_and(|a| a.contains(&json!("industrial_conf"))), "the conf column rides along");
         assert_eq!(rank_v2(&[("kind", "commercial"), ("min_conf", "0.5")], &[]).err().as_deref(), Some("min_conf does not apply to this sort"));
@@ -2140,10 +2140,10 @@ mod tests {
         assert_eq!(res["lead"], "gross_yield");
         // spec order, catalog fields only
         assert_eq!(strs(&res["fields"]), ["home_value", "value_trend_1y", "typical_rent", "gross_yield", "days_on_market", "price_cuts", "affordability", "mortgage_rate"]);
-        assert!(strs(&res["skipped"]).contains(&"zm_heat".to_string()), "a field the build lacks is skipped, never zero");
+        assert!(strs(&res["skipped"]).iter().any(|i| i == "zm_heat"), "a field the build lacks is skipped, never zero");
         // the multifamily lead is not in this build: the first kept field leads
         let mf = &segs[1];
-        assert!(strs(&mf["skipped"]).contains(&"zm_zori_mf_yoy".to_string()));
+        assert!(strs(&mf["skipped"]).iter().any(|i| i == "zm_zori_mf_yoy"));
         assert_eq!(mf["lead"], json!(strs(&mf["fields"]).first()));
         assert_eq!(segs[5]["label"], "People and jobs");
         assert_eq!(segs[5]["lead"], "pep_pop_change_1y");
