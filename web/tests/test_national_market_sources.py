@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT / "scripts" / "national" / "sources"))
 
 import _redfin_segments  # noqa: E402
 import _zillow_market  # noqa: E402
+from unittest.mock import patch
 
 
 class ZillowMarketParserTests(unittest.TestCase):
@@ -67,6 +68,41 @@ class RedfinMarketParserTests(unittest.TestCase):
             "2025-02": {"12345": {"redfin_median_sale": 200000}},
             "2025-03": {"12345": {"redfin_median_sale": 300000}},
         })
+
+class RedfinAreaLoaderTests(unittest.TestCase):
+    def test_loader_merges_supplements_only_for_base_areas(self):
+        class Context:
+            def fetch(self, url, name, **kwargs):
+                return name, {"bytes": 1}
+
+            def log(self, message):
+                pass
+
+        records = {
+            "housing_market": ({"92629": {"rf_median_sale": 500000},
+                                "92630": {"rf_median_sale": 600000}}, 3),
+            "property_types": ({"92629": {"rf_mf_inventory": 4},
+                                "99999": {"rf_mf_inventory": 99}}, 2),
+            "price_drops": ({"92629": {"rf_price_drop_share": 12.5},
+                             "99999": {"rf_price_drop_share": 99.0}}, 4),
+        }
+
+        def parse(path, **kwargs):
+            return (*records[path.removesuffix(".csv")], "2026-10")
+
+        with patch.object(_redfin_segments.time, "sleep"):
+            result = _redfin_segments.load_area(Context(), parse, "zip", "rf_", minimum=2)
+
+        self.assertEqual(result["data"], {
+            "92629": {
+                "rf_median_sale": 500000,
+                "rf_mf_inventory": 4,
+                "rf_price_drop_share": 12.5,
+            },
+            "92630": {"rf_median_sale": 600000},
+        })
+        self.assertEqual((result["rows"], result["as_of"]), (9, "2026-10"))
+
 
 
 class CensusDivisionParserTests(unittest.TestCase):
