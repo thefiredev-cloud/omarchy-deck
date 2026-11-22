@@ -8,7 +8,7 @@ A self-hosted status board and touch remote for the machines you run yourself. O
 
 - Hardware: any Linux server with systemd. It needs no GPU and no VRAM. The release binary carries the whole web UI inside it. Built and tested on x86-64.
 - Data stays on the box. Collectors write JSON files to local disk. The server reads those files and talks to services on loopback or your LAN (Home Assistant, a local model server, the agent gateway).
-- Outbound calls are limited to what you install: collectors fetch public data (NOAA buoys, FRED rates, Census tables). The server uses the Omarchy weather script first, then Home Assistant's forecast and Open-Meteo as fallbacks. Nothing else leaves the machine by default.
+- Outbound calls are limited to what you install and the weather lookup. Collectors fetch public data (NOAA buoys, FRED rates, Census tables). Weather tries the Omarchy weather script first, which uses wttr.in. If that fails, it tries Home Assistant's forecast, then Open-Meteo (api.open-meteo.com), which receives the place's latitude and longitude. Nothing else leaves the machine by default.
 - Phones and tablets reach the server over HTTPS on your own network or VPN. Access is a token you create on the server.
 
 If you run open models locally (for example gpt-oss or Llama on llama.cpp or vLLM), the Cluster card shows the model server's state from a feed file. The deck itself runs no model.
