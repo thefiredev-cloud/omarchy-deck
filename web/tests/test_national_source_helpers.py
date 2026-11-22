@@ -93,6 +93,25 @@ class FederalLayerTests(unittest.TestCase):
             with self.assertRaisesRegex(SourceUnavailable, "ArcGIS error"):
                 federal.read_features(path)
 
+    def test_add_years_clamps_leap_day_to_february_28(self):
+        self.assertEqual(federal.add_years(datetime.date(2024, 2, 29), 1), datetime.date(2025, 2, 28))
+
+    def test_layer_as_of_returns_publisher_edit_date_or_fallback(self):
+        class Context:
+            def get_json(self, url, cache_name, timeout):
+                return {"editingInfo": {"lastEditDate": "2026-11-12"}}
+
+        self.assertEqual(federal.layer_as_of(Context(), "https://example.test/layer/"), "2026-11-12")
+
+        class UnavailableContext:
+            def get_json(self, url, cache_name, timeout):
+                raise SourceUnavailable("offline")
+
+        self.assertEqual(federal.layer_as_of(UnavailableContext(), "https://example.test/layer", "2026-01-01"),
+                         "2026-01-01")
+
+
+
 
 class XlsxTests(unittest.TestCase):
     def test_rows_resolve_shared_inline_and_sparse_column_cells(self):

@@ -97,6 +97,7 @@ class RealtorCoreTests(unittest.TestCase):
                 writer.writerow(["202501", "11111", "0", "10", "0.1", "2", "30", "0.2", "1.23456", "200000", "0.05", "150"])
                 writer.writerow(["202502", "22222", "1", "20", "-0.1", "3", "40", "0.25", "1.23456", "300000", "0.02", "175"])
                 writer.writerow(["202502", "", "0", "999", "0", "0", "0", "0", "0", "0", "0", "0"])
+                writer.writerow(["202513", "33333", "0", "999", "0", "0", "0", "0", "0", "0", "0", "0"])
 
             data, rows, as_of, info = _realtor_core.parse_core(
                 path, "realtor_", "cbsa_code", _realtor_core.cbsa_key, "metro", min_rows=1
