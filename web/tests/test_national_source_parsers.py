@@ -18,6 +18,27 @@ import sec_absee_cmbs  # noqa: E402
 
 
 class BlsCesParserTests(unittest.TestCase):
+
+    def test_geography_keeps_only_verified_cbsa_metros(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "areas.tsv"
+            path.write_text(
+                "area_code\tarea_name\n"
+                "31080\tLos Angeles-Long Beach-Anaheim, CA\n"
+                "31081\tLos Angeles Metropolitan Division\n"
+                "80000\tNortheast Nebraska NECTA\n"
+                "99999\tNational total\n",
+                encoding="utf-8",
+            )
+
+            areas, skipped = _bls_ces.geography({"sm.area": path}, "cbsa")
+
+        self.assertEqual(areas, {"31080": "Los Angeles-Long Beach-Anaheim, CA"})
+        self.assertEqual(skipped, {
+            "metro divisions": 1,
+            "NECTAs or special areas without a verified CBSA crosswalk": 1,
+        })
+
     def test_cbsa_parse_uses_seasonally_adjusted_values_for_latest_and_yoy(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
