@@ -102,6 +102,52 @@ class BlsCesParserTests(unittest.TestCase):
             [["2024-02", 100000], ["2025-01", 100000], ["2025-02", 110000]],
         )
 
+    def test_industrial_yoy_uses_trade_transport_utilities_proxy_without_double_counting_wholesale(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            paths = {name: root / name for name in ("sm.area", "sm.series", "data")}
+            paths["sm.area"].write_text(
+                "area_code\tarea_name\n31080\tLos Angeles-Long Beach-Anaheim, CA\n",
+                encoding="utf-8",
+            )
+            series = [
+                ("nonfarm", _bls_ces.NONFARM),
+                ("manufacturing", _bls_ces.MANUFACTURING),
+                ("ttu", _bls_ces.TTU),
+                ("retail", _bls_ces.RETAIL),
+                ("wholesale", _bls_ces.WHOLESALE),
+            ]
+            paths["sm.series"].write_text(
+                "series_id\tstate_code\tarea_code\tindustry_code\tdata_type_code\tseasonal\tend_year\tend_period\n"
+                + "".join(
+                    f"{sid}\t06\t31080\t{industry}\t01\tS\t2025\tM02\n"
+                    for sid, industry in series
+                ),
+                encoding="utf-8",
+            )
+            values = {
+                "2024\tM02": {
+                    "nonfarm": 1000, "manufacturing": 15, "ttu": 80, "retail": 25, "wholesale": 40,
+                },
+                "2025\tM02": {
+                    "nonfarm": 1100, "manufacturing": 20, "ttu": 100, "retail": 30, "wholesale": 50,
+                },
+            }
+            paths["data"].write_text(
+                "series_id\tyear\tperiod\tvalue\n"
+                + "".join(
+                    f"{sid}\t{year_month}\t{measurements[sid]}\n"
+                    for year_month, measurements in values.items()
+                    for sid, _ in series
+                ),
+                encoding="utf-8",
+            )
+
+            data, _, _, _, note = _bls_ces.parse(paths, "cbsa", "cesm_", 1)
+
+        self.assertEqual(data["31080"]["cesm_industrial_emp_yoy"], 28.5714)
+        self.assertIn("proxy includes utilities", note)
+
 
 
 
