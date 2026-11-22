@@ -71,6 +71,8 @@ web/scripts/install-national          # national housing data from public source
 
 The surf, trends and e-commerce collectors (`web/scripts/deck-feed-*`) ship with unit files in `web/scripts/systemd/`. `deck-feed-markets`, `deck-feed-crons` and `deck-feed-dev` ship none. Copy a pair into `~/.config/systemd/user/`, put the script at `~/ops/bin/<name>` (the path the unit names), then `systemctl --user enable --now <name>.timer`. Each script's header says what it reads and where it writes. Set `DECK_FEED_DIR` to stage output somewhere other than `~/.meshvault/status`.
 
+`deck-feed-deadlines` is not in this repo: no script and no units. `install-ops-feeds` lists it in its default set, so a run with no arguments stops with "nothing was installed". Name the feeds you want.
+
 ## 5. iOS app on a Mac (Xcode)
 
 ```sh
