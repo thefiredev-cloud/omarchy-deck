@@ -35,6 +35,33 @@ class BuildingPermitsTests(unittest.TestCase):
 
         self.assertEqual(_bps.sum_ytd(current, annual, prior), {"06003": {key: 2 for key in _bps.KEYS}})
 
+    def test_state_parser_maps_state_fips_and_skips_regional_rows(self):
+        values = ["0", "10", "0", "0", "20", "0", "0", "30", "0", "40", "50", "60"] + ["0"] * 12
+
+        def line(state):
+            return ",".join(["202611", state, "x", "x", "x", *values])
+
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "state2611c.txt"
+            path.write_text(line("06") + "\n" + line("00") + "\n", encoding="latin-1")
+
+            data, label = _bps.parse(path, "state")
+
+        self.assertEqual(label, "2026-11")
+        self.assertEqual(data, {"CA": {"u1": 10, "u24": 50, "u5": 50, "b5": 40, "v5": 60000}})
+
+    def test_state_url_uses_state_prefix_and_annual_naming(self):
+        self.assertEqual(_bps.url_for("state", "c", 2026, 11),
+                         (_bps.STATE_BASE + "st2611c.txt", "st2611c.txt"))
+        self.assertEqual(_bps.url_for("state", "a", 2026),
+                         (_bps.STATE_BASE + "st2026a.txt", "st2026a.txt"))
+
+    def test_cbsa_annual_file_did_not_exist_before_2024(self):
+        self.assertIsNone(_bps.url_for("cbsa", "a", 2023))
+
+
+
+
 
 class FederalLayerTests(unittest.TestCase):
     def test_parse_day_accepts_publisher_formats_and_rejects_invalid_dates(self):
@@ -48,6 +75,23 @@ class FederalLayerTests(unittest.TestCase):
         self.assertEqual(federal.zip_of({"ZIP": "501-1234"}, ["ZIP"], locate), ("00501", "zip"))
         self.assertEqual(federal.zip_of({"ZIP": "00000", "LAT": 1, "LON": 2}, ["ZIP"], locate), ("00999", "point"))
         self.assertEqual(federal.zip_of({"ZIP": "00000", "LAT": 0, "LON": 2}, ["ZIP"], locate), (None, None))
+
+    def test_read_features_returns_attributes_and_empty_dict_for_null_attributes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "features.json"
+            path.write_text('{"features":[{"attributes":{"ZIP":"92629"}},{"attributes":null}]}', encoding="utf8")
+
+            features = federal.read_features(path)
+
+        self.assertEqual(features, [{"ZIP": "92629"}, {}])
+
+    def test_read_features_rejects_arcgis_error_responses(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "error.json"
+            path.write_text('{"error":{"message":"service unavailable"}}', encoding="utf8")
+
+            with self.assertRaisesRegex(SourceUnavailable, "ArcGIS error"):
+                federal.read_features(path)
 
 
 class XlsxTests(unittest.TestCase):
