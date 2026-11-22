@@ -91,7 +91,7 @@ Full steps, including the Xcode build, the Linux xtool build and production inst
 ## Limits
 
 - Built for one owner on one network. It is not multi-tenant, and any process running as the same user is trusted.
-- Some pages expect collectors that are not in this repo (calendar, mail, finance). Without their files those pages say "Not reporting".
+- Some pages expect collectors that are not in this repo (calendar, mail, finance, deadlines). Without their files those pages say "Not reporting".
 - The iOS app needs a Mac with Xcode to sign and install. The Linux harness tests only the Foundation code, not SwiftUI or WebKit.
 - The xtool build path was not run while preparing this repo.
 
