@@ -109,7 +109,9 @@ class FederalLayerTests(unittest.TestCase):
         self.assertIsNone(federal.parse_day("31-FEB-2026"))
 
     def test_zip_of_prefers_record_zip_then_uses_point_lookup(self):
-        locate = lambda lat, lon: "00999"
+        def locate(lat, lon):
+            return "00999"
+
         self.assertEqual(federal.zip_of({"ZIP": "501-1234"}, ["ZIP"], locate), ("00501", "zip"))
         self.assertEqual(federal.zip_of({"ZIP": "00000", "LAT": 1, "LON": 2}, ["ZIP"], locate), ("00999", "point"))
         self.assertEqual(federal.zip_of({"ZIP": "00000", "LAT": 0, "LON": 2}, ["ZIP"], locate), (None, None))

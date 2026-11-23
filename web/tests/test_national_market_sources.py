@@ -6,6 +6,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts" / "national"))
@@ -13,7 +14,6 @@ sys.path.insert(0, str(ROOT / "scripts" / "national" / "sources"))
 
 import _redfin_segments  # noqa: E402
 import _zillow_market  # noqa: E402
-from unittest.mock import patch
 from ctx import SourceUnavailable  # noqa: E402
 
 
