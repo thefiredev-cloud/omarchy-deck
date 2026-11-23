@@ -3,7 +3,6 @@ One keyless CSV per reporting year (about 60 MB, one row per facility and chemic
 counted once per TRI facility id. Release totals add the form's TOTAL RELEASES (on-site plus off-site) over every chemical;
 dioxin-class chemicals are reported in grams and are converted to pounds."""
 import csv
-import time
 
 from ctx import SourceUnavailable, num, zfill_zip
 

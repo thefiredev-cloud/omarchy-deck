@@ -1,7 +1,6 @@
 """NOAA NCEI Storm Events Database: damaging county-level storm events, damage and casualties over the last 10 full years."""
 import csv
 import gzip
-import io
 import os
 import re
 from collections import defaultdict

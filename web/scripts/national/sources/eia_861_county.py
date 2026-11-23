@@ -6,7 +6,6 @@ no FIPS). The price of a utility in a state is revenue / sales on its Bundled ro
 that serve it, weighted by each utility's sales to that customer class in the state. That is a proxy: EIA publishes no sales per
 utility per county. County names are matched to FIPS with the Census county gazetteer.
 """
-import csv
 import io
 import re
 import unicodedata

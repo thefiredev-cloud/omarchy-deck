@@ -6,7 +6,6 @@ category, source, as_of}. Parsers are pure and raise SourceUnavailable on a brok
 import csv
 import datetime as dt
 import email.utils
-import html
 import io
 import json
 import os
