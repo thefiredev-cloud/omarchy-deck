@@ -14,6 +14,7 @@ sys.path.insert(0, str(ROOT / "scripts" / "national" / "sources"))
 import _redfin_segments  # noqa: E402
 import _zillow_market  # noqa: E402
 from unittest.mock import patch
+from ctx import SourceUnavailable  # noqa: E402
 
 
 class ZillowMarketParserTests(unittest.TestCase):
@@ -38,6 +39,59 @@ class ZillowMarketParserTests(unittest.TestCase):
                 "v": 125, "yoy": 25.0, "hist": [["2025-01", 100], ["2025-02", 125]]
             }
         })
+
+
+class ZillowForecastParserTests(unittest.TestCase):
+    HEADER = ["RegionName", "RegionType", "StateName", "BaseDate", "2026-10-31", "2027-09-30", "2027-10-31"]
+
+    @staticmethod
+    def _write(tmp, header, rows):
+        path = Path(tmp) / "zhvf.csv"
+        with path.open("w", newline="", encoding="utf8") as fh:
+            writer = csv.writer(fh)
+            writer.writerow(header)
+            writer.writerows(rows)
+        return path
+
+    def test_forecast_picks_the_horizon_column_from_the_latest_base_month(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = self._write(tmp, self.HEADER, [
+                ["Example Metro", "msa", "CA", "2026-10-31", "100", "102", "104.567"],
+                ["Stale Metro", "msa", "NV", "2026-09-30", "100", "1", "1"],
+                ["United States", "country", "", "2026-11-30", "100", "1", "1"],
+            ])
+            out, rows, base = _zillow_market.parse_forecast(path, "msa", horizon=12, min_regions=1)
+
+        self.assertEqual(out, {("Example Metro", "CA"): 104.57})
+        self.assertEqual((rows, base), (3, "2026-10"))
+
+    def test_forecast_refuses_too_few_regions_missing_horizon_or_missing_base_date(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = self._write(tmp, self.HEADER, [["Example Metro", "msa", "CA", "2026-10-31", "100", "102", "104"]])
+            with self.assertRaises(SourceUnavailable):
+                _zillow_market.parse_forecast(path, "msa", horizon=12, min_regions=2)
+
+            short = self._write(tmp, self.HEADER[:4] + ["2027-09-30"], [["Example Metro", "msa", "CA", "2026-10-31", "1"]])
+            with self.assertRaises(SourceUnavailable):
+                _zillow_market.parse_forecast(short, "msa", horizon=12, min_regions=1)
+
+            no_base = self._write(tmp, ["RegionName", "RegionType", "StateName", "2026-10-31", "2027-10-31"],
+                                  [["Example Metro", "msa", "CA", "100", "104"]])
+            with self.assertRaises(SourceUnavailable):
+                _zillow_market.parse_forecast(no_base, "msa", horizon=12, min_regions=1)
+
+
+class ZillowLagAndCastTests(unittest.TestCase):
+    def test_lag_note_is_blank_when_series_end_together_and_names_the_late_ones(self):
+        self.assertEqual(_zillow_market.lag_note({"zhvi": "2026-10", "zori": "2026-10"}), "")
+        self.assertEqual(_zillow_market.lag_note({"zhvi": "2026-10", "zhvf": "2026-09", "inv": "2026-08"}),
+                         "Ends earlier than 2026-10: inv 2026-08, zhvf 2026-09.")
+
+    def test_cast_publishes_each_kind_in_its_unit(self):
+        self.assertEqual(_zillow_market.cast("0.1234", "p"), 12.34)
+        self.assertEqual(_zillow_market.cast("3.14159", "f"), 3.1)
+        self.assertEqual(_zillow_market.cast("250000.4", "d"), 250000)
+        self.assertIsNone(_zillow_market.cast("NA", "i"))
 
 
 class RedfinMarketParserTests(unittest.TestCase):
