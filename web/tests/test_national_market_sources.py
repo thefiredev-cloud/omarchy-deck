@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT / "scripts" / "national" / "sources"))
 
 import _redfin_segments  # noqa: E402
 import _zillow_market  # noqa: E402
+import redfin_metro_market
 from unittest.mock import patch
 from ctx import SourceUnavailable  # noqa: E402
 
@@ -157,6 +158,59 @@ class RedfinAreaLoaderTests(unittest.TestCase):
         })
         self.assertEqual((result["rows"], result["as_of"]), (9, "2026-10"))
 
+
+
+class RedfinMetroRollupTests(unittest.TestCase):
+    def test_rollup_uses_sales_and_inventory_weights_for_distinct_metrics(self):
+        divisions = {
+            "20001": {"parent": "10000", "title": "Division One"},
+            "20002": {"parent": "10000", "title": "Division Two"},
+        }
+        period = {
+            "20001": {"rfm_median_sale": 200000, "rfm_inventory": 100, "rfm_homes_sold": 1,
+                      "rfm_median_sale_yoy": 2, "rfm_inventory_yoy": -10, "rfm_price_drop_share": 20},
+            "20002": {"rfm_median_sale": 800000, "rfm_inventory": 300, "rfm_homes_sold": 3,
+                      "rfm_median_sale_yoy": 10, "rfm_inventory_yoy": 10, "rfm_price_drop_share": 40},
+        }
+        market = {
+            "20001": {"rfm_inventory": 100},
+            "20002": {"rfm_inventory": 300},
+        }
+
+        data, rolled = redfin_metro_market.rollup(
+            period, divisions, "rfm_", ("median_sale", "inventory", "homes_sold", "median_sale_yoy",
+                                         "inventory_yoy", "price_drop_share"), market)
+
+        self.assertEqual(rolled, {"10000"})
+        self.assertEqual(data["10000"], {
+            "rfm_median_sale": 650000,
+            "rfm_inventory": 400,
+            "rfm_homes_sold": 4,
+            "rfm_median_sale_yoy": 8,
+            "rfm_inventory_yoy": 5,
+            "rfm_price_drop_share": 35,
+        })
+
+    def test_rollup_keeps_published_parent_and_skips_incomplete_division_sets(self):
+        divisions = {
+            "20001": {"parent": "10000", "title": "Division One"},
+            "20002": {"parent": "10000", "title": "Division Two"},
+            "30001": {"parent": "30000", "title": "Division Three"},
+            "30002": {"parent": "30000", "title": "Division Four"},
+        }
+        published = {"rfm_inventory": 7, "rfm_median_sale": 500000}
+        period = {
+            "10000": published,
+            "20001": {"rfm_inventory": 10, "rfm_median_sale": 100000},
+            "20002": {"rfm_inventory": 20, "rfm_median_sale": 200000},
+            "30001": {"rfm_inventory": 30, "rfm_median_sale": 300000},
+        }
+
+        data, rolled = redfin_metro_market.rollup(period, divisions, "rfm_", ("inventory", "median_sale"))
+
+        self.assertEqual(data["10000"], published)
+        self.assertNotIn("30000", data)
+        self.assertEqual(rolled, set())
 
 
 class CensusDivisionParserTests(unittest.TestCase):
