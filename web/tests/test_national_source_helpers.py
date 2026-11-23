@@ -58,6 +58,39 @@ class BuildingPermitsTests(unittest.TestCase):
 
     def test_cbsa_annual_file_did_not_exist_before_2024(self):
         self.assertIsNone(_bps.url_for("cbsa", "a", 2023))
+    def test_files_remember_unavailable_months_without_fetching_twice(self):
+        class Context:
+            calls = 0
+
+            def fetch(self, url, name, timeout, min_bytes):
+                self.calls += 1
+                raise SourceUnavailable("not published")
+
+        ctx = Context()
+        files = _bps.Files(ctx, "state")
+
+        for _ in range(2):
+            with self.assertRaisesRegex(SourceUnavailable, "not published"):
+                files.get("c", 2026, 11)
+
+        self.assertEqual(ctx.calls, 1)
+        self.assertEqual(files.rows, 0)
+
+    def test_latest_month_walks_back_from_the_current_month(self):
+        class Files:
+            def __init__(self):
+                self.months = []
+
+            def get(self, flavor, year, month):
+                self.months.append((year, month))
+                if (year, month) != (2026, 10):
+                    raise SourceUnavailable("not published")
+
+        files = Files()
+
+        self.assertEqual(_bps.latest_month(files, type("Now", (), {"tm_year": 2026, "tm_mon": 11})()),
+                         (2026, 10))
+        self.assertEqual(files.months, [(2026, 11), (2026, 10)])
 
 
 
