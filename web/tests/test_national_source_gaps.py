@@ -1,6 +1,8 @@
 """Behavioral coverage for LIHTC expiration and county building aggregation."""
 import datetime
+import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -74,6 +76,35 @@ class UsaStructuresTests(unittest.TestCase):
     def test_parse_rejects_arcgis_errors_in_saved_response(self):
         with self.assertRaisesRegex(SourceUnavailable, "ArcGIS error"):
             usa_structures_county._rows({"error": {"message": "service unavailable"}}, "commercial")
+    def test_parse_returns_aggregated_data_and_source_row_count(self):
+        bundle = {
+            "commercial": {"features": [
+                {"attributes": {"FIPS": "06037", "PRIM_OCC": "Retail Trade", "n": 2, "sqft": 1200}},
+                {"attributes": {"FIPS": "06037", "PRIM_OCC": "Other", "n": 3, "sqft": 800}},
+            ]},
+            "industrial": {"features": [
+                {"attributes": {"FIPS": "06037", "n": 1, "sqft": 1000}},
+            ]},
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "bundle.json"
+            path.write_text(json.dumps(bundle), encoding="utf8")
+
+            data, rows, as_of = usa_structures_county.parse(path)
+
+        self.assertEqual(rows, 3)
+        self.assertIsNone(as_of)
+        self.assertEqual(data["06037"]["bldg_commercial_count"], 5)
+        self.assertEqual(data["06037"]["bldg_retail_count"], 2)
+        self.assertEqual(data["06037"]["bldg_industrial_count"], 1)
+
+    def test_parse_rejects_bundle_without_counties(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "bundle.json"
+            path.write_text("{}", encoding="utf8")
+
+            with self.assertRaisesRegex(SourceUnavailable, "had no counties"):
+                usa_structures_county.parse(path)
 
 
 if __name__ == "__main__":
