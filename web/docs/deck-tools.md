@@ -9,8 +9,7 @@ Reusable, read-only audit of the running Pixel Deck. Counts, status, source and 
 | `scripts/deck_audit.py` | Engine and CLI. Fixed GET allowlist, loopback `127.0.0.1:8796`. |
 | `integrations/hermes-plugin/` | Native Hermes directory plugin source (`plugin.yaml`, `__init__.py`). Installed and enabled in Tanner default on 2026-09-30; tool availability is deferred to new sessions. |
 | `tests/test_deck_audit.py` | Safety, sanitizing, failure modes, audit (including v6 feeds), mock and real-SDK plugin registration. |
-| `scripts/deck-launch` | Launch action runner, installed as `~/ops/bin/deck-launch` (see "Launch action" below). |
-| `tests/test_deck_launch.py` | deck-launch validation, prompts, secret handling, and the read-only `status` view against a fake loopback gateway. |
+| `~/ops/bin/deck-launch` | Launch action runner. The server calls it; the script is not in this repository (see "Launch action" below). |
 | skill `omarchy-deck-ops` | Default Hermes profile skill: how to use these tools and the boundaries. |
 
 ## CLI
@@ -113,7 +112,7 @@ Catalog items that only had the OMP target stay listed with no run button ("view
 - Every call appends one JSON line to `~/.local/state/pixel-deck/launch.jsonl` (mode 600): time, target, id, ok, run or pane id, error word.
 - Exit 0 ok, 1 failed after validation (gateway), 2 rejected.
 
-Reinstall after editing: `install -m 700 scripts/deck-launch ~/ops/bin/deck-launch`.
+`deck-launch` is not part of this repository. Install your own runner at `~/ops/bin/deck-launch` (mode 700).
 
 ## v8 read routes (all GET, cookie-only, no controls)
 
@@ -203,8 +202,8 @@ Until the timer exists, the Failing units card reads "Unavailable" once the file
 - The shared feed filter bounds strings (400 chars), lists (200 items) and depth, and drops any key named `key`, `token`, or containing `password`, `secret`, `apikey`, `cookie`. Side effect: `macro[].key` is dropped. The Shop tab does not read it.
 - The Shop tab (after Markets, before Life) renders it with plain DOM and inline SVG: coverage (14 site chips, four counters, days of history), movers, deals, watch cards (median, 7d and 30d change, 30-day sparkline, range, per-site bars, supply, shipping, condition, best deal, season chart) and macro cards. Every figure shows its source and age. Unknown is an em dash with the reason beside it, never 0. A feed older than 2x `refresh` shows `Out of date · Updated ...` on every heading and Out of date on every card; no feed shows the one empty state ("Shop trends are not reporting" with a plain reason and Try again; the file name stays in the hidden details). Deal and best links open in a new tab (`rel="noopener noreferrer"`, http and https only).
 - Listings is a separate Shop group. The price is a dollar amount only when the MCP reports USD; a missing currency shows an unknown price. Two different times are shown and never merged: `Posted` is the seller's own post time (it can be weeks old), `seen` is the last search that returned the link. Seen is search presence, not proof the item is still for sale; rows the latest search did not return say `last seen`. The count line says `Latest search:` and a second line gives the 24 h kept totals. A failed source shows no count and `Last worked ...` from its own `last_ok_at`, or `Never worked` (eBay without keys). Feeds without `source_status` fall back to the old `Checked` wording. No seller actions are exposed. Money reports that no finance feed is set up when its file is missing; no finance collector is installed by this change.
-- The Facebook Marketplace search needs the owner's area. `deck-feed-listings` reads it from `~/.config/pixel-deck/listings-location.json` (`{"latitude":..,"longitude":..,"location_id":".."}`, mode 0600, never committed). Without the file Facebook reports `location not configured` and the other sources still run.
-- `deck_audit.py` is unchanged and does not request `/api/ecom` (its GET allowlist is fixed). Probe it by hand with the one-liner in `docs/release-v9.md`.
+- The Facebook Marketplace search needs the owner's area. `deck-feed-listings` (not in this repository) reads it from `~/.config/pixel-deck/listings-location.json` (`{"latitude":..,"longitude":..,"location_id":".."}`, mode 0600, never committed). Without the file Facebook reports `location not configured` and the other sources still run.
+- `deck_audit.py` is unchanged and does not request `/api/ecom` (its GET allowlist is fixed).
 
 ## v9 Money feed (two read routes, amounts gated)
 
@@ -219,15 +218,15 @@ Until the timer exists, the Failing units card reads "Unavailable" once the file
 - The values route returns every captured value in one body (about 1 KB for 16 apps); the browser keeps only what was tapped (one app, or all with Reveal all) and drops it on expiry.
 - The Money tab (after Home, before Markets) shows: a "Sample data" banner when `sample` is true, the total (masked), inventory (installed, finance-related, covered, source and age), a status tally, per-app cards grouped by kind (bank, brokerage, crypto, payments, wallet, net worth, tax, shopping, receipts, other) with kind chip, route chip (iPhone screen, API, no route), status word with a mark (Never, OK, Out of date, Needs you, Needs unlock, Blocked) and age or reason. An app with values shows a fixed-width masked bar and a 44px Reveal button. The empty state (every app `never`, no totals) says `No capture yet` and `ask Hermes: finance-master status`.
 - Reveal rules, all in `DeckUI.finCtl` (`static/deck.js`): nothing is requested until a tap; each reveal expires 30 s after it lands; amounts are removed from JS state and from the DOM on expiry, Hide, `visibilitychange` to hidden, `pagehide`, another tab coming on screen, and ambient mode; a reveal still in flight when the page is hidden is discarded unread. Amounts are never put in a URL, storage, a log line or an attribute. The service worker does not answer or cache either route.
-- `deck_audit.py` is unchanged and does not request these routes. Probe them by hand with the one-liner in `docs/release-v9.md` (prints counts and booleans, never amounts).
+- `deck_audit.py` is unchanged and does not request these routes.
 
 ## Tests
 
 ```bash
-cd ~/projects/meshvault/pixel-deck
+cd web
 ~/.hermes/hermes-agent/venv/bin/python -m unittest tests/test_deck_audit.py -v   # includes real-SDK tests
 python3 -m unittest tests/test_deck_audit.py -v                                  # includes real-SDK tests when its imports resolve
-python3 -m unittest tests/test_deck_launch.py tests/test_deck_fleet_snapshot.py -v  # launch validation, status view, snapshot writer
+python3 -m unittest tests/test_deck_fleet_snapshot.py -v                          # snapshot writer
 node --test tests/*.test.js                                                      # front-end renderers (Today, cameras, pad, v6 pages, v9 Shop and Money; fixtures tests/fixtures/ecom.sample.json and finance.sample.json)
 (cd rust && cargo test)                                                          # server: feeds, launch checks, limiter, routes, finance split, finance log test
 ```

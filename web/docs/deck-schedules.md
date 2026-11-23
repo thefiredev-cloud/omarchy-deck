@@ -46,7 +46,7 @@ paused, finished and retired rows. A down source shows "could not be read. Unkno
 
 ## Files
 
-New: `static/schedules.js`, `scripts/deck-feed-crons`, `tests/deck_schedules_ui.test.js`, `tests/test_deck_feed_crons.py`, this file.
+New: `static/schedules.js`, `scripts/deck-feed-crons`, `tests/homeops_crons.test.js`, `tests/test_deck_feed_crons.py`, this file.
 Registration only: `rust/src/sources.rs` (one `Def`, `FEEDS` 11 to 12, contract keys), `rust/src/main.rs` (embed and route `/schedules.js`),
 `static/index.html` (one page div, one script tag), `static/deck.js` (one line in `deckPage`), `static/sw.js` (shell list; `V` unchanged).
 
@@ -57,4 +57,4 @@ Registration only: `rust/src/sources.rs` (one `Def`, `FEEDS` 11 to 12, contract 
 
 ## Tests
 
-`node --test tests/deck_schedules_ui.test.js`, `python3 -m unittest tests.test_deck_feed_crons`, `cd rust && cargo test --release`.
+`node --test tests/homeops_crons.test.js`, `python3 -m unittest tests.test_deck_feed_crons`, `cd rust && cargo test --release` (run from `web/`).
