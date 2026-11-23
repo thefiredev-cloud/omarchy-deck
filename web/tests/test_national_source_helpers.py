@@ -58,6 +58,11 @@ class BuildingPermitsTests(unittest.TestCase):
 
     def test_cbsa_annual_file_did_not_exist_before_2024(self):
         self.assertIsNone(_bps.url_for("cbsa", "a", 2023))
+    def test_cbsa_monthly_urls_switch_from_legacy_metro_to_cbsa_files_in_2024(self):
+        self.assertEqual(_bps.url_for("cbsa", "c", 2023, 12),
+                         (_bps.METRO_BASE + "ma2312c.txt", "ma2312c.txt"))
+        self.assertEqual(_bps.url_for("cbsa", "c", 2024, 1),
+                         (_bps.CBSA_BASE + "cbsa2401c.txt", "cbsa2401c.txt"))
     def test_files_remember_unavailable_months_without_fetching_twice(self):
         class Context:
             calls = 0
