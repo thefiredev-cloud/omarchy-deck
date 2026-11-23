@@ -194,8 +194,13 @@ class MockDeckTests(unittest.TestCase):
 
     def test_surf_alert_fixtures_move_alerts_off_and_onto_the_home_region(self):
         headers = self.session()
-        alerts = lambda: json.loads(self.get("/api/surf-coast", headers)[2])["alerts"]
-        home = lambda alert: "orange-county" in alert["regions"]
+
+        def alerts():
+            return json.loads(self.get("/api/surf-coast", headers)[2])["alerts"]
+
+        def home(alert):
+            return "orange-county" in alert["regions"]
+
         self.assertEqual(sum(map(home, alerts())), 1, "the cut fixture has one alert on the pinned spots' region")
         far_count = len([a for a in alerts() if not home(a)])
         self.control("surf-alerts-far")

@@ -13,7 +13,6 @@ market.mortgage. A series that cannot be fetched lands in `unavailable` with its
 never invented or carried forward as if it were current.
 """
 import csv
-import io
 import json
 import os
 import re

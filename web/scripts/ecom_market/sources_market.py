@@ -6,7 +6,6 @@ category, source, as_of}. Parsers are pure and raise SourceUnavailable on a brok
 import csv
 import datetime as dt
 import email.utils
-import html
 import io
 import json
 import os
@@ -250,14 +249,14 @@ def parse_reverb(body, make, model):
         raise SourceUnavailable("Reverb answered no listings")
     want = re.sub(r"[^a-z0-9]+", "", model.lower())  # "P-45" matches "P45" and "P-45"
     prices = []
-    for l in body["listings"]:
-        title = (l.get("title") or "").lower()
-        cats = " ".join(c.get("full_name", "") for c in l.get("categories") or [])
+    for listing in body["listings"]:
+        title = (listing.get("title") or "").lower()
+        cats = " ".join(c.get("full_name", "") for c in listing.get("categories") or [])
         if make.lower() not in title or want not in re.sub(r"[^a-z0-9]+", "", title):
             continue
         if cats.startswith(("Parts", "Accessories")) or _PARTS.search(title):
             continue
-        p = l.get("price") or {}
+        p = listing.get("price") or {}
         if p.get("currency") not in (None, "USD"):
             continue
         v = num(p.get("amount"))

@@ -141,8 +141,8 @@ def parse_etsy(body):
     if not isinstance(body, dict) or not isinstance(body.get("results"), list):
         raise SourceUnavailable("Etsy answered no results list")
     out = []
-    for l in body["results"]:
-        p = l.get("price") or {}
+    for listing in body["results"]:
+        p = listing.get("price") or {}
         amt, div = num(p.get("amount")), num(p.get("divisor")) or 100
         if amt and p.get("currency_code") in (None, "USD"):
             out.append(amt / div)

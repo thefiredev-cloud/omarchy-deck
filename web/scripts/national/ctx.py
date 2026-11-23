@@ -9,7 +9,6 @@ Run one source by hand:
     lowprio python3 ctx.py path/to/source.py [--force] [--out result.json] [--sample 3]
 It prints status, as_of, rows, how many geographies came back and the coverage of every field.
 """
-import email.utils
 import hashlib
 import importlib.util
 import io

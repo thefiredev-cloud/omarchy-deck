@@ -105,7 +105,8 @@ def state_resolver():
 def parse_periods(path, level, prefix, suffixes, multifamily=False, cbsas=None, months=1):
     """Stream a bounded monthly window, independent of publisher row order."""
     if level == "zip":
-        resolve = lambda region_id, name: zfill_zip(name)
+        def resolve(region_id, name):
+            return zfill_zip(name)
     elif level == "state":
         resolve = state_resolver()
     else:

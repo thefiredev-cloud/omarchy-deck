@@ -1,7 +1,6 @@
 """Behavioral coverage for FEMA NRI and FHFA UAD tract parsers."""
 import csv
 import io
-import json
 import sys
 import tempfile
 import unittest

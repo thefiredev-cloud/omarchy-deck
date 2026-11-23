@@ -37,7 +37,17 @@ GET /__fixture/surf-alerts-home adds four test alerts on the home region, least 
 GET /api/housing/fields, /api/housing/national?part=segments|states|metros and /api/housing/rank?...&cols= (2026-11-17)
 serve the Best ZIPs catalog, the Markets spec and lists and the columned rank rows captured from the live deck API
 (housing-fields.json, housing-national-segments|states|metros.json, housing-rank-cols.json); see served_national."""
-import base64, hashlib, html, http.server, json, os, ssl, sys, threading, time, urllib.parse
+import base64
+import hashlib
+import html
+import http.server
+import json
+import os
+import ssl
+import sys
+import threading
+import time
+import urllib.parse
 TOKEN = sys.argv[4] if len(sys.argv) > 4 else "mock-token-0000"
 TITLE = sys.argv[5] if len(sys.argv) > 5 else "MOCK DECK (not the real deck)"
 GUEST_TOKEN = "guest-" + TOKEN
